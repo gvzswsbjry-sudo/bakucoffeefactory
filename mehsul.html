@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="Baku Coffee Factory avadanlıq məhsulu və rəng seçimləri." />
+  <title>Məhsul — Yeni Baku Coffee Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="gear.css?v=20261024-detail3" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span>Yeni</span><strong>Baku Coffee<br />Factory</strong></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Ana səhifə</a>
+      <a href="qehveler.html">Qəhvələr</a>
+      <a href="caylar.html">Çaylar</a>
+      <a class="active" href="avadanliqlar.html">Avadanlıqlar</a>
+      <a href="menyu.html">Menyu</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menyunu aç" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <main class="product-page">
+    <a class="product-back" id="productBack" href="avadanliqlar.html">← Bütün avadanlıqlar</a>
+
+    <section class="product-detail" id="productDetail" aria-live="polite">
+      <div class="detail-gallery" id="detailGallery">
+        <figure><img id="detailImage" src="" alt="" /></figure>
+        <button class="gallery-arrow gallery-prev" id="detailPrev" type="button" aria-label="Əvvəlki rəng">←</button>
+        <button class="gallery-arrow gallery-next" id="detailNext" type="button" aria-label="Növbəti rəng">→</button>
+        <p class="gallery-count" id="galleryCount"></p>
+      </div>
+
+      <div class="detail-copy">
+        <p class="product-category" id="detailCategory"></p>
+        <h1 id="detailTitle"></h1>
+        <p class="detail-description" id="detailDescription"></p>
+
+        <div class="detail-price-row">
+          <span>Qiymət</span>
+          <strong id="detailPrice"></strong>
+        </div>
+
+        <div class="variant-picker" id="variantPicker">
+          <div><span>Variant</span><strong id="variantLabel"></strong></div>
+          <div class="variant-swatches" id="variantSwatches" aria-label="Variant seçimləri"></div>
+        </div>
+
+        <button class="detail-add" id="detailAdd" type="button">Səbətə əlavə et</button>
+        <p class="detail-cart-note" id="detailCartNote" aria-live="polite"></p>
+
+        <dl class="detail-meta">
+          <div><dt>Seçim</dt><dd id="detailVariantCount"></dd></div>
+          <div><dt>Qiymət qeydi</dt><dd>Müvəqqəti qiymət</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="product-not-found" id="productNotFound" hidden>
+      <p class="eyebrow">Məhsul tapılmadı</p>
+      <h1>Bu məhsul mövcud deyil.</h1>
+      <a href="avadanliqlar.html">Kataloqa qayıt</a>
+    </section>
+  </main>
+
+  <footer><a class="brand" href="index.html"><span>Yeni</span><strong>Baku Coffee<br />Factory</strong></a><p>© 2026 · Bakı, Azərbaycan</p></footer>
+  <script src="script.js?v=20261025-nozoom1"></script>
+  <script src="api/catalog.js"></script>
+  <script src="storefront-products.js?v=20261025-admin1"></script>
+  <script src="equipment-data.js?v=20261025-mobile1"></script>
+  <script src="cart-utils.js?v=20261025-nozoom1"></script>
+  <script src="product-detail.js?v=20261024-tea1"></script>
+</body>
+</html>

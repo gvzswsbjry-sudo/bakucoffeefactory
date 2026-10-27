@@ -1,0 +1,286 @@
+'use strict';
+
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const { handleCustomerAuthRequest, customerCookie, sameOrigin } = require('./customer-auth-routes');
+const { prepareOrder } = require('./order-store');
+
+const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif']);
+const UPLOAD_TYPES = new Map([
+  ['image/jpeg', { extension: '.jpg', valid: (data) => data.length >= 3 && data[0] === 0xff && data[1] === 0xd8 && data[2] === 0xff }],
+  ['image/png', { extension: '.png', valid: (data) => data.length >= 8 && data.subarray(0, 8).equals(Buffer.from('89504e470d0a1a0a', 'hex')) }],
+  ['image/webp', { extension: '.webp', valid: (data) => data.length >= 12 && data.subarray(0, 4).toString('ascii') === 'RIFF' && data.subarray(8, 12).toString('ascii') === 'WEBP' }],
+]);
+const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+const MAX_UPLOAD_BODY_BYTES = 12 * 1024 * 1024;
+const MIME_TYPES = {
+  '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+  '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.avif': 'image/avif', '.ico': 'image/x-icon',
+};
+const PUBLIC_FILES = new Set([
+  '/index.html', '/menyu.html', '/qehveler.html', '/caylar.html', '/avadanliqlar.html',
+  '/mehsul.html', '/mexfilik.html', '/admin/index.html',
+  '/style.css', '/navigation.css', '/home-contact.css', '/menu-background.css',
+  '/menu-mobile.css', '/summer-menu.css', '/tea-mobile.css', '/gear.css',
+  '/catalog.css', '/cart.css', '/account.css', '/favorites.css', '/brand.css', '/admin/admin.css',
+  '/checkout.css', '/admin/orders.html', '/admin/orders.js',
+  '/script.js', '/storefront-products.js', '/cart-utils.js', '/coffee-shop.js',
+  '/tea-shop.js', '/tea-data.js', '/gear-shop.js', '/equipment-data.js',
+  '/product-detail.js', '/account.js', '/favorites.js', '/admin/admin.js', '/admin/admin-api.js',
+  '/checkout.js',
+  '/admin/product-values.js',
+]);
+
+function json(res, status, body, headers = {}) {
+  res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers });
+  res.end(body === undefined ? '' : JSON.stringify(body));
+}
+
+function cookieToken(req) {
+  const match = String(req.headers.cookie || '').match(/(?:^|;\s*)bcf_admin=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+async function parseJson(req, maxBytes = 1024 * 1024) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > maxBytes) {
+      const error = new Error('Request body is too large');
+      error.status = 413;
+      throw error;
+    }
+    chunks.push(chunk);
+  }
+  if (!chunks.length) return {};
+  try {
+    return JSON.parse(Buffer.concat(chunks).toString('utf8'));
+  } catch {
+    const error = new Error('Request body must be valid JSON');
+    error.status = 400;
+    throw error;
+  }
+}
+
+async function saveUploadedImage(assetsRoot, rootDir, payload) {
+  const type = UPLOAD_TYPES.get(String(payload?.type || '').toLowerCase());
+  if (!type) {
+    const error = new Error('Yalnız JPG, PNG və WebP şəkilləri yükləmək olar.');
+    error.status = 415;
+    throw error;
+  }
+  const encoded = String(payload?.data || '');
+  if (!encoded || encoded.length % 4 !== 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded)) {
+    const error = new Error('Şəkil məlumatı düzgün deyil.');
+    error.status = 400;
+    throw error;
+  }
+  const data = Buffer.from(encoded, 'base64');
+  if (!data.length || data.length > MAX_UPLOAD_BYTES) {
+    const error = new Error('Şəkil maksimum 8 MB ola bilər.');
+    error.status = 413;
+    throw error;
+  }
+  if (!type.valid(data)) {
+    const error = new Error('Fayl məzmunu seçilmiş şəkil formatına uyğun deyil.');
+    error.status = 400;
+    throw error;
+  }
+
+  const sourceName = path.parse(String(payload?.name || 'image')).name;
+  const slug = sourceName.normalize('NFKD').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 52) || 'image';
+  const fileName = `${slug}-${Date.now().toString(36)}-${crypto.randomBytes(4).toString('hex')}${type.extension}`;
+  const uploadRoot = path.join(assetsRoot, 'uploads');
+  const absolute = path.join(uploadRoot, fileName);
+  await fs.mkdir(uploadRoot, { recursive: true });
+  await fs.writeFile(absolute, data, { flag: 'wx' });
+  return path.relative(rootDir, absolute).split(path.sep).join('/');
+}
+
+async function listAssets(assetsRoot, rootDir) {
+  const result = [];
+  async function walk(directory) {
+    const entries = await fs.readdir(directory, { withFileTypes: true });
+    for (const entry of entries) {
+      const absolute = path.join(directory, entry.name);
+      if (entry.isDirectory()) await walk(absolute);
+      else if (entry.isFile() && IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase())) {
+        result.push(path.relative(rootDir, absolute).split(path.sep).join('/'));
+      }
+    }
+  }
+  await walk(assetsRoot);
+  return result.sort((a, b) => a.localeCompare(b));
+}
+
+function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, customerAuth, secureCookies = false }) {
+  const assetsRoot = path.join(rootDir, 'assets');
+
+  return async function handle(req, res) {
+    try {
+      const url = new URL(req.url, 'http://localhost');
+      let pathname;
+      try {
+        pathname = decodeURIComponent(url.pathname);
+      } catch {
+        return json(res, 400, { error: 'Invalid URL path' });
+      }
+      if (pathname.split('/').includes('..') || pathname.includes('\0') || pathname.includes('\\')) {
+        return json(res, 400, { error: 'Invalid URL path' });
+      }
+
+      if (await handleCustomerAuthRequest(req, res, pathname, {
+        database: customerDatabase, customerAuth, secureCookies, json, parseJson,
+      })) return;
+
+      if (req.method === 'GET' && pathname === '/api/products') return json(res, 200, await store.list());
+      if (req.method === 'GET' && pathname === '/api/catalog.js') {
+        const serialized = JSON.stringify(await store.list()).replace(/</g, '\\u003c');
+        res.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-store' });
+        return res.end(`window.BCF_PRODUCT_DATA=${serialized};\n`);
+      }
+      if (req.method === 'GET' && pathname.startsWith('/api/products/')) {
+        const item = await store.get(pathname.slice('/api/products/'.length));
+        return item ? json(res, 200, item) : json(res, 404, { error: 'Product not found' });
+      }
+
+      if (pathname === '/api/orders') {
+        if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+        if (!sameOrigin(req)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+        try {
+          const order = prepareOrder(await parseJson(req, 48 * 1024), await store.list());
+          const token = customerCookie(req);
+          if (token && customerDatabase && customerAuth) {
+            await customerDatabase.migrate();
+            const customer = await customerAuth.getSession(token);
+            if (customer) order.customerId = customer.id;
+          }
+          const saved = await orders.create(order);
+          return json(res, 201, { orderId: saved.id, total: saved.total });
+        } catch (error) {
+          return json(res, error.status || 500, { error: error.message });
+        }
+      }
+
+      if (pathname === '/api/account/orders') {
+        if (req.method !== 'GET') return json(res, 405, { error: 'Method not allowed' });
+        if (!customerDatabase || !customerAuth) return json(res, 503, { error: 'Hesab xidməti hazırda əlçatan deyil.' });
+        try {
+          await customerDatabase.migrate();
+          const customer = await customerAuth.getSession(customerCookie(req));
+          if (!customer) return json(res, 401, { error: 'Hesaba daxil olun.' });
+          const history = (await orders.list()).filter((order) => order.customerId === customer.id).map((order) => ({
+            id: order.id, createdAt: order.createdAt, total: order.total, status: order.status,
+            items: order.items.map(({ name, quantity, unit }) => ({ name, quantity, unit })),
+          }));
+          return json(res, 200, history);
+        } catch {
+          return json(res, 503, { error: 'Sifariş tarixçəsi hazırda əlçatan deyil.' });
+        }
+      }
+
+      if (pathname === '/api/admin/session') {
+        if (req.method !== 'GET' && !sameOrigin(req)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+        const token = cookieToken(req);
+        if (req.method === 'GET') {
+          return json(res, 200, { configured: await auth.isConfigured(), authenticated: auth.verifySession(token) });
+        }
+        if (req.method === 'POST') {
+          const body = await parseJson(req);
+          let session;
+          try {
+            session = (await auth.isConfigured()) ? await auth.login(body.password) : await auth.setup(body.password);
+          } catch (error) {
+            return json(res, 401, { error: error.message });
+          }
+          return json(res, 200, { configured: true, authenticated: true }, {
+            'set-cookie': `bcf_admin=${encodeURIComponent(session.token)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200${secureCookies ? '; Secure' : ''}`,
+          });
+        }
+        if (req.method === 'DELETE') {
+          auth.logout(token);
+          return json(res, 204, undefined, { 'set-cookie': `bcf_admin=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${secureCookies ? '; Secure' : ''}` });
+        }
+      }
+
+      if (pathname.startsWith('/api/admin/')) {
+        if (!auth.verifySession(cookieToken(req))) return json(res, 401, { error: 'Authentication required' });
+        if (req.method !== 'GET' && !sameOrigin(req)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+
+        if (req.method === 'GET' && pathname === '/api/admin/orders') return json(res, 200, await orders.list());
+        if (pathname.startsWith('/api/admin/orders/')) {
+          if (req.method !== 'PATCH') return json(res, 405, { error: 'Method not allowed' });
+          try {
+            const id = decodeURIComponent(pathname.slice('/api/admin/orders/'.length));
+            const updated = await orders.updateStatus(id, (await parseJson(req)).status);
+            return updated ? json(res, 200, updated) : json(res, 404, { error: 'Order not found' });
+          } catch (error) {
+            return json(res, error.status || 400, { error: error.message });
+          }
+        }
+
+        if (req.method === 'GET' && pathname === '/api/admin/assets') {
+          return json(res, 200, await listAssets(assetsRoot, rootDir));
+        }
+        if (req.method === 'POST' && pathname === '/api/admin/assets') {
+          try {
+            const assetPath = await saveUploadedImage(assetsRoot, rootDir, await parseJson(req, MAX_UPLOAD_BODY_BYTES));
+            return json(res, 201, { path: assetPath });
+          } catch (error) {
+            return json(res, error.status || 400, { error: error.message });
+          }
+        }
+        if (pathname === '/api/admin/products') {
+          if (req.method === 'GET') return json(res, 200, await store.list());
+          if (req.method === 'POST') {
+            try {
+              return json(res, 201, await store.create(await parseJson(req)));
+            } catch (error) {
+              return json(res, /already exists/i.test(error.message) ? 409 : 400, { error: error.message });
+            }
+          }
+        }
+        if (pathname.startsWith('/api/admin/products/')) {
+          const id = pathname.slice('/api/admin/products/'.length);
+          if (req.method === 'PATCH') {
+            try {
+              const updated = await store.update(id, await parseJson(req));
+              return updated ? json(res, 200, updated) : json(res, 404, { error: 'Product not found' });
+            } catch (error) {
+              return json(res, 400, { error: error.message });
+            }
+          }
+          if (req.method === 'DELETE') {
+            return (await store.remove(id)) ? json(res, 204) : json(res, 404, { error: 'Product not found' });
+          }
+        }
+        return json(res, 404, { error: 'Admin API route not found' });
+      }
+
+      if (!['GET', 'HEAD'].includes(req.method)) return json(res, 405, { error: 'Method not allowed' });
+      const requested = pathname === '/' ? '/index.html' : pathname.endsWith('/') ? `${pathname}index.html` : pathname;
+      const isPublicAsset = pathname.startsWith('/assets/') && IMAGE_EXTENSIONS.has(path.extname(pathname).toLowerCase());
+      if (!PUBLIC_FILES.has(requested) && !isPublicAsset) return json(res, 404, { error: 'File not found' });
+      const absolute = path.resolve(rootDir, `.${requested}`);
+      const relative = path.relative(rootDir, absolute);
+      if (relative.startsWith('..') || path.isAbsolute(relative)) return json(res, 400, { error: 'Invalid URL path' });
+      try {
+        const body = await fs.readFile(absolute);
+        const extension = path.extname(absolute).toLowerCase();
+        res.writeHead(200, { 'content-type': MIME_TYPES[extension] || 'application/octet-stream',
+          'cache-control': ['.html', '.css', '.js'].includes(extension) ? 'no-cache' : 'public, max-age=3600' });
+        res.end(req.method === 'HEAD' ? undefined : body);
+      } catch (error) {
+        if (error.code === 'ENOENT' || error.code === 'EISDIR') return json(res, 404, { error: 'File not found' });
+        throw error;
+      }
+    } catch (error) {
+      json(res, error.status || 500, { error: error.message || 'Internal server error' });
+    }
+  };
+}
+
+module.exports = { createRequestHandler, listAssets, parseJson, saveUploadedImage };

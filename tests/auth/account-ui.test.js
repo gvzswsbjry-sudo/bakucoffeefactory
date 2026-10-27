@@ -1,0 +1,41 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const root = path.join(__dirname, '../..');
+const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
+
+test('the shared storefront script loads the accessible account interface without changing the cart', () => {
+  const shared = read('script.js');
+  const account = read('account.js');
+  assert.match(shared, /account\.js/);
+  assert.match(shared, /account\.css/);
+  assert.match(account, /role="dialog"/);
+  assert.match(account, /type="tel"/);
+  assert.match(account, /type="password"/);
+  assert.match(account, /mexfilik\.html/);
+  assert.match(account, /privacyAccepted/);
+  assert.match(account, /api\/auth\/me/);
+  assert.match(account, /api\/auth\/logout/);
+  assert.match(account, /class="account-code-value"[^>]*>\+994</);
+  assert.match(account, /class="account-code-arrows"/);
+  assert.match(account, /placeholder="123456789"/);
+  assert.match(account, /\['\+994', 'Azərbaycan'\]/);
+  assert.match(account, /data-contact="phone"/);
+  assert.match(account, /data-contact="email"/);
+  assert.match(account, /name="email"[^>]*type="email"/);
+  assert.match(account, /data-provider="google"/);
+  assert.match(account, /data-provider="apple"/);
+  assert.match(account, /api\/auth\/providers/);
+  assert.doesNotMatch(account, /setItem\([^)]*password|sessionStorage/);
+});
+
+test('privacy page explains the account data and contains a contact method', () => {
+  const policy = read('mexfilik.html');
+  assert.match(policy, /Məxfilik siyasəti/);
+  assert.match(policy, /telefon nömrəsi/i);
+  assert.match(policy, /e-poçt/i);
+  assert.match(policy, /şifrə/i);
+  assert.match(policy, /070 390 10 09/);
+});

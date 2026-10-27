@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Menyu — Yeni Baku Coffee Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="menu-background.css" />
+  <link rel="stylesheet" href="summer-menu.css" />
+  <link rel="stylesheet" href="menu-mobile.css?v=20261025-tab-header1" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <span>Yeni</span>
+      <strong>Baku Coffee<br />Factory</strong>
+    </a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Ana səhifə</a>
+      <a href="qehveler.html">Qəhvələr</a>
+      <a href="caylar.html">Çaylar</a>
+      <a href="avadanliqlar.html">Avadanlıqlar</a>
+      <a class="active" href="menyu.html">Menyu</a>
+      <a href="index.html#haqqimizda">Bizimlə əlaqə</a>
+      <a href="index.html#haqqimizda">Haqqımızda</a>
+    </nav>
+    <div class="menu-tabs-bar menu-tabs-bar-mobile" aria-label="Menyu bölmələri">
+      <div class="menu-tabs" role="tablist">
+        <button class="menu-tab active" data-menu-target="mainMenu" role="tab" aria-selected="true">Ana menyu <span>01</span></button>
+        <button class="menu-tab" data-menu-target="summerMenu" role="tab" aria-selected="false">Summer menu <span>02</span></button>
+        <button class="menu-tab" data-menu-target="dessertMenu" role="tab" aria-selected="false">Desert <span>03</span></button>
+      </div>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menyunu aç" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <main class="menu-page">
+    <section class="menu-top">
+      <p class="eyebrow">Baku Coffee Factory</p>
+      <h1>Bir fincan<br /><em>seçin.</em></h1>
+    </section>
+    <div class="menu-tabs-bar">
+      <div class="menu-tabs" role="tablist">
+        <button class="menu-tab active" data-menu-target="mainMenu" role="tab" aria-selected="true">Ana menyu <span>01</span></button>
+        <button class="menu-tab" data-menu-target="summerMenu" role="tab" aria-selected="false">Summer menu <span>02</span></button>
+        <button class="menu-tab" data-menu-target="dessertMenu" role="tab" aria-selected="false">Desert <span>03</span></button>
+      </div>
+    </div>
+
+    <!-- 01 · Ana menyu -->
+    <section class="menu-panel active" id="mainMenu">
+      <div class="menu-panel-heading">
+        <p class="eyebrow">01 · Ana menyu</p>
+        <p>Qiymətlər AZN ilə göstərilib.</p>
+      </div>
+      <div class="menu-columns">
+        <div>
+          <div class="menu-group">
+            <h2>Espresso</h2>
+            <p><span>Espresso (Single)</span><b>3.80 ₼</b></p>
+            <p><span>Espresso (Double)</span><b>4.70 ₼</b></p>
+            <p><span>Triple Joy</span><b>5.90 ₼</b></p>
+          </div>
+          <div class="menu-group">
+            <h2>Americano</h2>
+            <p><span>Americano (S / M / L)</span><b>5.90 / 6.30 / 7.20 ₼</b></p>
+          </div>
+          <div class="menu-group">
+            <h2>Südlü qəhvələr</h2>
+            <p><span>Latte (S / M / L)</span><b>6.80 / 7.50 / 8.40 ₼</b></p>
+            <p><span>Espresso Macchiato</span><b>5.50 ₼</b></p>
+            <p><span>Caramel Macchiato (S / M / L)</span><b>6.10 / 7.20 / 8.00 ₼</b></p>
+            <p><span>Cappuccino (S / M / L)</span><b>6.20 / 7.30 / 8.00 ₼</b></p>
+            <p><span>Flat White (S / M)</span><b>6.70 / 7.50 ₼</b></p>
+            <p><span>Mocha (S / M)</span><b>5.90 / 6.70 ₼</b></p>
+            <p><span>Cortado (M)</span><b>5.90 ₼</b></p>
+            <p><span>Raff Coffee (S / M)</span><b>7.00 / 8.00 ₼</b></p>
+            <p><span>Spanish Latte (S / M / L)</span><b>7.00 / 8.00 / 9.00 ₼</b></p>
+            <p><span>Spanish Cortado (M)</span><b>8.00 ₼</b></p>
+          </div>
+        </div>
+        <div>
+          <div class="menu-group">
+            <h2>Soyuq içkilər</h2>
+            <p><span>Ice Latte (L)</span><b>8.40 ₼</b></p>
+            <p><span>Ice Americano (L)</span><b>7.20 ₼</b></p>
+            <p><span>Cold Brew (M)</span><b>6.90 ₼</b></p>
+          </div>
+          <div class="menu-group">
+            <h2>Alternativlər</h2>
+            <p><span>Türk qəhvəsi</span><b>9.30 ₼</b></p>
+            <p><span>İsti şokolad</span><b>9.40 ₼</b></p>
+            <p><span>İsti şokolad (Marshmello)</span><b>9.90 ₼</b></p>
+            <p><span>Filtr coffee (V60)</span><b>13.00 ₼</b></p>
+            <p><span>Baku Coffee Factory Special</span><b>13.30 ₼</b></p>
+          </div>
+          <div class="menu-group">
+            <h2>Çaylar</h2>
+            <p><span>Chai Tea Latte (S / M)</span><b>6.90 / 7.70 ₼</b></p>
+            <p><span>Çay / Yaşıl çay (600 ml)</span><b>12.00 ₼</b></p>
+            <p><span>Çay / Yaşıl çay (250 ml)</span><b>4.00 ₼</b></p>
+          </div>
+          <div class="menu-group">
+            <h2>Əlavələr</h2>
+            <p><span>Lactose Free Milk</span><b>3.00 ₼</b></p>
+            <p><span>Sirop</span><b>1.70 ₼</b></p>
+            <p><span>Darçın</span><b>1.20 ₼</b></p>
+            <p><span>Şirab</span><b>4.00 ₼</b></p>
+            <p><span>Extra Order</span><b>2.00 ₼</b></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · Summer escape -->
+    <section class="menu-panel summer-panel summer-escape" id="summerMenu">
+      <header class="summer-escape-hero">
+        <p class="summer-overline">02 · Mövsümi kolleksiya</p>
+        <h2><em>Summer</em> Escape</h2>
+        <p class="summer-intro">Soyuq qəhvə yaradımları və təravətli limonadlar.</p>
+        <span class="summer-leaf summer-leaf-left" aria-hidden="true"></span>
+        <span class="summer-leaf summer-leaf-right" aria-hidden="true"></span>
+      </header>
+
+      <section class="summer-collection" aria-labelledby="coffee-creations-title">
+        <div class="summer-collection-heading"><h3 id="coffee-creations-title">Coffee Creations</h3><span>01—04</span></div>
+        <div class="summer-drinks">
+          <article class="summer-drink">
+            <figure><img src="assets/summer-escape/bumble.jpg" alt="Bumble Coffee" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Bumble Coffee</h4><b>8.50 ₼</b></div>
+          </article>
+          <article class="summer-drink">
+            <figure><img src="assets/summer-escape/espresso-tropical.jpg" alt="Espresso Tropical" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Espresso Tropical</h4><b>7.00 ₼</b></div>
+          </article>
+          <article class="summer-drink summer-drink-flower">
+            <figure><img src="assets/summer-escape/espresso-flower.jpg" alt="Espresso Flower" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Espresso Flower</h4><b>7.00 ₼</b></div>
+          </article>
+          <article class="summer-drink summer-drink-orange">
+            <figure><img src="assets/summer-escape/orange-chocolate.jpg" alt="Orange Chocolate" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Orange Chocolate</h4><b>8.80 ₼</b></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="summer-collection" aria-labelledby="lemonades-title">
+        <div class="summer-collection-heading"><h3 id="lemonades-title">Refreshing Lemonades</h3><span>05—08</span></div>
+        <div class="summer-drinks">
+          <article class="summer-drink summer-drink-mojito">
+            <figure><img src="assets/summer-escape/mojito.jpg" alt="Mojito" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Mojito</h4><b>7.00 ₼</b></div>
+          </article>
+          <article class="summer-drink">
+            <figure><img src="assets/summer-escape/strawberry-lemonade.jpg" alt="Strawberry Lemonade" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Strawberry Lemonade</h4><b>6.00 ₼</b></div>
+          </article>
+          <article class="summer-drink summer-drink-mango">
+            <figure><img src="assets/summer-escape/mango-maracuya.jpg" alt="Mango Maracuya" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Mango Maracuya</h4><b>6.00 ₼</b></div>
+          </article>
+          <article class="summer-drink summer-drink-blue">
+            <figure><img src="assets/summer-escape/blu-curacao.jpg" alt="Blu Curaçao" width="933" height="1400" loading="lazy" decoding="async" /></figure>
+            <div><h4>Blu Curaçao</h4><b>6.00 ₼</b></div>
+          </article>
+        </div>
+      </section>
+    </section>
+
+    <!-- 03 · Desert -->
+    <section class="menu-panel" id="dessertMenu">
+      <div class="menu-panel-heading">
+        <p class="eyebrow">03 · Desert menyusu</p>
+        <p>Təzə bişirilmiş şirniyyatlar · Qiymətlər AZN ilə göstərilib.</p>
+      </div>
+      <div class="menu-columns dessert-columns">
+        <div>
+          <div class="menu-group">
+            <h2>Desertlər</h2>
+            <p><span>San Sebastian</span><b>9.00 ₼</b></p>
+            <p><span>San Sebastian Brownie</span><b>10.00 ₼</b></p>
+            <p><span>Ballı tort</span><b>7.00 ₼</b></p>
+            <p><span>Napoleon</span><b>7.00 ₼</b></p>
+            <p><span>Tiramisu</span><b>9.00 ₼</b></p>
+            <p><span>Carrot cake</span><b>8.00 ₼</b></p>
+            <p><span>Crepe Lotus</span><b>8.00 ₼</b></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand" href="index.html">
+      <span>Yeni</span>
+      <strong>Baku Coffee<br />Factory</strong>
+    </a>
+    <p>© 2026 · Bakı, Azərbaycan</p>
+  </footer>
+
+  <script src="script.js?v=20261025-nozoom1"></script>
+</body>
+</html>

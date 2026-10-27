@@ -1,0 +1,1135 @@
+[
+  {
+    "id": "colombia",
+    "category": "coffee",
+    "name": "Colombia",
+    "price": 15,
+    "unit": "g",
+    "image": "assets/coffee/colombia.png",
+    "description": "Yumşaq şirinliyi, canlı meyvə xarakteri və kakaolu bitişi ilə balanslı gündəlik qəhvə.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 1,
+    "meta": {
+      "weight": 100,
+      "acidity": 3,
+      "body": 3,
+      "balance": 4,
+      "tasteNotes": "Qırmızı alma, karamel, süd şokoladı, yüngül fındıq."
+    },
+    "variants": []
+  },
+  {
+    "id": "guatemala",
+    "category": "coffee",
+    "name": "Guatemala",
+    "price": 12,
+    "unit": "g",
+    "image": "assets/coffee/guatemala.png",
+    "description": "Dərin, klassik və şokoladlı gövdəsi olan çox yönlü qəhvə.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 2,
+    "meta": {
+      "weight": 100,
+      "acidity": 3.5,
+      "body": 3.5,
+      "balance": 4,
+      "tasteNotes": "Tünd şokolad, badam, qəhvəyi şəkər, qurudulmuş portağal."
+    },
+    "variants": []
+  },
+  {
+    "id": "brasil",
+    "category": "coffee",
+    "name": "Brasil",
+    "price": 10,
+    "unit": "g",
+    "image": "assets/coffee/brasil.png",
+    "description": "Aşağı turşuluqlu, kremli və şokoladlı espresso profili.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 3,
+    "meta": {
+      "weight": 100,
+      "acidity": 2,
+      "body": 4,
+      "balance": 4.5,
+      "tasteNotes": "Fındıq, kakao, qəhvəyi şəkər, karamel."
+    },
+    "variants": []
+  },
+  {
+    "id": "honduras",
+    "category": "coffee",
+    "name": "Honduras",
+    "price": 11,
+    "unit": "g",
+    "image": "assets/coffee/honduras.png",
+    "description": "Meyvə təravəti və kakaolu rahatlığı birləşdirən canlı profil.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 4,
+    "meta": {
+      "weight": 100,
+      "acidity": 3,
+      "body": 3,
+      "balance": 4,
+      "tasteNotes": "Qırmızı giləmeyvə, kakao, qəhvəyi şəkər, yumşaq sitrus."
+    },
+    "variants": []
+  },
+  {
+    "id": "robusta",
+    "category": "coffee",
+    "name": "Robusta",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/coffee/robusta.png",
+    "description": "Güclü, intensiv və dolğun içim üçün seçilən qəhvə.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 5,
+    "meta": {
+      "weight": 100,
+      "acidity": 1.5,
+      "body": 5,
+      "balance": 3,
+      "tasteNotes": "Tünd kakao, qovrulmuş qoz, odunsu tonlar, ədviyyəli bitiş."
+    },
+    "variants": []
+  },
+  {
+    "id": "costa-rica",
+    "category": "coffee",
+    "name": "Costa Rica",
+    "price": 13,
+    "unit": "g",
+    "image": "assets/coffee/costa-rica.png",
+    "description": "Parlaq turşuluq və balabənzər şirinliyi olan təmiz fincan.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 6,
+    "meta": {
+      "weight": 100,
+      "acidity": 4,
+      "body": 3,
+      "balance": 4,
+      "tasteNotes": "Portağal, sarı meyvələr, bal, yüngül kakao."
+    },
+    "variants": []
+  },
+  {
+    "id": "efiopiya",
+    "category": "coffee",
+    "name": "Efiopiya",
+    "price": 13,
+    "unit": "g",
+    "image": "assets/coffee-origins/efiopiya.jpeg",
+    "description": "Ətirli, zərif və parlaq xarakterli, çayabənzər yüngül fincan.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 7,
+    "meta": {
+      "weight": 100,
+      "acidity": 4.5,
+      "body": 2.5,
+      "balance": 4,
+      "tasteNotes": "Berqamot, yasəmən, limon qabığı və çəyirdəkli meyvələr."
+    },
+    "variants": []
+  },
+  {
+    "id": "keniya",
+    "category": "coffee",
+    "name": "Keniya",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/coffee-origins/keniya.jpeg",
+    "description": "Şirəli meyvə xarakteri və parlaq turşuluğu ilə ifadəli qəhvə.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 8,
+    "meta": {
+      "weight": 100,
+      "acidity": 4.5,
+      "body": 3,
+      "balance": 4,
+      "tasteNotes": "Qara qarağat, qırmızı giləmeyvə, qreypfrut və qamış şəkəri."
+    },
+    "variants": []
+  },
+  {
+    "id": "decaf",
+    "category": "coffee",
+    "name": "Decaf",
+    "price": 12,
+    "unit": "g",
+    "image": "assets/coffee-origins/decaf.jpeg",
+    "description": "Kofeinsiz, yumşaq və dolğun qəhvə seçimi.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 9,
+    "meta": {
+      "weight": 100,
+      "acidity": 2,
+      "body": 3.5,
+      "balance": 4,
+      "tasteNotes": "Karamel, kakao, badam və yumşaq quru meyvə çalarları."
+    },
+    "variants": []
+  },
+  {
+    "id": "uqanda",
+    "category": "coffee",
+    "name": "Uqanda",
+    "price": 11,
+    "unit": "g",
+    "image": "assets/coffee-origins/uqanda.jpeg",
+    "description": "Dolğun bədənli, aşağı–orta turşuluqlu və uzun kakaolu fincan.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 10,
+    "meta": {
+      "weight": 100,
+      "acidity": 2.5,
+      "body": 4,
+      "balance": 3.5,
+      "tasteNotes": "Tünd şokolad, quru gavalı, isti ədviyyat və qovrulmuş qoz."
+    },
+    "variants": []
+  },
+  {
+    "id": "1001-gece",
+    "category": "tea",
+    "name": "1001 Gecə Çayı",
+    "price": 7,
+    "unit": "g",
+    "image": "assets/tea-packages/1001-gece.jpg",
+    "description": "Yaşıl və tünd çay yarpaqlarının rəngli çiçək ləçəkləri və meyvə parçaları ilə birləşdiyi zərif qarışıqdır. İlk qurtumda təravətli yarpaq dadı, ardınca yumşaq çiçək ətri və meyvəli şirinlik hiss olunur. Orta gövdəli və uzun, ətirli bitişlidir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 1,
+    "meta": {
+      "weight": 100,
+      "kind": "Aromatik qarışıq · çiçəkli",
+      "tasteNotes": "Çiçək, sitrus, quru meyvə",
+      "brew": "90°C · 3–4 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "admiral",
+    "category": "tea",
+    "name": "Admiral",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/tea-packages/admiral.jpg",
+    "description": "Qara çayın güclü əsasını mavi və açıq rəngli çiçək ləçəkləri, eləcə də giləmeyvə toxunuşları yumşaldır. Dəmləndikdə dərin kəhrəba rəngi, aydın qara çay xarakteri və zərif meyvə ətri verir. Səhər və günorta üçün balanslı, ifadəli seçimdir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 2,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · dolğun",
+      "tasteNotes": "Qara çay, giləmeyvə, çiçək",
+      "brew": "95°C · 3–5 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "geysa-qara",
+    "category": "tea",
+    "name": "Geyşa Qara",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/tea-packages/geysa-qara.jpg",
+    "description": "Qara çay yarpaqları iri ağ və narıncı çiçəklərlə tamamlanır. Dolğun çay gövdəsinin içində yumşaq balabənzər şirinlik və zərif çiçək ətri açılır. Nə həddindən artıq sərt, nə də çox yüngüldür; rahat içimli, tarazlı profili var.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 3,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · çiçəkli",
+      "tasteNotes": "Bal, çiçək ləçəyi, yüngül ədviyyə",
+      "brew": "95°C · 3–4 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "jasmin",
+    "category": "tea",
+    "name": "Jasmin Çayı",
+    "price": 2,
+    "unit": "piece",
+    "image": "assets/tea-packages/jasmin.jpg",
+    "description": "İsti suda tədricən açılan yaşıl çay kürələri vizual dəmləmə ritualı yaradır. Yasəmənin təmiz çiçək ətri yaşıl çayın yüngül bitki tonları ilə birləşir. Aşağı temperaturda dəmləndikdə acılaşmadan yumşaq, təravətli və ipək kimi içim verir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 4,
+    "meta": {
+      "weight": 1,
+      "kind": "Yaşıl çay · əl ilə bağlanmış",
+      "tasteNotes": "Yasəmən, təzə ot, ağ çiçək",
+      "brew": "80–85°C · 3–4 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "limon",
+    "category": "tea",
+    "name": "Limon Çayı",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/tea-packages/limon.jpg",
+    "description": "Qara çay, qurudulmuş limon dilimləri, sitrus qabığı və bitki ləçəklərinin canlı qarışığıdır. Parlaq limon ətri çayın dolğunluğunu yüngülləşdirir, sonda isə təmiz və azca turşməzə hiss buraxır. İsti olduğu kimi buzla da ifadəli qalır.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 5,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · sitruslu",
+      "tasteNotes": "Limon qabığı, sitrus, qara çay",
+      "brew": "95°C · 3–4 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "malina",
+    "category": "tea",
+    "name": "Malina Şərbəti",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/tea-packages/malina-serbeti.jpg",
+    "description": "Tünd çay yarpaqları, meyvə parçaları və açıq rəngli ləçəklərlə hazırlanmış ətirli qarışıqdır. Moruq xarakterli şirin-turş giləmeyvə dadı qara çayın dərinliyi ilə tarazlanır. Yumşaq şirinliyi və meyvəli bitişi desertlərlə yaxşı uyğunlaşır.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 6,
+    "meta": {
+      "weight": 100,
+      "kind": "Aromatik qara çay · giləmeyvəli",
+      "tasteNotes": "Moruq, qırmızı meyvə, yüngül karamel",
+      "brew": "95°C · 4 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "meyveli",
+    "category": "tea",
+    "name": "Meyvəli Çay",
+    "price": 7,
+    "unit": "g",
+    "image": "assets/tea-packages/meyveli.jpg",
+    "description": "Qurudulmuş meyvələr, giləmeyvə və hibiskus tonlarının rəngli qarışığıdır. Çay yarpağından daha çox meyvə xarakteri önə çıxır: dolğun ətir, təbii turşuluq və kompotu xatırladan yumşaq şirinlik verir. Uzun dəmləmə dadı daha dərin edir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 7,
+    "meta": {
+      "weight": 100,
+      "kind": "Meyvə infuziyası · şirin-turş",
+      "tasteNotes": "Alma, giləmeyvə, hibiskus",
+      "brew": "95°C · 5–7 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "nar",
+    "category": "tea",
+    "name": "Nar Çayı",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/tea-packages/nar.jpg",
+    "description": "Qara çay yarpaqlarını qırmızı meyvə parçaları və çiçək elementləri tamamlayır. Narın tanış şirin-turş xarakteri dəmləməyə parlaq ətir və canlı bitiş verir. Dolğun, lakin ağır olmayan profili həm tək, həm də az miqdarda bal ilə içmək üçün uyğundur.",
+    "active": true,
+    "stock": {
+      "status": "out",
+      "quantity": null
+    },
+    "sortOrder": 8,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · meyvəli",
+      "tasteNotes": "Nar, qırmızı giləmeyvə, çiçək",
+      "brew": "95°C · 4–5 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "portagal",
+    "category": "tea",
+    "name": "Portağal Çayı",
+    "price": 7,
+    "unit": "g",
+    "image": "assets/tea-packages/portagal.jpg",
+    "description": "Qara çayın dərin dadı qurudulmuş portağal dilimləri, qabıq və sarı ləçəklərlə canlanır. Əvvəlcə şirin sitrus ətri, sonra isə yüngül qabıq acılığı və isti çay gövdəsi hiss olunur. Xüsusilə sərin havada ətirli və rahat içimli seçimdir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 9,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · sitruslu",
+      "tasteNotes": "Portağal, sitrus qabığı, bal",
+      "brew": "95°C · 3–4 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "qarpiz",
+    "category": "tea",
+    "name": "Qarpız Çayı",
+    "price": 0,
+    "unit": "g",
+    "image": "assets/tea-packages/qarpiz.jpg",
+    "description": "Qara çay bazası qırmızı meyvə parçaları və yaşıl bitki elementləri ilə tamamlanır. Qarpızı xatırladan sulu, şirin ətir tünd yarpaq dadını daha yüngül göstərir. İsti dəmləndikdən sonra soyudulub buzla servis edildikdə meyvə xarakteri daha aydın duyulur.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 10,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · yay meyvəli",
+      "tasteNotes": "Qarpız, qırmızı meyvə, təzə bitki",
+      "brew": "95°C · 4 dəqiqə",
+      "pricePending": true
+    },
+    "variants": []
+  },
+  {
+    "id": "geysa-yasil",
+    "category": "tea",
+    "name": "Geyşa Yaşıl",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/tea-packages/geysa-yasil.jpg",
+    "description": "Yaşıl çay yarpaqları ağ və sarı çiçək ləçəkləri ilə tamamlanan zərif, ətirli qarışıqdır. Dəmləndikdə təzə bitki xarakteri, yumşaq çiçək ətri və yüngül təbii şirinlik açılır. Aşağı temperaturda hazırlandıqda təmiz, incə və acılaşmayan içim verir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 11,
+    "meta": {
+      "weight": 100,
+      "kind": "Yaşıl çay · çiçəkli",
+      "tasteNotes": "Ağ çiçək, təzə ot, yumşaq bal",
+      "brew": "80–85°C · 3 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "yasil-cay",
+    "category": "tea",
+    "name": "Yaşıl Çay",
+    "price": 0,
+    "unit": "g",
+    "image": "assets/tea-packages/yasil-cay.jpg",
+    "description": "Təmiz yarpaq xarakterini ön plana çıxaran gündəlik yaşıl çaydır. Yumşaq bitki ətri, yüngül mineral hiss və təravətli bitiş verir. Qaynar olmayan su ilə qısa dəmləndikdə yarpağın təbii şirinliyi qorunur və sərtlik yaranmır.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 12,
+    "meta": {
+      "weight": 100,
+      "kind": "Yaşıl çay · klassik",
+      "tasteNotes": "Təzə ot, yaşıl yarpaq, yüngül şirinlik",
+      "brew": "75–80°C · 2–3 dəqiqə",
+      "pricePending": true
+    },
+    "variants": []
+  },
+  {
+    "id": "mango-kuresi",
+    "category": "tea",
+    "name": "Mango Kürəsi",
+    "price": 2.4,
+    "unit": "piece",
+    "image": "assets/tea-packages/mango-kuresi.jpg",
+    "description": "Əl ilə bağlanmış çay kürəsi isti suda tədricən açılaraq həm vizual, həm də ətirli dəmləmə təcrübəsi yaradır. Yaşıl çayın yumşaq bitki tonları tropik meyvəni xatırladan şirin ətirlə birləşir. Şüşə dəmlikdə servis üçün xüsusilə uyğundur.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 13,
+    "meta": {
+      "weight": 1,
+      "kind": "Bağlanmış yaşıl çay · meyvəli",
+      "tasteNotes": "Mango, tropik meyvə, yumşaq çiçək",
+      "brew": "80–85°C · 4–5 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "mango-cayi",
+    "category": "tea",
+    "name": "Mango Çayı",
+    "price": 0,
+    "unit": "g",
+    "image": "assets/tea-packages/mango-cayi.jpg",
+    "description": "Qara çay yarpaqları meyvə parçaları və rəngli ləçəklərlə zənginləşdirilmiş aromatik qarışıqdır. Manqonu xatırladan şirin, yetişmiş meyvə ətri qara çayın dolğun gövdəsini yumşaldır. İsti servisə də, soyudulub buzla içilməyə də uyğundur.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 14,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · tropik meyvəli",
+      "tasteNotes": "Mango, yetişmiş meyvə, çiçək ləçəyi",
+      "brew": "95°C · 3–4 dəqiqə",
+      "pricePending": true
+    },
+    "variants": []
+  },
+  {
+    "id": "qara-cay",
+    "category": "tea",
+    "name": "Qara Çay",
+    "price": 7,
+    "unit": "g",
+    "image": "assets/tea-packages/qara-cay.jpg",
+    "description": "Saf yarpaq xarakterli, dolğun və aydın dəmlənən klassik qara çaydır. Kəhrəba rəngi, isti malt çalarları və uzun, təmiz bitişi ilə səhər süfrəsi və gündəlik çay fasilələri üçün rahat seçimdir. İstəyə görə limon və ya az miqdarda südlə servis edilə bilər.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 15,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · klassik",
+      "tasteNotes": "Malt, tünd bal, quru ağac",
+      "brew": "95°C · 3–5 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "jasminli-qara",
+    "category": "tea",
+    "name": "Jasminli Qara Çay",
+    "price": 7,
+    "unit": "g",
+    "image": "assets/tea-packages/jasminli-qara-cay.jpg",
+    "description": "Tünd çay yarpaqları jasmin çiçəklərinin parlaq, təmiz ətri ilə birləşir. Qara çayın dolğunluğu çiçəkli aromanı daşıyır, jasmin isə bitişə zəriflik və təravət əlavə edir. Klassik qara çaydan daha ətirli, yaşıl jasmin çayından isə daha gövdəlidir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 16,
+    "meta": {
+      "weight": 100,
+      "kind": "Qara çay · jasminli",
+      "tasteNotes": "Jasmin, qara çay, ağ çiçək",
+      "brew": "90–95°C · 3 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "hibiskus",
+    "category": "tea",
+    "name": "Hibiskus",
+    "price": 8,
+    "unit": "g",
+    "image": "assets/tea-packages/hibiskus.jpg",
+    "description": "Hibiskus ləçəkləri və meyvə parçalarından ibarət kofeinsiz, canlı rəngli infuziyadır. Parlaq turşuluq, qırmızı meyvə xarakteri və təmiz bitiş verir. İsti içildikdə dolğun və rahat, buzla servis edildikdə isə xüsusilə təravətli olur.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 17,
+    "meta": {
+      "weight": 100,
+      "kind": "Bitki infuziyası · turşməzə",
+      "tasteNotes": "Hibiskus, qırmızı giləmeyvə, sitrus",
+      "brew": "95°C · 5–7 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
+  },
+  {
+    "id": "french-press",
+    "category": "equipment",
+    "name": "French Press",
+    "price": 25,
+    "unit": "piece",
+    "image": "assets/equipment/french-press.jpg",
+    "description": "350 ml, 600 ml və 850 ml ölçülərdə sadə və dolğun dəmləmə üçün klassik pres.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 15,
+    "meta": {
+      "equipmentCategory": "brewing",
+      "categoryLabel": "Dəmləmə",
+      "imageFit": "cover"
+    },
+    "variants": [
+      {
+        "id": "french-press",
+        "name": "600 ml",
+        "price": 25,
+        "image": "assets/equipment/french-press.jpg",
+        "color": "#8f8982",
+        "alt": "600 millilitrlik şüşə və paslanmayan polad French Press"
+      },
+      {
+        "id": "french-press-350",
+        "name": "350 ml",
+        "price": 20,
+        "image": "assets/equipment/french-press.jpg",
+        "color": "#b7aaa0",
+        "alt": "350 millilitrlik şüşə və paslanmayan polad French Press"
+      },
+      {
+        "id": "french-press-850",
+        "name": "850 ml",
+        "price": 30,
+        "image": "assets/equipment/french-press.jpg",
+        "color": "#625d57",
+        "alt": "850 millilitrlik şüşə və paslanmayan polad French Press"
+      }
+    ]
+  },
+  {
+    "id": "wood-grinder",
+    "category": "equipment",
+    "name": "Əl dəyirmanı",
+    "price": 55,
+    "unit": "piece",
+    "image": "assets/equipment/manual-grinder-wood.jpg",
+    "description": "Klassik görünüşlü, mexaniki üyütmə üçün əl dəyirmanı.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 2,
+    "meta": {
+      "equipmentCategory": "grinder",
+      "categoryLabel": "Dəyirman",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "wood-grinder",
+        "name": "Klassik taxta",
+        "price": 55,
+        "image": "assets/equipment/manual-grinder-wood.jpg",
+        "color": "#76513a",
+        "alt": "Taxta gövdəli əl qəhvə dəyirmanı"
+      }
+    ]
+  },
+  {
+    "id": "ornate-manual-grinder",
+    "category": "equipment",
+    "name": "Naxışlı əl dəyirmanı",
+    "price": 55,
+    "unit": "piece",
+    "image": "assets/equipment/ornate-manual-grinder.jpg",
+    "description": "Bürünc naxışlı gövdə və mexaniki üyütmə sistemi ilə klassik əl dəyirmanı.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 3,
+    "meta": {
+      "equipmentCategory": "grinder",
+      "categoryLabel": "Dəyirman",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "ornate-manual-grinder",
+        "name": "Naxışlı bürünc",
+        "price": 55,
+        "image": "assets/equipment/ornate-manual-grinder.jpg",
+        "color": "#756044",
+        "alt": "Bürünc rəngli naxışlı əl qəhvə dəyirmanı"
+      }
+    ]
+  },
+  {
+    "id": "moka-pot",
+    "category": "equipment",
+    "name": "Moka Pot",
+    "price": 90,
+    "unit": "piece",
+    "image": "assets/equipment/moka-pot.jpg",
+    "description": "Ocaq üzərində güclü və aromatik qəhvə hazırlamaq üçün klassik dəmləyici.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 4,
+    "meta": {
+      "equipmentCategory": "brewing",
+      "categoryLabel": "Dəmləmə",
+      "imageFit": "cover"
+    },
+    "variants": [
+      {
+        "id": "moka-pot-steel",
+        "name": "Polad",
+        "price": 90,
+        "image": "assets/equipment/moka-pot.jpg",
+        "color": "#b7b7b2",
+        "alt": "Paslanmayan poladdan Moka Pot"
+      },
+      {
+        "id": "moka-pot-gray",
+        "name": "Boz",
+        "price": 90,
+        "image": "assets/equipment/classic-moka-pot-gray.jpg",
+        "color": "#696866",
+        "alt": "Boz xallı klassik Moka Pot"
+      }
+    ]
+  },
+  {
+    "id": "cezve",
+    "category": "equipment",
+    "name": "Naxışlı cezvə",
+    "price": 70,
+    "unit": "piece",
+    "image": "assets/equipment/brass-cezve.jpg",
+    "description": "Türk qəhvəsini ənənəvi üsulla hazırlamaq üçün cezvə.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 5,
+    "meta": {
+      "equipmentCategory": "brewing",
+      "categoryLabel": "Dəmləmə",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "cezve",
+        "name": "Klassik naxışlı",
+        "price": 70,
+        "image": "assets/equipment/brass-cezve.jpg",
+        "color": "#a9703e",
+        "alt": "Naxışlı mis rəngli cezvə"
+      },
+      {
+        "id": "cezve-classic",
+        "name": "Sadə bürünc",
+        "price": 70,
+        "image": "assets/equipment/brass-cezve-classic.jpg",
+        "color": "#b18a45",
+        "alt": "Taxta saplı klassik bürünc cezvə"
+      },
+      {
+        "id": "cezve-fluted",
+        "name": "Yivli bürünc",
+        "price": 70,
+        "image": "assets/equipment/brass-cezve-fluted.jpg",
+        "color": "#aa843d",
+        "alt": "Taxta saplı yivli bürünc cezvə"
+      },
+      {
+        "id": "cezve-lidded",
+        "name": "Qapaqlı bürünc",
+        "price": 75,
+        "image": "assets/equipment/brass-cezve-lidded.jpg",
+        "color": "#a08042",
+        "alt": "Taxta saplı qapaqlı bürünc cezvə"
+      }
+    ]
+  },
+  {
+    "id": "gooseneck-kettle",
+    "category": "equipment",
+    "name": "Gooseneck çaydan",
+    "price": 55,
+    "unit": "piece",
+    "image": "assets/equipment/gooseneck-kettle.jpg",
+    "description": "V60 və filtr qəhvə üçün su axınını dəqiq idarə edir.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 6,
+    "meta": {
+      "equipmentCategory": "kettle",
+      "categoryLabel": "Çaydan",
+      "imageFit": "cover"
+    },
+    "variants": [
+      {
+        "id": "gooseneck-kettle",
+        "name": "Polad",
+        "price": 55,
+        "image": "assets/equipment/gooseneck-kettle.jpg",
+        "color": "#a9a8a4",
+        "alt": "Paslanmayan poladdan qu quşu ağızlı çaydan"
+      }
+    ]
+  },
+  {
+    "id": "dallah",
+    "category": "equipment",
+    "name": "Naxışlı Dallah",
+    "price": 3,
+    "unit": "piece",
+    "image": "assets/equipment/decorative-dallah.jpg",
+    "description": "Qəhvə təqdimatına ənənəvi və zərif görünüş verən qəhvədan.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 7,
+    "meta": {
+      "equipmentCategory": "service",
+      "categoryLabel": "Servis",
+      "imageFit": "cover"
+    },
+    "variants": [
+      {
+        "id": "dallah-decorative",
+        "name": "Yaşıl daşlı",
+        "price": 3,
+        "image": "assets/equipment/decorative-dallah.jpg",
+        "color": "#64705c",
+        "alt": "Yaşıl daşlı dekorativ Dallah qəhvədan"
+      },
+      {
+        "id": "dallah-silver",
+        "name": "Gümüşü",
+        "price": 3,
+        "image": "assets/equipment/silver-dallah.jpg",
+        "color": "#c2c1bd",
+        "alt": "Naxışlı gümüşü rəngli Dallah qəhvədan"
+      }
+    ]
+  },
+  {
+    "id": "manual-press",
+    "category": "equipment",
+    "name": "Manual Press",
+    "price": 80,
+    "unit": "piece",
+    "image": "assets/equipment/manual-press.jpg",
+    "description": "Sürətli dəmləmə və rahat daşınma üçün yığcam əl presi.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 8,
+    "meta": {
+      "equipmentCategory": "brewing",
+      "categoryLabel": "Dəmləmə",
+      "imageFit": "cover"
+    },
+    "variants": [
+      {
+        "id": "manual-press",
+        "name": "Qara",
+        "price": 80,
+        "image": "assets/equipment/manual-press.jpg",
+        "color": "#262625",
+        "alt": "Silindrik əl presi dəmləyici"
+      }
+    ]
+  },
+  {
+    "id": "wheel-grinder",
+    "category": "equipment",
+    "name": "Çarxlı əl dəyirmanı",
+    "price": 95,
+    "unit": "piece",
+    "image": "assets/equipment/wheel-grinder.jpg",
+    "description": "Möhkəm metal gövdəli, klassik çarx mexanizmi ilə.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 1,
+    "meta": {
+      "equipmentCategory": "grinder",
+      "categoryLabel": "Dəyirman",
+      "imageFit": "cover"
+    },
+    "variants": [
+      {
+        "id": "wheel-grinder",
+        "name": "Bürünc",
+        "price": 95,
+        "image": "assets/equipment/wheel-grinder.jpg",
+        "color": "#755037",
+        "alt": "Böyük çarxlı klassik əl qəhvə dəyirmanı"
+      }
+    ]
+  },
+  {
+    "id": "glass-server",
+    "category": "equipment",
+    "name": "Şüşə server · 400 ml",
+    "price": 38,
+    "unit": "piece",
+    "image": "assets/equipment/glass-server-400ml.jpg",
+    "description": "Filtr qəhvəni dəmləmək və səliqəli təqdim etmək üçün.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 10,
+    "meta": {
+      "equipmentCategory": "service",
+      "categoryLabel": "Servis",
+      "imageFit": "cover"
+    },
+    "variants": [
+      {
+        "id": "glass-server",
+        "name": "Şüşə",
+        "price": 38,
+        "image": "assets/equipment/glass-server-400ml.jpg",
+        "color": "#d7d1c7",
+        "alt": "Qara tutacaqlı 400 millilitrlik şüşə server"
+      }
+    ]
+  },
+  {
+    "id": "azerbaijan-coffee-set",
+    "category": "equipment",
+    "name": "Azərbaycan qəhvə dəsti",
+    "price": 83,
+    "unit": "piece",
+    "image": "assets/equipment/azerbaijan-coffee-set-bronze.jpg",
+    "description": "Cezvə, iki fincan və servis detalları ilə zərif hədiyyə dəsti.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 11,
+    "meta": {
+      "equipmentCategory": "service",
+      "categoryLabel": "Servis",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "azerbaijan-set-bronze",
+        "name": "Bürünc",
+        "price": 83,
+        "image": "assets/equipment/azerbaijan-coffee-set-bronze.jpg",
+        "color": "#75503b",
+        "alt": "Taxta qutuda bürünc rəngli Azərbaycan qəhvə dəsti"
+      },
+      {
+        "id": "azerbaijan-set-silver",
+        "name": "Gümüşü",
+        "price": 83,
+        "image": "assets/equipment/azerbaijan-coffee-set-silver.jpg",
+        "color": "#b7b3ad",
+        "alt": "Taxta qutuda gümüşü rəngli Azərbaycan qəhvə dəsti"
+      }
+    ]
+  },
+  {
+    "id": "espresso-tamper",
+    "category": "equipment",
+    "name": "Espresso tamper",
+    "price": 58,
+    "unit": "piece",
+    "image": "assets/equipment/espresso-tamper-wood.jpg",
+    "description": "Qəhvəni portafilterdə bərabər sıxmaq üçün möhkəm və rahat tamper.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 12,
+    "meta": {
+      "equipmentCategory": "accessory",
+      "categoryLabel": "Aksesuar",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "tamper-wood",
+        "name": "Taxta",
+        "price": 58,
+        "image": "assets/equipment/espresso-tamper-wood.jpg",
+        "color": "#7a563d",
+        "alt": "Taxta üstlü qara espresso tamperi"
+      },
+      {
+        "id": "tamper-silver",
+        "name": "Gümüşü",
+        "price": 55,
+        "image": "assets/equipment/espresso-tamper-silver.jpg",
+        "color": "#c6c5c0",
+        "alt": "Gümüşü rəngli espresso tamperi"
+      },
+      {
+        "id": "tamper-black",
+        "name": "Qara",
+        "price": 55,
+        "image": "assets/equipment/espresso-tamper-black.jpg",
+        "color": "#242321",
+        "alt": "Qara rəngli espresso tamperi"
+      }
+    ]
+  },
+  {
+    "id": "oriental-serving-set",
+    "category": "equipment",
+    "name": "Şərq üslublu servis dəsti",
+    "price": 120,
+    "unit": "piece",
+    "image": "assets/equipment/oriental-serving-set-six-cup.jpg",
+    "description": "Naxışlı fincanlar, şəkər qabı və altlıqdan ibarət servis dəsti.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 13,
+    "meta": {
+      "equipmentCategory": "service",
+      "categoryLabel": "Servis",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "oriental-serving-set-six-cup",
+        "name": "6 fincanlı",
+        "price": 120,
+        "image": "assets/equipment/oriental-serving-set-six-cup.jpg",
+        "color": "#5e4939",
+        "alt": "Naxışlı metal altlıqda altı fincanlı Şərq üslublu servis dəsti"
+      },
+      {
+        "id": "oriental-serving-set",
+        "name": "2 fincanlı",
+        "price": 72,
+        "image": "assets/equipment/oriental-serving-set.jpg",
+        "color": "#766153",
+        "alt": "Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti"
+      }
+    ]
+  },
+  {
+    "id": "fincan",
+    "category": "equipment",
+    "name": "Fincan",
+    "price": 12,
+    "unit": "piece",
+    "image": "assets/catalog/fincan.jpg",
+    "description": "",
+    "active": true,
+    "stock": {
+      "status": "counted",
+      "quantity": 1
+    },
+    "sortOrder": 11,
+    "meta": {},
+    "variants": []
+  },
+  {
+    "id": "millifincan",
+    "category": "equipment",
+    "name": "Milli Fincan(qaşıqlı)",
+    "price": 18,
+    "unit": "piece",
+    "image": "assets/catalog/milli-fincan.jpg",
+    "description": "",
+    "active": true,
+    "stock": {
+      "status": "counted",
+      "quantity": 3
+    },
+    "sortOrder": 11,
+    "meta": {},
+    "variants": []
+  }
+]

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>İdarəetmə — Baku Coffee Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <main class="auth-screen" id="authView" hidden>
+    <section class="auth-card" id="setupPanel" hidden>
+      <p class="eyebrow">İLK QURAŞDIRMA</p>
+      <h1>Admin girişini yaradın.</h1>
+      <p>Bu şifrə yalnız bu MacBook-da saxlanılan məhsulları idarə etmək üçündür.</p>
+      <form id="setupForm">
+        <label for="setupPassword">Yeni şifrə</label>
+        <input id="setupPassword" name="password" type="password" minlength="6" autocomplete="new-password" required />
+        <label for="setupPasswordConfirm">Şifrəni təkrar edin</label>
+        <input id="setupPasswordConfirm" name="passwordConfirm" type="password" minlength="6" autocomplete="new-password" required />
+        <button type="submit">Admin panelini yarat</button>
+      </form>
+    </section>
+    <section class="auth-card" id="loginPanel" hidden>
+      <p class="eyebrow">YERLİ İDARƏETMƏ</p>
+      <h1>Admin panelinə giriş.</h1>
+      <p>Məhsulları, qiymətləri, şəkilləri və stok vəziyyətini idarə edin.</p>
+      <form id="loginForm">
+        <label for="loginPassword">Şifrə</label>
+        <input id="loginPassword" name="password" type="password" autocomplete="current-password" required />
+        <button type="submit">Daxil ol</button>
+      </form>
+    </section>
+    <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+  </main>
+
+  <div class="admin-shell" id="adminApp" hidden>
+    <aside class="admin-sidebar">
+      <a class="admin-brand" href="../index.html" target="_blank" rel="noreferrer">
+        <span>YENİ</span><strong>Baku Coffee<br />Factory</strong><small>İDARƏETMƏ</small>
+      </a>
+      <nav id="categoryNav" aria-label="Məhsul kateqoriyaları">
+        <button class="category-button active" type="button" data-category="all"><span>Hamısı</span><strong id="countAll">0</strong></button>
+        <button class="category-button" type="button" data-category="coffee"><span>Qəhvələr</span><strong id="countCoffee">0</strong></button>
+        <button class="category-button" type="button" data-category="tea"><span>Çaylar</span><strong id="countTea">0</strong></button>
+        <button class="category-button" type="button" data-category="equipment"><span>Avadanlıqlar</span><strong id="countEquipment">0</strong></button>
+        <a class="category-button" href="orders.html"><span>Sifarişlər</span><strong>↗</strong></a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="../index.html" target="_blank" rel="noreferrer">Saytı aç <span>↗</span></a>
+        <button id="logoutButton" type="button">Çıxış</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div><p class="eyebrow">KATALOQ</p><h1 id="catalogTitle">Bütün məhsullar</h1></div>
+        <button class="primary-action" id="newProductButton" type="button"><span>＋</span> Yeni məhsul</button>
+      </header>
+
+      <section class="catalog-toolbar" aria-label="Kataloq filtrləri">
+        <label class="search-field" for="productSearch"><span aria-hidden="true">⌕</span><input id="productSearch" type="search" placeholder="Ad və ya ID ilə axtar" autocomplete="off" /></label>
+        <label for="activeFilter"><span>Görünüş</span><select id="activeFilter"><option value="all">Hamısı</option><option value="active">Aktiv</option><option value="inactive">Gizli</option></select></label>
+        <label for="stockFilter"><span>Stok</span><select id="stockFilter"><option value="all">Hamısı</option><option value="available">Mövcud</option><option value="out">Bitib</option><option value="counted">Sayla</option></select></label>
+      </section>
+
+      <section class="table-card" aria-labelledby="catalogTitle">
+        <table class="product-table">
+          <thead><tr><th>Məhsul</th><th>Kateqoriya</th><th>Qiymət</th><th>Stok</th><th>Status</th><th><span class="sr-only">Əməliyyat</span></th></tr></thead>
+          <tbody id="productTableBody"></tbody>
+        </table>
+        <div class="empty-state" id="emptyState" hidden><strong>Nəticə tapılmadı.</strong><span>Filtrləri dəyişin və ya yeni məhsul yaradın.</span></div>
+      </section>
+      <p class="app-message" id="appMessage" role="status" aria-live="polite"></p>
+    </main>
+  </div>
+
+  <div class="editor-backdrop" id="editorBackdrop" hidden></div>
+  <aside class="product-editor" id="productEditor" aria-labelledby="editorTitle" aria-hidden="true" hidden>
+    <header><div><p class="eyebrow" id="editorKicker">MƏHSUL</p><h2 id="editorTitle">Yeni məhsul</h2></div><button id="cancelEditButton" type="button" aria-label="Redaktoru bağla">×</button></header>
+    <form id="productForm" novalidate>
+      <div class="validation-summary" id="validationSummary" role="alert" hidden></div>
+      <fieldset class="editor-section"><legend>Əsas məlumat</legend>
+        <div class="form-grid">
+          <label for="productId">Məhsul ID-si<input id="productId" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" /></label>
+          <label for="productCategory">Kateqoriya<select id="productCategory" required><option value="coffee">Qəhvə</option><option value="tea">Çay</option><option value="equipment">Avadanlıq</option></select></label>
+          <label class="span-2" for="productName">Məhsul adı<input id="productName" required /></label>
+          <label id="basePriceField" for="productPrice">Qiymət, AZN<input id="productPrice" type="number" min="0" step="0.01" required /></label>
+          <label for="productUnit">Vahid<select id="productUnit"><option value="g">Qram</option><option value="piece">Ədəd</option></select></label>
+          <p class="pricing-note span-2" id="variantPricingHint" hidden>Bu məhsulun qiyməti variantlar bölməsində idarə olunur. Kataloqda ilk variantın qiyməti göstərilir.</p>
+          <label for="sortOrder">Sıralama<input id="sortOrder" type="number" step="1" required /></label>
+          <label class="check-field" for="productActive"><input id="productActive" type="checkbox" /> Saytda aktiv göstər</label>
+          <label class="span-2" for="productDescription">Açıqlama<textarea id="productDescription" rows="4"></textarea></label>
+        </div>
+      </fieldset>
+      <fieldset class="editor-section"><legend>Şəkil</legend>
+        <div class="image-field"><div class="image-preview" id="imagePreview">Şəkil seçilməyib</div><div><label for="productImage">Asset yolu<input id="productImage" required readonly /></label><button id="openAssetPicker" type="button">Şəkillərdən seç</button></div></div>
+      </fieldset>
+      <fieldset class="editor-section"><legend>Stok</legend>
+        <div class="form-grid"><label for="stockStatus">Vəziyyət<select id="stockStatus"><option value="available">Mövcuddur</option><option value="out">Bitib</option><option value="counted">Sayla idarə et</option></select></label><label for="stockQuantity">Say<input id="stockQuantity" type="number" min="0" step="1" inputmode="numeric" /><small>Say yazdıqda “Sayla idarə et” avtomatik seçilir.</small></label></div>
+      </fieldset>
+      <fieldset class="editor-section variant-section"><div class="fieldset-heading"><div><legend>Variantlar</legend><p>Ölçü, rəng və fərqli qiymətləri burada idarə edin.</p></div><button id="addVariantButton" type="button">＋ Variant əlavə et</button></div><p class="variant-empty" id="variantEmpty">Bu məhsulun variantı yoxdur.</p><div id="variantRows" class="variant-rows"></div></fieldset>
+      <details class="advanced-settings"><summary>Əlavə məlumat <small>JSON — təkmil ayarlar</small></summary><label for="productMeta" class="json-field"><textarea id="productMeta" rows="6" spellcheck="false">{}</textarea></label></details>
+      <footer class="editor-actions"><button class="danger-action" id="deleteProductButton" type="button" hidden>Sil</button><span></span><button id="discardProductButton" type="button">Ləğv et</button><button class="primary-action" id="saveProductButton" type="submit">Yadda saxla</button></footer>
+    </form>
+  </aside>
+
+  <dialog id="assetDialog" class="asset-dialog" role="dialog" aria-labelledby="assetDialogTitle"><header><div><p class="eyebrow">ŞƏKİL KİTABXANASI</p><h2 id="assetDialogTitle">Şəkil seçin və ya əlavə edin</h2></div><button type="button" id="closeAssetDialog" aria-label="Bağla">×</button></header><div class="asset-tools"><label class="asset-upload" for="assetUpload"><span><strong>Kompüterdən şəkil əlavə et</strong><small>JPG, PNG və ya WebP · maksimum 8 MB</small></span><b>＋ Fayl seç</b><input id="assetUpload" type="file" accept="image/jpeg,image/png,image/webp" /></label><p id="assetUploadMessage" class="asset-upload-message" role="status" aria-live="polite"></p><label for="assetSearch">Kitabxanada axtar<input id="assetSearch" type="search" placeholder="Fayl adı" /></label></div><div class="asset-grid" id="assetGrid"></div></dialog>
+  <dialog id="deleteDialog" class="confirm-dialog" role="dialog" aria-labelledby="deleteDialogTitle"><p class="eyebrow">TƏSDİQ</p><h2 id="deleteDialogTitle">Məhsulu silmək?</h2><p><strong id="deleteProductName"></strong> kataloqdan birdəfəlik silinəcək.</p><div><button id="cancelDeleteButton" type="button">Ləğv et</button><button class="danger-action" id="confirmDeleteButton" type="button">Məhsulu sil</button></div></dialog>
+
+  <script src="product-values.js"></script><script src="admin-api.js"></script><script src="admin.js"></script>
+</body>
+</html>

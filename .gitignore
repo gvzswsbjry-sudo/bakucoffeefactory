@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+.env
+.env.*
+
+# Local customer/order/admin data must never be published.
+data/admin-config.json
+data/orders.json
+data/products.json.bak
+
+# Admin uploads are runtime data. Render Free does not persist them.
+assets/uploads/
+
+# Agent execution scratch space.
+.superpowers/
+

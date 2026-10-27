@@ -1,0 +1,264 @@
+#mainMenu,
+#dessertMenu {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  contain: paint;
+  clip-path: inset(0);
+  max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+  background: #2b211b;
+  color: #f7f2e9;
+  touch-action: pan-y;
+}
+
+#mainMenu::before,
+#dessertMenu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(30, 25, 22, .08), rgba(30, 25, 22, .30)),
+    radial-gradient(circle at 82% 18%, rgba(184, 115, 51, .14), transparent 38%),
+    radial-gradient(circle at 15% 72%, rgba(107, 123, 92, .12), transparent 42%);
+}
+
+.menu-atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  contain: strict;
+  clip-path: inset(0);
+  width: 100%;
+  max-width: 100vw;
+  pointer-events: none;
+  touch-action: none;
+}
+
+.menu-atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(30, 25, 22, .58), rgba(30, 25, 22, .34), rgba(30, 25, 22, .54));
+}
+
+.menu-atmosphere img {
+  position: absolute;
+  display: block;
+  width: 38vw;
+  min-width: 420px;
+  height: 470px;
+  object-fit: cover;
+  opacity: .82;
+  filter: blur(2px) brightness(.62) saturate(.82) sepia(.1);
+  transform: scale(1.02);
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.menu-atmosphere img:nth-child(1) { top: -70px; left: -8vw; }
+.menu-atmosphere img:nth-child(2) { top: 8%; right: -7vw; height: 540px; }
+.menu-atmosphere img:nth-child(3) { top: 38%; left: 8vw; width: 32vw; }
+.menu-atmosphere img:nth-child(4) { top: 52%; right: 4vw; width: 42vw; height: 520px; }
+.menu-atmosphere img:nth-child(5) { bottom: -80px; left: -4vw; width: 45vw; height: 500px; }
+
+#mainMenu > .menu-panel-heading,
+#mainMenu > .menu-columns,
+#dessertMenu > .menu-panel-heading,
+#dessertMenu > .menu-columns {
+  position: relative;
+  z-index: 2;
+}
+
+#mainMenu .menu-panel-heading,
+#dessertMenu .menu-panel-heading {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(247, 242, 233, .35);
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+#mainMenu .menu-group,
+#dessertMenu .menu-group {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+#mainMenu .menu-group h2,
+#dessertMenu .menu-group h2 {
+  color: #f4e9d9;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .28);
+}
+
+#mainMenu .menu-group p,
+#dessertMenu .menu-group p {
+  border-color: rgba(247, 242, 233, .28);
+  text-shadow: 0 1px 10px rgba(0, 0, 0, .28);
+}
+
+#mainMenu .menu-group p b,
+#mainMenu .menu-panel-heading .eyebrow,
+#dessertMenu .menu-group p b,
+#dessertMenu .menu-panel-heading .eyebrow {
+  color: #e8caa7;
+}
+
+#mainMenu .menu-panel-heading p:last-child,
+#dessertMenu .menu-panel-heading p:last-child {
+  color: rgba(247, 242, 233, .72);
+}
+
+@media (max-width: 720px) {
+  .menu-atmosphere {
+    overflow: hidden;
+    contain: strict;
+    clip-path: inset(0);
+    max-width: 100vw;
+  }
+
+  .menu-atmosphere img {
+    width: 88vw;
+    min-width: 0;
+    max-width: 100vw;
+    height: 390px;
+    opacity: .75;
+    filter: blur(2px) brightness(.58) saturate(.78) sepia(.12);
+  }
+
+  .menu-atmosphere img:nth-child(1) { top: -20px; left: -10vw; }
+  .menu-atmosphere img:nth-child(2) { top: 18%; right: -10vw; height: 420px; }
+  .menu-atmosphere img:nth-child(3) { top: 39%; left: -10vw; width: 90vw; }
+  .menu-atmosphere img:nth-child(4) { top: 58%; right: -10vw; width: 92vw; height: 430px; }
+  .menu-atmosphere img:nth-child(5) { bottom: -40px; left: -10vw; width: 95vw; height: 420px; }
+
+  #mainMenu .menu-panel-heading,
+  #dessertMenu .menu-panel-heading {
+    padding: 0;
+  }
+
+  #mainMenu .menu-group,
+  #dessertMenu .menu-group {
+    padding: 0;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  #mainMenu .menu-panel-heading,
+  #mainMenu .menu-group,
+  #dessertMenu .menu-panel-heading,
+  #dessertMenu .menu-group {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Apple-style typography, scoped only to the menu content. */
+.menu-page .menu-panel {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.menu-page .menu-panel .menu-group h2,
+.menu-page .menu-panel .summer-group > h2 {
+  font-family: inherit;
+  font-size: 38px;
+  font-weight: 650;
+  letter-spacing: -.035em;
+}
+
+.menu-page .menu-panel .menu-group p {
+  padding: 13px 0;
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: -.01em;
+}
+
+.menu-page .menu-panel .menu-group p b {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+.menu-page .menu-panel .menu-panel-heading p {
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.menu-page .menu-panel .summer-grid h3 {
+  font-family: inherit;
+  font-size: 27px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+.menu-page .menu-panel .summer-grid p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.menu-page .menu-panel .summer-grid b {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+#dessertMenu .dessert-columns {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#dessertMenu .menu-group p {
+  font-weight: 600;
+}
+
+#dessertMenu .menu-group p b {
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .menu-page .menu-panel .menu-group h2,
+  .menu-page .menu-panel .summer-group > h2 {
+    font-size: 32px;
+  }
+
+  .menu-page .menu-panel .menu-group p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .menu-page .menu-panel .menu-group p b {
+    font-size: 13px;
+  }
+
+  .menu-page .menu-panel .summer-grid h3 {
+    font-size: 25px;
+  }
+}
+
+.menu-tabs {
+  flex-wrap: wrap;
+  gap: 10px 0;
+}
+
+@media (max-width: 980px) and (min-width: 721px) {
+  .menu-tab {
+    min-width: 170px;
+    margin-right: 25px;
+    padding-right: 15px;
+  }
+}

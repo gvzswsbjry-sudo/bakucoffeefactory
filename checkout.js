@@ -1,0 +1,142 @@
+(() => {
+  const summary = document.querySelector('.cart-summary');
+  if (!summary || document.getElementById('checkoutOpen')) return;
+
+  const openButton = document.createElement('button');
+  openButton.id = 'checkoutOpen';
+  openButton.className = 'checkout-open';
+  openButton.type = 'button';
+  openButton.textContent = 'Sifariş et';
+  summary.append(openButton);
+
+  const overlay = document.createElement('div');
+  overlay.className = 'checkout-overlay';
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <section class="checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle" tabindex="-1">
+      <button class="checkout-close" type="button" aria-label="Sifariş pəncərəsini bağla">×</button>
+      <div class="checkout-form-view">
+        <p class="checkout-eyebrow">SİFARİŞ SORĞUSU</p>
+        <h2 id="checkoutTitle">Sifarişi tamamlayın.</h2>
+        <p class="checkout-intro">Əlaqə nömrənizi qeyd edin. Komandamız sifarişinizi və mövcudluğu sizinlə dəqiqləşdirəcək.</p>
+        <form id="checkoutForm">
+          <label>Telefon nömrəsi <span>(ölkə kodu ilə)</span>
+            <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+994 70 390 10 09" required />
+          </label>
+          <label>Satıcıya qeyd <span>(istəyə bağlı)</span>
+            <textarea name="note" rows="4" maxlength="1000" placeholder="Sifarişlə bağlı əlavə istəyiniz varsa yazın"></textarea>
+          </label>
+          <div class="checkout-total"><span>Cəmi</span><strong id="checkoutTotal">0.00 ₼</strong></div>
+          <p class="checkout-error" role="alert" aria-live="polite"></p>
+          <button class="checkout-confirm" type="submit">Sifarişi təsdiqlə</button>
+        </form>
+      </div>
+      <div class="checkout-success" hidden role="status" aria-live="polite">
+        <span class="checkout-success-icon" aria-hidden="true">✓</span>
+        <p class="checkout-eyebrow">SİFARİŞ QEYDƏ ALINDI</p>
+        <h2>Sifariş sorğunuz qəbul edildi.</h2>
+        <p>Seçdiyiniz məhsulları nəzərdən keçirəcəyik. Təsdiq və növbəti addımlar üçün göstərdiyiniz telefon nömrəsi ilə əlaqə saxlayacağıq.</p>
+        <p class="checkout-reference"></p>
+        <button class="checkout-done" type="button">Alış-verişə davam et</button>
+      </div>
+    </section>`;
+  document.body.append(overlay);
+
+  const dialog = overlay.querySelector('.checkout-dialog');
+  const form = overlay.querySelector('#checkoutForm');
+  const errorBox = overlay.querySelector('.checkout-error');
+  const confirmButton = overlay.querySelector('.checkout-confirm');
+  const successView = overlay.querySelector('.checkout-success');
+  const formView = overlay.querySelector('.checkout-form-view');
+  let previousFocus = null;
+
+  function readCart() {
+    return Object.values(loadSharedCart()).filter((item) => Number(item?.quantity) > 0);
+  }
+
+  function close() {
+    const completed = !successView.hidden;
+    overlay.hidden = true;
+    document.body.classList.remove('checkout-active');
+    if (completed) {
+      document.querySelector('.cart-close')?.click();
+      (document.querySelector('#headerCartTrigger') || document.querySelector('#cartTrigger') || document.querySelector('#floatingCartTrigger'))?.focus();
+    } else previousFocus?.focus();
+  }
+
+  openButton.addEventListener('click', async () => {
+    const items = readCart();
+    if (!items.length) {
+      openButton.textContent = 'Səbətiniz boşdur';
+      setTimeout(() => { openButton.textContent = 'Sifariş et'; }, 2200);
+      return;
+    }
+    previousFocus = document.activeElement;
+    formView.hidden = false;
+    successView.hidden = true;
+    errorBox.textContent = '';
+    form.reset();
+    overlay.querySelector('#checkoutTotal').textContent = formatCartPrice(items.reduce((sum, item) => sum + getCartItemTotal(item), 0));
+    overlay.hidden = false;
+    document.body.classList.add('checkout-active');
+    dialog.focus();
+    try {
+      const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      if (response.ok && !overlay.hidden) {
+        const data = await response.json();
+        if (data.user?.phone && !form.elements.phone.value) form.elements.phone.value = data.user.phone;
+      }
+    } catch {}
+  });
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    errorBox.textContent = '';
+    if (location.protocol === 'file:') {
+      errorBox.textContent = 'Sifariş göndərmək üçün saytı fayl kimi deyil, işləyən server ünvanından açın.';
+      return;
+    }
+    const phone = form.elements.phone.value.replace(/[\s().-]/g, '');
+    if (!/^\+[1-9]\d{6,14}$/.test(phone)) {
+      errorBox.textContent = 'Telefon nömrəsini ölkə kodu ilə daxil edin (məsələn, +994703901009).';
+      form.elements.phone.focus();
+      return;
+    }
+    const cartSnapshot = readCart();
+    const items = cartSnapshot.map(({ id, quantity }) => ({ id, quantity }));
+    if (!items.length) { errorBox.textContent = 'Səbətiniz boşdur.'; return; }
+    confirmButton.disabled = true;
+    confirmButton.textContent = 'Sifariş göndərilir…';
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST', credentials: 'same-origin', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ phone, note: form.elements.note.value.trim(), items,
+          expectedTotal: Math.round(cartSnapshot.reduce((sum, item) => sum + getCartItemTotal(item), 0) * 100) / 100 }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Sifarişi göndərmək mümkün olmadı. Yenidən cəhd edin.');
+      window.dispatchEvent(new CustomEvent('bcf:orders-changed', { detail: { id: result.orderId } }));
+      saveSharedCart({});
+      formView.hidden = true;
+      successView.hidden = false;
+      successView.querySelector('.checkout-reference').textContent = `Sifariş nömrəsi: ${result.orderId}`;
+      successView.querySelector('.checkout-done').focus();
+    } catch (error) {
+      errorBox.textContent = error.message;
+    } finally {
+      confirmButton.disabled = false;
+      confirmButton.textContent = 'Sifarişi təsdiqlə';
+    }
+  });
+
+  overlay.querySelector('.checkout-close').addEventListener('click', close);
+  overlay.querySelector('.checkout-done').addEventListener('click', close);
+  overlay.addEventListener('click', (event) => { if (event.target === overlay) close(); });
+  overlay.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') close();
+    if (event.key !== 'Tab') return;
+    const focusables = [...overlay.querySelectorAll('button, input, textarea')].filter((element) => !element.closest('[hidden]'));
+    if (event.shiftKey && document.activeElement === focusables[0]) { event.preventDefault(); focusables.at(-1).focus(); }
+    else if (!event.shiftKey && document.activeElement === focusables.at(-1)) { event.preventDefault(); focusables[0].focus(); }
+  });
+})();

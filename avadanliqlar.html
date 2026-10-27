@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="Baku Coffee Factory dəmləmə avadanlıqları və qəhvə aksesuarları." />
+  <title>Avadanlıqlar — Yeni Baku Coffee Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="gear.css?v=20261025-mobile-alignment1" />
+  <link rel="stylesheet" href="cart.css?v=20261025-floatcart1" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html"><span>Yeni</span><strong>Baku Coffee<br />Factory</strong></a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html">Ana səhifə</a>
+      <a href="qehveler.html">Qəhvələr</a>
+      <a href="caylar.html">Çaylar</a>
+      <a class="active" href="avadanliqlar.html">Avadanlıqlar</a>
+      <a href="menyu.html">Menyu</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menyunu aç" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <main class="equipment-page">
+    <section class="equipment-hero">
+      <div>
+        <p class="eyebrow">Baku Coffee Factory · Avadanlıqlar</p>
+        <h1>Dəmləmək üçün<br /><em>seçilmiş alətlər.</em></h1>
+      </div>
+      <div class="equipment-hero-note">
+        <span>13 məhsul · 24 seçim</span>
+        <p>Evdə və peşəkar istifadə üçün dəmləyicilər, dəyirmanlar və servis aksesuarları.</p>
+      </div>
+    </section>
+
+    <section class="shop-section" aria-labelledby="shopTitle">
+      <div class="shop-toolbar">
+        <div><p class="eyebrow">Kataloq</p><h2 id="shopTitle">Bütün məhsullar</h2></div>
+      </div>
+
+      <div class="shop-filters" id="shopFilters" aria-label="Məhsul kateqoriyaları">
+        <button class="filter-chip active" type="button" data-filter="all" aria-pressed="true">Hamısı</button>
+        <button class="filter-chip" type="button" data-filter="brewing" aria-pressed="false">Dəmləmə</button>
+        <button class="filter-chip" type="button" data-filter="grinder" aria-pressed="false">Dəyirman</button>
+        <button class="filter-chip" type="button" data-filter="kettle" aria-pressed="false">Çaydan</button>
+        <button class="filter-chip" type="button" data-filter="service" aria-pressed="false">Servis</button>
+        <button class="filter-chip" type="button" data-filter="accessory" aria-pressed="false">Aksesuar</button>
+        <label class="shop-sort-label" for="shopSort"><span>Sırala</span>
+          <select class="shop-sort" id="shopSort">
+            <option value="featured">Önə çıxanlar</option>
+            <option value="price-asc">Ucuzdan bahaya</option>
+            <option value="price-desc">Bahadan ucuza</option>
+            <option value="newest">Ən yeni</option>
+            <option value="oldest">Ən köhnə</option>
+            <option value="name-asc">Ada görə A–Z</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="shop-products" id="shopProducts" aria-live="polite">
+        <article class="shop-product" data-category="brewing">
+          <figure><img src="assets/equipment/french-press.jpg" alt="Şüşə və paslanmayan poladdan French Press" loading="eager" /></figure>
+          <div class="product-copy"><p class="product-category">Dəmləmə</p><h3>French Press</h3><p class="product-description">Sadə, dolğun və rahat dəmləmə üçün klassik pres.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="french-press" data-product-name="French Press">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="grinder">
+          <figure><img src="assets/equipment/manual-grinder-wood.jpg" alt="Taxta gövdəli əl qəhvə dəyirmanı" loading="eager" /></figure>
+          <div class="product-copy"><p class="product-category">Dəyirman</p><h3>Taxta əl dəyirmanı</h3><p class="product-description">Klassik görünüşlü, mexaniki üyütmə üçün əl dəyirmanı.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="wood-grinder" data-product-name="Taxta əl dəyirmanı">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="brewing">
+          <figure><img src="assets/equipment/moka-pot.jpg" alt="Paslanmayan poladdan moka pot" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Dəmləmə</p><h3>Paslanmayan Moka Pot</h3><p class="product-description">Ocaq üzərində güclü və aromatik qəhvə hazırlamaq üçün.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="moka-pot" data-product-name="Paslanmayan Moka Pot">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="brewing">
+          <figure><img src="assets/equipment/brass-cezve.jpg" alt="Naxışlı mis rəngli cezvə" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Dəmləmə</p><h3>Naxışlı cezvə</h3><p class="product-description">Türk qəhvəsini ənənəvi üsulla hazırlamaq üçün cezvə.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="cezve" data-product-name="Naxışlı cezvə">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="kettle">
+          <figure><img src="assets/equipment/gooseneck-kettle.jpg" alt="Paslanmayan poladdan qu quşu ağızlı çaydan" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Çaydan</p><h3>Gooseneck çaydan</h3><p class="product-description">V60 və filtr qəhvə üçün su axınını dəqiq idarə edir.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="gooseneck-kettle" data-product-name="Gooseneck çaydan">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="service">
+          <figure><img src="assets/equipment/decorative-dallah.jpg" alt="Yaşıl daşlı dekorativ dallah qəhvədan" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Servis</p><h3>Dekorativ Dallah</h3><p class="product-description">Qəhvə təqdimatına ənənəvi və zərif görünüş verən qəhvədan.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="dallah" data-product-name="Dekorativ Dallah">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="brewing">
+          <figure><img src="assets/equipment/manual-press.jpg" alt="Silindrik əl presi dəmləyici" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Dəmləmə</p><h3>Manual Press</h3><p class="product-description">Sürətli dəmləmə və rahat daşınma üçün yığcam əl presi.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="manual-press" data-product-name="Manual Press">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="grinder">
+          <figure><img src="assets/equipment/wheel-grinder.jpg" alt="Böyük çarxlı klassik əl qəhvə dəyirmanı" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Dəyirman</p><h3>Çarxlı əl dəyirmanı</h3><p class="product-description">Möhkəm metal gövdəli, klassik çarx mexanizmi ilə.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="wheel-grinder" data-product-name="Çarxlı əl dəyirmanı">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="service">
+          <figure><img src="assets/equipment/glass-server-400ml.jpg" alt="Qara tutacaqlı 400 millilitrlik şüşə server" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Servis</p><h3>Şüşə server · 400 ml</h3><p class="product-description">Filtr qəhvəni dəmləmək və səliqəli təqdim etmək üçün.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="glass-server" data-product-name="Şüşə server · 400 ml">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="service">
+          <figure><img src="assets/equipment/azerbaijan-coffee-set-bronze.jpg" alt="Taxta qutuda bürünc rəngli Azərbaycan qəhvə dəsti" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Servis</p><h3>Azərbaycan qəhvə dəsti · Bürünc</h3><p class="product-description">Cezvə, iki fincan və servis detalları ilə hədiyyə dəsti.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="azerbaijan-set-bronze" data-product-name="Azərbaycan qəhvə dəsti · Bürünc">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="service">
+          <figure><img src="assets/equipment/silver-dallah.jpg" alt="Naxışlı gümüşü rəngli Dallah qəhvədan" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Servis</p><h3>Naxışlı Dallah · Gümüşü</h3><p class="product-description">Ənənəvi qəhvə servisi üçün incə naxışlı qəhvədan.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="silver-dallah" data-product-name="Naxışlı Dallah · Gümüşü">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="accessory">
+          <figure><img src="assets/equipment/espresso-tamper-wood.jpg" alt="Taxta üstlü qara espresso tamperi" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Aksesuar</p><h3>Espresso tamper · Taxta</h3><p class="product-description">Qəhvəni portafilterdə bərabər sıxmaq üçün rahat tamper.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="tamper-wood" data-product-name="Espresso tamper · Taxta">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="accessory">
+          <figure><img src="assets/equipment/espresso-tamper-silver.jpg" alt="Gümüşü rəngli espresso tamperi" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Aksesuar</p><h3>Espresso tamper · Gümüşü</h3><p class="product-description">Sabit təzyiq və bərabər espresso yatağı üçün metal tamper.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="tamper-silver" data-product-name="Espresso tamper · Gümüşü">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="accessory">
+          <figure><img src="assets/equipment/espresso-tamper-black.jpg" alt="Qara rəngli espresso tamperi" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Aksesuar</p><h3>Espresso tamper · Qara</h3><p class="product-description">Gündəlik espresso hazırlığı üçün möhkəm və yığcam tamper.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="tamper-black" data-product-name="Espresso tamper · Qara">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="service">
+          <figure><img src="assets/equipment/oriental-serving-set.jpg" alt="Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Servis</p><h3>Şərq üslublu servis dəsti</h3><p class="product-description">İki fincan, şəkər qabı və naxışlı altlıqdan ibarət dəst.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="oriental-serving-set" data-product-name="Şərq üslublu servis dəsti">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="brewing">
+          <figure><img src="assets/equipment/classic-moka-pot-gray.jpg" alt="Boz xallı klassik Moka Pot" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Dəmləmə</p><h3>Klassik Moka Pot · Boz</h3><p class="product-description">Ocaq üzərində zəngin qəhvə hazırlamaq üçün klassik dəmləyici.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="moka-pot-gray" data-product-name="Klassik Moka Pot · Boz">Səbətə əlavə et</button></div></div>
+        </article>
+        <article class="shop-product" data-category="service">
+          <figure><img src="assets/equipment/azerbaijan-coffee-set-silver.jpg" alt="Taxta qutuda gümüşü rəngli Azərbaycan qəhvə dəsti" loading="lazy" /></figure>
+          <div class="product-copy"><p class="product-category">Servis</p><h3>Azərbaycan qəhvə dəsti · Gümüşü</h3><p class="product-description">Cezvə, iki fincan və servis detalları ilə zərif hədiyyə dəsti.</p><div class="product-buy"><span class="product-price">1.00 ₼</span><button class="add-to-cart" type="button" data-product-id="azerbaijan-set-silver" data-product-name="Azərbaycan qəhvə dəsti · Gümüşü">Səbətə əlavə et</button></div></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div class="cart-overlay" id="cartOverlay" hidden></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-labelledby="cartTitle" aria-hidden="true">
+    <div class="cart-header"><div><p class="eyebrow">Sizin seçiminiz</p><h2 id="cartTitle">Səbət</h2></div><button class="cart-close" id="cartClose" type="button" aria-label="Səbəti bağla">×</button></div>
+    <div class="cart-items" id="cartItems"><p class="cart-empty">Səbətiniz hələ boşdur.</p></div>
+    <div class="cart-summary"><div><span>Cəmi</span><strong id="cartTotal">0.00 ₼</strong></div><small>Qəhvə, çay və avadanlıqlar vahid səbətdə hesablanır.</small></div>
+  </aside>
+
+  <button class="floating-cart-btn" id="floatingCartTrigger" type="button" aria-label="Səbəti aç" aria-haspopup="dialog" aria-controls="cartDrawer">
+    <span class="floating-cart-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2.5 9h19l-2.2 11.5a2 2 0 0 1-2 1.5H6.7a2 2 0 0 1-2-1.5L2.5 9z"></path>
+        <path d="M7 9V5a5 5 0 0 1 10 0v4"></path>
+        <line x1="4" y1="9" x2="20" y2="9"></line>
+        <line x1="9" y1="13" x2="9" y2="17"></line>
+        <line x1="15" y1="13" x2="15" y2="17"></line>
+      </svg>
+    </span>
+    <span class="floating-cart-badge" id="floatingCartBadge" data-count="0" aria-label="Səbətdəki məhsul sayı">0</span>
+  </button>
+
+  <footer><a class="brand" href="index.html"><span>Yeni</span><strong>Baku Coffee<br />Factory</strong></a><p>© 2026 · Bakı, Azərbaycan</p></footer>
+  <script src="script.js?v=20261025-nozoom1"></script>
+  <script src="api/catalog.js"></script>
+  <script src="storefront-products.js?v=20261025-admin1"></script>
+  <script src="equipment-data.js?v=20261025-mobile1"></script>
+  <script src="cart-utils.js?v=20261027-cartfix1"></script>
+  <script src="gear-shop.js?v=20261027-cartfix1"></script>
+</body>
+</html>
+

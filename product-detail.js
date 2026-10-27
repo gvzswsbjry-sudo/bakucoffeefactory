@@ -1,0 +1,142 @@
+const detailCartKey = 'bcf-equipment-cart-v1';
+const params = new URLSearchParams(window.location.search);
+const detailProduct = getEquipmentProduct(params.get('id'));
+const sourceFilter = params.get('from') || 'all';
+
+const productDetail = document.getElementById('productDetail');
+const productNotFound = document.getElementById('productNotFound');
+const detailGallery = document.getElementById('detailGallery');
+const detailImage = document.getElementById('detailImage');
+const detailCategory = document.getElementById('detailCategory');
+const detailTitle = document.getElementById('detailTitle');
+const detailDescription = document.getElementById('detailDescription');
+const detailPrice = document.getElementById('detailPrice');
+const variantLabel = document.getElementById('variantLabel');
+const variantSwatches = document.getElementById('variantSwatches');
+const galleryCount = document.getElementById('galleryCount');
+const detailPrev = document.getElementById('detailPrev');
+const detailNext = document.getElementById('detailNext');
+const detailAdd = document.getElementById('detailAdd');
+const detailCartNote = document.getElementById('detailCartNote');
+const detailVariantCount = document.getElementById('detailVariantCount');
+const productBack = document.getElementById('productBack');
+
+let selectedVariant = detailProduct ? resolveEquipmentVariant(detailProduct, params.get('variant')) : null;
+const purchasable = Boolean(detailProduct) && detailProduct.stock?.status !== 'out' && !(detailProduct.stock?.status === 'counted' && detailProduct.stock.quantity <= 0);
+
+const formatDetailPrice = (value) => `${Number(value).toFixed(2)} ₼`;
+
+const updateVariantUrl = () => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('id', detailProduct.id);
+  url.searchParams.set('variant', selectedVariant.id);
+  window.history.replaceState({}, '', url);
+};
+
+const renderVariant = () => {
+  if (!detailProduct || !selectedVariant) return;
+  const index = detailProduct.variants.findIndex((variant) => variant.id === selectedVariant.id);
+  detailImage.src = selectedVariant.image;
+  detailImage.alt = selectedVariant.alt;
+  detailGallery.classList.toggle('image-contain', detailProduct.imageFit === 'contain');
+  detailCategory.textContent = detailProduct.categoryLabel;
+  detailTitle.textContent = detailProduct.name;
+  detailDescription.textContent = detailProduct.description;
+  detailPrice.textContent = formatDetailPrice(selectedVariant.price);
+  variantLabel.textContent = selectedVariant.label;
+  galleryCount.textContent = `${String(index + 1).padStart(2, '0')} / ${String(detailProduct.variants.length).padStart(2, '0')}`;
+  detailVariantCount.textContent = `${detailProduct.variants.length} seçim`;
+
+  variantSwatches.querySelectorAll('.variant-swatch').forEach((button) => {
+    const isActive = button.dataset.variantId === selectedVariant.id;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+  });
+
+  updateVariantUrl();
+};
+
+const selectVariant = (variant) => {
+  if (!variant) return;
+  selectedVariant = variant;
+  renderVariant();
+};
+
+const renderDetail = () => {
+  productBack.href = buildEquipmentCatalogUrl(sourceFilter);
+  if (!detailProduct) {
+    productDetail.hidden = true;
+    productNotFound.hidden = false;
+    document.title = 'Məhsul tapılmadı — Yeni Baku Coffee Factory';
+    return;
+  }
+
+  document.title = `${detailProduct.name} — Yeni Baku Coffee Factory`;
+  variantSwatches.innerHTML = detailProduct.variants.map((variant) => `
+    <button class="variant-swatch" type="button" data-variant-id="${variant.id}" style="--swatch:${variant.color}" aria-label="${variant.label}" aria-pressed="false">
+      <span></span><small>${variant.label}</small>
+    </button>`).join('');
+
+  const hasMultiple = detailProduct.variants.length > 1;
+  detailPrev.hidden = !hasMultiple;
+  detailNext.hidden = !hasMultiple;
+  detailAdd.disabled = !purchasable;
+  if (!purchasable) {
+    detailAdd.textContent = 'Bitib';
+    detailCartNote.textContent = 'Bu məhsul hazırda stokda yoxdur.';
+  }
+  renderVariant();
+};
+
+const addSelectedVariant = () => {
+  if (!purchasable) return;
+  if (!detailProduct || !selectedVariant) return;
+  let cart = typeof loadSharedCart === 'function' ? loadSharedCart() : {};
+  if (!Object.keys(cart).length) {
+    try {
+      cart = JSON.parse(localStorage.getItem(detailCartKey)) || {};
+    } catch {
+      cart = {};
+    }
+  }
+
+  const id = selectedVariant.id;
+  cart[id] = cart[id] || { id, name: getEquipmentVariantName(detailProduct, selectedVariant), price: selectedVariant.price, quantity: 0, unit: 'piece', maxQuantity: 99, category: 'equipment', image: selectedVariant.image };
+  cart[id].name = getEquipmentVariantName(detailProduct, selectedVariant);
+  cart[id].price = selectedVariant.price;
+  cart[id].unit = 'piece';
+  cart[id].maxQuantity = 99;
+  cart[id].category = 'equipment';
+  cart[id].image = selectedVariant.image;
+  cart[id].quantity += 1;
+  if (typeof saveSharedCart === 'function') {
+    saveSharedCart(cart);
+  } else {
+    localStorage.setItem(detailCartKey, JSON.stringify(cart));
+  }
+  detailCartNote.textContent = `${cart[id].name} səbətə əlavə edildi.`;
+  detailAdd.classList.add('added');
+  detailAdd.textContent = 'Əlavə edildi';
+  window.setTimeout(() => {
+    detailAdd.classList.remove('added');
+    detailAdd.textContent = 'Səbətə əlavə et';
+  }, 900);
+};
+
+variantSwatches?.addEventListener('click', (event) => {
+  const button = event.target.closest('.variant-swatch');
+  if (!button) return;
+  selectVariant(resolveEquipmentVariant(detailProduct, button.dataset.variantId));
+});
+
+detailPrev?.addEventListener('click', () => selectVariant(cycleEquipmentVariant(detailProduct, selectedVariant.id, -1)));
+detailNext?.addEventListener('click', () => selectVariant(cycleEquipmentVariant(detailProduct, selectedVariant.id, 1)));
+detailAdd?.addEventListener('click', addSelectedVariant);
+
+document.addEventListener('keydown', (event) => {
+  if (!detailProduct || detailProduct.variants.length < 2) return;
+  if (event.key === 'ArrowLeft') selectVariant(cycleEquipmentVariant(detailProduct, selectedVariant.id, -1));
+  if (event.key === 'ArrowRight') selectVariant(cycleEquipmentVariant(detailProduct, selectedVariant.id, 1));
+});
+
+renderDetail();
