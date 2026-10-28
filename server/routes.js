@@ -5,6 +5,13 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { handleCustomerAuthRequest, customerCookie, sameOrigin } = require('./customer-auth-routes');
 const { prepareOrder } = require('./order-store');
+const {
+  applySecurityHeaders,
+  createRateLimiter,
+  getClientIp,
+  isJsonRequest,
+  isTrustedOrigin,
+} = require('./security');
 
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif']);
 const UPLOAD_TYPES = new Map([
@@ -41,6 +48,18 @@ function json(res, status, body, headers = {}) {
 function cookieToken(req) {
   const match = String(req.headers.cookie || '').match(/(?:^|;\s*)bcf_admin=([^;]+)/);
   return match ? decodeURIComponent(match[1]) : null;
+}
+
+function constantTimeStringEqual(left, right) {
+  const leftHash = crypto.createHash('sha256').update(String(left || '')).digest();
+  const rightHash = crypto.createHash('sha256').update(String(right || '')).digest();
+  return crypto.timingSafeEqual(leftHash, rightHash);
+}
+
+function requireJson(req, res) {
+  if (isJsonRequest(req)) return true;
+  json(res, 415, { error: 'JSON məzmunu tələb olunur.' });
+  return false;
 }
 
 async function parseJson(req, maxBytes = 1024 * 1024) {
@@ -116,10 +135,38 @@ async function listAssets(assetsRoot, rootDir) {
   return result.sort((a, b) => a.localeCompare(b));
 }
 
-function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, customerAuth, secureCookies = false }) {
+function createRequestHandler({
+  rootDir,
+  store,
+  auth,
+  orders,
+  customerDatabase,
+  customerAuth,
+  secureCookies = false,
+  allowedOrigins = [],
+  trustProxy = false,
+  adminInitialPassword = '',
+}) {
   const assetsRoot = path.join(rootDir, 'assets');
+  const apiLimiter = createRateLimiter({ limit: 240, windowMs: 60 * 1000 });
+  const adminLoginLimiter = createRateLimiter({ limit: 5, windowMs: 15 * 60 * 1000 });
+  const accountLimiter = createRateLimiter({ limit: 12, windowMs: 15 * 60 * 1000 });
+  const orderLimiter = createRateLimiter({ limit: 20, windowMs: 60 * 60 * 1000 });
+
+  function limitRequest(res, limiter, key) {
+    const result = limiter.consume(key);
+    res.setHeader('RateLimit-Limit', String(result.limit));
+    res.setHeader('RateLimit-Remaining', String(result.remaining));
+    res.setHeader('RateLimit-Reset', String(Math.ceil(result.resetAt / 1000)));
+    if (result.allowed) return false;
+    json(res, 429, { error: 'Çox sayda sorğu göndərildi. Bir qədər sonra yenidən cəhd edin.' }, {
+      'retry-after': String(result.retryAfter),
+    });
+    return true;
+  }
 
   return async function handle(req, res) {
+    applySecurityHeaders(res, { secure: secureCookies });
     try {
       const url = new URL(req.url, 'http://localhost');
       let pathname;
@@ -132,8 +179,18 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
         return json(res, 400, { error: 'Invalid URL path' });
       }
 
+      const clientIp = getClientIp(req, trustProxy);
+      if (pathname.startsWith('/api/')) {
+        if (limitRequest(res, apiLimiter, clientIp)) return;
+        if (!isTrustedOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+        if (req.method === 'OPTIONS') return json(res, 204);
+        if (pathname === '/api/admin/session' && req.method === 'POST' && limitRequest(res, adminLoginLimiter, clientIp)) return;
+        if (['/api/auth/login', '/api/auth/register'].includes(pathname) && req.method === 'POST' && limitRequest(res, accountLimiter, clientIp)) return;
+        if (pathname === '/api/orders' && req.method === 'POST' && limitRequest(res, orderLimiter, clientIp)) return;
+      }
+
       if (await handleCustomerAuthRequest(req, res, pathname, {
-        database: customerDatabase, customerAuth, secureCookies, json, parseJson,
+        database: customerDatabase, customerAuth, secureCookies, json, parseJson, allowedOrigins, trustProxy,
       })) return;
 
       if (req.method === 'GET' && pathname === '/api/products') return json(res, 200, await store.list());
@@ -149,7 +206,8 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
 
       if (pathname === '/api/orders') {
         if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
-        if (!sameOrigin(req)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+        if (!sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+        if (!requireJson(req, res)) return;
         try {
           const order = prepareOrder(await parseJson(req, 48 * 1024), await store.list());
           const token = customerCookie(req);
@@ -161,7 +219,7 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
           const saved = await orders.create(order);
           return json(res, 201, { orderId: saved.id, total: saved.total });
         } catch (error) {
-          return json(res, error.status || 500, { error: error.message });
+          return json(res, error.status || 500, { error: error.status ? error.message : 'Sifariş hazırda qəbul edilə bilmir.' });
         }
       }
 
@@ -183,36 +241,43 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
       }
 
       if (pathname === '/api/admin/session') {
-        if (req.method !== 'GET' && !sameOrigin(req)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+        if (req.method !== 'GET' && !sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
         const token = cookieToken(req);
         if (req.method === 'GET') {
           return json(res, 200, { configured: await auth.isConfigured(), authenticated: auth.verifySession(token) });
         }
         if (req.method === 'POST') {
+          if (!requireJson(req, res)) return;
           const body = await parseJson(req);
           let session;
           try {
-            session = (await auth.isConfigured()) ? await auth.login(body.password) : await auth.setup(body.password);
+            const configured = await auth.isConfigured();
+            if (!configured && secureCookies) {
+              if (!adminInitialPassword) return json(res, 503, { error: 'Admin ilkin şifrəsi serverdə konfiqurasiya edilməyib.' });
+              if (!constantTimeStringEqual(body.password, adminInitialPassword)) throw new Error('Invalid password');
+            }
+            session = configured ? await auth.login(body.password) : await auth.setup(body.password);
           } catch (error) {
-            return json(res, 401, { error: error.message });
+            return json(res, 401, { error: 'Şifrə yanlışdır.' });
           }
           return json(res, 200, { configured: true, authenticated: true }, {
-            'set-cookie': `bcf_admin=${encodeURIComponent(session.token)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200${secureCookies ? '; Secure' : ''}`,
+            'set-cookie': `bcf_admin=${encodeURIComponent(session.token)}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200; Priority=High${secureCookies ? '; Secure' : ''}`,
           });
         }
         if (req.method === 'DELETE') {
           auth.logout(token);
-          return json(res, 204, undefined, { 'set-cookie': `bcf_admin=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${secureCookies ? '; Secure' : ''}` });
+          return json(res, 204, undefined, { 'set-cookie': `bcf_admin=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0; Priority=High${secureCookies ? '; Secure' : ''}` });
         }
       }
 
       if (pathname.startsWith('/api/admin/')) {
         if (!auth.verifySession(cookieToken(req))) return json(res, 401, { error: 'Authentication required' });
-        if (req.method !== 'GET' && !sameOrigin(req)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+        if (req.method !== 'GET' && !sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
 
         if (req.method === 'GET' && pathname === '/api/admin/orders') return json(res, 200, await orders.list());
         if (pathname.startsWith('/api/admin/orders/')) {
           if (req.method !== 'PATCH') return json(res, 405, { error: 'Method not allowed' });
+          if (!requireJson(req, res)) return;
           try {
             const id = decodeURIComponent(pathname.slice('/api/admin/orders/'.length));
             const updated = await orders.updateStatus(id, (await parseJson(req)).status);
@@ -226,6 +291,7 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
           return json(res, 200, await listAssets(assetsRoot, rootDir));
         }
         if (req.method === 'POST' && pathname === '/api/admin/assets') {
+          if (!requireJson(req, res)) return;
           try {
             const assetPath = await saveUploadedImage(assetsRoot, rootDir, await parseJson(req, MAX_UPLOAD_BODY_BYTES));
             return json(res, 201, { path: assetPath });
@@ -236,6 +302,7 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
         if (pathname === '/api/admin/products') {
           if (req.method === 'GET') return json(res, 200, await store.list());
           if (req.method === 'POST') {
+            if (!requireJson(req, res)) return;
             try {
               return json(res, 201, await store.create(await parseJson(req)));
             } catch (error) {
@@ -246,6 +313,7 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
         if (pathname.startsWith('/api/admin/products/')) {
           const id = pathname.slice('/api/admin/products/'.length);
           if (req.method === 'PATCH') {
+            if (!requireJson(req, res)) return;
             try {
               const updated = await store.update(id, await parseJson(req));
               return updated ? json(res, 200, updated) : json(res, 404, { error: 'Product not found' });
@@ -278,7 +346,8 @@ function createRequestHandler({ rootDir, store, auth, orders, customerDatabase, 
         throw error;
       }
     } catch (error) {
-      json(res, error.status || 500, { error: error.message || 'Internal server error' });
+      const status = Number.isInteger(error.status) && error.status >= 400 && error.status < 500 ? error.status : 500;
+      json(res, status, { error: status === 500 ? 'Daxili server xətası baş verdi.' : error.message });
     }
   };
 }

@@ -65,7 +65,7 @@ function createOrderStore({ filePath }) {
   async function write(orders) {
     await fs.mkdir(path.dirname(filePath), { recursive: true });
     const temp = `${filePath}.${crypto.randomBytes(4).toString('hex')}.tmp`;
-    await fs.writeFile(temp, `${JSON.stringify(orders, null, 2)}\n`, { flag: 'wx' });
+    await fs.writeFile(temp, `${JSON.stringify(orders, null, 2)}\n`, { flag: 'wx', mode: 0o600 });
     try { await fs.rename(temp, filePath); } catch (error) { await fs.unlink(temp).catch(() => {}); throw error; }
   }
   function create(order) {

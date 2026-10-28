@@ -5,6 +5,15 @@
 })(typeof window !== 'undefined' ? window : globalThis, function () {
   const BCF_CART_KEY = 'bcf-equipment-cart-v1';
 
+  const escapeCartHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
+  })[character]);
+
+  const safeCartAssetPath = (value) => {
+    const path = String(value || '');
+    return /^assets\/(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(path) && !path.split('/').includes('..') ? path : '';
+  };
+
   const formatCartPrice = (value) => `${Number(value || 0).toFixed(2)} ₼`;
 
   const normalizeTeaQuantity = (value, unit = 'g', maxQuantity = 1000) => {
@@ -109,24 +118,27 @@
       const maxLimit = item.maxQuantity || (String(id).startsWith('coffee-') ? 2000 : (isGram ? 1000 : 20));
       const total = formatCartPrice(getCartItemTotal(item));
       const qtyBadge = isGram ? `${item.quantity}q` : `${item.quantity}`;
-      const image = cat === 'Qəhvə' ? 'assets/coffee/cart-coffee-beans.png' : item.image;
+      const safeId = escapeCartHtml(id);
+      const safeName = escapeCartHtml(item.name);
+      const safeCat = escapeCartHtml(cat);
+      const image = safeCartAssetPath(cat === 'Qəhvə' ? 'assets/coffee/cart-coffee-beans.png' : item.image);
       const thumb = image
-        ? `<img class="cart-item-thumb" src="${image}" alt="${item.name}" />`
+        ? `<img class="cart-item-thumb" src="${escapeCartHtml(image)}" alt="${safeName}" />`
         : `<span class="cart-item-thumb cart-item-thumb-empty" aria-hidden="true"></span>`;
 
       return `
-        <article class="cart-item" data-item-id="${id}">
+        <article class="cart-item" data-item-id="${safeId}">
           ${thumb}
           <div class="cart-item-copy">
-            <span class="cart-item-cat">${cat}</span>
-            <h3>${item.name}</h3>
-            <p>${formatCartItemQuantity(item)} · ${total}</p>
-            <button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${id}" aria-label="${item.name} məhsulunu səbətdən sil">Sil</button>
+            <span class="cart-item-cat">${safeCat}</span>
+            <h3>${safeName}</h3>
+            <p>${escapeCartHtml(formatCartItemQuantity(item))} · ${escapeCartHtml(total)}</p>
+            <button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${safeId}" aria-label="${safeName} məhsulunu səbətdən sil">Sil</button>
           </div>
-          <div class="cart-quantity" aria-label="${item.name} miqdarı">
-            <button type="button" data-cart-action="decrease" data-product-id="${id}" aria-label="Miqdarı azalt">−</button>
-            <span>${qtyBadge}</span>
-            <button type="button" data-cart-action="increase" data-product-id="${id}" aria-label="Miqdarı artır" ${item.quantity >= maxLimit ? 'disabled' : ''}>+</button>
+          <div class="cart-quantity" aria-label="${safeName} miqdarı">
+            <button type="button" data-cart-action="decrease" data-product-id="${safeId}" aria-label="Miqdarı azalt">−</button>
+            <span>${escapeCartHtml(qtyBadge)}</span>
+            <button type="button" data-cart-action="increase" data-product-id="${safeId}" aria-label="Miqdarı artır" ${item.quantity >= maxLimit ? 'disabled' : ''}>+</button>
           </div>
         </article>
       `;
@@ -325,6 +337,8 @@
     loadSharedCart,
     saveSharedCart,
     renderUnifiedCartItemsHtml,
+    escapeCartHtml,
+    safeCartAssetPath,
     syncUnifiedCartDom,
     openUnifiedCart,
     closeUnifiedCart,

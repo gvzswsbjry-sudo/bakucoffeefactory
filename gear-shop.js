@@ -14,6 +14,14 @@ const cartCount = document.getElementById('cartCount');
 const headerCartCount = document.getElementById('headerCartCount');
 const cartTotal = document.getElementById('cartTotal');
 
+const escapeShopHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
+})[character]);
+const safeShopImage = (value) => {
+  const image = String(value || '');
+  return /^assets\/(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(image) && !image.split('/').includes('..') ? image : '';
+};
+
 const loadCart = () => {
   try {
     return JSON.parse(localStorage.getItem(equipmentCartKey)) || {};
@@ -72,20 +80,24 @@ const renderProducts = () => {
     const soldOut = product.stock?.status === 'out' || (product.stock?.status === 'counted' && product.stock.quantity <= 0);
     const fitClass = product.imageFit === 'contain' ? 'product-image-contain' : '';
     const variants = product.variants.length > 1
-      ? `<div class="product-variant-preview" aria-label="${product.variants.length} seçim">${product.variants.map((item) => `<span style="--swatch:${item.color}" title="${item.label}"></span>`).join('')}</div>`
+      ? `<div class="product-variant-preview" aria-label="${product.variants.length} seçim">${product.variants.map((item) => `<span style="--swatch:${escapeShopHtml(item.color)}" title="${escapeShopHtml(item.label)}"></span>`).join('')}</div>`
       : '';
 
+    const productId = escapeShopHtml(product.id);
+    const productName = escapeShopHtml(product.name);
+    const variantImage = escapeShopHtml(safeShopImage(variant.image));
+
     return `
-      <article class="shop-product" data-category="${product.category}" data-product-id="${product.id}" data-product-url="${buildEquipmentDetailUrl(product.id)}" tabindex="0" role="link" aria-label="${product.name} məhsuluna bax">
-        <figure class="${fitClass}"><img src="${variant.image}" alt="${variant.alt}" loading="${product.id === 'french-press' || product.id === 'wood-grinder' ? 'eager' : 'lazy'}" /></figure>
+      <article class="shop-product" data-category="${escapeShopHtml(product.category)}" data-product-id="${productId}" data-product-url="${escapeShopHtml(buildEquipmentDetailUrl(product.id))}" tabindex="0" role="link" aria-label="${productName} məhsuluna bax">
+        <figure class="${fitClass}"><img src="${variantImage}" alt="${escapeShopHtml(variant.alt)}" loading="${product.id === 'french-press' || product.id === 'wood-grinder' ? 'eager' : 'lazy'}" /></figure>
         <div class="product-copy">
-          <p class="product-category">${product.categoryLabel}</p>
-          <h3>${product.name}</h3>
-          <p class="product-description">${product.description}</p>
+          <p class="product-category">${escapeShopHtml(product.categoryLabel)}</p>
+          <h3>${productName}</h3>
+          <p class="product-description">${escapeShopHtml(product.description)}</p>
           ${variants}
           <div class="product-buy">
-            <span class="product-price">${formatPrice(variant.price)}</span>
-            <button class="add-to-cart" type="button" data-product-id="${product.id}" ${soldOut ? 'disabled' : ''}>${soldOut ? 'Bitib' : 'Səbətə əlavə et'}</button>
+            <span class="product-price">${escapeShopHtml(formatPrice(variant.price))}</span>
+            <button class="add-to-cart" type="button" data-product-id="${productId}" ${soldOut ? 'disabled' : ''}>${soldOut ? 'Bitib' : 'Səbətə əlavə et'}</button>
           </div>
         </div>
       </article>`;
@@ -116,12 +128,12 @@ const renderCart = () => {
 
   cartItems.innerHTML = entries.map(([id, item]) => `
     <article class="cart-item">
-      ${item.image ? `<img class="cart-item-thumb" src="${item.image}" alt="" />` : '<span class="cart-item-thumb cart-item-thumb-empty" aria-hidden="true"></span>'}
-      <div class="cart-item-copy"><h3>${item.name}</h3><p>${item.unit === 'g' ? `${item.quantity} q · ` : ''}${formatPrice(typeof getCartItemTotal === 'function' ? getCartItemTotal(item) : item.quantity * (Number(item.price) || 1))}</p><button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${id}" aria-label="${item.name} məhsulunu səbətdən sil">Sil</button></div>
-      <div class="cart-quantity" aria-label="${item.name} sayı">
-        <button type="button" data-cart-action="decrease" data-product-id="${id}" aria-label="Miqdarı azalt">−</button>
-        <span>${item.unit === 'g' ? `${item.quantity}q` : item.quantity}</span>
-        <button type="button" data-cart-action="increase" data-product-id="${id}" aria-label="Miqdarı artır" ${item.unit === 'g' && item.quantity >= 1000 ? 'disabled' : ''}>+</button>
+      ${safeShopImage(item.image) ? `<img class="cart-item-thumb" src="${escapeShopHtml(safeShopImage(item.image))}" alt="" />` : '<span class="cart-item-thumb cart-item-thumb-empty" aria-hidden="true"></span>'}
+      <div class="cart-item-copy"><h3>${escapeShopHtml(item.name)}</h3><p>${item.unit === 'g' ? `${escapeShopHtml(item.quantity)} q · ` : ''}${escapeShopHtml(formatPrice(typeof getCartItemTotal === 'function' ? getCartItemTotal(item) : item.quantity * (Number(item.price) || 1)))}</p><button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${escapeShopHtml(id)}" aria-label="${escapeShopHtml(item.name)} məhsulunu səbətdən sil">Sil</button></div>
+      <div class="cart-quantity" aria-label="${escapeShopHtml(item.name)} sayı">
+        <button type="button" data-cart-action="decrease" data-product-id="${escapeShopHtml(id)}" aria-label="Miqdarı azalt">−</button>
+        <span>${item.unit === 'g' ? `${escapeShopHtml(item.quantity)}q` : escapeShopHtml(item.quantity)}</span>
+        <button type="button" data-cart-action="increase" data-product-id="${escapeShopHtml(id)}" aria-label="Miqdarı artır" ${item.unit === 'g' && item.quantity >= 1000 ? 'disabled' : ''}>+</button>
       </div>
     </article>`).join('');
 };

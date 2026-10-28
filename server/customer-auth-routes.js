@@ -1,5 +1,7 @@
 'use strict';
 
+const { getClientIp, isJsonRequest, isTrustedOrigin } = require('./security');
+
 const COOKIE_NAME = 'bcf_customer';
 const COOKIE_AGE = 30 * 24 * 60 * 60;
 
@@ -9,19 +11,16 @@ function customerCookie(req) {
 }
 
 function cookieHeader(token, secureCookies) {
-  return `${COOKIE_NAME}=${token || ''}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${token ? COOKIE_AGE : 0}${secureCookies ? '; Secure' : ''}`;
+  return `${COOKIE_NAME}=${token || ''}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${token ? COOKIE_AGE : 0}; Priority=High${secureCookies ? '; Secure' : ''}`;
 }
 
-function sameOrigin(req) {
-  if (!req.headers.origin) return true;
-  try {
-    return new URL(req.headers.origin).host === req.headers.host;
-  } catch {
-    return false;
-  }
+function sameOrigin(req, allowedOrigins = []) {
+  return isTrustedOrigin(req, allowedOrigins);
 }
 
-async function handleCustomerAuthRequest(req, res, pathname, { database, customerAuth, secureCookies, json, parseJson }) {
+async function handleCustomerAuthRequest(req, res, pathname, {
+  database, customerAuth, secureCookies, json, parseJson, allowedOrigins = [], trustProxy = false,
+}) {
   if (!pathname.startsWith('/api/auth/')) return false;
   if (pathname === '/api/auth/providers' && req.method === 'GET') {
     json(res, 200, { google: false, apple: false });
@@ -50,7 +49,7 @@ async function handleCustomerAuthRequest(req, res, pathname, { database, custome
     json(res, 405, { error: 'Method not allowed' });
     return true;
   }
-  if (!sameOrigin(req)) {
+  if (!sameOrigin(req, allowedOrigins)) {
     json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
     return true;
   }
@@ -59,13 +58,13 @@ async function handleCustomerAuthRequest(req, res, pathname, { database, custome
     json(res, 204, undefined, { 'set-cookie': cookieHeader('', secureCookies) });
     return true;
   }
-  if (!/^application\/json(?:\s*;|\s*$)/i.test(String(req.headers['content-type'] || ''))) {
+  if (!isJsonRequest(req)) {
     json(res, 415, { error: 'JSON məzmunu tələb olunur.' });
     return true;
   }
   try {
     const body = await parseJson(req, 16 * 1024);
-    const input = { ...body, ip: req.socket.remoteAddress, userAgent: req.headers['user-agent'] };
+    const input = { ...body, ip: getClientIp(req, trustProxy), userAgent: String(req.headers['user-agent'] || '').slice(0, 512) };
     const result = pathname === '/api/auth/register' ? await customerAuth.register(input) : await customerAuth.login(input);
     json(res, pathname === '/api/auth/register' ? 201 : 200, { user: result.user }, { 'set-cookie': cookieHeader(result.token, secureCookies) });
   } catch (error) {

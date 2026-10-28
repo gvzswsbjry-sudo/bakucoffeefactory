@@ -7,6 +7,8 @@ const { promisify } = require('node:util');
 
 const scrypt = promisify(crypto.scrypt);
 const SESSION_TTL = 12 * 60 * 60 * 1000;
+const MIN_PASSWORD_LENGTH = 12;
+const MAX_PASSWORD_LENGTH = 128;
 
 function createAuth({ configPath, now = () => Date.now() }) {
   const sessions = new Map();
@@ -36,7 +38,9 @@ function createAuth({ configPath, now = () => Date.now() }) {
   }
 
   async function setup(password) {
-    if (typeof password !== 'string' || password.length < 6) throw new Error('Password must be at least 6 characters');
+    if (typeof password !== 'string' || password.length < MIN_PASSWORD_LENGTH || password.length > MAX_PASSWORD_LENGTH) {
+      throw new Error(`Password must be between ${MIN_PASSWORD_LENGTH} and ${MAX_PASSWORD_LENGTH} characters`);
+    }
     if (await isConfigured()) throw new Error('Admin password is already configured');
     const salt = crypto.randomBytes(16).toString('hex');
     const hash = await derive(password, salt);
@@ -51,7 +55,12 @@ function createAuth({ configPath, now = () => Date.now() }) {
   async function login(password) {
     const config = await readConfig();
     if (!config) throw new Error('Admin password is not configured');
-    const candidate = Buffer.from(await derive(String(password || ''), config.salt), 'hex');
+    const supplied = String(password || '');
+    if (supplied.length > MAX_PASSWORD_LENGTH) throw new Error('Invalid password');
+    if (typeof config.salt !== 'string' || !/^[a-f0-9]{32}$/i.test(config.salt) || typeof config.hash !== 'string' || !/^[a-f0-9]{128}$/i.test(config.hash)) {
+      throw new Error('Admin password configuration is invalid');
+    }
+    const candidate = Buffer.from(await derive(supplied, config.salt), 'hex');
     const expected = Buffer.from(config.hash, 'hex');
     if (candidate.length !== expected.length || !crypto.timingSafeEqual(candidate, expected)) {
       throw new Error('Invalid password');
@@ -75,4 +84,4 @@ function createAuth({ configPath, now = () => Date.now() }) {
   return { isConfigured, setup, login, verifySession, logout };
 }
 
-module.exports = { createAuth, SESSION_TTL };
+module.exports = { createAuth, SESSION_TTL, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH };

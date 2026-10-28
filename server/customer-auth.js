@@ -40,14 +40,16 @@ function normalizeUsername(value) {
 }
 
 async function hashPassword(password, salt = crypto.randomBytes(16).toString('hex')) {
-  if (typeof password !== 'string' || password.length < 8 || password.length > 128) {
-    throw authError('Şifrə 8–128 simvol olmalıdır.');
+  if (typeof password !== 'string' || password.length < 12 || password.length > 128) {
+    throw authError('Şifrə 12–128 simvol olmalıdır.');
   }
   return { salt, hash: (await scrypt(password, Buffer.from(salt, 'hex'), 64)).toString('hex') };
 }
 
 async function verifyPassword(password, salt, hash) {
-  const candidate = await scrypt(String(password ?? ''), Buffer.from(salt, 'hex'), 64);
+  const supplied = String(password ?? '');
+  if (supplied.length > 128) return false;
+  const candidate = await scrypt(supplied, Buffer.from(salt, 'hex'), 64);
   const expected = Buffer.from(hash, 'hex');
   return expected.length === candidate.length && crypto.timingSafeEqual(candidate, expected);
 }

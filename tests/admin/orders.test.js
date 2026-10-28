@@ -48,6 +48,7 @@ test('orders persist and remain readable after store recreation', async (t) => {
   assert.match(saved.id, /^BCF-/);
   assert.equal((await createOrderStore({ filePath }).list())[0].id, saved.id);
   assert.equal((await fs.readFile(filePath, 'utf8')).includes(saved.id), true);
+  assert.equal((await fs.stat(filePath)).mode & 0o777, 0o600);
 });
 
 test('order status updates persist and reject invalid transitions', async (t) => {
@@ -89,7 +90,7 @@ test('public checkout saves a receipt and admin can read orders after login', as
   assert.match(receipt.orderId, /^BCF-/);
   assert.equal((await fetch(`${base}/api/admin/orders`)).status, 401);
   const login = await fetch(`${base}/api/admin/session`, {
-    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: 'coffee123' }),
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: 'coffee-test-123' }),
   });
   assert.equal(login.status, 200);
   const admin = await fetch(`${base}/api/admin/orders`, { headers: { cookie: login.headers.get('set-cookie') } });

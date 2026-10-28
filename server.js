@@ -9,13 +9,33 @@ const { createDatabase } = require('./server/db');
 const { createCustomerAuth } = require('./server/customer-auth');
 const { createOrderStore } = require('./server/order-store');
 
-function createServer({ rootDir = __dirname, host = '127.0.0.1', port = 8017, customerDatabase, secureCookies = process.env.NODE_ENV === 'production' } = {}) {
+function parseAllowedOrigins(value) {
+  return String(value || '').split(',').map((origin) => origin.trim()).filter(Boolean);
+}
+
+function createServer({
+  rootDir = __dirname,
+  host = '127.0.0.1',
+  port = 8017,
+  customerDatabase,
+  secureCookies = process.env.NODE_ENV === 'production',
+  allowedOrigins = parseAllowedOrigins(process.env.ALLOWED_ORIGINS),
+  trustProxy = process.env.TRUST_PROXY === '1',
+  adminInitialPassword = process.env.ADMIN_INITIAL_PASSWORD || '',
+} = {}) {
   const store = createProductStore({ filePath: path.join(rootDir, 'data', 'products.json'), assetsRoot: path.join(rootDir, 'assets') });
   const auth = createAuth({ configPath: path.join(rootDir, 'data', 'admin-config.json') });
   const database = customerDatabase === undefined ? createDatabase() : customerDatabase;
   const customerAuth = database ? createCustomerAuth({ database }) : null;
   const orders = createOrderStore({ filePath: path.join(rootDir, 'data', 'orders.json') });
-  const server = http.createServer(createRequestHandler({ rootDir, store, auth, orders, customerDatabase: database, customerAuth, secureCookies }));
+  const server = http.createServer(createRequestHandler({
+    rootDir, store, auth, orders, customerDatabase: database, customerAuth, secureCookies,
+    allowedOrigins, trustProxy, adminInitialPassword,
+  }));
+  server.headersTimeout = 15_000;
+  server.requestTimeout = 30_000;
+  server.keepAliveTimeout = 5_000;
+  server.maxRequestsPerSocket = 100;
   server.customerDatabase = database;
   server.adminHost = host;
   server.adminPort = port;
@@ -32,4 +52,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { createServer };
+module.exports = { createServer, parseAllowedOrigins };

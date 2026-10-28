@@ -10,7 +10,9 @@ test('deployment documentation covers persistent database and strong admin crede
   assert.match(readme, /DATABASE_URL/);
   assert.match(readme, /PostgreSQL/);
   assert.match(readme, /HTTPS/);
-  assert.match(readme, /1234/);
+  assert.match(readme, /ADMIN_INITIAL_PASSWORD/);
+  assert.match(readme, /ən azı 12 simvol/);
+  assert.doesNotMatch(readme, /(?:şifrə|parol)[^\n]{0,30}`?1234`?/i);
   assert.match(readme, /Məxfilik siyasəti/);
 });
 

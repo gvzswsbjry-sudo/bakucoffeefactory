@@ -6,6 +6,7 @@ const path = require('node:path');
 
 const { createAuth } = require('../../server/auth');
 const { createServer } = require('../../server');
+const TEST_PASSWORD = 'coffee-test-123';
 
 function sample(overrides = {}) {
   return {
@@ -28,19 +29,19 @@ test('auth supports first-run setup and persists only a salted scrypt hash', asy
   const auth = createAuth({ configPath });
 
   assert.equal(await auth.isConfigured(), false);
-  await assert.rejects(() => auth.setup('12345'), /at least 6/i);
-  const session = await auth.setup('coffee123');
+  await assert.rejects(() => auth.setup('12345'), /between 12 and 128/i);
+  const session = await auth.setup(TEST_PASSWORD);
   assert.match(session.token, /^[a-f0-9]{64}$/);
   assert.equal(await auth.isConfigured(), true);
 
   const persisted = JSON.parse(await fs.readFile(configPath, 'utf8'));
   assert.equal(Object.hasOwn(persisted, 'password'), false);
-  assert.notEqual(persisted.hash, 'coffee123');
+  assert.notEqual(persisted.hash, TEST_PASSWORD);
   assert.match(persisted.salt, /^[a-f0-9]+$/);
   assert.equal(persisted.algorithm, 'scrypt');
 
   await assert.rejects(() => auth.login('wrong-pass'), /invalid password/i);
-  const loggedIn = await auth.login('coffee123');
+  const loggedIn = await auth.login(TEST_PASSWORD);
   assert.equal(auth.verifySession(loggedIn.token), true);
   assert.equal(auth.logout(loggedIn.token), true);
   assert.equal(auth.verifySession(loggedIn.token), false);
@@ -50,7 +51,7 @@ test('auth expires sessions after twelve hours', async (t) => {
   const dir = await tempDir(t);
   let clock = 1_000;
   const auth = createAuth({ configPath: path.join(dir, 'admin-config.json'), now: () => clock });
-  const session = await auth.setup('coffee123');
+  const session = await auth.setup(TEST_PASSWORD);
   clock += 12 * 60 * 60 * 1000 + 1;
   assert.equal(auth.verifySession(session.token), false);
 });
@@ -89,6 +90,9 @@ test('server exposes public reads, static files, and binds to localhost', async 
 
   assert.equal((await request(fixture.base, '/api/products/ethiopia')).status, 200);
   assert.equal((await request(fixture.base, '/api/products/missing')).status, 404);
+  assert.equal(products.headers.get('x-frame-options'), 'DENY');
+  assert.equal(products.headers.get('x-content-type-options'), 'nosniff');
+  assert.match(products.headers.get('content-security-policy'), /default-src 'self'/);
   const catalogScript = await request(fixture.base, '/api/catalog.js');
   assert.equal(catalogScript.status, 200);
   assert.match(catalogScript.headers.get('content-type'), /javascript/);
@@ -105,7 +109,7 @@ test('admin mutations require a valid HttpOnly strict session', async (t) => {
   assert.equal((await request(fixture.base, '/api/admin/products/ethiopia', { method: 'PATCH', body: { price: 14 } })).status, 401);
   assert.equal((await request(fixture.base, '/api/admin/products/ethiopia', { method: 'DELETE' })).status, 401);
 
-  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: 'coffee123' } });
+  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: TEST_PASSWORD } });
   assert.equal(setup.status, 200);
   const cookie = setup.headers.get('set-cookie');
   assert.match(cookie, /bcf_admin=/);
@@ -146,18 +150,46 @@ test('admin mutations require a valid HttpOnly strict session', async (t) => {
 });
 
 test('admin cookies are secure in production and foreign-origin writes are rejected', async (t) => {
-  const fixture = await startFixture(t, { secureCookies: true });
+  const fixture = await startFixture(t, { secureCookies: true, adminInitialPassword: TEST_PASSWORD });
   const forged = await request(fixture.base, '/api/admin/session', {
-    method: 'POST', headers: { origin: 'https://other.example' }, body: { password: 'coffee123' },
+    method: 'POST', headers: { origin: 'https://other.example' }, body: { password: TEST_PASSWORD },
   });
   assert.equal(forged.status, 403);
-  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: 'coffee123' } });
+  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: TEST_PASSWORD } });
   const cookie = setup.headers.get('set-cookie');
   assert.match(cookie, /; Secure/);
   const update = await request(fixture.base, '/api/admin/products/ethiopia', {
     method: 'PATCH', headers: { cookie, origin: 'https://other.example' }, body: { price: 14 },
   });
   assert.equal(update.status, 403);
+});
+
+test('production first-run admin setup requires the server-side bootstrap secret', async (t) => {
+  const fixture = await startFixture(t, { secureCookies: true });
+  const response = await request(fixture.base, '/api/admin/session', {
+    method: 'POST', body: { password: TEST_PASSWORD },
+  });
+  assert.equal(response.status, 503);
+  assert.match((await response.json()).error, /serverdə konfiqurasiya edilməyib/i);
+});
+
+test('admin login is rate limited and state-changing JSON routes reject other content types', async (t) => {
+  const fixture = await startFixture(t);
+  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: TEST_PASSWORD } });
+  const cookie = setup.headers.get('set-cookie');
+  const wrongStatuses = [];
+  for (let index = 0; index < 6; index += 1) {
+    const response = await request(fixture.base, '/api/admin/session', {
+      method: 'POST', body: { password: 'definitely-wrong-password' },
+    });
+    wrongStatuses.push(response.status);
+  }
+  assert.ok(wrongStatuses.includes(429));
+
+  const nonJson = await fetch(`${fixture.base}/api/admin/products/ethiopia`, {
+    method: 'PATCH', headers: { cookie, 'content-type': 'text/plain' }, body: '{"price":14}',
+  });
+  assert.equal(nonJson.status, 415);
 });
 
 test('admin image upload requires authentication', async (t) => {
@@ -171,7 +203,7 @@ test('admin image upload requires authentication', async (t) => {
 
 test('admin uploads a supported image into the asset library', async (t) => {
   const fixture = await startFixture(t);
-  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: 'coffee123' } });
+  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: TEST_PASSWORD } });
   const cookie = setup.headers.get('set-cookie');
   const imageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 
@@ -189,7 +221,7 @@ test('admin uploads a supported image into the asset library', async (t) => {
 
 test('admin rejects unsupported image upload formats', async (t) => {
   const fixture = await startFixture(t);
-  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: 'coffee123' } });
+  const setup = await request(fixture.base, '/api/admin/session', { method: 'POST', body: { password: TEST_PASSWORD } });
   const cookie = setup.headers.get('set-cookie');
   const response = await request(fixture.base, '/api/admin/assets', {
     method: 'POST', headers: { cookie }, body: { name: 'animation.gif', type: 'image/gif', data: 'R0lGODlh' },

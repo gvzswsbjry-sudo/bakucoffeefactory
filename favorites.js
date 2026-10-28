@@ -31,13 +31,27 @@
   }
 
   function safeProductUrl(value) {
-    const url = String(value || '');
-    return /^(?:qehveler|caylar|avadanliqlar|mehsul)\.html(?:[?#].*)?$/.test(url) ? url : '#';
+    try {
+      const parsed = new URL(String(value || ''), 'https://storefront.invalid/');
+      const pathname = parsed.pathname.replace(/^\//, '');
+      if (!['qehveler.html', 'caylar.html', 'avadanliqlar.html', 'mehsul.html'].includes(pathname)) return '#';
+      if (parsed.origin !== 'https://storefront.invalid') return '#';
+      const clean = new URL(`https://storefront.invalid/${pathname}`);
+      if (pathname === 'mehsul.html') {
+        for (const key of ['id', 'variant']) {
+          const field = parsed.searchParams.get(key);
+          if (field && /^[a-z0-9-]{1,80}$/i.test(field)) clean.searchParams.set(key, field);
+        }
+      }
+      if (parsed.hash && /^#[a-z0-9-]{1,100}$/i.test(parsed.hash)) clean.hash = parsed.hash;
+      return `${clean.pathname.slice(1)}${clean.search}${clean.hash}`;
+    } catch { return '#'; }
   }
 
   function safeImage(value) {
     const image = String(value || '');
-    return /^(?:assets\/|https?:\/\/)/.test(image) ? image : 'assets/coffee/cart-coffee-beans.png';
+    return /^assets\/[a-z0-9_./-]+\.(?:avif|gif|jpe?g|png|webp)$/i.test(image) && !image.includes('..')
+      ? image : 'assets/coffee/cart-coffee-beans.png';
   }
 
   function slug(value) {
@@ -118,8 +132,8 @@
     const list = drawer.querySelector('.favorites-list');
     list.innerHTML = favorites.length ? favorites.map((item) => `
       <article class="favorites-list-item" data-favorite-key="${escapeHtml(item.key)}">
-        <a href="${safeProductUrl(item.url)}">
-          <img src="${safeImage(item.image)}" alt="" />
+        <a href="${escapeHtml(safeProductUrl(item.url))}">
+          <img src="${escapeHtml(safeImage(item.image))}" alt="" />
           <span><small>${escapeHtml(item.category)}</small><strong>${escapeHtml(item.name)}</strong><em>${escapeHtml(item.price || 'Məhsula bax')}</em></span>
         </a>
         <button type="button" data-remove-favorite="${escapeHtml(item.key)}" aria-label="${escapeHtml(item.name)} favoritlərdən sil">Sil</button>
@@ -210,5 +224,5 @@
     root.addEventListener('bcf:favorites-changed', sync);
   }
 
-  return { STORAGE_KEY, read, write, describe, safeProductUrl, init };
+  return { STORAGE_KEY, read, write, describe, safeProductUrl, safeImage, init };
 });

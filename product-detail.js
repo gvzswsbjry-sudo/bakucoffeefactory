@@ -21,6 +21,10 @@ const detailCartNote = document.getElementById('detailCartNote');
 const detailVariantCount = document.getElementById('detailVariantCount');
 const productBack = document.getElementById('productBack');
 
+const escapeDetailHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
+})[character]);
+
 let selectedVariant = detailProduct ? resolveEquipmentVariant(detailProduct, params.get('variant')) : null;
 const purchasable = Boolean(detailProduct) && detailProduct.stock?.status !== 'out' && !(detailProduct.stock?.status === 'counted' && detailProduct.stock.quantity <= 0);
 
@@ -73,8 +77,8 @@ const renderDetail = () => {
 
   document.title = `${detailProduct.name} — Yeni Baku Coffee Factory`;
   variantSwatches.innerHTML = detailProduct.variants.map((variant) => `
-    <button class="variant-swatch" type="button" data-variant-id="${variant.id}" style="--swatch:${variant.color}" aria-label="${variant.label}" aria-pressed="false">
-      <span></span><small>${variant.label}</small>
+    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${escapeDetailHtml(variant.color)}" aria-label="${escapeDetailHtml(variant.label)}" aria-pressed="false">
+      <span></span><small>${escapeDetailHtml(variant.label)}</small>
     </button>`).join('');
 
   const hasMultiple = detailProduct.variants.length > 1;

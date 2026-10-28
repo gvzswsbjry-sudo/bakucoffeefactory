@@ -15,6 +15,12 @@ services:
         fromDatabase:
           name: baku-coffee-factory-db
           property: connectionString
+      - key: ADMIN_INITIAL_PASSWORD
+        sync: false
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: TRUST_PROXY
+        value: 1
 
 databases:
   - name: baku-coffee-factory-db
