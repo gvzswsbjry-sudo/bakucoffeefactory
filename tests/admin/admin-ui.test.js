@@ -40,7 +40,24 @@ test('desktop CSS is MacBook-oriented with fixed navigation and scrollable edito
   assert.match(css, /\.product-editor[\s\S]*position:\s*fixed[\s\S]*overflow-y:\s*auto/);
   assert.match(css, /body[\s\S]*overflow-x:\s*hidden/);
   assert.match(css, /@media\s*\(max-width:\s*1100px\)/);
-  assert.match(css, /min-width:\s*1100px/);
+  assert.doesNotMatch(css, /body\s*\{[^}]*min-width:\s*1100px/);
+});
+
+test('admin catalog becomes a readable card grid on tablet and mobile screens', () => {
+  const css = read('admin/admin.css');
+  const js = read('admin/admin.js');
+
+  assert.match(css, /@media\s*\(max-width:\s*760px\)/);
+  assert.match(css, /#categoryNav[\s\S]*overflow-x:\s*auto/);
+  assert.match(css, /\.product-table\s+thead[\s\S]*display:\s*none/);
+  assert.match(css, /\.product-table\s+tbody[\s\S]*display:\s*grid/);
+  assert.match(css, /\.product-table\s+td::before[\s\S]*content:\s*attr\(data-label\)/);
+  assert.match(css, /\.product-cell\s*>\s*div[\s\S]*min-width:\s*0/);
+  assert.match(css, /\.product-cell\s+strong[\s\S]*text-overflow:\s*ellipsis/);
+
+  for (const label of ['Məhsul', 'Kateqoriya', 'Qiymət', 'Stok', 'Status', 'Əməliyyat']) {
+    assert.match(js, new RegExp(`data-label="${label}"`));
+  }
 });
 
 test('admin API client exposes all session, product, and asset methods', async () => {

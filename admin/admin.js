@@ -81,11 +81,11 @@
       const price = isProductPricePending(item) ? 'Mağazada' : `${getCatalogPrice(item).toFixed(2)} ₼`;
       const stock = item.stock.status === 'counted' ? `${item.stock.quantity} ədəd` : item.stock.status === 'out' ? 'Bitib' : 'Mövcuddur';
       return `<tr data-id="${escapeHtml(item.id)}">
-        <td><div class="product-cell"><img src="../${escapeHtml(item.image)}" alt="" /><div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.id)}</small></div></div></td>
-        <td><span class="tag">${categoryNames[item.category]}</span></td><td><strong>${price}</strong></td>
-        <td><span class="status-pill ${item.stock.status === 'out' ? 'out' : ''}">${stock}</span></td>
-        <td><span class="status-pill ${item.active ? '' : 'inactive'}">${item.active ? 'Aktiv' : 'Gizli'}</span></td>
-        <td><button class="row-edit" type="button" data-edit="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)} məhsulunu redaktə et">→</button></td></tr>`;
+        <td data-label="Məhsul"><div class="product-cell"><img src="../${escapeHtml(item.image)}" alt="" /><div><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.id)}</small></div></div></td>
+        <td data-label="Kateqoriya"><span class="tag">${categoryNames[item.category]}</span></td><td data-label="Qiymət"><strong>${price}</strong></td>
+        <td data-label="Stok"><span class="status-pill ${item.stock.status === 'out' ? 'out' : ''}">${stock}</span></td>
+        <td data-label="Status"><span class="status-pill ${item.active ? '' : 'inactive'}">${item.active ? 'Aktiv' : 'Gizli'}</span></td>
+        <td data-label="Əməliyyat"><button class="row-edit" type="button" data-edit="${escapeHtml(item.id)}" aria-label="${escapeHtml(item.name)} məhsulunu redaktə et">→</button></td></tr>`;
     }).join('');
   }
 
