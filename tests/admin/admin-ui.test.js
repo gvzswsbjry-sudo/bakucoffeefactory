@@ -129,6 +129,15 @@ test('orders page can filter and persist shipped status', () => {
   assert.match(js, /Göndərilməyib/);
 });
 
+test('orders page keeps order details and status actions usable on mobile', () => {
+  const html = read('admin/orders.html');
+  assert.match(html, /@media\s*\(max-width:\s*700px\)[\s\S]*\.order-top\s*\{[^}]*flex-direction:\s*column/);
+  assert.match(html, /@media\s*\(max-width:\s*700px\)[\s\S]*\.order-items\s+li\s*\{[^}]*grid-template-columns:\s*48px\s+minmax\(0,\s*1fr\)/);
+  assert.match(html, /@media\s*\(max-width:\s*700px\)[\s\S]*\.order-items\s+li\s*>\s*strong\s*\{[^}]*grid-column:\s*2/);
+  assert.match(html, /@media\s*\(max-width:\s*700px\)[\s\S]*\.order-status-action\s*\{[^}]*width:\s*100%/);
+  assert.match(html, /@media\s*\(max-width:\s*700px\)[\s\S]*\.orders-toolbar\s+select\s*\{[^}]*width:\s*100%/);
+});
+
 test('equipment variant editing preserves color and accessible image text', () => {
   const js = read('admin/admin.js');
   assert.match(js, /data-variant="color"/);
