@@ -178,8 +178,17 @@
     if (trigger.nextElementSibling !== accountTrigger) {
       accountTrigger.insertAdjacentElement('beforebegin', trigger);
     }
+    trigger.classList.remove('favorites-trigger--fallback');
     trigger.hidden = false;
     return true;
+  }
+
+  function placeTriggerInFallback() {
+    if (!trigger) return;
+    const host = document.querySelector('.site-header') || document.body;
+    if (trigger.parentElement !== host) host.append(trigger);
+    trigger.classList.add('favorites-trigger--fallback');
+    trigger.hidden = false;
   }
 
   function createDrawer() {
@@ -209,6 +218,7 @@
       <div class="favorites-list"></div>`;
 
     document.body.append(overlay, drawer);
+    placeTriggerInFallback();
     placeTriggerBesideAccount();
     trigger.addEventListener('click', openDrawer);
     overlay.addEventListener('click', closeDrawer);

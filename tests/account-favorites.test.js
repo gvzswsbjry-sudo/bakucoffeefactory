@@ -63,9 +63,14 @@ test('favorites trigger sits beside the account control and mobile drawer fills 
   const favorites = read('favorites.js');
   const favoritesCss = read('favorites.css');
   assert.match(favorites, /function placeTriggerBesideAccount/);
+  assert.match(favorites, /function placeTriggerInFallback/);
+  assert.match(favorites, /document\.querySelector\('\.site-header'\) \|\| document\.body/);
+  assert.match(favorites, /trigger\.classList\.add\('favorites-trigger--fallback'\)/);
+  assert.match(favorites, /placeTriggerInFallback\(\);\s*placeTriggerBesideAccount\(\)/);
   assert.match(favorites, /accountTrigger\.insertAdjacentElement\('beforebegin', trigger\)/);
   assert.doesNotMatch(favorites, /document\.body\.append\(trigger,\s*overlay,\s*drawer\)/);
   assert.match(favoritesCss, /\.favorites-trigger\{position:relative/);
+  assert.match(favoritesCss, /\.favorites-trigger\.favorites-trigger--fallback\{position:fixed/);
   assert.match(favoritesCss, /@media\(max-width:720px\)[\s\S]*\.favorites-drawer\{inset:0;width:100%;height:100dvh;max-height:none/);
   assert.doesNotMatch(favoritesCss, /\.favorites-trigger\{[^}]*bottom:/);
 });

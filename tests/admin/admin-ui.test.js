@@ -70,6 +70,8 @@ test('admin editor, authentication, and dialogs fit mobile viewports safely', ()
   assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.image-field\s*\{[^}]*grid-template-columns:\s*1fr/);
   assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.variant-row-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
   assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.asset-dialog\s*\{[^}]*width:\s*calc\(100vw\s*-\s*20px\)[^}]*max-height:\s*calc\(100dvh\s*-\s*20px\)/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.asset-dialog header\s*\{[^}]*position:\s*sticky[^}]*top:\s*0/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.product-editor\s*\{[^}]*safe-area-inset-right[^}]*safe-area-inset-left/);
   assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.asset-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
 });
 
