@@ -172,12 +172,23 @@
     drawer.focus();
   }
 
+  function placeTriggerBesideAccount() {
+    const accountTrigger = document.getElementById('accountTrigger');
+    if (!trigger || !accountTrigger) return false;
+    if (trigger.nextElementSibling !== accountTrigger) {
+      accountTrigger.insertAdjacentElement('beforebegin', trigger);
+    }
+    trigger.hidden = false;
+    return true;
+  }
+
   function createDrawer() {
     if (document.getElementById('favoritesTrigger')) return;
     trigger = document.createElement('button');
     trigger.id = 'favoritesTrigger';
     trigger.className = 'favorites-trigger';
     trigger.type = 'button';
+    trigger.hidden = true;
     trigger.setAttribute('aria-haspopup', 'dialog');
     trigger.setAttribute('aria-expanded', 'false');
     trigger.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.7-7.5 1.1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></svg><span class="favorites-count">0</span>';
@@ -197,7 +208,8 @@
       <header><div><p>SİZİN SEÇİMLƏRİNİZ</p><h2 id="favoritesTitle">Favorilər</h2></div><button class="favorites-close" type="button" aria-label="Bağla">×</button></header>
       <div class="favorites-list"></div>`;
 
-    document.body.append(trigger, overlay, drawer);
+    document.body.append(overlay, drawer);
+    placeTriggerBesideAccount();
     trigger.addEventListener('click', openDrawer);
     overlay.addEventListener('click', closeDrawer);
     drawer.querySelector('.favorites-close').addEventListener('click', closeDrawer);
@@ -217,6 +229,7 @@
     createDrawer();
     sync();
     const observer = new MutationObserver((records) => {
+      placeTriggerBesideAccount();
       if (records.some((record) => [...record.addedNodes].some((node) => node.nodeType === 1 && (node.matches?.(CARD_SELECTOR) || node.querySelector?.(CARD_SELECTOR))))) sync();
     });
     observer.observe(document.body, { childList: true, subtree: true });

@@ -48,7 +48,7 @@ test('account center keeps profile and order history while favorites live in a s
   assert.match(favorites, /className = 'favorites-drawer'/);
   assert.match(favorites, /favorites-list/);
   assert.match(favorites, /safeProductUrl/);
-  assert.match(favorites, /<a href="\$\{safeProductUrl\(item\.url\)\}"/);
+  assert.match(favorites, /<a href="\$\{escapeHtml\(safeProductUrl\(item\.url\)\)\}"/);
   assert.match(favorites, /data-remove-favorite/);
   assert.doesNotMatch(checkout, /bcf-order-history-v1/);
   assert.match(checkout, /bcf:orders-changed/);
@@ -57,5 +57,16 @@ test('account center keeps profile and order history while favorites live in a s
 test('registration contact selector is hidden outside registration mode', () => {
   const accountCss = read('account.css');
   assert.match(accountCss, /\.account-contact-choice\[hidden\]/);
+});
+
+test('favorites trigger sits beside the account control and mobile drawer fills the viewport', () => {
+  const favorites = read('favorites.js');
+  const favoritesCss = read('favorites.css');
+  assert.match(favorites, /function placeTriggerBesideAccount/);
+  assert.match(favorites, /accountTrigger\.insertAdjacentElement\('beforebegin', trigger\)/);
+  assert.doesNotMatch(favorites, /document\.body\.append\(trigger,\s*overlay,\s*drawer\)/);
+  assert.match(favoritesCss, /\.favorites-trigger\{position:relative/);
+  assert.match(favoritesCss, /@media\(max-width:720px\)[\s\S]*\.favorites-drawer\{inset:0;width:100%;height:100dvh;max-height:none/);
+  assert.doesNotMatch(favoritesCss, /\.favorites-trigger\{[^}]*bottom:/);
 });
 
