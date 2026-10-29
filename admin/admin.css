@@ -9,7 +9,7 @@ button { cursor:pointer; }
 .eyebrow { margin:0 0 10px; font:500 11px/1.2 "DM Mono",monospace; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
 
 .auth-screen { min-height:100vh; display:grid; place-content:center; background:radial-gradient(circle at 72% 22%,#ded0b9 0 11%,transparent 32%),var(--cream); }
-.auth-card { width:460px; padding:48px; border:1px solid var(--line); background:rgba(251,249,244,.96); box-shadow:0 24px 70px rgba(50,34,22,.12); }
+.auth-card { width:min(460px,calc(100vw - 24px)); padding:48px; border:1px solid var(--line); background:rgba(251,249,244,.96); box-shadow:0 24px 70px rgba(50,34,22,.12); }
 .auth-card h1 { margin:0 0 12px; font:600 46px/1 "Playfair Display",serif; }
 .auth-card>p:not(.eyebrow) { margin:0 0 28px; color:var(--muted); line-height:1.65; }
 .auth-card form { display:grid; gap:10px; }
@@ -17,7 +17,7 @@ button { cursor:pointer; }
 .auth-card input { width:100%; padding:14px; border:1px solid var(--line); background:#fff; outline:none; }
 .auth-card input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(97,112,86,.13); }
 .auth-card button { margin-top:14px; padding:15px; border:0; background:var(--green); color:#fff; font-weight:700; }
-.auth-message { width:460px; margin:14px 0 0; color:var(--danger); }
+.auth-message { width:min(460px,calc(100vw - 24px)); margin:14px 0 0; color:var(--danger); }
 
 .admin-shell { min-height:100vh; display:grid; grid-template-columns:var(--sidebar-width) minmax(0,1fr); }
 .admin-sidebar { position:fixed; inset:0 auto 0 0; z-index:20; width:var(--sidebar-width); padding:30px 22px; display:flex; flex-direction:column; background:var(--brown); color:#f7f0e4; }
@@ -104,6 +104,11 @@ dialog { border:0; padding:0; color:var(--ink); background:var(--paper); box-sha
 }
 
 @media (max-width:760px) {
+  .auth-screen { min-height:100dvh; padding:12px 0; place-content:center; }
+  .auth-card { padding:28px 20px; }
+  .auth-card h1 { font-size:38px; }
+  .auth-card>p:not(.eyebrow) { margin-bottom:20px; }
+  .auth-card input,.auth-card button { min-height:48px; }
   .admin-sidebar { grid-template-columns:1fr auto; padding:10px 12px 8px; gap:8px 12px; }
   .admin-brand { min-width:0; }
   .admin-brand small { display:none; }
@@ -137,4 +142,36 @@ dialog { border:0; padding:0; color:var(--ink); background:var(--paper); box-sha
   .product-cell strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .row-edit { width:44px; height:44px; }
   .empty-state { min-height:280px; }
+  .product-editor { inset:0; width:100%; min-height:100vh; height:100dvh; padding:0 12px 112px; box-shadow:none; overscroll-behavior:contain; }
+  .product-editor>header { margin:0 -12px 14px; padding:15px 16px 13px; }
+  .product-editor h2 { font-size:27px; }
+  .product-editor>header button,.asset-dialog header button { min-width:44px; min-height:44px; }
+  .editor-section,.advanced-settings { padding:14px!important; }
+  .form-grid { grid-template-columns:1fr; gap:12px; }
+  .span-2 { grid-column:auto; }
+  .check-field { min-height:44px; height:auto; }
+  .image-field { grid-template-columns:1fr; }
+  .image-preview { height:auto; min-height:190px; aspect-ratio:4/3; }
+  .fieldset-heading { align-items:stretch; flex-direction:column; gap:10px; }
+  .fieldset-heading button { min-height:44px; }
+  .variant-row { padding:12px; }
+  .variant-row-grid { grid-template-columns:1fr; }
+  .variant-row-meta { grid-template-columns:1fr; }
+  .variant-image-field { grid-template-columns:1fr; align-items:stretch; }
+  .variant-image-field button { min-height:44px; }
+  .variant-color-preview { position:static; display:block; margin-top:12px; }
+  .editor-actions { width:100%; grid-template-columns:1fr 1fr; padding:10px 12px; padding-bottom:calc(10px + env(safe-area-inset-bottom)); }
+  .editor-actions button { min-height:46px; }
+  .editor-actions .danger-action { grid-column:1/-1; grid-row:2; }
+  .asset-dialog { width:calc(100vw - 20px); max-width:none; max-height:calc(100dvh - 20px); padding:18px 14px; overflow-y:auto; }
+  .asset-dialog header { margin-bottom:14px; }
+  .asset-dialog h2,.confirm-dialog h2 { font-size:28px; }
+  .asset-tools { grid-template-columns:1fr; }
+  .asset-upload { grid-column:auto; min-height:92px; align-items:flex-start; flex-direction:column!important; }
+  .asset-upload-message { grid-column:auto; }
+  .asset-grid { grid-template-columns:repeat(2,minmax(0,1fr)); max-height:none; padding-right:0; }
+  .asset-item { min-height:44px; }
+  .confirm-dialog { width:calc(100vw - 24px); max-width:420px; padding:24px 18px; }
+  .confirm-dialog>div { display:grid; grid-template-columns:1fr 1fr; }
+  .confirm-dialog button { min-height:46px; }
 }

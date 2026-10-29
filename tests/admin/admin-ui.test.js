@@ -60,6 +60,19 @@ test('admin catalog becomes a readable card grid on tablet and mobile screens', 
   }
 });
 
+test('admin editor, authentication, and dialogs fit mobile viewports safely', () => {
+  const css = read('admin/admin.css');
+
+  assert.match(css, /\.auth-card[\s\S]*width:\s*min\(460px,\s*calc\(100vw\s*-\s*24px\)\)/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.product-editor\s*\{[^}]*inset:\s*0[^}]*width:\s*100%[^}]*min-height:\s*100vh[^}]*height:\s*100dvh/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.editor-actions\s*\{[^}]*width:\s*100%[^}]*padding-bottom:\s*calc\([^)]*safe-area-inset-bottom/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.form-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.image-field\s*\{[^}]*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.variant-row-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.asset-dialog\s*\{[^}]*width:\s*calc\(100vw\s*-\s*20px\)[^}]*max-height:\s*calc\(100dvh\s*-\s*20px\)/);
+  assert.match(css, /@media\s*\(max-width:\s*760px\)[\s\S]*\.asset-grid\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\)/);
+});
+
 test('admin API client exposes all session, product, and asset methods', async () => {
   const calls = [];
   const { createAdminApi } = require('../../admin/admin-api');
