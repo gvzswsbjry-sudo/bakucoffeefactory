@@ -13,11 +13,14 @@ for required in \
   'id="teaQuantity"' \
   'input id="teaQuantity" type="text" inputmode="numeric" pattern="[0-9]*"' \
   'id="cartItems"' \
-  'src="tea-data.js' \
+  'src="storefront-products.js' \
   'src="cart-utils.js' \
-  'src="tea-shop.js'; do
+  'src="storefront-bootstrap.js' \
+  'data-catalog-page="tea"'; do
   rg -Fq "$required" "$html" || fail "caylar.html daxilində $required yoxdur"
 done
+
+rg -Fq "tea: ['tea-data.js', 'tea-shop.js']" "$project_dir/storefront-products.js" || fail 'çay adapteri və mağaza skripti API məlumatından sonra yüklənmir'
 
 rg -Fq "isWeight ? 'Maksimum 1 kq'" "$project_dir/tea-shop.js" || fail 'çəki limiti izahı yoxdur'
 

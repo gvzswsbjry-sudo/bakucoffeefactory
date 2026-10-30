@@ -13,9 +13,13 @@ for required in \
   'id="coffeeQuantity"' \
   'id="coffeeCartDrawer"' \
   'id="coffeeCartToast"' \
-  'src="coffee-shop.js'; do
+  'src="storefront-products.js' \
+  'src="storefront-bootstrap.js' \
+  'data-catalog-page="coffee"'; do
   rg -Fq "$required" "$html" || fail "qehveler.html daxilində $required yoxdur"
 done
+
+rg -Fq "coffee: ['coffee-shop.js']" "$project_dir/storefront-products.js" || fail 'qəhvə mağaza skripti API məlumatından sonra yüklənmir'
 
 rg -Fq 'maxQuantity: 2000' "$script" || fail 'qəhvə üçün 2 kq limiti yoxdur'
 rg -Fq "className = 'coffee-buy'" "$script" || fail 'qəhvə kartlarında səbət düyməsi yaradılmır'
