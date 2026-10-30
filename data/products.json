@@ -394,13 +394,13 @@
     "id": "nar",
     "category": "tea",
     "name": "Nar Çayı",
-    "price": 8,
+    "price": 0,
     "unit": "g",
     "image": "assets/tea-packages/nar.jpg",
     "description": "Qara çay yarpaqlarını qırmızı meyvə parçaları və çiçək elementləri tamamlayır. Narın tanış şirin-turş xarakteri dəmləməyə parlaq ətir və canlı bitiş verir. Dolğun, lakin ağır olmayan profili həm tək, həm də az miqdarda bal ilə içmək üçün uyğundur.",
     "active": true,
     "stock": {
-      "status": "out",
+      "status": "available",
       "quantity": null
     },
     "sortOrder": 8,
@@ -409,7 +409,7 @@
       "kind": "Qara çay · meyvəli",
       "tasteNotes": "Nar, qırmızı giləmeyvə, çiçək",
       "brew": "95°C · 4–5 dəqiqə",
-      "pricePending": false
+      "pricePending": true
     },
     "variants": []
   },
@@ -601,7 +601,7 @@
     "id": "hibiskus",
     "category": "tea",
     "name": "Hibiskus",
-    "price": 8,
+    "price": 0,
     "unit": "g",
     "image": "assets/tea-packages/hibiskus.jpg",
     "description": "Hibiskus ləçəkləri və meyvə parçalarından ibarət kofeinsiz, canlı rəngli infuziyadır. Parlaq turşuluq, qırmızı meyvə xarakteri və təmiz bitiş verir. İsti içildikdə dolğun və rahat, buzla servis edildikdə isə xüsusilə təravətli olur.",
@@ -616,7 +616,7 @@
       "kind": "Bitki infuziyası · turşməzə",
       "tasteNotes": "Hibiskus, qırmızı giləmeyvə, sitrus",
       "brew": "95°C · 5–7 dəqiqə",
-      "pricePending": false
+      "pricePending": true
     },
     "variants": []
   },
@@ -633,7 +633,7 @@
       "status": "available",
       "quantity": null
     },
-    "sortOrder": 15,
+    "sortOrder": 1,
     "meta": {
       "equipmentCategory": "brewing",
       "categoryLabel": "Dəmləmə",
@@ -852,7 +852,7 @@
     "id": "dallah",
     "category": "equipment",
     "name": "Naxışlı Dallah",
-    "price": 3,
+    "price": 1,
     "unit": "piece",
     "image": "assets/equipment/decorative-dallah.jpg",
     "description": "Qəhvə təqdimatına ənənəvi və zərif görünüş verən qəhvədan.",
@@ -871,7 +871,7 @@
       {
         "id": "dallah-decorative",
         "name": "Yaşıl daşlı",
-        "price": 3,
+        "price": 1,
         "image": "assets/equipment/decorative-dallah.jpg",
         "color": "#64705c",
         "alt": "Yaşıl daşlı dekorativ Dallah qəhvədan"
@@ -879,7 +879,7 @@
       {
         "id": "dallah-silver",
         "name": "Gümüşü",
-        "price": 3,
+        "price": 1,
         "image": "assets/equipment/silver-dallah.jpg",
         "color": "#c2c1bd",
         "alt": "Naxışlı gümüşü rəngli Dallah qəhvədan"
@@ -929,7 +929,7 @@
       "status": "available",
       "quantity": null
     },
-    "sortOrder": 1,
+    "sortOrder": 9,
     "meta": {
       "equipmentCategory": "grinder",
       "categoryLabel": "Dəyirman",
@@ -1097,39 +1097,5 @@
         "alt": "Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti"
       }
     ]
-  },
-  {
-    "id": "fincan",
-    "category": "equipment",
-    "name": "Fincan",
-    "price": 12,
-    "unit": "piece",
-    "image": "assets/catalog/fincan.jpg",
-    "description": "",
-    "active": true,
-    "stock": {
-      "status": "counted",
-      "quantity": 1
-    },
-    "sortOrder": 11,
-    "meta": {},
-    "variants": []
-  },
-  {
-    "id": "millifincan",
-    "category": "equipment",
-    "name": "Milli Fincan(qaşıqlı)",
-    "price": 18,
-    "unit": "piece",
-    "image": "assets/catalog/milli-fincan.jpg",
-    "description": "",
-    "active": true,
-    "stock": {
-      "status": "counted",
-      "quantity": 3
-    },
-    "sortOrder": 11,
-    "meta": {},
-    "variants": []
   }
 ]
