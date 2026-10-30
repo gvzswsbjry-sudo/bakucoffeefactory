@@ -13,13 +13,13 @@ test('Mac launcher starts the localhost-only Node admin server', () => {
   assert.match(script, /127\.0\.0\.1:8017\/admin\//);
 });
 
-test('managed catalog pages load live data before their shop scripts', () => {
+test('managed catalog pages bootstrap directly from /api/products instead of generated catalog data', () => {
   for (const file of ['qehveler.html', 'caylar.html', 'avadanliqlar.html', 'mehsul.html']) {
     const html = read(file);
-    const catalog = html.indexOf('api/catalog.js');
-    const data = html.indexOf('equipment-data.js');
-    assert.ok(catalog > -1, file);
-    assert.ok(data > catalog, `${file}: catalog must load before data adapter`);
+    assert.doesNotMatch(html, /api\/catalog\.js/, file);
+    assert.match(html, /storefront-products\.js/, file);
+    assert.match(html, /storefront-bootstrap\.js/, file);
+    assert.doesNotMatch(html, /<script[^>]+src="(?:tea-data|equipment-data|tea-shop|coffee-shop|gear-shop|product-detail)\.js/, file);
   }
 });
 

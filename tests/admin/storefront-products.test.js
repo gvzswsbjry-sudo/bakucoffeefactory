@@ -2,7 +2,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
+  loadAllStorefrontProducts,
   loadStorefrontProducts,
+  bootstrapStorefrontPage,
   adaptTeaProducts,
   adaptEquipmentProducts,
   getProductAvailability,
@@ -24,6 +26,66 @@ test('loader fetches public products, filters category/inactive records, and sor
   ];
   const result = await loadStorefrontProducts('tea', async () => ({ ok: true, json: async () => rows }));
   assert.deepEqual(result.map((item) => item.id), ['first', 'late']);
+});
+
+test('all-product loader bypasses browser cache and validates the API payload', async () => {
+  let request;
+  const rows = [product({ id: 'fresh' })];
+  const result = await loadAllStorefrontProducts(async (...args) => {
+    request = args;
+    return { ok: true, json: async () => rows };
+  });
+  assert.deepEqual(result, rows);
+  assert.equal(request[0], '/api/products');
+  assert.equal(request[1].cache, 'no-store');
+  assert.equal(request[1].headers.Accept, 'application/json');
+
+  await assert.rejects(
+    () => loadAllStorefrontProducts(async () => ({ ok: true, json: async () => ({ products: rows }) })),
+    /formatı düzgün deyil/i
+  );
+});
+
+test('page bootstrap publishes fresh rows, hydrates markup, then starts shop scripts', async () => {
+  const calls = [];
+  const root = {
+    CustomEvent: class CustomEvent { constructor(type, init) { this.type = type; this.detail = init.detail; } },
+    dispatchEvent(event) { calls.push(`event:${event.type}:${event.detail.length}`); },
+  };
+  const rows = [product({ id: 'fresh' })];
+  const result = await bootstrapStorefrontPage({
+    page: 'tea',
+    root,
+    fetchImpl: async () => ({ ok: true, json: async () => rows }),
+    hydrate: (items) => calls.push(`hydrate:${items[0].id}`),
+    loadScript: async (src) => calls.push(`script:${src}`),
+  });
+
+  assert.equal(root.BCF_PRODUCT_DATA, rows);
+  assert.deepEqual(calls, [
+    'hydrate:fresh',
+    'script:tea-data.js',
+    'script:tea-shop.js',
+    'event:bcf:catalog-ready:1',
+  ]);
+  assert.deepEqual(result, rows);
+});
+
+test('page bootstrap reports API failures without starting stale shop scripts', async () => {
+  const calls = [];
+  await assert.rejects(
+    () => bootstrapStorefrontPage({
+      page: 'coffee',
+      root: {},
+      fetchImpl: async () => ({ ok: false, status: 503 }),
+      hydrate: () => calls.push('hydrate'),
+      loadScript: async () => calls.push('script'),
+      showError: (error) => calls.push(error.message),
+    }),
+    /503/
+  );
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /kataloq məlumatları/i);
 });
 
 test('loader reports an actionable API failure', async () => {
