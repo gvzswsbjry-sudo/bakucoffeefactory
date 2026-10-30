@@ -40,3 +40,7 @@ assets/uploads/
 # Agent execution scratch space.
 .superpowers/
 
+node_modules/
+.DS_Store
+dist/
+.next/
