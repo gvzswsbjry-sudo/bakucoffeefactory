@@ -4,12 +4,31 @@
   if (root) Object.assign(root, api);
   if (root?.document && Array.isArray(root.BCF_PRODUCT_DATA)) api.hydrateManagedCatalog(root.BCF_PRODUCT_DATA);
 })(typeof window !== 'undefined' ? window : globalThis, function () {
-  async function loadStorefrontProducts(category, fetchImpl = fetch) {
+  const PAGE_SCRIPTS = Object.freeze({
+    tea: ['tea-data.js', 'tea-shop.js'],
+    coffee: ['coffee-shop.js'],
+    equipment: ['equipment-data.js', 'gear-shop.js'],
+    detail: ['equipment-data.js', 'product-detail.js'],
+  });
+
+  async function loadAllStorefrontProducts(fetchImpl = globalThis.fetch) {
+    if (typeof fetchImpl !== 'function') throw new Error('Kataloq məlumatlarını yükləmək üçün şəbəkə bağlantısı tapılmadı.');
     let response;
-    try { response = await fetchImpl('/api/products'); }
+    try {
+      response = await fetchImpl('/api/products', {
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+      });
+    }
     catch (error) { throw new Error(`Kataloq məlumatları yüklənmədi: ${error.message}`); }
     if (!response.ok) throw new Error(`Kataloq məlumatları yüklənmədi (${response.status})`);
     const products = await response.json();
+    if (!Array.isArray(products)) throw new Error('Kataloq məlumatlarının formatı düzgün deyil.');
+    return products;
+  }
+
+  async function loadStorefrontProducts(category, fetchImpl = globalThis.fetch) {
+    const products = await loadAllStorefrontProducts(fetchImpl);
     return products
       .filter((item) => item.category === category && item.active)
       .sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name, 'az'));
@@ -93,5 +112,74 @@
     renderTeaCatalog(products);
   }
 
-  return { loadStorefrontProducts, getProductAvailability, adaptTeaProducts, adaptEquipmentProducts, preserveCartLines, renderCoffeeCatalog, renderTeaCatalog, hydrateManagedCatalog };
+  function loadBrowserScript(src, documentRef = globalThis.document) {
+    return new Promise((resolve, reject) => {
+      if (!documentRef?.createElement || !documentRef?.body) {
+        reject(new Error(`${src} yüklənmədi: sənəd hazır deyil.`));
+        return;
+      }
+      const script = documentRef.createElement('script');
+      script.src = src;
+      script.async = false;
+      script.onload = () => resolve(src);
+      script.onerror = () => reject(new Error(`${src} yüklənmədi.`));
+      documentRef.body.append(script);
+    });
+  }
+
+  function showCatalogLoadError(error, documentRef = globalThis.document) {
+    const target = documentRef?.querySelector?.('.coffee-list')
+      || documentRef?.getElementById?.('kolleksiya')
+      || documentRef?.getElementById?.('shopProducts')
+      || documentRef?.getElementById?.('productDetail')
+      || documentRef?.querySelector?.('main');
+    if (!target || !documentRef?.createElement) return;
+    target.replaceChildren();
+    const message = documentRef.createElement('p');
+    message.className = 'catalog-load-error';
+    message.setAttribute('role', 'alert');
+    message.textContent = 'Məhsullar hazırda yüklənə bilmir. Səhifəni yeniləyib yenidən cəhd edin.';
+    target.append(message);
+    if (globalThis.console?.error) globalThis.console.error('Catalog load failed:', error?.message || error);
+  }
+
+  async function bootstrapStorefrontPage(options = {}) {
+    const root = options.root || (typeof window !== 'undefined' ? window : globalThis);
+    const page = options.page;
+    const fetchImpl = options.fetchImpl || root.fetch?.bind(root);
+    const hydrate = options.hydrate || hydrateManagedCatalog;
+    const loadScript = options.loadScript || ((src) => loadBrowserScript(src, root.document));
+    const showError = options.showError || ((error) => showCatalogLoadError(error, root.document));
+
+    try {
+      const products = await loadAllStorefrontProducts(fetchImpl);
+      root.BCF_PRODUCT_DATA = products;
+      if (page === 'coffee' || page === 'tea') hydrate(products);
+      const scripts = PAGE_SCRIPTS[page];
+      if (!scripts) throw new Error(`Naməlum kataloq səhifəsi: ${page || 'təyin edilməyib'}`);
+      for (const src of scripts) await loadScript(src);
+      if (typeof root.dispatchEvent === 'function' && typeof root.CustomEvent === 'function') {
+        root.dispatchEvent(new root.CustomEvent('bcf:catalog-ready', { detail: products }));
+      }
+      return products;
+    } catch (error) {
+      showError(error);
+      throw error;
+    }
+  }
+
+  return {
+    loadAllStorefrontProducts,
+    loadStorefrontProducts,
+    bootstrapStorefrontPage,
+    loadBrowserScript,
+    showCatalogLoadError,
+    getProductAvailability,
+    adaptTeaProducts,
+    adaptEquipmentProducts,
+    preserveCartLines,
+    renderCoffeeCatalog,
+    renderTeaCatalog,
+    hydrateManagedCatalog,
+  };
 });
