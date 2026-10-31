@@ -19,9 +19,12 @@ document.head.append(brandStyles);
 document.querySelectorAll('.site-header .brand').forEach((brand) => {
   brand.setAttribute('aria-label', 'Baku Coffee Factory ana səhifə');
   const logo = document.createElement('img');
-  logo.src = 'assets/brand/baku-coffee-factory-logo.jpg';
-  logo.alt = '';
-  brand.replaceChildren(logo);
+  logo.alt = 'Baku Coffee Factory';
+  logo.addEventListener('load', () => {
+    if (logo.naturalWidth > 0) brand.replaceChildren(logo);
+  }, { once: true });
+  logo.src = new URL('assets/brand/baku-coffee-factory-logo.jpg', document.baseURI).href;
+  if (logo.complete && logo.naturalWidth > 0) brand.replaceChildren(logo);
 });
 
 const accountStyles = document.createElement('link');
