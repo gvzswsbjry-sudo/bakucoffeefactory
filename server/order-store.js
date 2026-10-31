@@ -39,10 +39,12 @@ function prepareOrder(payload, products) {
     const max = unit === 'g' ? (product.category === 'coffee' ? 2000 : 1000) : 99;
     if (!Number.isInteger(quantity) || quantity < (unit === 'g' ? 5 : 1) || quantity > max || (unit === 'g' && quantity % 5 !== 0)) bad('Məhsul miqdarı düzgün deyil.');
     const price = Number(variant?.price ?? product.price);
-    if (!Number.isFinite(price) || price <= 0) bad('Məhsul qiyməti düzgün deyil.');
-    const total = Math.round((unit === 'g' ? price * quantity / 100 : price * quantity) * 100) / 100;
+    const quoteRequired = product.category === 'tea' && product.meta?.pricePending === true && !(price > 0);
+    if (!quoteRequired && (!Number.isFinite(price) || price <= 0)) bad('Məhsul qiyməti düzgün deyil.');
+    const total = quoteRequired ? null : Math.round((unit === 'g' ? price * quantity / 100 : price * quantity) * 100) / 100;
     return { id, productId: product.id, name: variant ? `${product.name} · ${variant.name}` : product.name,
-      category: product.category, image: variant?.image || product.image, unit, quantity, price, total };
+      category: product.category, image: variant?.image || product.image, unit, quantity,
+      price: quoteRequired ? null : price, total, quoteRequired };
   });
   const total = Math.round(items.reduce((sum, item) => sum + item.total, 0) * 100) / 100;
   if (payload.expectedTotal !== undefined && Math.abs(Number(payload.expectedTotal) - total) > 0.009) {
@@ -50,7 +52,7 @@ function prepareOrder(payload, products) {
     error.status = 409;
     throw error;
   }
-  return { phone, note, items, total, status: 'new' };
+  return { phone, note, items, total, quoteRequired: items.some((item) => item.quoteRequired), status: 'new' };
 }
 
 function createOrderStore({ filePath }) {
