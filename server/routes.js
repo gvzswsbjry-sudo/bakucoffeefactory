@@ -240,6 +240,40 @@ function createRequestHandler({
         }
       }
 
+      if (pathname === '/api/account/favorites') {
+        if (!['GET', 'PUT'].includes(req.method)) return json(res, 405, { error: 'Method not allowed' });
+        if (!customerDatabase || !customerAuth) return json(res, 503, { error: 'Hesab xidməti hazırda əlçatan deyil.' });
+        try {
+          await customerDatabase.migrate();
+          const customer = await customerAuth.getSession(customerCookie(req));
+          if (!customer) return json(res, 401, { error: 'Hesaba daxil olun.' });
+          if (req.method === 'GET') {
+            const { rows } = await customerDatabase.pool.query('SELECT product_keys FROM customer_favorites WHERE user_id = $1', [customer.id]);
+            return json(res, 200, { keys: rows.length ? JSON.parse(rows[0].product_keys) : [] });
+          }
+          if (!sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
+          if (!requireJson(req, res)) return;
+          const body = await parseJson(req, 8 * 1024);
+          const keys = body?.keys;
+          if (!Array.isArray(keys) || keys.length > 100 || new Set(keys).size !== keys.length ||
+            keys.some((key) => typeof key !== 'string' || !/^(coffee|tea|equipment):[a-z0-9]+(?:-[a-z0-9]+)*$/.test(key))) {
+            return json(res, 400, { error: 'Favorit siyahısı düzgün deyil.' });
+          }
+          const products = await store.list();
+          if (keys.some((key) => {
+            const [category, id] = key.split(':');
+            return !products.some((item) => item.category === category && item.id === id && item.active);
+          })) return json(res, 400, { error: 'Favorit məhsullardan biri tapılmadı.' });
+          await customerDatabase.pool.query(`INSERT INTO customer_favorites(user_id, product_keys, updated_at)
+            VALUES($1, $2, CURRENT_TIMESTAMP)
+            ON CONFLICT (user_id) DO UPDATE SET product_keys = $2, updated_at = CURRENT_TIMESTAMP`,
+          [customer.id, JSON.stringify(keys)]);
+          return json(res, 200, { keys });
+        } catch {
+          return json(res, 503, { error: 'Favoritlər hazırda yadda saxlanıla bilmir.' });
+        }
+      }
+
       if (pathname === '/api/admin/session') {
         if (req.method !== 'GET' && !sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
         const token = cookieToken(req);

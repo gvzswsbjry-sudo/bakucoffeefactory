@@ -39,3 +39,9 @@ CREATE TABLE IF NOT EXISTS auth_attempts (
   first_attempt_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS customer_favorites (
+  user_id UUID PRIMARY KEY REFERENCES customer_users(id) ON DELETE CASCADE,
+  product_keys TEXT NOT NULL DEFAULT '[]',
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
