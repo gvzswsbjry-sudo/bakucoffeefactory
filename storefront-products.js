@@ -119,7 +119,8 @@
         return;
       }
       const script = documentRef.createElement('script');
-      script.src = src;
+      const url = src.includes('?') ? src : `${src}?v=20261101-v1`;
+      script.src = url;
       script.async = false;
       script.onload = () => resolve(src);
       script.onerror = () => reject(new Error(`${src} yüklənmədi.`));
