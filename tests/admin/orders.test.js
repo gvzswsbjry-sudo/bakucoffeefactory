@@ -31,6 +31,19 @@ test('equipment without variants can be ordered by its product ID', () => {
   assert.throws(() => prepareOrder(payload, [...products, { ...plain, stock: { status: 'out' } }]), /satışda deyil/i);
 });
 
+test('every active, priced catalog selection can be ordered unless marked out of stock', async () => {
+  const catalog = JSON.parse(await fs.readFile(path.join(__dirname, '..', '..', 'data', 'products.json'), 'utf8'));
+  for (const product of catalog.filter((item) => item.active && item.stock?.status !== 'out')) {
+    const variants = product.category === 'equipment' ? (product.variants?.length ? product.variants : [product]) : [product];
+    for (const variant of variants.filter((item) => item.active !== false && Number(item.price ?? product.price) > 0)) {
+      const id = product.category === 'equipment' ? variant.id : `${product.category}-${product.id}`;
+      const quantity = product.category === 'equipment' ? 1 : 100;
+      const order = prepareOrder({ phone: '+994703901009', items: [{ id, quantity }] }, catalog);
+      assert.equal(order.items[0].productId, product.id, id);
+    }
+  }
+});
+
 test('orders validate quantities and price from server catalog', () => {
   const make = (items, phone = '+994703901009') => prepareOrder({ phone, items, note: '  Zəng edin.  ' }, products);
   assert.throws(() => make([]), /məhsul/i);
