@@ -23,7 +23,13 @@ async function handleCustomerAuthRequest(req, res, pathname, {
 }) {
   if (!pathname.startsWith('/api/auth/')) return false;
   if (pathname === '/api/auth/providers' && req.method === 'GET') {
-    json(res, 200, { google: false, apple: false });
+    json(res, 200, { google: true, apple: true });
+    return true;
+  }
+  if (pathname.startsWith('/api/auth/oauth/') && req.method === 'GET') {
+    const provider = pathname.slice('/api/auth/oauth/'.length);
+    res.writeHead(302, { Location: `/?auth=social&provider=${encodeURIComponent(provider)}` });
+    res.end();
     return true;
   }
   if (!database || !customerAuth) {
@@ -41,7 +47,7 @@ async function handleCustomerAuthRequest(req, res, pathname, {
     json(res, 200, { user: await customerAuth.getSession(customerCookie(req)) });
     return true;
   }
-  if (!['register', 'login', 'logout'].some((name) => pathname === `/api/auth/${name}`)) {
+  if (!['register', 'login', 'logout', 'social', 'oauth'].some((name) => pathname === `/api/auth/${name}`)) {
     json(res, 404, { error: 'Account route not found' });
     return true;
   }
@@ -65,6 +71,11 @@ async function handleCustomerAuthRequest(req, res, pathname, {
   try {
     const body = await parseJson(req, 16 * 1024);
     const input = { ...body, ip: getClientIp(req, trustProxy), userAgent: String(req.headers['user-agent'] || '').slice(0, 512) };
+    if (pathname === '/api/auth/social' || pathname === '/api/auth/oauth') {
+      const result = await customerAuth.socialAuth(input);
+      json(res, result.isNew ? 201 : 200, { user: result.user }, { 'set-cookie': cookieHeader(result.token, secureCookies) });
+      return true;
+    }
     const result = pathname === '/api/auth/register' ? await customerAuth.register(input) : await customerAuth.login(input);
     json(res, pathname === '/api/auth/register' ? 201 : 200, { user: result.user }, { 'set-cookie': cookieHeader(result.token, secureCookies) });
   } catch (error) {
