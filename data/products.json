@@ -1097,5 +1097,35 @@
         "alt": "Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti"
       }
     ]
+  },
+  {
+    "id": "test",
+    "category": "equipment",
+    "name": "Test",
+    "price": 1,
+    "unit": "piece",
+    "image": "assets/equipment/french-press.jpg",
+    "description": "Sınaq və yoxlama üçün test avadanlığı.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 14,
+    "meta": {
+      "equipmentCategory": "accessory",
+      "categoryLabel": "Aksesuar",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "test",
+        "name": "Standart",
+        "price": 1,
+        "image": "assets/equipment/french-press.jpg",
+        "color": "#8b8177",
+        "alt": "Test avadanlığı"
+      }
+    ]
   }
 ]
