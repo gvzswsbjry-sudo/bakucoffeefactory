@@ -87,6 +87,7 @@
               <span>Adınız (istəyə bağlı)</span>
               <input type="text" id="accountSocialName" autocomplete="name" placeholder="Adınız və ya ləqəbiniz" />
             </label>
+            <p class="account-social-message" id="accountSocialMessage" role="alert" style="color:#b23b3b;font-size:12px;margin:2px 0 0;font-weight:600;" hidden></p>
             <div class="account-social-actions">
               <button type="button" class="account-social-cancel" id="accountSocialCancel">Geri</button>
               <button type="button" class="account-social-confirm" id="accountSocialConfirm">Daxil ol</button>
