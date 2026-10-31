@@ -20,6 +20,17 @@ const products = [{
   variants: [{ id: 'tamper-black', name: 'Qara', price: 58, image: 'assets/equipment/tamper-black.jpg' }],
 }];
 
+test('equipment without variants can be ordered by its product ID', () => {
+  const plain = { id: 'plain-grinder', category: 'equipment', name: 'Sadə dəyirman', price: 25,
+    unit: 'piece', active: true, stock: { status: 'available', quantity: null }, image: 'assets/equipment/grinder.jpg', variants: [] };
+  const payload = { phone: '+994703901009', items: [{ id: plain.id, quantity: 1 }] };
+  const order = prepareOrder(payload, [...products, plain]);
+  assert.equal(order.items[0].productId, plain.id);
+  assert.equal(order.total, 25);
+  assert.throws(() => prepareOrder(payload, [...products, { ...plain, active: false }]), /satışda deyil/i);
+  assert.throws(() => prepareOrder(payload, [...products, { ...plain, stock: { status: 'out' } }]), /satışda deyil/i);
+});
+
 test('orders validate quantities and price from server catalog', () => {
   const make = (items, phone = '+994703901009') => prepareOrder({ phone, items, note: '  Zəng edin.  ' }, products);
   assert.throws(() => make([]), /məhsul/i);
