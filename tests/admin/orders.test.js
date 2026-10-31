@@ -31,17 +31,31 @@ test('equipment without variants can be ordered by its product ID', () => {
   assert.throws(() => prepareOrder(payload, [...products, { ...plain, stock: { status: 'out' } }]), /satışda deyil/i);
 });
 
-test('every active, priced catalog selection can be ordered unless marked out of stock', async () => {
+test('every active catalog selection can be ordered unless marked out of stock', async () => {
   const catalog = JSON.parse(await fs.readFile(path.join(__dirname, '..', '..', 'data', 'products.json'), 'utf8'));
   for (const product of catalog.filter((item) => item.active && item.stock?.status !== 'out')) {
     const variants = product.category === 'equipment' ? (product.variants?.length ? product.variants : [product]) : [product];
-    for (const variant of variants.filter((item) => item.active !== false && Number(item.price ?? product.price) > 0)) {
+    for (const variant of variants.filter((item) => item.active !== false)) {
       const id = product.category === 'equipment' ? variant.id : `${product.category}-${product.id}`;
       const quantity = product.category === 'equipment' || product.unit !== 'g' ? 1 : 100;
       const order = prepareOrder({ phone: '+994703901009', items: [{ id, quantity }] }, catalog);
       assert.equal(order.items[0].productId, product.id, id);
+      if (product.meta?.pricePending && !(Number(product.price) > 0)) {
+        assert.equal(order.items[0].price, null);
+        assert.equal(order.quoteRequired, true);
+      }
     }
   }
+});
+
+test('pending-price tea is accepted as a quote request, not a zero-price sale', () => {
+  const pending = { ...products[1], price: 0, meta: { pricePending: true } };
+  const order = prepareOrder({ phone: '+994703901009', expectedTotal: 0,
+    items: [{ id: 'tea-admiral', quantity: 100 }] }, [pending]);
+  assert.equal(order.quoteRequired, true);
+  assert.equal(order.items[0].price, null);
+  assert.equal(order.items[0].total, null);
+  assert.equal(order.total, 0);
 });
 
 test('orders validate quantities and price from server catalog', () => {
