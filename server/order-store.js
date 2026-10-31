@@ -27,10 +27,13 @@ function prepareOrder(payload, products) {
     if (id.startsWith('coffee-')) product = products.find((entry) => entry.id === id.slice(7) && entry.category === 'coffee');
     else if (id.startsWith('tea-')) product = products.find((entry) => entry.id === id.slice(4) && entry.category === 'tea');
     else {
-      product = products.find((entry) => entry.category === 'equipment' && entry.variants?.some((candidate) => candidate.id === id));
-      variant = product?.variants.find((candidate) => candidate.id === id);
+      product = products.find((entry) => entry.category === 'equipment' &&
+        (entry.variants?.some((candidate) => candidate.id === id) || (!entry.variants?.length && entry.id === id)));
+      variant = product?.variants?.find((candidate) => candidate.id === id);
     }
-    if (!product || !product.active || product.stock?.status === 'out' || (variant && variant.active === false)) bad('Məhsul tapılmadı və ya hazırda satışda deyil.');
+    if (!product || !product.active || product.stock?.status === 'out' ||
+      (product.stock?.status === 'counted' && Number(product.stock.quantity) <= 0) ||
+      (variant && variant.active === false)) bad('Məhsul tapılmadı və ya hazırda satışda deyil.');
     const unit = product.category === 'equipment' ? 'piece' : product.unit;
     const quantity = Number(selection?.quantity);
     const max = unit === 'g' ? (product.category === 'coffee' ? 2000 : 1000) : 99;
