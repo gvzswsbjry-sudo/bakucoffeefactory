@@ -47,7 +47,7 @@ const renderTeaCart = () => {
 const updateModalTotal = () => {
   if (!selectedTea) return;
   const quantity = normalizeTeaQuantity(teaQuantity.value, selectedTea.unit);
-  teaOrderTotal.textContent = formatCartPrice(getCartItemTotal({ ...selectedTea, quantity }));
+  teaOrderTotal.textContent = selectedTea.price == null ? 'Qiymət təsdiqlənəcək' : formatCartPrice(getCartItemTotal({ ...selectedTea, quantity }));
 };
 
 const setModalQuantity = (value) => {
@@ -63,7 +63,8 @@ const openTeaModal = (tea, trigger) => {
   teaOrderImage.src = tea.image;
   teaOrderImage.alt = tea.name;
   teaOrderTitle.textContent = tea.name;
-  teaOrderUnit.textContent = isWeight ? `${formatCartPrice(tea.price)} / 100 q` : `${formatCartPrice(tea.price)} / ədəd`;
+  teaOrderUnit.textContent = tea.price == null ? 'Qiymət sifarişdən sonra dəqiqləşdiriləcək'
+    : isWeight ? `${formatCartPrice(tea.price)} / 100 q` : `${formatCartPrice(tea.price)} / ədəd`;
   teaQuantityLabel.textContent = isWeight ? 'Qram' : 'Ədəd';
   teaOrderLimit.textContent = isWeight ? 'Maksimum 1 kq' : '1–20 ədəd seçə bilərsiniz';
   teaQuantity.value = isWeight ? '100' : '1';
@@ -123,7 +124,7 @@ document.querySelectorAll('.tea-product').forEach((card) => {
   if (soldOut) {
     buy.innerHTML = '<span class="tea-price tea-price-pending">Bitib</span>';
   } else if (tea.price == null) {
-    buy.innerHTML = '<span class="tea-price tea-price-pending">Qiymət mağazada</span>';
+    buy.innerHTML = `<span class="tea-price tea-price-pending">Qiymət təsdiqlənəcək</span><button class="tea-add-button" type="button" data-tea-id="${tea.id}">Sifariş sorğusuna əlavə et</button>`;
   } else {
     const unit = tea.unit === 'g' ? '100 q' : 'ədəd';
     buy.innerHTML = `<span class="tea-price">${formatCartPrice(tea.price)} <small>/ ${unit}</small></span><button class="tea-add-button" type="button" data-tea-id="${tea.id}">Səbətə əlavə et</button>`;
@@ -136,7 +137,7 @@ teaProductsRoot?.addEventListener('click', (event) => {
   if (!button) return;
   const tea = getTeaProduct(button.dataset.teaId);
   const soldOut = tea?.stock?.status === 'out' || (tea?.stock?.status === 'counted' && tea.stock.quantity <= 0);
-  if (tea?.price != null && !soldOut) openTeaModal(tea, button);
+  if (tea && !soldOut) openTeaModal(tea, button);
 });
 
 teaQuantityDecrease?.addEventListener('click', () => {
