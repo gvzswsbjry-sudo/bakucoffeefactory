@@ -100,6 +100,11 @@
         { id: 'oriental-serving-set', label: '2 fincanlı', color: '#766153', image: 'assets/equipment/oriental-serving-set.jpg', alt: 'Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti', price: 72 },
       ],
     },
+    {
+      id: 'test', category: 'accessory', categoryLabel: 'Aksesuar', name: 'Test',
+      description: 'Sınaq və yoxlama üçün test avadanlığı.',
+      variants: [{ id: 'test', label: 'Standart', color: '#8b8177', image: 'assets/equipment/french-press.jpg', alt: 'Test avadanlığı', price: 1 }],
+    },
   ];
 
   const managedEquipment = Array.isArray(globalThis.BCF_PRODUCT_DATA)
