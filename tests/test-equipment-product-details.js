@@ -133,4 +133,16 @@ for (const [id, price] of Object.entries(expectedPrices)) {
   assert.equal(actualVariants[id]?.price, price, `${id} should cost ${price} AZN`);
 }
 
+const htmlPath = path.join(__dirname, '..', 'avadanliqlar.html');
+const html = fs.readFileSync(htmlPath, 'utf8');
+assert.match(html, /data-product-id="test"/, 'avadanliqlar.html must contain static test product');
+assert.match(html, />Test<\/h3>/, 'avadanliqlar.html must show product title Test');
+assert.match(html, /1\.00 ₼/, 'avadanliqlar.html must show price 1.00 ₼');
+
+const productsJsonPath = path.join(__dirname, '..', 'data', 'products.json');
+const products = JSON.parse(fs.readFileSync(productsJsonPath, 'utf8'));
+const testProduct = products.find((p) => p.id === 'test');
+assert.ok(testProduct, 'data/products.json must contain test product');
+assert.equal(testProduct.price, 1, 'test product price must be 1');
+
 console.log('Equipment grouping and variant behavior are valid.');
