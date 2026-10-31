@@ -160,7 +160,73 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     await pool.query('DELETE FROM customer_sessions WHERE token_hash = $1', [tokenHash(token)]);
   }
 
-  return { register, login, getSession, logout };
+  async function socialAuth({ provider, email, name, ip, userAgent } = {}) {
+    const rawProvider = String(provider ?? '').trim().toLowerCase();
+    if (rawProvider !== 'google' && rawProvider !== 'apple') {
+      throw authError('Dəstəklənməyən giriş təminatçısı.', 400);
+    }
+    const emailNormalized = normalizeEmail(email);
+    const key = attemptKey(ip, emailNormalized);
+    await checkAttempts(key);
+
+    const { rows: existingRows } = await pool.query(
+      'SELECT id, username, phone_e164, email_normalized FROM customer_users WHERE email_normalized = $1 AND is_active = TRUE',
+      [emailNormalized]
+    );
+
+    if (existingRows.length > 0) {
+      const user = existingRows[0];
+      await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
+      const token = await createSession(pool, user.id, userAgent);
+      await pool.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
+      return { user: publicUser(user), token, isNew: false };
+    }
+
+    let baseName = String(name ?? '').trim().normalize('NFKC');
+    if (!baseName) {
+      baseName = emailNormalized.split('@')[0];
+    }
+    let cleanBase = baseName.replace(/[^\p{L}\p{N}._-]/gu, '_').slice(0, 20);
+    if (cleanBase.length < 3) cleanBase = `user_${cleanBase}`.slice(0, 20);
+
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      let candidateUsername = cleanBase;
+      let candidateNormalized = candidateUsername.toLocaleLowerCase('und');
+      let counter = 1;
+
+      while (true) {
+        const check = await client.query(
+          'SELECT 1 FROM customer_users WHERE username_normalized = $1',
+          [candidateNormalized]
+        );
+        if (check.rows.length === 0) break;
+        candidateUsername = `${cleanBase}_${counter++}`;
+        candidateNormalized = candidateUsername.toLocaleLowerCase('und');
+      }
+
+      const randomPassword = crypto.randomBytes(32).toString('hex');
+      const { salt, hash } = await hashPassword(randomPassword);
+
+      const { rows } = await client.query(`INSERT INTO customer_users
+        (id, username, username_normalized, phone_e164, email_normalized, password_salt, password_hash, privacy_consent_at, privacy_policy_version, created_at, updated_at, last_login_at)
+        VALUES ($1, $2, $3, NULL, $4, $5, $6, $7, $8, $7, $7, $7) RETURNING id, username, phone_e164, email_normalized`,
+      [crypto.randomUUID(), candidateUsername, candidateNormalized, emailNormalized, salt, hash, current(), POLICY_VERSION]);
+
+      const token = await createSession(client, rows[0].id, userAgent);
+      await client.query('COMMIT');
+      await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
+      return { user: publicUser(rows[0]), token, isNew: true };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  return { register, login, getSession, logout, socialAuth };
 }
 
 module.exports = { createCustomerAuth, normalizeEmail, normalizePhone, normalizeUsername, hashPassword, verifyPassword, tokenHash, POLICY_VERSION };
