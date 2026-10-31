@@ -419,4 +419,15 @@
   window.addEventListener('bcf:orders-changed', renderOrders);
   fetch('/api/auth/me', { credentials: 'same-origin' }).then((response) => response.ok ? response.json() : null)
     .then((data) => { if (data) { user = data.user; renderUser(); announceAuthChange(); } }).catch(() => {});
+
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('auth') === 'social') {
+      const provider = urlParams.get('provider') || 'google';
+      setTimeout(() => {
+        trigger.click();
+        openSocialPrompt(provider);
+      }, 100);
+    }
+  } catch {}
 })();
