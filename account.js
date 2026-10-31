@@ -265,13 +265,85 @@
   fetch('/api/auth/providers', { credentials: 'same-origin' }).then((response) => response.ok ? response.json() : null).then((providers) => {
     providerButtons.forEach((button) => { button.dataset.available = String(Boolean(providers?.[button.dataset.provider])); });
   }).catch(() => {});
+
+  const socialPrompt = overlay.querySelector('#accountSocialPrompt');
+  const socialTitle = overlay.querySelector('#accountSocialTitle');
+  const socialSubtitle = overlay.querySelector('#accountSocialSubtitle');
+  const socialIcon = overlay.querySelector('#accountSocialIcon');
+  const socialEmail = overlay.querySelector('#accountSocialEmail');
+  const socialName = overlay.querySelector('#accountSocialName');
+  const socialCancel = overlay.querySelector('#accountSocialCancel');
+  const socialConfirm = overlay.querySelector('#accountSocialConfirm');
+  let activeSocialProvider = null;
+
+  function openSocialPrompt(provider) {
+    activeSocialProvider = provider;
+    message.textContent = '';
+    const isGoogle = provider === 'google';
+    socialTitle.textContent = isGoogle ? 'Google ilə davam et' : 'Apple ilə davam et';
+    socialSubtitle.textContent = isGoogle
+      ? 'Google e-poçtunuz ilə bir kliklə hesab yaradın və ya daxil olun'
+      : 'Apple ID e-poçtunuz ilə bir kliklə hesab yaradın və ya daxil olun';
+    socialIcon.innerHTML = isGoogle
+      ? '<span style="display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0);color:#fff;font-weight:700;font-size:13px;">G</span>'
+      : '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16.7 12.8c0-2.7 2.2-4 2.3-4.1-1.3-1.9-3.3-2.1-4-2.1-1.7-.2-3.3 1-4.2 1-.9 0-2.3-1-3.7-.9-1.9 0-3.6 1.1-4.6 2.8-2 3.4-.5 8.4 1.4 11.2.9 1.4 2.1 2.9 3.6 2.8 1.4-.1 2-1 3.7-1s2.2 1 3.7 1c1.5 0 2.5-1.4 3.4-2.7 1.1-1.6 1.6-3.2 1.6-3.3-.1 0-3.2-1.2-3.2-4.7ZM13.9 4.8c.8-1 1.4-2.4 1.2-3.8-1.2.1-2.6.8-3.5 1.8-.8.9-1.4 2.3-1.2 3.7 1.3.1 2.7-.7 3.5-1.7Z"/></svg>';
+    socialEmail.placeholder = isGoogle ? 'ad@gmail.com' : 'ad@icloud.com';
+    const formEmail = form.elements.email?.value?.trim() || (form.elements.identifier?.value?.includes('@') ? form.elements.identifier.value.trim() : '');
+    socialEmail.value = formEmail || '';
+    socialName.value = form.elements.username?.value?.trim() || '';
+    socialPrompt.hidden = false;
+    providerButtons.forEach((b) => { b.hidden = true; });
+    setTimeout(() => socialEmail.focus(), 60);
+  }
+
+  function closeSocialPrompt() {
+    activeSocialProvider = null;
+    if (socialPrompt) socialPrompt.hidden = true;
+    providerButtons.forEach((b) => { b.hidden = false; });
+  }
+
+  socialCancel?.addEventListener('click', closeSocialPrompt);
+
   providerButtons.forEach((button) => button.addEventListener('click', () => {
-    if (button.dataset.available === 'true') {
-      window.location.assign(`/api/auth/oauth/${button.dataset.provider}`);
+    openSocialPrompt(button.dataset.provider);
+  }));
+
+  socialConfirm?.addEventListener('click', async () => {
+    if (!activeSocialProvider) return;
+    const email = socialEmail.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      message.textContent = 'Düzgün e-poçt ünvanı daxil edin.';
+      socialEmail.focus();
       return;
     }
-    message.textContent = `${button.dataset.provider === 'google' ? 'Google' : 'Apple'} girişi yayım konfiqurasiyası tamamlandıqdan sonra aktiv olacaq.`;
-  }));
+    socialConfirm.disabled = true;
+    message.textContent = '';
+    try {
+      const result = await request('social', {
+        provider: activeSocialProvider,
+        email,
+        name: socialName.value.trim(),
+      });
+      user = result.user;
+      announceAuthChange();
+      closeSocialPrompt();
+      form.reset();
+      updateCountryCode();
+      renderUser();
+      close();
+    } catch (err) {
+      message.textContent = err.message;
+    } finally {
+      socialConfirm.disabled = false;
+    }
+  });
+
+  socialEmail?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); socialConfirm.click(); }
+  });
+  socialName?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); socialConfirm.click(); }
+  });
   overlay.querySelectorAll('input').forEach((input) => input.addEventListener('focus', () => {
     if (window.visualViewport && window.visualViewport.height < window.innerHeight * .75) {
       setTimeout(() => input.scrollIntoView({ block: 'center', behavior: 'smooth' }), 120);
