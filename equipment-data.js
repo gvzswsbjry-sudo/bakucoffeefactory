@@ -125,7 +125,12 @@
             price: variant.price,
           })),
         }))
-    : FALLBACK_EQUIPMENT_PRODUCTS;
+    : (typeof window !== 'undefined' ? [...FALLBACK_EQUIPMENT_PRODUCTS, {
+        id: 'test', category: 'accessory', categoryLabel: 'Aksesuar', name: 'Test',
+        description: 'Sınaq və yoxlama üçün test avadanlığı.',
+        imageFit: 'contain',
+        variants: [{ id: 'test', label: 'Standart', color: '#8b8177', image: 'assets/equipment/french-press.jpg', alt: 'Test avadanlığı', price: 1 }],
+      }] : FALLBACK_EQUIPMENT_PRODUCTS);
 
   const getEquipmentProduct = (id) => EQUIPMENT_PRODUCTS.find((product) => product.id === id);
 
