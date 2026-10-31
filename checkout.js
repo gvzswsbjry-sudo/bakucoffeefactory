@@ -76,7 +76,7 @@
     successView.hidden = true;
     errorBox.textContent = '';
     form.reset();
-    overlay.querySelector('#checkoutTotal').textContent = formatCartPrice(items.reduce((sum, item) => sum + getCartItemTotal(item), 0));
+    overlay.querySelector('#checkoutTotal').textContent = cartTotalLabel(Object.fromEntries(items.map((item) => [item.id, item])));
     overlay.hidden = false;
     document.body.classList.add('checkout-active');
     dialog.focus();
