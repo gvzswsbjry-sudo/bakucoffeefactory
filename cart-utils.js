@@ -32,6 +32,13 @@
     return item?.unit === 'g' ? (price * quantity) / 100 : price * quantity;
   };
 
+  const cartTotalLabel = (cart) => {
+    const entries = Object.values(cart || {}).filter((item) => Number(item?.quantity) > 0);
+    const knownTotal = formatCartPrice(entries.reduce((sum, item) => sum + getCartItemTotal(item), 0));
+    if (!entries.some((item) => item.price == null)) return knownTotal;
+    return `${knownTotal} + qiyməti təsdiqlənəcək`;
+  };
+
   const getProductCategory = (id, item) => {
     if (String(id).startsWith('coffee-') || item?.category === 'coffee') return 'Qəhvə';
     if (String(id).startsWith('tea-') || item?.category === 'tea') return 'Çay';
@@ -116,7 +123,7 @@
       const cat = getProductCategory(id, item);
       const isGram = item.unit === 'g';
       const maxLimit = item.maxQuantity || (String(id).startsWith('coffee-') ? 2000 : (isGram ? 1000 : 20));
-      const total = formatCartPrice(getCartItemTotal(item));
+      const total = item.price == null ? 'Qiymət təsdiqlənəcək' : formatCartPrice(getCartItemTotal(item));
       const qtyBadge = isGram ? `${item.quantity}q` : `${item.quantity}`;
       const safeId = escapeCartHtml(id);
       const safeName = escapeCartHtml(item.name);
@@ -150,7 +157,7 @@
     const cart = cartParam || loadSharedCart();
     const entries = Object.entries(cart).filter(([, item]) => Number(item?.quantity) > 0);
     const countText = formatCartCount(cart);
-    const totalText = formatCartPrice(entries.reduce((sum, [, item]) => sum + getCartItemTotal(item), 0));
+    const totalText = cartTotalLabel(cart);
     const itemsHtml = renderUnifiedCartItemsHtml(cart);
 
     ['cartCount', 'headerCartCount', 'coffeeCartCount'].forEach((id) => {
@@ -325,6 +332,7 @@
   return {
     BCF_CART_KEY,
     formatCartPrice,
+    cartTotalLabel,
     normalizeTeaQuantity,
     getCartItemTotal,
     getProductCategory,
