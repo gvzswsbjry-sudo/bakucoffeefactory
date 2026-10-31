@@ -14,12 +14,15 @@
   let accountUserId = null;
   let saveQueue = Promise.resolve();
 
-  function read() {
-    if (accountItems !== null) return accountItems;
+  function readGuest() {
     try {
       const value = JSON.parse(root.localStorage.getItem(STORAGE_KEY));
       return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
     } catch { return {}; }
+  }
+
+  function read() {
+    return accountItems !== null ? accountItems : readGuest();
   }
 
   function write(items) {
@@ -60,8 +63,10 @@
 
   async function changeAccount(user) {
     const owner = user?.id || null;
+    const guest = accountUserId ? {} : readGuest();
     accountUserId = owner;
-    if (!owner) { accountItems = null; sync(); return; }
+    accountItems = owner ? {} : null;
+    if (!owner) { sync(); return; }
     try {
       const [favoritesResponse, productsResponse] = await Promise.all([
         root.fetch('/api/account/favorites', { credentials: 'same-origin' }),
@@ -74,7 +79,6 @@
         const item = fromCatalog(product);
         return [item.key, item];
       }));
-      const guest = read();
       const mergedKeys = [...new Set([...(Array.isArray(keys) ? keys : []), ...Object.keys(guest)])]
         .filter((key) => catalog[key]);
       accountItems = Object.fromEntries(mergedKeys.map((key) => [key, catalog[key]]));
