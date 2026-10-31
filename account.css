@@ -50,6 +50,15 @@ html.account-open, body.account-open { overflow: hidden !important; touch-action
 .account-provider-google>span { width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0); font: 700 11px Arial,sans-serif; }
 .account-provider-apple { background: #171513; color: #fff; border-color: #171513; }
 .account-provider-apple:hover,.account-provider-apple:focus-visible { background: #322c28; color: #fff; }
+.account-social-prompt { border: 1px solid #d5c9bb; background: #fff; padding: 18px; margin-top: 14px; display: grid; gap: 14px; text-align: left; }
+.account-social-header { display: flex; align-items: center; gap: 12px; }
+.account-social-header h4 { margin: 0 0 3px; font-size: 15px; font-weight: 700; color: #211b17; }
+.account-social-header p { margin: 0; color: #746b61; font-size: 11px; }
+.account-social-actions { display: grid; grid-template-columns: auto 1fr; gap: 10px; margin-top: 4px; }
+.account-social-cancel { min-height: 44px; padding: 0 16px; border: 1px solid #c9bdae; background: transparent; color: #51483f; font: 600 12px var(--sans, sans-serif); cursor: pointer; }
+.account-social-confirm { min-height: 44px; border: 0; background: #596750; color: #fff; font: 700 13px var(--sans, sans-serif); cursor: pointer; }
+.account-social-confirm:hover, .account-social-confirm:focus-visible { background: #4a5643; }
+.account-social-confirm:disabled { opacity: .6; cursor: wait; }
 .account-provider-note { margin: 10px 4px 0; color: #857b72; text-align: center; font: 10px/1.45 var(--sans,sans-serif); }
 .account-note { margin: 17px 0 0; color: #746b61; font: 11px/1.5 var(--sans, sans-serif); }
 .account-greeting { font: 22px var(--serif, Georgia,serif); }
