@@ -28,6 +28,10 @@ test('the shared storefront script loads the accessible account interface withou
   assert.match(account, /data-provider="google"/);
   assert.match(account, /data-provider="apple"/);
   assert.match(account, /api\/auth\/providers/);
+  assert.match(account, /id="accountSocialPrompt"/);
+  assert.match(account, /id="accountSocialMessage"/);
+  assert.match(account, /istifadeci@icloud\.com/);
+  assert.match(account, /bcf_customer_user/);
   assert.doesNotMatch(account, /setItem\([^)]*password|sessionStorage/);
 });
 
