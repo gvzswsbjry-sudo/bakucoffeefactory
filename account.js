@@ -105,6 +105,9 @@
   let contactMode = 'phone';
   let user = null;
   let previousFocus = null;
+  function announceAuthChange() {
+    window.dispatchEvent(new CustomEvent('bcf:auth-changed', { detail: { user } }));
+  }
   function escapeHtml(value) {
     return String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
   }
@@ -290,6 +293,7 @@
     try {
       const result = await request(mode, body);
       user = result.user;
+      announceAuthChange();
       form.reset();
       updateCountryCode();
       form.elements.password.type = 'password';
@@ -307,6 +311,7 @@
       const response = await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
       if (!response.ok) throw new Error('Logout failed');
       user = null;
+      announceAuthChange();
       renderUser();
       close();
     } catch {
@@ -319,5 +324,5 @@
   renderCollections();
   window.addEventListener('bcf:orders-changed', renderOrders);
   fetch('/api/auth/me', { credentials: 'same-origin' }).then((response) => response.ok ? response.json() : null)
-    .then((data) => { if (data) { user = data.user; renderUser(); } }).catch(() => {});
+    .then((data) => { if (data) { user = data.user; renderUser(); announceAuthChange(); } }).catch(() => {});
 })();

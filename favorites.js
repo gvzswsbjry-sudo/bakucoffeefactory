@@ -10,8 +10,12 @@
   let overlay;
   let trigger;
   let previousFocus;
+  let accountItems = null;
+  let accountUserId = null;
+  let saveQueue = Promise.resolve();
 
   function read() {
+    if (accountItems !== null) return accountItems;
     try {
       const value = JSON.parse(root.localStorage.getItem(STORAGE_KEY));
       return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
@@ -19,9 +23,68 @@
   }
 
   function write(items) {
-    try { root.localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch {}
+    if (accountUserId) {
+      accountItems = items;
+      const keys = Object.keys(items);
+      const owner = accountUserId;
+      saveQueue = saveQueue.catch(() => {}).then(async () => {
+        if (owner !== accountUserId) return;
+        const response = await root.fetch('/api/account/favorites', {
+          method: 'PUT', credentials: 'same-origin', headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ keys }),
+        });
+        if (!response.ok) throw new Error('Favoritlər hesabınızda yadda saxlanılmadı. Yenidən cəhd edin.');
+      }).catch((error) => {
+        const status = drawer?.querySelector('.favorites-sync-status');
+        if (status) status.textContent = error.message;
+      });
+    } else {
+      try { root.localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch {}
+    }
     root.dispatchEvent?.(new CustomEvent('bcf:favorites-changed', { detail: Object.values(items) }));
     return items;
+  }
+
+  function fromCatalog(product) {
+    const category = product.category;
+    const key = `${category}:${product.id}`;
+    return {
+      key, id: product.id, category: { coffee: 'Qəhvə', tea: 'Çay', equipment: 'Avadanlıq' }[category],
+      name: product.name, image: product.image,
+      price: Number(product.price) > 0 ? `${Number(product.price).toFixed(2)} ₼` : 'Qiymət mağazada',
+      url: category === 'equipment' ? `mehsul.html?id=${encodeURIComponent(product.id)}`
+        : category === 'tea' ? `caylar.html#${encodeURIComponent(product.id)}`
+          : `qehveler.html#coffee-${encodeURIComponent(product.id)}`,
+    };
+  }
+
+  async function changeAccount(user) {
+    const owner = user?.id || null;
+    accountUserId = owner;
+    if (!owner) { accountItems = null; sync(); return; }
+    try {
+      const [favoritesResponse, productsResponse] = await Promise.all([
+        root.fetch('/api/account/favorites', { credentials: 'same-origin' }),
+        root.fetch('/api/products', { cache: 'no-store' }),
+      ]);
+      if (!favoritesResponse.ok || !productsResponse.ok) throw new Error('Favoritlər hesabınızdan yüklənmədi.');
+      const [{ keys }, products] = await Promise.all([favoritesResponse.json(), productsResponse.json()]);
+      if (owner !== accountUserId) return;
+      const catalog = Object.fromEntries(products.filter((product) => product.active).map((product) => {
+        const item = fromCatalog(product);
+        return [item.key, item];
+      }));
+      const guest = read();
+      const mergedKeys = [...new Set([...(Array.isArray(keys) ? keys : []), ...Object.keys(guest)])]
+        .filter((key) => catalog[key]);
+      accountItems = Object.fromEntries(mergedKeys.map((key) => [key, catalog[key]]));
+      try { root.localStorage.removeItem(STORAGE_KEY); } catch {}
+      sync();
+      if (mergedKeys.length !== keys.length) write(accountItems);
+    } catch (error) {
+      const status = drawer?.querySelector('.favorites-sync-status');
+      if (status) status.textContent = error.message;
+    }
   }
 
   function escapeHtml(value) {
@@ -215,6 +278,7 @@
     drawer.setAttribute('aria-labelledby', 'favoritesTitle');
     drawer.innerHTML = `
       <header><div><p>SİZİN SEÇİMLƏRİNİZ</p><h2 id="favoritesTitle">Favorilər</h2></div><button class="favorites-close" type="button" aria-label="Bağla">×</button></header>
+      <p class="favorites-sync-status" role="status" aria-live="polite"></p>
       <div class="favorites-list"></div>`;
 
     document.body.append(overlay, drawer);
@@ -245,6 +309,7 @@
     observer.observe(document.body, { childList: true, subtree: true });
     root.addEventListener('storage', (event) => { if (event.key === STORAGE_KEY) sync(); });
     root.addEventListener('bcf:favorites-changed', sync);
+    root.addEventListener('bcf:auth-changed', (event) => { changeAccount(event.detail?.user); });
   }
 
   return { STORAGE_KEY, read, write, describe, safeProductUrl, safeImage, init };
