@@ -441,23 +441,36 @@
 
   overlay.querySelector('.account-logout').addEventListener('click', async () => {
     try {
-      const response = await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
-      if (!response.ok) throw new Error('Logout failed');
-      user = null;
-      announceAuthChange();
-      renderUser();
-      close();
-    } catch {
-      message.textContent = 'Çıxış mümkün olmadı. Yenidən cəhd edin.';
-    }
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
+    } catch {}
+    try {
+      localStorage.removeItem('bcf_customer_user');
+    } catch {}
+    user = null;
+    announceAuthChange();
+    renderUser();
+    close();
   });
 
   setMode('login');
+  try {
+    const localSaved = localStorage.getItem('bcf_customer_user');
+    if (localSaved && !user) {
+      user = JSON.parse(localSaved);
+    }
+  } catch {}
   renderUser();
   renderCollections();
   window.addEventListener('bcf:orders-changed', renderOrders);
   fetch('/api/auth/me', { credentials: 'same-origin' }).then((response) => response.ok ? response.json() : null)
-    .then((data) => { if (data) { user = data.user; renderUser(); announceAuthChange(); } }).catch(() => {});
+    .then((data) => {
+      if (data?.user) {
+        user = data.user;
+        try { localStorage.setItem('bcf_customer_user', JSON.stringify(user)); } catch {}
+        renderUser();
+        announceAuthChange();
+      }
+    }).catch(() => {});
 
   try {
     const urlParams = new URLSearchParams(window.location.search);
