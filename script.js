@@ -29,10 +29,10 @@ document.querySelectorAll('.site-header .brand').forEach((brand) => {
 
 const accountStyles = document.createElement('link');
 accountStyles.rel = 'stylesheet';
-accountStyles.href = 'account.css';
+accountStyles.href = 'account.css?v=20261031-v3';
 document.head.append(accountStyles);
 const accountScript = document.createElement('script');
-accountScript.src = 'account.js';
+accountScript.src = 'account.js?v=20261031-v3';
 accountScript.async = false;
 document.body.append(accountScript);
 
