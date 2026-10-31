@@ -89,6 +89,35 @@ test('static serving exposes only storefront assets, never private server files'
   } finally { await site.close(); }
 });
 
+test('social authentication allows Google and Apple sign-in and session generation', async () => {
+  const site = await fixture();
+  try {
+    const googleAuth = await post(site.base, 'social', { provider: 'google', email: 'tester@gmail.com', name: 'Tester User' });
+    assert.equal(googleAuth.status, 201);
+    const googleData = await googleAuth.json();
+    assert.equal(googleData.user.email, 'tester@gmail.com');
+    const cookie = googleAuth.headers.get('set-cookie');
+    assert.match(cookie, /^bcf_customer=/);
+
+    const session = await fetch(`${site.base}/api/auth/me`, { headers: { cookie } });
+    assert.equal((await session.json()).user.email, 'tester@gmail.com');
+
+    const repeatGoogle = await post(site.base, 'social', { provider: 'google', email: 'tester@gmail.com' });
+    assert.equal(repeatGoogle.status, 200);
+
+    const appleAuth = await post(site.base, 'social', { provider: 'apple', email: 'apple_user@icloud.com', name: 'Apple Fan' });
+    assert.equal(appleAuth.status, 201);
+    assert.equal((await appleAuth.json()).user.email, 'apple_user@icloud.com');
+
+    const invalidProvider = await post(site.base, 'social', { provider: 'unknown', email: 'x@example.com' });
+    assert.equal(invalidProvider.status, 400);
+
+    const oauthRedirect = await fetch(`${site.base}/api/auth/oauth/google`, { redirect: 'manual' });
+    assert.equal(oauthRedirect.status, 302);
+    assert.match(oauthRedirect.headers.get('location'), /auth=social&provider=google/);
+  } finally { await site.close(); }
+});
+
 test('production customer cookie is marked Secure', async () => {
   const { Pool } = newDb().adapters.createPg();
   const database = createDatabase({ connectionString: 'postgres://local/test', PoolClass: Pool });
