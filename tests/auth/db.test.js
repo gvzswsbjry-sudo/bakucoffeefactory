@@ -15,6 +15,8 @@ test('customer migration creates persistent user, session, and attempt tables', 
   await database.migrate();
   const tables = await database.pool.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
   const names = tables.rows.map((row) => row.table_name);
-  for (const table of ['customer_users', 'customer_sessions', 'auth_attempts']) assert.ok(names.includes(table), table);
+  for (const table of ['customer_users', 'customer_sessions', 'customer_identities', 'customer_favorites', 'auth_attempts']) {
+    assert.ok(names.includes(table), table);
+  }
   await database.close();
 });

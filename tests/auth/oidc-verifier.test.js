@@ -63,4 +63,10 @@ test('OIDC verifier validates Apple issuer and client audience', async () => {
   }));
   assert.equal(identity.provider, 'apple');
   assert.equal(identity.subject, 'apple-subject');
+
+  const returningIdentity = await verifier().verify('apple', token({
+    iss: 'https://appleid.apple.com', aud: 'apple-client-id', sub: 'apple-subject',
+    iat: nowSeconds - 30, exp: nowSeconds + 300,
+  }));
+  assert.equal(returningIdentity.email, null);
 });

@@ -98,6 +98,7 @@ test('social authentication requires a provider-verified ID token', async () => 
   const identities = {
     'google-good-token': { provider: 'google', subject: 'google-subject-1', email: 'tester@gmail.com', name: 'Tester User' },
     'apple-good-token': { provider: 'apple', subject: 'apple-subject-1', email: 'apple_user@icloud.com', name: 'Apple Fan' },
+    'apple-repeat-token': { provider: 'apple', subject: 'apple-subject-1', email: null, name: '' },
   };
   const site = await fixture(true, {
     socialProviders: {
@@ -136,6 +137,10 @@ test('social authentication requires a provider-verified ID token', async () => 
     const appleAuth = await post(site.base, 'social', { provider: 'apple', idToken: 'apple-good-token' });
     assert.equal(appleAuth.status, 201);
     assert.equal((await appleAuth.json()).user.email, 'apple_user@icloud.com');
+
+    const repeatApple = await post(site.base, 'social', { provider: 'apple', idToken: 'apple-repeat-token' });
+    assert.equal(repeatApple.status, 200);
+    assert.equal((await repeatApple.json()).user.email, 'apple_user@icloud.com');
 
     const invalidProvider = await post(site.base, 'social', { provider: 'unknown', idToken: 'nope' });
     assert.equal(invalidProvider.status, 400);
