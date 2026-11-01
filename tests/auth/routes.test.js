@@ -4,13 +4,13 @@ const { newDb } = require('pg-mem');
 const { createDatabase } = require('../../server/db');
 const { createServer } = require('../../server');
 
-async function fixture(withDatabase = true) {
+async function fixture(withDatabase = true, options = {}) {
   let database;
   if (withDatabase) {
     const { Pool } = newDb().adapters.createPg();
     database = createDatabase({ connectionString: 'postgres://local/test', PoolClass: Pool });
   }
-  const server = createServer({ customerDatabase: database });
+  const server = createServer({ customerDatabase: database, ...options });
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   const base = `http://127.0.0.1:${server.address().port}`;
   return { base, database, close: async () => {
@@ -46,16 +46,21 @@ test('register, me, logout, and phone login use a separate secure customer cooki
   } finally { await site.close(); }
 });
 
-test('provider discovery never exposes OAuth secrets', async () => {
-  const site = await fixture();
+test('provider discovery exposes only public OAuth configuration', async () => {
+  const site = await fixture(true, {
+    socialProviders: {
+      google: { clientId: 'google-client.apps.exampleusercontent.com' },
+      apple: { clientId: 'az.bakucoffeefactory.web' },
+    },
+  });
   try {
     const response = await fetch(`${site.base}/api/auth/providers`);
     assert.equal(response.status, 200);
     const body = await response.json();
     assert.deepEqual(Object.keys(body).sort(), ['apple', 'google']);
-    assert.equal(typeof body.google, 'boolean');
-    assert.equal(typeof body.apple, 'boolean');
-    assert.doesNotMatch(JSON.stringify(body), /secret|clientId|private/i);
+    assert.deepEqual(body.google, { enabled: true, clientId: 'google-client.apps.exampleusercontent.com' });
+    assert.deepEqual(body.apple, { enabled: true, clientId: 'az.bakucoffeefactory.web' });
+    assert.doesNotMatch(JSON.stringify(body), /secret|privateKey|clientSecret/i);
   } finally { await site.close(); }
 });
 
@@ -89,10 +94,33 @@ test('static serving exposes only storefront assets, never private server files'
   } finally { await site.close(); }
 });
 
-test('social authentication allows Google and Apple sign-in and session generation', async () => {
-  const site = await fixture();
+test('social authentication requires a provider-verified ID token', async () => {
+  const identities = {
+    'google-good-token': { provider: 'google', subject: 'google-subject-1', email: 'tester@gmail.com', name: 'Tester User' },
+    'apple-good-token': { provider: 'apple', subject: 'apple-subject-1', email: 'apple_user@icloud.com', name: 'Apple Fan' },
+  };
+  const site = await fixture(true, {
+    socialProviders: {
+      google: { clientId: 'google-client.apps.exampleusercontent.com' },
+      apple: { clientId: 'az.bakucoffeefactory.web' },
+    },
+    oidcVerifier: {
+      verify: async (provider, idToken) => {
+        const identity = identities[idToken];
+        if (!identity || identity.provider !== provider) {
+          const error = new Error('Provayder təsdiqi uğursuz oldu.');
+          error.status = 401;
+          throw error;
+        }
+        return identity;
+      },
+    },
+  });
   try {
-    const googleAuth = await post(site.base, 'social', { provider: 'google', email: 'tester@gmail.com', name: 'Tester User' });
+    const forged = await post(site.base, 'social', { provider: 'google', email: 'victim@gmail.com', name: 'Victim' });
+    assert.equal(forged.status, 401);
+
+    const googleAuth = await post(site.base, 'social', { provider: 'google', idToken: 'google-good-token' });
     assert.equal(googleAuth.status, 201);
     const googleData = await googleAuth.json();
     assert.equal(googleData.user.email, 'tester@gmail.com');
@@ -102,19 +130,18 @@ test('social authentication allows Google and Apple sign-in and session generati
     const session = await fetch(`${site.base}/api/auth/me`, { headers: { cookie } });
     assert.equal((await session.json()).user.email, 'tester@gmail.com');
 
-    const repeatGoogle = await post(site.base, 'social', { provider: 'google', email: 'tester@gmail.com' });
+    const repeatGoogle = await post(site.base, 'social', { provider: 'google', idToken: 'google-good-token' });
     assert.equal(repeatGoogle.status, 200);
 
-    const appleAuth = await post(site.base, 'social', { provider: 'apple', email: 'apple_user@icloud.com', name: 'Apple Fan' });
+    const appleAuth = await post(site.base, 'social', { provider: 'apple', idToken: 'apple-good-token' });
     assert.equal(appleAuth.status, 201);
     assert.equal((await appleAuth.json()).user.email, 'apple_user@icloud.com');
 
-    const invalidProvider = await post(site.base, 'social', { provider: 'unknown', email: 'x@example.com' });
+    const invalidProvider = await post(site.base, 'social', { provider: 'unknown', idToken: 'nope' });
     assert.equal(invalidProvider.status, 400);
 
     const oauthRedirect = await fetch(`${site.base}/api/auth/oauth/google`, { redirect: 'manual' });
-    assert.equal(oauthRedirect.status, 302);
-    assert.match(oauthRedirect.headers.get('location'), /auth=social&provider=google/);
+    assert.equal(oauthRedirect.status, 404);
   } finally { await site.close(); }
 });
 
