@@ -6,12 +6,12 @@ const DEFAULT_CSP = [
   "object-src 'none'",
   "frame-ancestors 'none'",
   "form-action 'self'",
-  "script-src 'self'",
+  "script-src 'self' https://accounts.google.com https://appleid.cdn-apple.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob:",
-  "connect-src 'self'",
-  "frame-src 'none'",
+  "connect-src 'self' https://accounts.google.com https://appleid.apple.com",
+  "frame-src https://accounts.google.com https://appleid.apple.com",
   "worker-src 'self' blob:",
 ].join('; ');
 
@@ -21,7 +21,9 @@ function applySecurityHeaders(res, { secure = false } = {}) {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()');
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+  // OAuth popup hand-offs require an opener relationship, while still isolating
+  // unrelated cross-origin pages.
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
   res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
   if (secure) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
