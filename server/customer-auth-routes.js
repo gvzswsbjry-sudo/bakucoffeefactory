@@ -71,7 +71,11 @@ async function handleCustomerAuthRequest(req, res, pathname, {
     const input = { ...body, ip: getClientIp(req, trustProxy), userAgent: String(req.headers['user-agent'] || '').slice(0, 512) };
     if (pathname === '/api/auth/social') {
       if (!oidcVerifier) throw Object.assign(new Error('Bu giriş üsulu hazırda aktiv deyil.'), { status: 503 });
-      const identity = await oidcVerifier.verify(String(body.provider || '').toLowerCase(), body.idToken);
+      const provider = String(body.provider || '').toLowerCase();
+      if (!['google', 'apple'].includes(provider)) {
+        throw Object.assign(new Error('Dəstəklənməyən giriş təminatçısı.'), { status: 400 });
+      }
+      const identity = await oidcVerifier.verify(provider, body.idToken);
       const result = await customerAuth.socialAuth({ ...identity, ip: input.ip, userAgent: input.userAgent });
       json(res, result.isNew ? 201 : 200, { user: result.user }, { 'set-cookie': cookieHeader(result.token, secureCookies) });
       return true;
