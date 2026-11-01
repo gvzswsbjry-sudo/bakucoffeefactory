@@ -28,10 +28,11 @@ test('the shared storefront script loads the accessible account interface withou
   assert.match(account, /data-provider="google"/);
   assert.match(account, /data-provider="apple"/);
   assert.match(account, /api\/auth\/providers/);
-  assert.match(account, /id="accountSocialPrompt"/);
   assert.match(account, /id="accountSocialMessage"/);
-  assert.match(account, /istifadeci@icloud\.com/);
-  assert.match(account, /bcf_customer_user/);
+  assert.match(account, /accounts\.google\.com\/gsi\/client/);
+  assert.match(account, /appleid\.cdn-apple\.com\/appleauth/);
+  assert.match(account, /idToken/);
+  assert.doesNotMatch(account, /bcf_customer_user|istifadeci@icloud\.com|activeSocialProvider/);
   assert.doesNotMatch(account, /setItem\([^)]*password|sessionStorage/);
 });
 
