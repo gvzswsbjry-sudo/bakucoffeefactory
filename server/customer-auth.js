@@ -167,7 +167,6 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     }
     const subjectNormalized = String(subject ?? '').trim();
     if (!subjectNormalized || subjectNormalized.length > 255) throw authError('Provayder təsdiqi uğursuz oldu.', 401);
-    const emailNormalized = normalizeEmail(email);
     const key = attemptKey(ip, `${rawProvider}:${subjectNormalized}`);
     await checkAttempts(key);
 
@@ -181,6 +180,9 @@ function createCustomerAuth({ database, now = () => new Date() }) {
       await pool.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
       return { user: publicUser(user), token, isNew: false };
     }
+
+    if (!email) throw authError('Provayder e-poçt ünvanı qaytarmadı.', 401);
+    const emailNormalized = normalizeEmail(email);
 
     const { rows: existingRows } = await pool.query(
       'SELECT id, username, phone_e164, email_normalized FROM customer_users WHERE email_normalized = $1 AND is_active = TRUE',

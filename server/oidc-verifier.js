@@ -62,8 +62,13 @@ function createOidcVerifier({ providers = {}, fetchImpl = globalThis.fetch, now 
       || (Number.isFinite(claims.iat) && claims.iat > current + 60)
       || typeof claims.sub !== 'string' || claims.sub.length > 255) throw oidcError();
     if (provider === 'google' && claims.email_verified !== true) throw oidcError('Google e-poçtu təsdiqlənməyib.');
-    if (typeof claims.email !== 'string') throw oidcError('Provayder e-poçt ünvanı qaytarmadı.');
-    return { provider, subject: claims.sub, email: claims.email, name: typeof claims.name === 'string' ? claims.name : '' };
+    if (provider === 'google' && typeof claims.email !== 'string') throw oidcError('Provayder e-poçt ünvanı qaytarmadı.');
+    return {
+      provider,
+      subject: claims.sub,
+      email: typeof claims.email === 'string' ? claims.email : null,
+      name: typeof claims.name === 'string' ? claims.name : '',
+    };
   }
 
   return { verify };

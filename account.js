@@ -188,7 +188,6 @@
   }
 
   function close() {
-    closeSocialPrompt();
     overlay.hidden = true;
     document.body.classList.remove('account-open');
     document.documentElement.classList.remove('account-open');
