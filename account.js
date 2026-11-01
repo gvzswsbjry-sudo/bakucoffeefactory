@@ -395,9 +395,6 @@
     try {
       await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
     } catch {}
-    try {
-      localStorage.removeItem('bcf_customer_user');
-    } catch {}
     user = null;
     announceAuthChange();
     renderUser();
@@ -405,12 +402,6 @@
   });
 
   setMode('login');
-  try {
-    const localSaved = localStorage.getItem('bcf_customer_user');
-    if (localSaved && !user) {
-      user = JSON.parse(localSaved);
-    }
-  } catch {}
   renderUser();
   renderCollections();
   window.addEventListener('bcf:orders-changed', renderOrders);
@@ -418,20 +409,9 @@
     .then((data) => {
       if (data?.user) {
         user = data.user;
-        try { localStorage.setItem('bcf_customer_user', JSON.stringify(user)); } catch {}
         renderUser();
         announceAuthChange();
       }
     }).catch(() => {});
 
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('auth') === 'social') {
-      const provider = urlParams.get('provider') || 'google';
-      setTimeout(() => {
-        trigger.click();
-        openSocialPrompt(provider);
-      }, 100);
-    }
-  } catch {}
 })();
