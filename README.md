@@ -12,6 +12,8 @@ Qeydiyyat və giriş üçün PostgreSQL tələb olunur. Serverin mühitində `DA
 
 Qeydiyyatda istifadəçi adı, ən azı 12 simvollu şifrə, ölkə kodlu beynəlxalq telefon nömrəsi və Məxfilik siyasəti razılığı tələb olunur. Girişdə istifadəçi adı və ya telefon nömrəsi işləyir. Telefon nömrəsi hələ SMS ilə təsdiqlənmir; bu səbəbdən nömrə sahibliyi yoxlanmış sayılmamalıdır. Şifrələr açıq mətn kimi saxlanmır. Hesab sessiyası HttpOnly cookie ilə idarə edilir.
 
+Google və Apple girişləri yalnız real provayder tokeni serverdə imza, issuer və audience üzrə yoxlanandan sonra hesab yaradır. Google üçün OAuth Web Client yaradın, saytın HTTPS domenini Authorized JavaScript origins hissəsinə əlavə edin və `GOOGLE_CLIENT_ID` dəyişənini təyin edin. Apple üçün Services ID yaradın, domeni və `${SITE_ORIGIN}/` callback ünvanını Apple Developer portalında qeyd edin və `APPLE_CLIENT_ID` təyin edin. Bu dəyişənlər verilməyən provayderin düyməsi avtomatik passiv qalır. Client ID məxfi açar deyil; Google client secret və Apple private key bu hazır ID-token axınında tələb olunmur. Lokal `http://127.0.0.1` Apple girişinin real sınağı üçün uyğun deyil — sabit HTTPS domen istifadə edin.
+
 ## Sifariş sorğuları
 
 Müştəri səbətdən “Sifariş et” seçərək əlaqə nömrəsi və istəyə bağlı qeyd daxil edə bilər. Server qiymət və miqdarı məhsul kataloqu ilə yenidən yoxlayır, sorğunu `data/orders.json` faylına yazır və yalnız uğurlu saxlanmadan sonra sifariş nömrəsi göstərir. Bu, avtomatik ödəniş və ya stok təsdiqi deyil: sifarişlər `/admin/orders.html` ünvanında admin girişi ilə görünür və satıcı müştəri ilə əlaqə saxlamalıdır. Saytı `file://` ilə deyil, Node serveri vasitəsilə açın.
@@ -19,6 +21,7 @@ Müştəri səbətdən “Sifariş et” seçərək əlaqə nömrəsi və istəy
 ## Yayımdan əvvəl
 
 - HTTPS qoşun, `NODE_ENV=production` təyin edin və `DATABASE_URL` üçün davamlı PostgreSQL xidməti qurun. Production rejimində müştəri sessiya cookie-si `Secure` olur.
+- Müştərinin eyni hesabı başqa telefonda açması, favoriləri və sifariş tarixçəsini görməsi üçün bütün instansiyaların eyni davamlı `DATABASE_URL` bazasına qoşulduğunu təsdiqləyin. Müvəqqəti Cloudflare tunel domeni Google/Apple provayder qeydiyyatı üçün uyğun deyil; əvvəl sabit domeni bağlayın.
 - `ADMIN_INITIAL_PASSWORD` üçün ən azı 12 simvolluq, güclü və unikal ilkin admin şifrəsi təyin edin. Production-da bu dəyişən verilmədən ilk admin qurulması bloklanır. Admin panelini yalnız etibarlı operatorlara açın və ilkin girişdən sonra şifrəni rotasiya edin.
 - `ALLOWED_ORIGINS` dəyişənini yalnız real HTTPS domenləri ilə doldurun (vergüllə ayrılmış). Reverse proxy arxasında işləyərkən `TRUST_PROXY=1`, birbaşa internetə açılan Node prosesində isə `TRUST_PROXY=0` saxlayın.
 - `data/products.json`, `data/orders.json`, `data/admin-config.json` və `assets/uploads/` üçün davamlı disk və ehtiyat nüsxə təmin edin. Sifariş faylı itərsə, sifarişlər də itər. Birdən çox server instansiyası planlaşdırılırsa, məhsul, admin və sifariş yaddaşını ortaq verilənlər bazasına köçürün.
