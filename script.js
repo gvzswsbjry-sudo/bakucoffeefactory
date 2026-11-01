@@ -23,7 +23,9 @@ document.querySelectorAll('.site-header .brand').forEach((brand) => {
   logo.addEventListener('load', () => {
     if (logo.naturalWidth > 0) brand.replaceChildren(logo);
   }, { once: true });
-  logo.src = new URL('assets/brand/baku-coffee-factory-logo.jpg', document.baseURI).href;
+  const logoUrl = new URL('assets/brand/baku-coffee-factory-logo.jpg', document.baseURI);
+  logoUrl.searchParams.set('v', '20261101');
+  logo.src = logoUrl.href;
   if (logo.complete && logo.naturalWidth > 0) brand.replaceChildren(logo);
 });
 

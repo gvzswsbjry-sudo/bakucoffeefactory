@@ -231,7 +231,7 @@ function createRequestHandler({
           const customer = await customerAuth.getSession(customerCookie(req));
           if (!customer) return json(res, 401, { error: 'Hesaba daxil olun.' });
           const history = (await orders.list()).filter((order) => order.customerId === customer.id).map((order) => ({
-            id: order.id, createdAt: order.createdAt, total: order.total, status: order.status,
+            id: order.id, createdAt: order.createdAt, total: order.total, quoteRequired: Boolean(order.quoteRequired), status: order.status,
             items: order.items.map(({ name, quantity, unit }) => ({ name, quantity, unit })),
           }));
           return json(res, 200, history);

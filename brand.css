@@ -4,6 +4,7 @@
   justify-content: flex-start;
   align-self: flex-start;
   flex: 0 0 auto;
+  min-width: 120px;
   width: auto;
   height: 52px;
   max-width: 170px;
@@ -32,6 +33,7 @@
     width: auto;
     height: 45px;
     max-width: 140px;
+    min-width: 104px;
   }
   .site-header .brand img {
     max-height: 45px;

@@ -4,6 +4,11 @@
   const filter = document.getElementById('orderStatusFilter');
   let orders = [];
   const money = (value) => `${Number(value || 0).toFixed(2)} ₼`;
+  const totalLabel = (value, quoteRequired = false) => {
+    const known = Number(value || 0);
+    if (!quoteRequired) return money(known);
+    return known > 0 ? `${money(known)} + qiymət təsdiqlənəcək` : 'Qiymət təsdiqlənəcək';
+  };
   const normalizedStatus = (order) => order.status === 'shipped' ? 'shipped' : 'new';
   const element = (tag, className, value) => {
     const node = document.createElement(tag);
@@ -32,7 +37,7 @@
       const time = element('time', '', new Date(order.createdAt).toLocaleString('az-AZ'));
       time.dateTime = order.createdAt;
       heading.append(time);
-      top.append(heading, element('strong', '', money(order.total)));
+      top.append(heading, element('strong', '', totalLabel(order.total, order.quoteRequired)));
       const contact = element('div', 'order-contact');
       const phone = element('a', '', order.phone);
       phone.href = `tel:${order.phone}`;
@@ -52,7 +57,10 @@
           img.alt = '';
           row.append(img);
         }
-        row.append(element('span', '', `${item.name} · ${item.quantity} ${item.unit === 'g' ? 'q' : 'ədəd'}`), element('strong', '', money(item.total)));
+        row.append(
+          element('span', '', `${item.name} · ${item.quantity} ${item.unit === 'g' ? 'q' : 'ədəd'}`),
+          element('strong', '', totalLabel(item.total, item.quoteRequired)),
+        );
         items.append(row);
       });
       card.append(top, contact, items);

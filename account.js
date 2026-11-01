@@ -58,7 +58,7 @@
             <input name="email" type="email" inputmode="email" autocomplete="email" placeholder="ad@example.com" />
           </label>
           <label class="account-field">Şifrə
-            <span class="account-password-wrap"><input name="password" type="password" autocomplete="current-password" minlength="8" /><button class="account-password-toggle" type="button" aria-label="Şifrəni göstər" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span>
+            <span class="account-password-wrap"><input name="password" type="password" autocomplete="current-password" minlength="12" /><button class="account-password-toggle" type="button" aria-label="Şifrəni göstər" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span>
           </label>
           <label class="account-consent account-register-only" hidden>
             <input name="privacyAccepted" type="checkbox" />
@@ -155,7 +155,9 @@
     list.innerHTML = Array.isArray(orders) && orders.length ? orders.map((order) => `
       <article class="account-order-card">
         <div><span>Sifariş #${escapeHtml(order.id)}</span><time datetime="${escapeHtml(order.createdAt)}">${escapeHtml(new Date(order.createdAt).toLocaleDateString('az-AZ'))}</time></div>
-        <strong>${escapeHtml(Number(order.total || 0).toFixed(2))} ₼</strong>
+        <strong>${escapeHtml(order.quoteRequired
+          ? (Number(order.total || 0) > 0 ? `${Number(order.total).toFixed(2)} ₼ + qiymət təsdiqlənəcək` : 'Qiymət təsdiqlənəcək')
+          : `${Number(order.total || 0).toFixed(2)} ₼`)}</strong>
         <p>${escapeHtml((Array.isArray(order.items) ? order.items : []).map((item) => `${item.name} × ${item.quantity}${item.unit === 'g' ? 'q' : ''}`).join(' · '))}</p>
         <small>${order.status === 'new' ? 'Sifariş qeydə alınıb' : escapeHtml(order.status || 'Sifariş qeydə alınıb')}</small>
       </article>`).join('') : '<div class="account-empty"><span aria-hidden="true">⌁</span><h3>Hələ sifariş yoxdur.</h3><p>Hesabınıza daxil olaraq verdiyiniz sifarişlər burada görünəcək.</p></div>';
