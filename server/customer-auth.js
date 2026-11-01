@@ -143,7 +143,7 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     }
     await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
     const token = await createSession(pool, user.id, userAgent);
-    await pool.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
+        await client.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
     return { user: publicUser(user), token };
   }
 
