@@ -244,126 +244,97 @@
     passwordToggle.setAttribute('aria-label', visible ? 'Şifrəni gizlət' : 'Şifrəni göstər');
   });
   const providerButtons = [...overlay.querySelectorAll('[data-provider]')];
+  let providerConfig = {};
   fetch('/api/auth/providers', { credentials: 'same-origin' }).then((response) => response.ok ? response.json() : null).then((providers) => {
-    providerButtons.forEach((button) => { button.dataset.available = String(Boolean(providers?.[button.dataset.provider])); });
+    providerConfig = providers || {};
+    providerButtons.forEach((button) => {
+      const enabled = Boolean(providerConfig?.[button.dataset.provider]?.enabled);
+      button.dataset.available = String(enabled);
+      button.disabled = !enabled;
+      if (!enabled) button.title = 'Bu giriş üsulu serverdə hələ konfiqurasiya edilməyib.';
+    });
   }).catch(() => {});
 
-  const socialPrompt = overlay.querySelector('#accountSocialPrompt');
-  const socialTitle = overlay.querySelector('#accountSocialTitle');
-  const socialSubtitle = overlay.querySelector('#accountSocialSubtitle');
-  const socialIcon = overlay.querySelector('#accountSocialIcon');
-  const socialEmail = overlay.querySelector('#accountSocialEmail');
-  const socialName = overlay.querySelector('#accountSocialName');
   const socialMessage = overlay.querySelector('#accountSocialMessage');
-  const socialCancel = overlay.querySelector('#accountSocialCancel');
-  const socialConfirm = overlay.querySelector('#accountSocialConfirm');
-  let activeSocialProvider = null;
-
-  function setSocialError(text) {
-    if (!socialMessage) return;
-    if (text) {
-      socialMessage.textContent = text;
-      socialMessage.hidden = false;
-    } else {
-      socialMessage.textContent = '';
-      socialMessage.hidden = true;
-    }
+  const loadedScripts = new Map();
+  function loadProviderScript(url) {
+    if (loadedScripts.has(url)) return loadedScripts.get(url);
+    const promise = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = url;
+      script.async = true;
+      script.defer = true;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error('Giriş provayderini yükləmək mümkün olmadı.'));
+      document.head.append(script);
+    });
+    loadedScripts.set(url, promise);
+    return promise;
   }
-
-  function openSocialPrompt(provider) {
-    activeSocialProvider = provider;
-    message.textContent = '';
-    setSocialError('');
-    const isGoogle = provider === 'google';
-    socialTitle.textContent = isGoogle ? 'Google ilə davam et' : 'Apple ilə davam et';
-    socialSubtitle.textContent = isGoogle
-      ? 'Google e-poçtunuz ilə dərhal daxil olun və ya qeydiyyatdan keçin'
-      : 'Apple ID e-poçtunuz ilə dərhal daxil olun və ya qeydiyyatdan keçin';
-    socialIcon.innerHTML = isGoogle
-      ? '<span style="display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0);color:#fff;font-weight:700;font-size:13px;">G</span>'
-      : '<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M16.7 12.8c0-2.7 2.2-4 2.3-4.1-1.3-1.9-3.3-2.1-4-2.1-1.7-.2-3.3 1-4.2 1-.9 0-2.3-1-3.7-.9-1.9 0-3.6 1.1-4.6 2.8-2 3.4-.5 8.4 1.4 11.2.9 1.4 2.1 2.9 3.6 2.8 1.4-.1 2-1 3.7-1s2.2 1 3.7 1c1.5 0 2.5-1.4 3.4-2.7 1.1-1.6 1.6-3.2 1.6-3.3-.1 0-3.2-1.2-3.2-4.7ZM13.9 4.8c.8-1 1.4-2.4 1.2-3.8-1.2.1-2.6.8-3.5 1.8-.8.9-1.4 2.3-1.2 3.7 1.3.1 2.7-.7 3.5-1.7Z"/></svg>';
-    socialConfirm.textContent = isGoogle ? 'Google ilə daxil ol' : 'Apple ilə daxil ol';
-    socialEmail.placeholder = isGoogle ? 'ad@gmail.com' : 'ad@icloud.com';
-    const formEmail = form.elements.email?.value?.trim() || (form.elements.identifier?.value?.includes('@') ? form.elements.identifier.value.trim() : '');
-    socialEmail.value = formEmail || (isGoogle ? 'istifadeci@gmail.com' : 'istifadeci@icloud.com');
-    socialName.value = form.elements.username?.value?.trim() || (isGoogle ? 'Google İstifadəçisi' : 'Apple İstifadəçisi');
-    socialPrompt.hidden = false;
-    providerButtons.forEach((b) => { b.hidden = true; });
-    setTimeout(() => {
-      socialEmail.focus();
-      try { socialEmail.select(); } catch {}
-    }, 60);
+  function socialStatus(text, isError = false) {
+    socialMessage.textContent = text || '';
+    socialMessage.hidden = !text;
+    socialMessage.classList.toggle('error', isError);
   }
-
-  function closeSocialPrompt() {
-    activeSocialProvider = null;
-    setSocialError('');
-    if (socialPrompt) socialPrompt.hidden = true;
-    providerButtons.forEach((b) => { b.hidden = false; });
+  async function finishSocial(provider, idToken) {
+    const result = await request('social', { provider, idToken });
+    user = result.user;
+    announceAuthChange();
+    form.reset();
+    updateCountryCode();
+    renderUser();
+    close();
   }
-
-  socialCancel?.addEventListener('click', closeSocialPrompt);
-
-  providerButtons.forEach((button) => button.addEventListener('click', () => {
-    openSocialPrompt(button.dataset.provider);
-  }));
-
-  socialConfirm?.addEventListener('click', async () => {
-    if (!activeSocialProvider) return;
-    let email = socialEmail.value.trim();
-    if (!email) {
-      email = activeSocialProvider === 'apple' ? 'istifadeci@icloud.com' : 'istifadeci@gmail.com';
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setSocialError('Düzgün e-poçt ünvanı daxil edin.');
-      socialEmail.focus();
-      return;
-    }
-    setSocialError('');
-    socialConfirm.disabled = true;
-    message.textContent = '';
-    const name = socialName.value.trim();
+  async function signInWithGoogle(config) {
+    await loadProviderScript('https://accounts.google.com/gsi/client');
+    if (!window.google?.accounts?.id) throw new Error('Google giriş xidməti yüklənmədi.');
+    await new Promise((resolve, reject) => {
+      let completed = false;
+      window.google.accounts.id.initialize({
+        client_id: config.clientId,
+        callback: async (response) => {
+          if (completed) return;
+          completed = true;
+          try { await finishSocial('google', response.credential); resolve(); }
+          catch (error) { reject(error); }
+        },
+      });
+      window.google.accounts.id.prompt((notice) => {
+        if (!completed && (notice.isNotDisplayed?.() || notice.isSkippedMoment?.())) {
+          completed = true;
+          reject(new Error('Google hesab seçimi açılmadı. Brauzerdə üçüncü tərəf girişinə icazə verib yenidən yoxlayın.'));
+        }
+      });
+    });
+  }
+  async function signInWithApple(config) {
+    await loadProviderScript('https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js');
+    if (!window.AppleID?.auth) throw new Error('Apple giriş xidməti yüklənmədi.');
+    window.AppleID.auth.init({
+      clientId: config.clientId,
+      scope: 'name email',
+      redirectURI: `${location.origin}/`,
+      state: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+      usePopup: true,
+    });
+    const response = await window.AppleID.auth.signIn();
+    await finishSocial('apple', response?.authorization?.id_token);
+  }
+  providerButtons.forEach((button) => button.addEventListener('click', async () => {
+    const provider = button.dataset.provider;
+    const config = providerConfig?.[provider];
+    if (!config?.enabled) return socialStatus('Bu giriş üsulu serverdə hələ aktiv edilməyib.', true);
+    socialStatus(`${provider === 'google' ? 'Google' : 'Apple'} hesab seçimi açılır…`);
+    providerButtons.forEach((item) => { item.disabled = true; });
     try {
-      try {
-        const result = await request('social', {
-          provider: activeSocialProvider,
-          email,
-          name,
-        });
-        user = result.user;
-      } catch (err) {
-        // Resilient fallback when backend database is offline (503) or static host (404)
-        const cleanName = name || email.split('@')[0] || (activeSocialProvider === 'apple' ? 'Apple İstifadəçisi' : 'Google İstifadəçisi');
-        user = {
-          id: `${activeSocialProvider}_${Date.now().toString(36)}`,
-          username: cleanName,
-          email: email,
-          phone: null,
-          provider: activeSocialProvider,
-        };
-      }
-      try {
-        localStorage.setItem('bcf_customer_user', JSON.stringify(user));
-      } catch {}
-      announceAuthChange();
-      closeSocialPrompt();
-      form.reset();
-      updateCountryCode();
-      renderUser();
-      close();
-    } catch (err) {
-      setSocialError(err.message || 'Giriş tamamlanmadı.');
+      if (provider === 'google') await signInWithGoogle(config);
+      else await signInWithApple(config);
+    } catch (error) {
+      socialStatus(error.message || 'Giriş tamamlanmadı.', true);
     } finally {
-      socialConfirm.disabled = false;
+      providerButtons.forEach((item) => { item.disabled = !providerConfig?.[item.dataset.provider]?.enabled; });
     }
-  });
-
-  socialEmail?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); socialConfirm.click(); }
-  });
-  socialName?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); socialConfirm.click(); }
-  });
+  }));
   overlay.querySelectorAll('input').forEach((input) => input.addEventListener('focus', () => {
     if (window.visualViewport && window.visualViewport.height < window.innerHeight * .75) {
       setTimeout(() => input.scrollIntoView({ block: 'center', behavior: 'smooth' }), 120);
