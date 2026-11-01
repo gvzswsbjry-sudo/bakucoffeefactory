@@ -146,6 +146,8 @@ function createRequestHandler({
   allowedOrigins = [],
   trustProxy = false,
   adminInitialPassword = '',
+  socialProviders = {},
+  oidcVerifier,
 }) {
   const assetsRoot = path.join(rootDir, 'assets');
   const apiLimiter = createRateLimiter({ limit: 240, windowMs: 60 * 1000 });
@@ -191,6 +193,7 @@ function createRequestHandler({
 
       if (await handleCustomerAuthRequest(req, res, pathname, {
         database: customerDatabase, customerAuth, secureCookies, json, parseJson, allowedOrigins, trustProxy,
+        socialProviders, oidcVerifier,
       })) return;
 
       if (req.method === 'GET' && pathname === '/api/products') return json(res, 200, await store.list());

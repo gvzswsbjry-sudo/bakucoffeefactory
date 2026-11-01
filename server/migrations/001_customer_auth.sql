@@ -33,6 +33,17 @@ CREATE TABLE IF NOT EXISTS customer_sessions (
 CREATE INDEX IF NOT EXISTS customer_sessions_user_id_idx ON customer_sessions(user_id);
 CREATE INDEX IF NOT EXISTS customer_sessions_expires_at_idx ON customer_sessions(expires_at);
 
+CREATE TABLE IF NOT EXISTS customer_identities (
+  provider TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  user_id UUID NOT NULL REFERENCES customer_users(id) ON DELETE CASCADE,
+  email_normalized TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (provider, subject)
+);
+
+CREATE INDEX IF NOT EXISTS customer_identities_user_id_idx ON customer_identities(user_id);
+
 CREATE TABLE IF NOT EXISTS auth_attempts (
   attempt_key TEXT PRIMARY KEY,
   failure_count INTEGER NOT NULL,
