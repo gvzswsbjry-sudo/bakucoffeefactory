@@ -50,6 +50,9 @@ html.account-open, body.account-open { overflow: hidden !important; touch-action
 .account-provider-google>span { width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0); font: 700 11px Arial,sans-serif; }
 .account-provider-apple { background: #171513; color: #fff; border-color: #171513; }
 .account-provider-apple:hover,.account-provider-apple:focus-visible { background: #322c28; color: #fff; }
+.account-provider:disabled { opacity: .48; cursor: not-allowed; filter: grayscale(.35); }
+.account-social-message { margin: 10px 4px 0; color: #526248; text-align: center; font: 600 11px/1.45 var(--sans,sans-serif); }
+.account-social-message.error { color: #a7392f; }
 .account-social-prompt { border: 1px solid #d5c9bb; background: #fff; padding: 18px; margin-top: 14px; display: grid; gap: 14px; text-align: left; }
 .account-social-header { display: flex; align-items: center; gap: 12px; }
 .account-social-header h4 { margin: 0 0 3px; font-size: 15px; font-weight: 700; color: #211b17; }
