@@ -160,26 +160,47 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     await pool.query('DELETE FROM customer_sessions WHERE token_hash = $1', [tokenHash(token)]);
   }
 
-  async function socialAuth({ provider, email, name, ip, userAgent } = {}) {
+  async function socialAuth({ provider, subject, email, name, ip, userAgent } = {}) {
     const rawProvider = String(provider ?? '').trim().toLowerCase();
     if (rawProvider !== 'google' && rawProvider !== 'apple') {
       throw authError('Dəstəklənməyən giriş təminatçısı.', 400);
     }
+    const subjectNormalized = String(subject ?? '').trim();
+    if (!subjectNormalized || subjectNormalized.length > 255) throw authError('Provayder təsdiqi uğursuz oldu.', 401);
     const emailNormalized = normalizeEmail(email);
-    const key = attemptKey(ip, emailNormalized);
+    const key = attemptKey(ip, `${rawProvider}:${subjectNormalized}`);
     await checkAttempts(key);
 
-    const { rows: existingRows } = await pool.query(
-      'SELECT id, username, phone_e164, email_normalized FROM customer_users WHERE email_normalized = $1 AND is_active = TRUE',
-      [emailNormalized]
-    );
+    const { rows: identityRows } = await pool.query(`SELECT u.id, u.username, u.phone_e164, u.email_normalized
+      FROM customer_identities i JOIN customer_users u ON u.id = i.user_id
+      WHERE i.provider = $1 AND i.subject = $2 AND u.is_active = TRUE`, [rawProvider, subjectNormalized]);
 
-    if (existingRows.length > 0) {
-      const user = existingRows[0];
-      await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
+    if (identityRows.length > 0) {
+      const user = identityRows[0];
       const token = await createSession(pool, user.id, userAgent);
       await pool.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
       return { user: publicUser(user), token, isNew: false };
+    }
+
+    const { rows: existingRows } = await pool.query(
+      'SELECT id, username, phone_e164, email_normalized FROM customer_users WHERE email_normalized = $1 AND is_active = TRUE',
+      [emailNormalized]);
+
+    if (existingRows.length > 0) {
+      const user = existingRows[0];
+      const client = await pool.connect();
+      try {
+        await client.query('BEGIN');
+        await client.query(`INSERT INTO customer_identities(provider, subject, user_id, email_normalized, created_at)
+          VALUES($1, $2, $3, $4, $5)`, [rawProvider, subjectNormalized, user.id, emailNormalized, current()]);
+        const token = await createSession(client, user.id, userAgent);
+        await client.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
+        await client.query('COMMIT');
+        return { user: publicUser(user), token, isNew: false };
+      } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+      } finally { client.release(); }
     }
 
     let baseName = String(name ?? '').trim().normalize('NFKC');
@@ -213,6 +234,9 @@ function createCustomerAuth({ database, now = () => new Date() }) {
         (id, username, username_normalized, phone_e164, email_normalized, password_salt, password_hash, privacy_consent_at, privacy_policy_version, created_at, updated_at, last_login_at)
         VALUES ($1, $2, $3, NULL, $4, $5, $6, $7, $8, $7, $7, $7) RETURNING id, username, phone_e164, email_normalized`,
       [crypto.randomUUID(), candidateUsername, candidateNormalized, emailNormalized, salt, hash, current(), POLICY_VERSION]);
+
+      await client.query(`INSERT INTO customer_identities(provider, subject, user_id, email_normalized, created_at)
+        VALUES($1, $2, $3, $4, $5)`, [rawProvider, subjectNormalized, rows[0].id, emailNormalized, current()]);
 
       const token = await createSession(client, rows[0].id, userAgent);
       await client.query('COMMIT');
