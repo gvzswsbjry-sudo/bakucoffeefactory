@@ -51,7 +51,9 @@
   let previousFocus = null;
 
   function readCart() {
-    return Object.values(loadSharedCart()).filter((item) => Number(item?.quantity) > 0);
+    return Object.entries(loadSharedCart())
+      .filter(([, item]) => Number(item?.quantity) > 0)
+      .map(([id, item]) => ({ ...item, id }));
   }
 
   function close() {
