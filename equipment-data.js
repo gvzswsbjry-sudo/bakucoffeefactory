@@ -53,8 +53,8 @@
       id: 'dallah', category: 'service', categoryLabel: 'Servis', name: 'Naxışlı Dallah',
       description: 'Qəhvə təqdimatına ənənəvi və zərif görünüş verən qəhvədan.',
       variants: [
-        { id: 'dallah-decorative', label: 'Yaşıl daşlı', color: '#64705c', image: 'assets/equipment/decorative-dallah.jpg', alt: 'Yaşıl daşlı dekorativ Dallah qəhvədan', price: 1 },
-        { id: 'dallah-silver', label: 'Gümüşü', color: '#c2c1bd', image: 'assets/equipment/silver-dallah.jpg', alt: 'Naxışlı gümüşü rəngli Dallah qəhvədan', price: 1 },
+        { id: 'dallah-decorative', label: 'Yaşıl daşlı', color: '#64705c', image: 'assets/equipment/decorative-dallah.jpg', alt: 'Yaşıl daşlı dekorativ Dallah qəhvədan', price: 2 },
+        { id: 'dallah-silver', label: 'Gümüşü', color: '#c2c1bd', image: 'assets/equipment/silver-dallah.jpg', alt: 'Naxışlı gümüşü rəngli Dallah qəhvədan', price: 2 },
       ],
     },
     {
