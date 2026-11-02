@@ -37,6 +37,13 @@ cart['french-press'] = {
   quantity: 1,
 };
 
+// Checkout must send the catalog key, not the shorter id stored inside a cart item.
+assert.deepStrictEqual(
+  cartUtils.getCheckoutCartItems(cart).map((item) => item.id),
+  ['coffee-colombia', 'tea-1001-gece', 'french-press'],
+  'Checkout IDs must preserve coffee/tea prefixes for backend lookup',
+);
+
 // Test Badge Count: 1 coffee line + 1 tea line + 1 equipment piece = 3 items
 assert.strictEqual(cartUtils.getCartBadgeCount(cart), 3, 'Badge count should be 3');
 assert.strictEqual(cartUtils.formatCartCount(cart), '3 məhsul', 'Formatted count should be "3 məhsul"');

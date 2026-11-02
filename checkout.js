@@ -51,9 +51,7 @@
   let previousFocus = null;
 
   function readCart() {
-    return Object.entries(loadSharedCart())
-      .filter(([, item]) => Number(item?.quantity) > 0)
-      .map(([id, item]) => ({ ...item, id }));
+    return getCheckoutCartItems(loadSharedCart());
   }
 
   function close() {

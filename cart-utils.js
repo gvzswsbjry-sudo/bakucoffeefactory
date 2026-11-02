@@ -114,6 +114,10 @@
     }
   };
 
+  const getCheckoutCartItems = (cart) => Object.entries(cart || {})
+    .filter(([, item]) => Number(item?.quantity) > 0)
+    .map(([id, item]) => ({ ...item, id }));
+
   const renderUnifiedCartItemsHtml = (cart) => {
     const entries = Object.entries(cart || {}).filter(([, item]) => Number(item?.quantity) > 0);
     if (!entries.length) {
@@ -343,6 +347,7 @@
     formatCartCount,
     hydrateEquipmentCart,
     loadSharedCart,
+    getCheckoutCartItems,
     saveSharedCart,
     renderUnifiedCartItemsHtml,
     escapeCartHtml,
