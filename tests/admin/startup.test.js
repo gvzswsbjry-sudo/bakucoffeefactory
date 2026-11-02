@@ -23,6 +23,11 @@ test('managed catalog pages bootstrap directly from /api/products instead of gen
   }
 });
 
+test('the dynamic storefront bootstrap is allowed through the static-file route', () => {
+  const routes = read('server/routes.js');
+  assert.match(routes, /PUBLIC_FILES = new Set\([\s\S]*'\/storefront-bootstrap\.js'/);
+});
+
 test('README documents admin setup, local-only access, persistence, and backups', () => {
   const readme = read('README.md');
   assert.match(readme, /Admin panel/i);
