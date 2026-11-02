@@ -37,7 +37,22 @@ html.account-open, body.account-open { overflow: hidden !important; touch-action
 .account-password-wrap input { padding-right: 54px; }
 .account-password-toggle { position: absolute; right: 1px; top: 1px; width: 47px; height: calc(100% - 2px); border: 0; background: #fff; color: #4d443c; display: grid; place-items: center; cursor: pointer; }
 .account-consent { display: flex; align-items: flex-start; gap: 9px; margin: 5px 0 17px; color: #4f453d; font: 12px/1.55 var(--sans, sans-serif); }
-.account-consent input { flex: none; margin: 3px 0 0; width: 17px; height: 17px; accent-color: #596750; }
+.account-consent input[type="checkbox"] {
+  display: block;
+  flex: none;
+  width: 17px;
+  height: 17px;
+  margin: 3px 0 0;
+  padding: 0;
+  border: 1px solid #8f8479;
+  border-radius: 2px;
+  background: #fff;
+  opacity: 1;
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
+  accent-color: #596750;
+  cursor: pointer;
+}
 .account-consent a { color: #a34e34; text-decoration: underline; }
 .account-message { min-height: 18px; color: #a3392f; font: 12px/1.4 var(--sans, sans-serif); }
 .account-submit, .account-logout { width: 100%; min-height: 48px; border: 0; background: #596750; color: #fff; font: 700 14px var(--sans, sans-serif); cursor: pointer; }

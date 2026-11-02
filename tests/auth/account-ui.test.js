@@ -16,6 +16,8 @@ test('the shared storefront script loads the accessible account interface withou
   assert.match(account, /type="password"/);
   assert.match(account, /mexfilik\.html/);
   assert.match(account, /privacyAccepted/);
+  assert.match(css, /\.account-consent input\[type="checkbox"\]/);
+  assert.match(css, /appearance:\s*checkbox/);
   assert.match(account, /api\/auth\/me/);
   assert.match(account, /api\/auth\/logout/);
   assert.match(account, /class="account-code-value"[^>]*>\+994</);
