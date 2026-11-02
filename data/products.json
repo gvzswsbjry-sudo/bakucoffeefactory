@@ -852,7 +852,7 @@
     "id": "dallah",
     "category": "equipment",
     "name": "Naxışlı Dallah",
-    "price": 1,
+    "price": 2,
     "unit": "piece",
     "image": "assets/equipment/decorative-dallah.jpg",
     "description": "Qəhvə təqdimatına ənənəvi və zərif görünüş verən qəhvədan.",
@@ -871,7 +871,7 @@
       {
         "id": "dallah-decorative",
         "name": "Yaşıl daşlı",
-        "price": 1,
+        "price": 2,
         "image": "assets/equipment/decorative-dallah.jpg",
         "color": "#64705c",
         "alt": "Yaşıl daşlı dekorativ Dallah qəhvədan"
@@ -879,7 +879,7 @@
       {
         "id": "dallah-silver",
         "name": "Gümüşü",
-        "price": 1,
+        "price": 2,
         "image": "assets/equipment/silver-dallah.jpg",
         "color": "#c2c1bd",
         "alt": "Naxışlı gümüşü rəngli Dallah qəhvədan"
