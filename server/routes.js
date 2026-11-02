@@ -33,7 +33,7 @@ const PUBLIC_FILES = new Set([
   '/menu-mobile.css', '/summer-menu.css', '/tea-mobile.css', '/gear.css',
   '/catalog.css', '/cart.css', '/account.css', '/favorites.css', '/brand.css', '/admin/admin.css',
   '/checkout.css', '/admin/orders.html', '/admin/orders.js',
-  '/script.js', '/storefront-products.js', '/cart-utils.js', '/coffee-shop.js',
+  '/script.js', '/storefront-products.js', '/storefront-bootstrap.js', '/cart-utils.js', '/coffee-shop.js',
   '/tea-shop.js', '/tea-data.js', '/gear-shop.js', '/equipment-data.js',
   '/product-detail.js', '/account.js', '/favorites.js', '/admin/admin.js', '/admin/admin-api.js',
   '/checkout.js',
