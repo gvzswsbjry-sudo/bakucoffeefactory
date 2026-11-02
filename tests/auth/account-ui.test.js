@@ -9,6 +9,7 @@ const read = (name) => fs.readFileSync(path.join(root, name), 'utf8');
 test('the shared storefront script loads the accessible account interface without changing the cart', () => {
   const shared = read('script.js');
   const account = read('account.js');
+  const css = read('account.css');
   assert.match(shared, /account\.js/);
   assert.match(shared, /account\.css/);
   assert.match(account, /role="dialog"/);
