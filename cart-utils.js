@@ -233,7 +233,7 @@
       document.head.append(stylesheet);
       const checkoutScript = document.createElement('script');
       checkoutScript.id = 'checkoutScript';
-      checkoutScript.src = 'checkout.js?v=20261027-2';
+      checkoutScript.src = 'checkout.js?v=20261102-orderfix2';
       document.body.append(checkoutScript);
     }
     window.addEventListener('storage', (event) => {
