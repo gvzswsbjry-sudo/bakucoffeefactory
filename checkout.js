@@ -2,6 +2,21 @@
   const summary = document.querySelector('.cart-summary');
   if (!summary || document.getElementById('checkoutOpen')) return;
 
+  const countryOptions = [
+    ['+994', 'Azərbaycan'], ['+90', 'Türkiyə'], ['+995', 'Gürcüstan'], ['+7', 'Rusiya / Qazaxıstan'],
+    ['+1', 'ABŞ / Kanada'], ['+44', 'Birləşmiş Krallıq'], ['+49', 'Almaniya'], ['+33', 'Fransa'],
+    ['+39', 'İtaliya'], ['+34', 'İspaniya'], ['+971', 'BƏƏ'], ['+380', 'Ukrayna'],
+    ['+91', 'Hindistan'], ['+92', 'Pakistan'], ['+98', 'İran'], ['+966', 'Səudiyyə Ərəbistanı'],
+    ['+31', 'Niderland'], ['+41', 'İsveçrə'], ['+48', 'Polşa'], ['+86', 'Çin'],
+  ];
+
+  function splitPhone(value) {
+    const normalized = String(value || '').replace(/[^\d+]/g, '');
+    const codes = countryOptions.map(([code]) => code).sort((a, b) => b.length - a.length);
+    const code = codes.find((item) => normalized.startsWith(item)) || '+994';
+    return { code, local: normalized.startsWith(code) ? normalized.slice(code.length).replace(/\D/g, '') : '' };
+  }
+
   const openButton = document.createElement('button');
   openButton.id = 'checkoutOpen';
   openButton.className = 'checkout-open';
@@ -20,9 +35,17 @@
         <h2 id="checkoutTitle">Sifarişi tamamlayın.</h2>
         <p class="checkout-intro">Əlaqə nömrənizi qeyd edin. Komandamız sifarişinizi və mövcudluğu sizinlə dəqiqləşdirəcək.</p>
         <form id="checkoutForm">
-          <label>Telefon nömrəsi <span>(ölkə kodu ilə)</span>
-            <input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+994 70 390 10 09" required />
-          </label>
+          <fieldset class="checkout-phone-field">
+            <legend>Telefon nömrəsi</legend>
+            <div class="checkout-phone-row">
+              <label class="checkout-country"><span class="checkout-sr-only">Ölkə kodu</span>
+                <select name="countryCode" aria-label="Ölkə və telefon kodu">${countryOptions.map(([code, name]) => `<option value="${code}">${name} (${code})</option>`).join('')}</select>
+              </label>
+              <label><span class="checkout-sr-only">Telefon nömrəsinin qalan hissəsi</span>
+                <input name="phoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123456789" maxlength="14" required />
+              </label>
+            </div>
+          </fieldset>
           <label>Satıcıya qeyd <span>(istəyə bağlı)</span>
             <textarea name="note" rows="4" maxlength="1000" placeholder="Sifarişlə bağlı əlavə istəyiniz varsa yazın"></textarea>
           </label>
@@ -80,6 +103,7 @@
     successView.hidden = true;
     errorBox.textContent = '';
     form.reset();
+    form.elements.countryCode.value = '+994';
     overlay.querySelector('#checkoutTotal').textContent = cartTotalLabel(Object.fromEntries(items.map((item) => [item.id, item])));
     overlay.hidden = false;
     document.body.classList.add('checkout-active');
@@ -88,7 +112,11 @@
       const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
       if (response.ok && !overlay.hidden) {
         const data = await response.json();
-        if (data.user?.phone && !form.elements.phone.value) form.elements.phone.value = data.user.phone;
+        if (data.user?.phone && !form.elements.phoneLocal.value) {
+          const savedPhone = splitPhone(data.user.phone);
+          form.elements.countryCode.value = savedPhone.code;
+          form.elements.phoneLocal.value = savedPhone.local;
+        }
       }
     } catch {}
   });
@@ -100,10 +128,11 @@
       errorBox.textContent = 'Sifariş göndərmək üçün saytı fayl kimi deyil, işləyən server ünvanından açın.';
       return;
     }
-    const phone = form.elements.phone.value.replace(/[\s().-]/g, '');
+    const localDigits = form.elements.phoneLocal.value.replace(/\D/g, '');
+    const phone = `${form.elements.countryCode.value}${localDigits}`;
     if (!/^\+[1-9]\d{6,14}$/.test(phone)) {
-      errorBox.textContent = 'Telefon nömrəsini ölkə kodu ilə daxil edin (məsələn, +994703901009).';
-      form.elements.phone.focus();
+      errorBox.textContent = 'Ölkə kodunu seçin və telefon nömrəsinin qalan rəqəmlərini daxil edin.';
+      form.elements.phoneLocal.focus();
       return;
     }
     const cartSnapshot = readCart();
@@ -139,7 +168,7 @@
   overlay.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') close();
     if (event.key !== 'Tab') return;
-    const focusables = [...overlay.querySelectorAll('button, input, textarea')].filter((element) => !element.closest('[hidden]'));
+    const focusables = [...overlay.querySelectorAll('button, input, select, textarea')].filter((element) => !element.closest('[hidden]'));
     if (event.shiftKey && document.activeElement === focusables[0]) { event.preventDefault(); focusables.at(-1).focus(); }
     else if (!event.shiftKey && document.activeElement === focusables.at(-1)) { event.preventDefault(); focusables[0].focus(); }
   });

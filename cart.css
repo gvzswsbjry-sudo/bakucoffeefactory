@@ -1,7 +1,10 @@
 .site-header {
+  position: -webkit-sticky !important;
   position: sticky !important;
   top: 0 !important;
-  z-index: 60 !important;
+  z-index: 1000 !important;
+  isolation: isolate;
+  box-shadow: 0 1px 0 rgba(34, 29, 25, .12);
 }
 
 .site-header .tea-header-cart {
