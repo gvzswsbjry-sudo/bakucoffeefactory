@@ -11,10 +11,10 @@ services:
         value: production
       - key: HOST
         value: 0.0.0.0
+      - key: TRUST_PROXY
+        value: "1"
       - key: DATABASE_URL
-        fromDatabase:
-          name: baku-coffee-factory-db
-          property: connectionString
+        sync: false
       - key: ADMIN_INITIAL_PASSWORD
         sync: false
       - key: ALLOWED_ORIGINS
@@ -23,12 +23,3 @@ services:
         sync: false
       - key: APPLE_CLIENT_ID
         sync: false
-      - key: TRUST_PROXY
-        value: 1
-
-databases:
-  - name: baku-coffee-factory-db
-    plan: free
-    databaseName: baku_coffee_factory
-    user: baku_coffee_factory
-
