@@ -107,6 +107,7 @@ html.account-open, body.account-open { overflow: hidden !important; touch-action
 .account-empty p { max-width: 370px; margin: auto; color: #746b61; font: 12px/1.55 var(--sans,sans-serif); }
 @media (max-width: 720px) {
   .site-header .account-trigger { position: absolute; z-index: 6; top: max(18px, calc(14px + env(safe-area-inset-top))); right: 132px; padding: 7px 11px; font-size: 10px; }
+  .site-header .account-trigger.is-logged-in { width: 34px; height: 34px; padding: 0; top: max(16px, calc(12px + env(safe-area-inset-top))); }
   .site-header:not(:has(.tea-header-cart)) .account-trigger { right: max(18px, env(safe-area-inset-right)); }
   .account-overlay { padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); overflow-x: hidden; }
   .account-dialog { width: 100%; max-width: 100%; box-sizing: border-box; overflow-x: hidden; contain: paint; clip-path: inset(0); padding: max(24px, calc(16px + env(safe-area-inset-top))) max(20px, calc(12px + env(safe-area-inset-right))) max(24px, calc(16px + env(safe-area-inset-bottom))) max(20px, calc(12px + env(safe-area-inset-left))); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); }
