@@ -27,12 +27,12 @@
     },
     "/": {
       "views": 5,
-      "totalDurationSeconds": 25
+      "totalDurationSeconds": 45
     },
     "/menyu.html": {
       "views": 1,
       "totalDurationSeconds": 55
     }
   },
-  "lastUpdated": "2026-11-03T20:44:09.744Z"
+  "lastUpdated": "2026-11-03T20:44:21.837Z"
 }
