@@ -11,7 +11,13 @@
 </head>
 <body>
   <main class="orders-main">
-    <div class="orders-heading"><div><p class="eyebrow">İDARƏETMƏ</p><h1>Sifariş sorğuları</h1></div><a href="./">← Məhsullara qayıt</a></div>
+    <div class="orders-heading">
+      <div><p class="eyebrow">İDARƏETMƏ</p><h1>Sifariş sorğuları</h1></div>
+      <div style="display:flex;gap:18px;align-items:center;">
+        <a href="analytics.html">📊 İstatistiklər</a>
+        <a href="./">← Məhsullara qayıt</a>
+      </div>
+    </div>
     <div class="orders-toolbar"><p id="ordersMessage" role="status">Sifarişlər yüklənir…</p><label for="orderStatusFilter">Status<select id="orderStatusFilter"><option value="all">Hamısı</option><option value="new">Göndərilməyib</option><option value="shipped">Göndərildi</option></select></label></div>
     <div class="orders-list" id="ordersList"></div>
   </main>
