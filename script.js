@@ -31,10 +31,10 @@ document.querySelectorAll('.site-header .brand').forEach((brand) => {
 
 const accountStyles = document.createElement('link');
 accountStyles.rel = 'stylesheet';
-accountStyles.href = 'account.css?v=20261103-v2';
+accountStyles.href = 'account.css?v=20261103-v3';
 document.head.append(accountStyles);
 const accountScript = document.createElement('script');
-accountScript.src = 'account.js?v=20261103-v2';
+accountScript.src = 'account.js?v=20261103-v3';
 accountScript.async = false;
 document.body.append(accountScript);
 
