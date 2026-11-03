@@ -321,7 +321,6 @@
     providerButtons.forEach((item) => { item.disabled = true; });
     try {
       if (provider === 'google') await signInWithGoogle(config);
-      else await signInWithApple(config);
     } catch (error) {
       socialStatus(error.message || 'Giriş tamamlanmadı.', true);
     } finally {
