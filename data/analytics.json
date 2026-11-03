@@ -1,10 +1,11 @@
 {
   "daily": {
     "2026-11-03": {
-      "pageviews": 4,
+      "pageviews": 5,
       "visitors": [
         "test_sess_1",
-        "s_mw12adzf_70u0vhf"
+        "s_mw12adzf_70u0vhf",
+        "s_mw14103o_yzmfvgj"
       ]
     }
   },
@@ -18,7 +19,7 @@
       "totalDurationSeconds": 70
     },
     "/": {
-      "views": 1,
+      "views": 2,
       "totalDurationSeconds": 5
     },
     "/menyu.html": {
@@ -26,5 +27,5 @@
       "totalDurationSeconds": 55
     }
   },
-  "lastUpdated": "2026-11-03T19:16:58.631Z"
+  "lastUpdated": "2026-11-03T19:57:59.885Z"
 }
