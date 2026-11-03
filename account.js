@@ -124,8 +124,16 @@
     let orders;
     try {
       const response = await fetch('/api/account/orders', { credentials: 'same-origin' });
-      if (!response.ok) throw new Error('Sifariş tarixçəsini yükləmək mümkün olmadı. Yenidən cəhd edin.');
-      orders = await response.json();
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const fallback = response.status === 503
+          ? 'Hesab xidməti serverdə hələ aktiv deyil. PostgreSQL bazası qoşulduqdan sonra sifariş tarixçəsi işləyəcək.'
+          : response.status === 401
+            ? 'Sifarişlərinizi görmək üçün hesabınıza yenidən daxil olun.'
+            : 'Sifariş tarixçəsini yükləmək mümkün olmadı. Yenidən cəhd edin.';
+        throw new Error(result.error || fallback);
+      }
+      orders = result;
     } catch (error) {
       if (user?.id === ownerId) list.innerHTML = `<p class="account-list-status" role="alert">${escapeHtml(error.message)}</p>`;
       return;
@@ -200,7 +208,7 @@
     document.body.classList.add('account-open');
     document.documentElement.classList.add('account-open');
     message.textContent = '';
-    renderCollections();
+    if (tab.dataset.center === 'orders') renderOrders();
     dialog.focus();
   });
   overlay.querySelector('.account-close').addEventListener('click', close);

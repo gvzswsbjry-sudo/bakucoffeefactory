@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
+    "start": "node --env-file-if-exists=.env server.js",
     "test:admin": "node --test tests/admin/*.test.js",
     "test": "node --test tests/auth/*.test.js tests/admin/*.test.js tests/security/*.test.js && node tests/test-tea-cart.js && node tests/test-equipment-product-details.js && bash tests/test-tea-shop.sh && bash tests/test-coffee-shop.sh && sh tests/test-mobile-catalog-refinements.sh && sh tests/test-mobile-menu-navigation.sh && bash tests/test-coffee-origins.sh"
   },
