@@ -31,6 +31,7 @@
       deleteProduct: (id) => request(`/api/admin/products/${encodeURIComponent(id)}`, { method: 'DELETE' }),
       listAssets: () => request('/api/admin/assets'),
       uploadAsset: (file) => request('/api/admin/assets', { method: 'POST', body: file }),
+      getAnalytics: () => request('/api/admin/analytics'),
     };
   }
   return { createAdminApi };
