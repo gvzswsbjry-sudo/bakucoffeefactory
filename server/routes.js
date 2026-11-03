@@ -5,6 +5,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { handleCustomerAuthRequest, customerCookie, sameOrigin } = require('./customer-auth-routes');
 const { prepareOrder } = require('./order-store');
+const { createAnalyticsStore } = require('./analytics-store');
 const {
   applySecurityHeaders,
   createRateLimiter,
