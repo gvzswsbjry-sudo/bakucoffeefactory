@@ -32,7 +32,7 @@
     },
     "/menyu.html": {
       "views": 4,
-      "totalDurationSeconds": 1130
+      "totalDurationSeconds": 1145
     },
     "/caylar.html": {
       "views": 2,
@@ -43,5 +43,5 @@
       "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-03T21:03:25.902Z"
+  "lastUpdated": "2026-11-03T21:04:25.623Z"
 }
