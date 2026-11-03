@@ -36,8 +36,9 @@ function createServer({
   const customerAuth = database ? createCustomerAuth({ database }) : null;
   const socialVerifier = oidcVerifier || createOidcVerifier({ providers: socialProviders });
   const orders = createOrderStore({ filePath: path.join(rootDir, 'data', 'orders.json') });
+  const analytics = createAnalyticsStore({ filePath: path.join(rootDir, 'data', 'analytics.json'), rootDir });
   const server = http.createServer(createRequestHandler({
-    rootDir, store, auth, orders, customerDatabase: database, customerAuth, secureCookies,
+    rootDir, store, auth, orders, analytics, customerDatabase: database, customerAuth, secureCookies,
     allowedOrigins, trustProxy, adminInitialPassword, socialProviders, oidcVerifier: socialVerifier,
   }));
   server.headersTimeout = 15_000;
