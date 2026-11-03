@@ -9,6 +9,7 @@ const { createDatabase } = require('./server/db');
 const { createCustomerAuth } = require('./server/customer-auth');
 const { createOrderStore } = require('./server/order-store');
 const { createOidcVerifier } = require('./server/oidc-verifier');
+const { createAnalyticsStore } = require('./server/analytics-store');
 
 function parseAllowedOrigins(value) {
   return String(value || '').split(',').map((origin) => origin.trim()).filter(Boolean);
