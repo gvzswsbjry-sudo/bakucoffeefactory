@@ -10,6 +10,33 @@ function bad(message) {
   throw error;
 }
 
+function stripCategoryPrefix(value, category) {
+  const prefix = `${category}-`;
+  let normalized = String(value || '').trim();
+  while (normalized.startsWith(prefix)) normalized = normalized.slice(prefix.length);
+  return normalized;
+}
+
+function resolveOrderSelection(rawId, products) {
+  const id = String(rawId || '').trim();
+  if (!id) return {};
+
+  for (const category of ['coffee', 'tea']) {
+    const hasPrefix = id.startsWith(`${category}-`);
+    const candidateId = stripCategoryPrefix(id, category);
+    const product = products.find((entry) => entry.category === category &&
+      (entry.id === candidateId || (!hasPrefix && entry.id === id)));
+    if (product) return { product, canonicalId: `${category}-${product.id}` };
+  }
+
+  const product = products.find((entry) => entry.category === 'equipment' &&
+    (entry.id === id || entry.variants?.some((candidate) => candidate.id === id)));
+  if (!product) return {};
+  const variant = product.variants?.find((candidate) => candidate.id === id)
+    || (product.id === id ? product.variants?.find((candidate) => candidate.active !== false) : undefined);
+  return { product, variant, canonicalId: variant?.id || product.id };
+}
+
 function prepareOrder(payload, products) {
   const phone = String(payload?.phone || '').replace(/[\s().-]/g, '');
   if (!/^\+[1-9]\d{6,14}$/.test(phone)) bad('Telefon nömrəsini ölkə kodu ilə daxil edin.');
@@ -19,18 +46,9 @@ function prepareOrder(payload, products) {
   if (!Array.isArray(requested) || !requested.length || requested.length > 50) bad('Səbətdə 1–50 məhsul olmalıdır.');
   const seen = new Set();
   const items = requested.map((selection) => {
-    const id = String(selection?.id || '');
-    if (seen.has(id)) bad('Eyni məhsul səbətdə təkrarlana bilməz.');
-    seen.add(id);
-    let product;
-    let variant;
-    if (id.startsWith('coffee-')) product = products.find((entry) => entry.id === id.slice(7) && entry.category === 'coffee');
-    else if (id.startsWith('tea-')) product = products.find((entry) => entry.id === id.slice(4) && entry.category === 'tea');
-    else {
-      product = products.find((entry) => entry.category === 'equipment' &&
-        (entry.variants?.some((candidate) => candidate.id === id) || (!entry.variants?.length && entry.id === id)));
-      variant = product?.variants?.find((candidate) => candidate.id === id);
-    }
+    const { product, variant, canonicalId } = resolveOrderSelection(selection?.id, products);
+    if (seen.has(canonicalId)) bad('Eyni məhsul səbətdə təkrarlana bilməz.');
+    seen.add(canonicalId);
     if (!product || !product.active || product.stock?.status === 'out' ||
       (product.stock?.status === 'counted' && Number(product.stock.quantity) <= 0) ||
       (variant && variant.active === false)) bad('Məhsul tapılmadı və ya hazırda satışda deyil.');
@@ -42,7 +60,7 @@ function prepareOrder(payload, products) {
     const quoteRequired = product.category === 'tea' && product.meta?.pricePending === true && !(price > 0);
     if (!quoteRequired && (!Number.isFinite(price) || price <= 0)) bad('Məhsul qiyməti düzgün deyil.');
     const total = quoteRequired ? null : Math.round((unit === 'g' ? price * quantity / 100 : price * quantity) * 100) / 100;
-    return { id, productId: product.id, name: variant ? `${product.name} · ${variant.name}` : product.name,
+    return { id: canonicalId, productId: product.id, name: variant ? `${product.name} · ${variant.name}` : product.name,
       category: product.category, image: variant?.image || product.image, unit, quantity,
       price: quoteRequired ? null : price, total, quoteRequired };
   });
@@ -101,4 +119,4 @@ function createOrderStore({ filePath }) {
   return { list, create, updateStatus };
 }
 
-module.exports = { prepareOrder, createOrderStore };
+module.exports = { prepareOrder, createOrderStore, resolveOrderSelection };

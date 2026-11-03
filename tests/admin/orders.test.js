@@ -31,6 +31,25 @@ test('equipment without variants can be ordered by its product ID', () => {
   assert.throws(() => prepareOrder(payload, [...products, { ...plain, stock: { status: 'out' } }]), /satışda deyil/i);
 });
 
+test('legacy and repeated category prefixes resolve to the current catalog product', () => {
+  for (const id of ['colombia', 'coffee-colombia', 'coffee-coffee-colombia']) {
+    const order = prepareOrder({ phone: '+994703901009', items: [{ id, quantity: 100 }] }, products);
+    assert.equal(order.items[0].id, 'coffee-colombia');
+    assert.equal(order.items[0].productId, 'colombia');
+  }
+  for (const id of ['admiral', 'tea-admiral', 'tea-tea-admiral']) {
+    const order = prepareOrder({ phone: '+994703901009', items: [{ id, quantity: 100 }] }, products);
+    assert.equal(order.items[0].id, 'tea-admiral');
+    assert.equal(order.items[0].productId, 'admiral');
+  }
+});
+
+test('equipment parent IDs resolve to the first active variant for legacy carts', () => {
+  const order = prepareOrder({ phone: '+994703901009', items: [{ id: 'tamper', quantity: 1 }] }, products);
+  assert.equal(order.items[0].id, 'tamper-black');
+  assert.equal(order.items[0].price, 58);
+});
+
 test('every active catalog selection can be ordered unless marked out of stock', async () => {
   const catalog = JSON.parse(await fs.readFile(path.join(__dirname, '..', '..', 'data', 'products.json'), 'utf8'));
   for (const product of catalog.filter((item) => item.active && item.stock?.status !== 'out')) {
