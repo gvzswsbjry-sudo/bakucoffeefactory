@@ -9,10 +9,11 @@
       ]
     },
     "2026-11-04": {
-      "pageviews": 6,
+      "pageviews": 7,
       "visitors": [
         "s_mw15o12w_lsdh6f6",
-        "s_mw15o9wl_t10pkci"
+        "s_mw15o9wl_t10pkci",
+        "s_mw15tlo6_6cmf8ss"
       ]
     }
   },
@@ -30,9 +31,9 @@
       "totalDurationSeconds": 135
     },
     "/menyu.html": {
-      "views": 3,
+      "views": 4,
       "totalDurationSeconds": 210
     }
   },
-  "lastUpdated": "2026-11-03T20:48:04.136Z"
+  "lastUpdated": "2026-11-03T20:48:10.242Z"
 }
