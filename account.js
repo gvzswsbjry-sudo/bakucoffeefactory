@@ -70,9 +70,8 @@
         <div class="account-social">
           <div class="account-divider"><span>və ya</span></div>
           <button class="account-provider account-provider-google" type="button" data-provider="google"><span aria-hidden="true">G</span>Google ilə davam et</button>
-          <button class="account-provider account-provider-apple" type="button" data-provider="apple"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16.7 12.8c0-2.7 2.2-4 2.3-4.1-1.3-1.9-3.3-2.1-4-2.1-1.7-.2-3.3 1-4.2 1-.9 0-2.3-1-3.7-.9-1.9 0-3.6 1.1-4.6 2.8-2 3.4-.5 8.4 1.4 11.2.9 1.4 2.1 2.9 3.6 2.8 1.4-.1 2-1 3.7-1s2.2 1 3.7 1c1.5 0 2.5-1.4 3.4-2.7 1.1-1.6 1.6-3.2 1.6-3.3-.1 0-3.2-1.2-3.2-4.7ZM13.9 4.8c.8-1 1.4-2.4 1.2-3.8-1.2.1-2.6.8-3.5 1.8-.8.9-1.4 2.3-1.2 3.7 1.3.1 2.7-.7 3.5-1.7Z"/></svg>Apple ilə davam et</button>
           <p class="account-social-message" id="accountSocialMessage" role="status" aria-live="polite" hidden></p>
-          <p class="account-provider-note">Google və Apple ilə bir kliklə sürətli giriş və qeydiyyat.</p>
+          <p class="account-provider-note">Google ilə bir kliklə sürətli giriş və qeydiyyat.</p>
         </div>
         <p class="account-note">Hesab açmadan da sayta baxa və səbətə məhsul əlavə edə bilərsiniz.</p>
        </div>
