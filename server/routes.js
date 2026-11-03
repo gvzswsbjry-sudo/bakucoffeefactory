@@ -141,6 +141,7 @@ function createRequestHandler({
   store,
   auth,
   orders,
+  analytics: userAnalytics,
   customerDatabase,
   customerAuth,
   secureCookies = false,
@@ -150,6 +151,7 @@ function createRequestHandler({
   socialProviders = {},
   oidcVerifier,
 }) {
+  const analytics = userAnalytics || createAnalyticsStore({ rootDir });
   const assetsRoot = path.join(rootDir, 'assets');
   const apiLimiter = createRateLimiter({ limit: 240, windowMs: 60 * 1000 });
   const adminLoginLimiter = createRateLimiter({ limit: 5, windowMs: 15 * 60 * 1000 });
