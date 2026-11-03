@@ -47,11 +47,11 @@ function prepareOrder(payload, products) {
   const seen = new Set();
   const items = requested.map((selection) => {
     const { product, variant, canonicalId } = resolveOrderSelection(selection?.id, products);
-    if (seen.has(canonicalId)) bad('Eyni məhsul səbətdə təkrarlana bilməz.');
-    seen.add(canonicalId);
     if (!product || !product.active || product.stock?.status === 'out' ||
       (product.stock?.status === 'counted' && Number(product.stock.quantity) <= 0) ||
       (variant && variant.active === false)) bad('Məhsul tapılmadı və ya hazırda satışda deyil.');
+    if (seen.has(canonicalId)) bad('Eyni məhsul səbətdə təkrarlana bilməz.');
+    seen.add(canonicalId);
     const unit = product.category === 'equipment' ? 'piece' : product.unit;
     const quantity = Number(selection?.quantity);
     const max = unit === 'g' ? (product.category === 'coffee' ? 2000 : 1000) : 99;
