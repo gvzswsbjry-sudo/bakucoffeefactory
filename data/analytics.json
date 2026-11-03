@@ -1,9 +1,10 @@
 {
   "daily": {
     "2026-11-03": {
-      "pageviews": 1,
+      "pageviews": 2,
       "visitors": [
-        "test_sess_1"
+        "test_sess_1",
+        "live_user_1"
       ]
     }
   },
@@ -11,7 +12,11 @@
     "/qehveler.html": {
       "views": 1,
       "totalDurationSeconds": 20
+    },
+    "/menyu.html": {
+      "views": 1,
+      "totalDurationSeconds": 15
     }
   },
-  "lastUpdated": "2026-11-03T19:04:02.338Z"
+  "lastUpdated": "2026-11-03T19:04:34.897Z"
 }
