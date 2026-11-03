@@ -1,7 +1,7 @@
 {
   "daily": {
     "2026-11-03": {
-      "pageviews": 2,
+      "pageviews": 3,
       "visitors": [
         "test_sess_1",
         "s_mw12adzf_70u0vhf"
@@ -16,7 +16,11 @@
     "/avadanliqlar.html": {
       "views": 1,
       "totalDurationSeconds": 70
+    },
+    "/": {
+      "views": 1,
+      "totalDurationSeconds": 0
     }
   },
-  "lastUpdated": "2026-11-03T19:15:27.746Z"
+  "lastUpdated": "2026-11-03T19:15:35.307Z"
 }
