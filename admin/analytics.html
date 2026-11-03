@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>İstatistiklər — Baku Coffee Factory İdarəetmə</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .analytics-shell { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; font-family: var(--sans, 'Manrope', sans-serif); color: #1e1e1e; }
+    .analytics-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 32px; border-bottom: 1px solid #dfd5c9; padding-bottom: 24px; }
+    .analytics-heading h1 { font: 500 42px/1.1 'Playfair Display', Georgia, serif; margin: 8px 0 0; }
+    .analytics-nav-links { display: flex; gap: 16px; align-items: center; margin-top: 10px; }
+    .analytics-nav-links a { color: #4a3525; font-weight: 600; text-decoration: none; border-bottom: 1px solid #4a3525; padding-bottom: 3px; }
+    .analytics-nav-links a:hover { opacity: .75; }
+
+    /* Live active banner */
+    .live-card { background: #201a16; color: #fffaf2; border-radius: 4px; padding: 24px 28px; margin-bottom: 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; box-shadow: 0 4px 18px rgba(0,0,0,.12); }
+    .live-status { display: flex; align-items: center; gap: 14px; }
+    .pulse-dot { width: 14px; height: 14px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); animation: pulse 1.8s infinite cubic-bezier(0.66, 0, 0, 1); }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { box-shadow: 0 0 0 14px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
+    .live-count { font: 700 32px/1 'Playfair Display', Georgia, serif; color: #4ade80; margin-right: 6px; }
+    .live-desc { font-size: 14px; color: #d5cbbf; }
+    .live-pages { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .live-badge { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+    .live-badge strong { color: #4ade80; margin-left: 4px; }
+
+    /* Metric cards grid */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 36px; }
+    .metric-card { background: #fffdf8; border: 1px solid #dfd5c9; padding: 22px 24px; border-radius: 2px; }
+    .metric-card .eyebrow { margin: 0 0 12px; font: 500 11px var(--mono, 'DM Mono', monospace); letter-spacing: .08em; text-transform: uppercase; color: #7a6a5e; }
+    .metric-card .value { font: 600 36px/1 'Playfair Display', Georgia, serif; color: #1e1e1e; margin-bottom: 8px; }
+    .metric-card .subtext { font-size: 13px; color: #7a6a5e; margin: 0; }
+
+    /* Table sections */
+    .section-title { font: 500 24px/1.2 'Playfair Display', Georgia, serif; margin: 36px 0 18px; color: #1e1e1e; display: flex; align-items: center; justify-content: space-between; }
+    .analytics-table-card { background: #fffdf8; border: 1px solid #dfd5c9; overflow-x: auto; margin-bottom: 36px; }
+    .analytics-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    .analytics-table th { padding: 14px 18px; background: #f5eee5; font-weight: 600; color: #51473f; border-bottom: 1px solid #dfd5c9; white-space: nowrap; }
+    .analytics-table td { padding: 14px 18px; border-bottom: 1px solid #ede5da; vertical-align: middle; }
+    .analytics-table tr:last-child td { border-bottom: 0; }
+    .analytics-table tr:hover td { background: #faf6ef; }
+    .page-name-cell strong { display: block; font-size: 14px; color: #1e1e1e; margin-bottom: 2px; }
+    .page-name-cell small { color: #887b6f; font-family: var(--mono, 'DM Mono', monospace); font-size: 11px; }
+    .duration-badge { display: inline-block; padding: 4px 10px; background: #e8eee4; color: #325532; border-radius: 999px; font-weight: 600; font-size: 12px; }
+    .refresh-note { font-size: 12px; color: #887b6f; display: flex; align-items: center; gap: 6px; }
+
+    @media (max-width: 768px) {
+      .analytics-shell { padding: 20px 14px 60px; }
+      .analytics-heading { flex-direction: column; gap: 12px; }
+      .analytics-heading h1 { font-size: 32px; }
+      .live-card { padding: 18px; flex-direction: column; align-items: flex-start; }
+      .metrics-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="analytics-shell">
+    <header class="analytics-heading">
+      <div>
+        <p class="eyebrow" style="margin:0 0 6px;font:11px 'DM Mono',monospace;letter-spacing:.1em;color:#7a6a5e;">İDARƏETMƏ PANELİ</p>
+        <h1>Ziyarətçi və Trafik İstatistikləri</h1>
+      </div>
+      <div class="analytics-nav-links">
+        <span class="refresh-note">🟢 Canlı yenilənir</span>
+        <a href="orders.html">Sifarişlər ↗</a>
+        <a href="./">Məhsullar ←</a>
+      </div>
+    </header>
+
+    <!-- 🟢 Real-time Active Visitors Banner -->
+    <section class="live-card" aria-label="Canlı istifadəçi izləmə">
+      <div class="live-status">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        <div>
+          <div><span class="live-count" id="activeUsersCount">0</span> <strong style="font-size:16px;">nəfər hazırda aktivdir</strong></div>
+          <p class="live-desc" id="activeUsersDesc" style="margin:4px 0 0;">Saytda son 60 saniyədə aktiv olan istifadəçilər</p>
+        </div>
+      </div>
+      <div class="live-pages" id="activePagesList">
+        <span class="live-badge">Səhifələr izlənilir…</span>
+      </div>
+    </section>
+
+    <!-- 📊 Key Traffic Metrics Grid -->
+    <div class="metrics-grid">
+      <article class="metric-card">
+        <p class="eyebrow">Bugünkü Baxış Sayı</p>
+        <div class="value" id="todayPageviews">0</div>
+        <p class="subtext">Səhifə baxışlarının cəmi</p>
+      </article>
+
+      <article class="metric-card">
+        <p class="eyebrow">Bugünkü Unikal Ziyarətçi</p>
+        <div class="value" id="todayVisitors">0</div>
+        <p class="subtext">Fərqli cihaz və sessiyalar</p>
+      </article>
+
+      <article class="metric-card">
+        <p class="eyebrow">Bu Aykı Trafik</p>
+        <div class="value" id="monthPageviews">0</div>
+        <p class="subtext" id="monthVisitorsSub">0 unikal ziyarətçi</p>
+      </article>
+
+      <article class="metric-card">
+        <p class="eyebrow">Orta Saytda Qalma Vaxtı</p>
+        <div class="value" id="avgDuration">0 san</div>
+        <p class="subtext">Ziyarətçilərin orta müddəti</p>
+      </article>
+    </div>
+
+    <!-- ⏱️ Pages Breakdown: Where and How Long -->
+    <h2 class="section-title">
+      <span>İstifadəçilərin harada nə qədər vaxt keçirdiyi</span>
+      <small style="font-size:12px;color:#7a6a5e;font-family:var(--sans);">Səhifələr üzrə baxış və orta müddət</small>
+    </h2>
+    <div class="analytics-table-card">
+      <table class="analytics-table">
+        <thead>
+          <tr>
+            <th>Səhifə</th>
+            <th>Ziyarət sayı (Baxış)</th>
+            <th>Orta keçirilən vaxt</th>
+            <th>Ümumi keçirilən vaxt</th>
+          </tr>
+        </thead>
+        <tbody id="pagesTableBody">
+          <tr><td colspan="4" style="text-align:center;padding:24px;color:#7a6a5e;">Məlumatlar yüklənir…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 📅 Recent 14 Days History -->
+    <h2 class="section-title">
+      <span>Son günlər üzrə trafik dinamikası</span>
+      <small style="font-size:12px;color:#7a6a5e;font-family:var(--sans);">Gündəlik baxış və unikal ziyarətçi</small>
+    </h2>
+    <div class="analytics-table-card">
+      <table class="analytics-table">
+        <thead>
+          <tr>
+            <th>Tarix</th>
+            <th>Baxış sayı</th>
+            <th>Unikal ziyarətçi sayı</th>
+          </tr>
+        </thead>
+        <tbody id="dailyTableBody">
+          <tr><td colspan="3" style="text-align:center;padding:24px;color:#7a6a5e;">Məlumatlar yüklənir…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="admin-api.js"></script>
+  <script src="analytics.js"></script>
+</body>
+</html>
