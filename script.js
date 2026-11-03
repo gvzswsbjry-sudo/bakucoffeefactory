@@ -47,6 +47,11 @@ favoritesScript.src = 'favorites.js';
 favoritesScript.async = false;
 document.body.append(favoritesScript);
 
+const analyticsScript = document.createElement('script');
+analyticsScript.src = 'analytics.js?v=20261103-v1';
+analyticsScript.async = true;
+document.body.append(analyticsScript);
+
 menuToggle?.addEventListener('click', () => {
   const menuIsOpen = mainNav.classList.toggle('open');
   menuToggle.setAttribute('aria-expanded', String(menuIsOpen));
