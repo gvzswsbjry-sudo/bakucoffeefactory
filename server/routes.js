@@ -210,6 +210,37 @@ function createRequestHandler({
         return item ? json(res, 200, item) : json(res, 404, { error: 'Product not found' });
       }
 
+      if (pathname === '/api/analytics/track') {
+        if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+        try {
+          const body = await parseJson(req, 8 * 1024);
+          await analytics.trackPageView({
+            sessionId: String(body?.sessionId || '').slice(0, 100),
+            path: String(body?.path || '/').slice(0, 200),
+            ip: clientIp,
+            userAgent: String(req.headers['user-agent'] || '').slice(0, 250)
+          });
+          return json(res, 200, { ok: true });
+        } catch {
+          return json(res, 200, { ok: false });
+        }
+      }
+
+      if (pathname === '/api/analytics/heartbeat') {
+        if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+        try {
+          const body = await parseJson(req, 8 * 1024);
+          await analytics.trackHeartbeat({
+            sessionId: String(body?.sessionId || '').slice(0, 100),
+            path: String(body?.path || '/').slice(0, 200),
+            duration: Number(body?.duration) || 15
+          });
+          return json(res, 200, { ok: true });
+        } catch {
+          return json(res, 200, { ok: false });
+        }
+      }
+
       if (pathname === '/api/orders') {
         if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
         if (!sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
