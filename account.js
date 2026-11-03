@@ -313,24 +313,11 @@
       });
     });
   }
-  async function signInWithApple(config) {
-    await loadProviderScript('https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js');
-    if (!window.AppleID?.auth) throw new Error('Apple giriş xidməti yüklənmədi.');
-    window.AppleID.auth.init({
-      clientId: config.clientId,
-      scope: 'name email',
-      redirectURI: `${location.origin}/`,
-      state: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-      usePopup: true,
-    });
-    const response = await window.AppleID.auth.signIn();
-    await finishSocial('apple', response?.authorization?.id_token);
-  }
   providerButtons.forEach((button) => button.addEventListener('click', async () => {
     const provider = button.dataset.provider;
     const config = providerConfig?.[provider];
     if (!config?.enabled) return socialStatus('Bu giriş üsulu serverdə hələ aktiv edilməyib.', true);
-    socialStatus(`${provider === 'google' ? 'Google' : 'Apple'} hesab seçimi açılır…`);
+    socialStatus('Google hesab seçimi açılır…');
     providerButtons.forEach((item) => { item.disabled = true; });
     try {
       if (provider === 'google') await signInWithGoogle(config);
