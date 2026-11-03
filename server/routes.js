@@ -346,6 +346,7 @@ function createRequestHandler({
         if (req.method !== 'GET' && !sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
 
         if (req.method === 'GET' && pathname === '/api/admin/orders') return json(res, 200, await orders.list());
+        if (req.method === 'GET' && pathname === '/api/admin/analytics') return json(res, 200, await analytics.getStats());
         if (pathname.startsWith('/api/admin/orders/')) {
           if (req.method !== 'PATCH') return json(res, 405, { error: 'Method not allowed' });
           if (!requireJson(req, res)) return;
