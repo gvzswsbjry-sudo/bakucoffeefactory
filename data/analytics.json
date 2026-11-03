@@ -24,7 +24,7 @@
     },
     "/avadanliqlar.html": {
       "views": 3,
-      "totalDurationSeconds": 125
+      "totalDurationSeconds": 140
     },
     "/": {
       "views": 5,
@@ -43,5 +43,5 @@
       "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-03T20:51:03.960Z"
+  "lastUpdated": "2026-11-03T20:51:12.198Z"
 }
