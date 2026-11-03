@@ -154,12 +154,20 @@
   }
 
   function renderUser() {
-    trigger.textContent = 'Hesab';
     profile.hidden = !user;
     authView.hidden = Boolean(user);
     if (user) {
+      trigger.classList.add('is-logged-in');
+      trigger.setAttribute('aria-label', `Hesab: ${user.username}`);
+      trigger.title = user.username;
+      trigger.innerHTML = '<span class="account-user-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></span>';
       profile.querySelector('.account-greeting').textContent = `Salam, ${user.username}!`;
       profile.querySelector('.account-phone').textContent = user.phone || user.email || '';
+    } else {
+      trigger.classList.remove('is-logged-in');
+      trigger.removeAttribute('aria-label');
+      trigger.removeAttribute('title');
+      trigger.textContent = 'Hesab';
     }
     if (overlay.querySelector('[data-center="orders"]').classList.contains('active')) renderOrders();
   }
