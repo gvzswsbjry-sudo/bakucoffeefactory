@@ -52,7 +52,7 @@ function createServer({
 }
 
 if (require.main === module) {
-  const host = process.env.HOST || '127.0.0.1';
+  const host = process.env.HOST || (process.env.PORT ? '0.0.0.0' : '127.0.0.1');
   const port = Number(process.env.PORT || 8017);
   const server = createServer({ rootDir: __dirname, host, port });
   server.listen(port, host, () => {
