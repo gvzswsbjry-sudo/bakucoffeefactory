@@ -394,7 +394,7 @@
     "id": "nar",
     "category": "tea",
     "name": "Nar Çayı",
-    "price": 0,
+    "price": 8,
     "unit": "g",
     "image": "assets/tea-packages/nar.jpg",
     "description": "Qara çay yarpaqlarını qırmızı meyvə parçaları və çiçək elementləri tamamlayır. Narın tanış şirin-turş xarakteri dəmləməyə parlaq ətir və canlı bitiş verir. Dolğun, lakin ağır olmayan profili həm tək, həm də az miqdarda bal ilə içmək üçün uyğundur.",
@@ -409,7 +409,7 @@
       "kind": "Qara çay · meyvəli",
       "tasteNotes": "Nar, qırmızı giləmeyvə, çiçək",
       "brew": "95°C · 4–5 dəqiqə",
-      "pricePending": true
+      "pricePending": false
     },
     "variants": []
   },
