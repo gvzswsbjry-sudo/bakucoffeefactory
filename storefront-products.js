@@ -119,7 +119,7 @@
         return;
       }
       const script = documentRef.createElement('script');
-      const url = src.includes('?') ? src : `${src}?v=20261102-orderfix1`;
+      const url = src.includes('?') ? src : `${src}?v=20261103-cart-fallback1`;
       script.src = url;
       script.async = false;
       script.onload = () => resolve(src);
@@ -152,15 +152,36 @@
     const loadScript = options.loadScript || ((src) => loadBrowserScript(src, root.document));
     const showError = options.showError || ((error) => showCatalogLoadError(error, root.document));
 
+    const scripts = PAGE_SCRIPTS[page];
+    if (!scripts) {
+      const error = new Error(`Naməlum kataloq səhifəsi: ${page || 'təyin edilməyib'}`);
+      showError(error);
+      throw error;
+    }
+
+    let products = [];
+    let apiError = null;
     try {
-      const products = await loadAllStorefrontProducts(fetchImpl);
+      products = await loadAllStorefrontProducts(fetchImpl);
       root.BCF_PRODUCT_DATA = products;
       if (page === 'coffee' || page === 'tea') hydrate(products);
-      const scripts = PAGE_SCRIPTS[page];
-      if (!scripts) throw new Error(`Naməlum kataloq səhifəsi: ${page || 'təyin edilməyib'}`);
+    } catch (error) {
+      apiError = error;
+      root.BCF_PRODUCT_DATA = [];
+      // Tea and coffee pages keep a complete static catalogue in their HTML.
+      // Let their shop scripts enhance that catalogue so ordering remains
+      // available during a temporary API/server interruption.
+      if (page !== 'coffee' && page !== 'tea') {
+        showError(error);
+        throw error;
+      }
+      root.console?.warn?.('Catalog API unavailable; using the built-in ordering catalogue.', error?.message || error);
+    }
+
+    try {
       for (const src of scripts) await loadScript(src);
       if (typeof root.dispatchEvent === 'function' && typeof root.CustomEvent === 'function') {
-        root.dispatchEvent(new root.CustomEvent('bcf:catalog-ready', { detail: products }));
+        root.dispatchEvent(new root.CustomEvent('bcf:catalog-ready', { detail: { products, fallback: Boolean(apiError) } }));
       }
       return products;
     } catch (error) {

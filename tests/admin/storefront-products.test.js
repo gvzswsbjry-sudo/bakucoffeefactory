@@ -50,7 +50,7 @@ test('page bootstrap publishes fresh rows, hydrates markup, then starts shop scr
   const calls = [];
   const root = {
     CustomEvent: class CustomEvent { constructor(type, init) { this.type = type; this.detail = init.detail; } },
-    dispatchEvent(event) { calls.push(`event:${event.type}:${event.detail.length}`); },
+    dispatchEvent(event) { calls.push(`event:${event.type}:${event.detail.products.length}:${event.detail.fallback}`); },
   };
   const rows = [product({ id: 'fresh' })];
   const result = await bootstrapStorefrontPage({
@@ -66,24 +66,34 @@ test('page bootstrap publishes fresh rows, hydrates markup, then starts shop scr
     'hydrate:fresh',
     'script:tea-data.js',
     'script:tea-shop.js',
-    'event:bcf:catalog-ready:1',
+    'event:bcf:catalog-ready:1:false',
   ]);
   assert.deepEqual(result, rows);
 });
 
-test('page bootstrap reports API failures without starting stale shop scripts', async () => {
+test('tea and coffee bootstrap keep ordering scripts available when the API is temporarily down', async () => {
   const calls = [];
-  await assert.rejects(
-    () => bootstrapStorefrontPage({
-      page: 'coffee',
-      root: {},
-      fetchImpl: async () => ({ ok: false, status: 503 }),
-      hydrate: () => calls.push('hydrate'),
-      loadScript: async () => calls.push('script'),
-      showError: (error) => calls.push(error.message),
-    }),
-    /503/
-  );
+  const result = await bootstrapStorefrontPage({
+    page: 'coffee',
+    root: { console: { warn: () => calls.push('warn') } },
+    fetchImpl: async () => ({ ok: false, status: 503 }),
+    hydrate: () => calls.push('hydrate'),
+    loadScript: async (src) => calls.push(src),
+    showError: (error) => calls.push(error.message),
+  });
+  assert.deepEqual(result, []);
+  assert.deepEqual(calls, ['warn', 'coffee-shop.js']);
+});
+
+test('API-dependent equipment bootstrap still reports failures and stops', async () => {
+  const calls = [];
+  await assert.rejects(() => bootstrapStorefrontPage({
+    page: 'equipment',
+    root: {},
+    fetchImpl: async () => ({ ok: false, status: 503 }),
+    loadScript: async (src) => calls.push(src),
+    showError: (error) => calls.push(error.message),
+  }), /503/);
   assert.equal(calls.length, 1);
   assert.match(calls[0], /kataloq məlumatları/i);
 });
