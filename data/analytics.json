@@ -9,7 +9,7 @@
       ]
     },
     "2026-11-04": {
-      "pageviews": 9,
+      "pageviews": 10,
       "visitors": [
         "s_mw15o12w_lsdh6f6",
         "s_mw15o9wl_t10pkci",
@@ -19,7 +19,7 @@
   },
   "pages": {
     "/qehveler.html": {
-      "views": 2,
+      "views": 3,
       "totalDurationSeconds": 20
     },
     "/avadanliqlar.html": {
@@ -36,8 +36,8 @@
     },
     "/caylar.html": {
       "views": 1,
-      "totalDurationSeconds": 0
+      "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-03T20:48:33.870Z"
+  "lastUpdated": "2026-11-03T20:48:41.733Z"
 }
