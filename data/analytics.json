@@ -1,7 +1,7 @@
 {
   "daily": {
     "2026-11-03": {
-      "pageviews": 3,
+      "pageviews": 4,
       "visitors": [
         "test_sess_1",
         "s_mw12adzf_70u0vhf"
@@ -20,7 +20,11 @@
     "/": {
       "views": 1,
       "totalDurationSeconds": 5
+    },
+    "/menyu.html": {
+      "views": 1,
+      "totalDurationSeconds": 0
     }
   },
-  "lastUpdated": "2026-11-03T19:15:39.917Z"
+  "lastUpdated": "2026-11-03T19:15:42.537Z"
 }
