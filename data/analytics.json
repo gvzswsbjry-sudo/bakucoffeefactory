@@ -9,20 +9,21 @@
       ]
     },
     "2026-11-04": {
-      "pageviews": 16,
+      "pageviews": 17,
       "visitors": [
         "s_mw15o12w_lsdh6f6",
         "s_mw15o9wl_t10pkci",
         "s_mw15tlo6_6cmf8ss",
         "s_mw2gaxfa_t05h2o6",
-        "s_mw2gaxga_kx7h67f"
+        "s_mw2gaxga_kx7h67f",
+        "s_mw2gazf5_jckgkkj"
       ]
     }
   },
   "pages": {
     "/qehveler.html": {
-      "views": 3,
-      "totalDurationSeconds": 55
+      "views": 4,
+      "totalDurationSeconds": 85
     },
     "/avadanliqlar.html": {
       "views": 3,
@@ -38,13 +39,12 @@
     },
     "/caylar.html": {
       "views": 4,
-      "totalDurationSeconds": 55
+      "totalDurationSeconds": 115
     },
     "/mehsul.html": {
       "views": 1,
       "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-04T18:29:22.364Z"
-}: "2026-11-04T18:29:26.020Z"
+  "lastUpdated": "2026-11-04T18:29:53.639Z"
 }
