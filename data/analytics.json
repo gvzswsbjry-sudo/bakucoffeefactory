@@ -23,7 +23,7 @@
   "pages": {
     "/qehveler.html": {
       "views": 4,
-      "totalDurationSeconds": 2320
+      "totalDurationSeconds": 2335
     },
     "/avadanliqlar.html": {
       "views": 3,
@@ -46,5 +46,5 @@
       "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-04T19:25:01.683Z"
+  "lastUpdated": "2026-11-04T19:25:05.017Z"
 }
