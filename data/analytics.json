@@ -33,7 +33,7 @@
     },
     "/avadanliqlar.html": {
       "views": 4,
-      "totalDurationSeconds": 295
+      "totalDurationSeconds": 310
     },
     "/": {
       "views": 6,
@@ -45,12 +45,12 @@
     },
     "/caylar.html": {
       "views": 4,
-      "totalDurationSeconds": 12885
+      "totalDurationSeconds": 12900
     },
     "/mehsul.html": {
       "views": 1,
       "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-05T09:08:28.208Z"
+  "lastUpdated": "2026-11-05T09:08:40.659Z"
 }
