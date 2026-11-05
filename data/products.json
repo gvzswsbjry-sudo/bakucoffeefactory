@@ -1127,5 +1127,47 @@
         "alt": "Test avadanlığı"
       }
     ]
+  },
+  {
+    "id": "fincan",
+    "category": "equipment",
+    "name": "Fincan",
+    "price": 12,
+    "unit": "piece",
+    "image": "assets/catalog/fincan.jpg",
+    "description": "Zərif qəhvə fincanı.",
+    "active": true,
+    "stock": {
+      "status": "counted",
+      "quantity": 1
+    },
+    "sortOrder": 11,
+    "meta": {
+      "equipmentCategory": "accessory",
+      "categoryLabel": "Aksesuar",
+      "imageFit": "contain"
+    },
+    "variants": []
+  },
+  {
+    "id": "millifincan",
+    "category": "equipment",
+    "name": "Milli Fincan (qaşıqlı)",
+    "price": 18,
+    "unit": "piece",
+    "image": "assets/catalog/milli-fincan.jpg",
+    "description": "Xüsusi naxışlı milli qəhvə fincanı və qaşıq dəsti.",
+    "active": true,
+    "stock": {
+      "status": "counted",
+      "quantity": 3
+    },
+    "sortOrder": 12,
+    "meta": {
+      "equipmentCategory": "accessory",
+      "categoryLabel": "Aksesuar",
+      "imageFit": "contain"
+    },
+    "variants": []
   }
 ]
