@@ -18,15 +18,21 @@
         "s_mw2gaxga_kx7h67f",
         "s_mw2gazf5_jckgkkj"
       ]
+    },
+    "2026-11-05": {
+      "pageviews": 1,
+      "visitors": [
+        "s_mw2gaxfa_t05h2o6"
+      ]
     }
   },
   "pages": {
     "/qehveler.html": {
       "views": 4,
-      "totalDurationSeconds": 6400
+      "totalDurationSeconds": 6415
     },
     "/avadanliqlar.html": {
-      "views": 3,
+      "views": 4,
       "totalDurationSeconds": 160
     },
     "/": {
@@ -39,12 +45,12 @@
     },
     "/caylar.html": {
       "views": 4,
-      "totalDurationSeconds": 12735
+      "totalDurationSeconds": 12750
     },
     "/mehsul.html": {
       "views": 1,
       "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-05T09:05:59.273Z"
+  "lastUpdated": "2026-11-05T09:06:13.205Z"
 }
