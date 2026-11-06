@@ -33,6 +33,7 @@ pnpm-debug.log*
 data/admin-config.json
 data/orders.json
 data/products.json.bak
+data/products.local.json
 
 # Admin uploads are runtime data. Render Free does not persist them.
 assets/uploads/

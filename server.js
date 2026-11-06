@@ -30,9 +30,13 @@ function createServer({
   },
   oidcVerifier,
 } = {}) {
-  const store = createProductStore({ filePath: path.join(rootDir, 'data', 'products.json'), assetsRoot: path.join(rootDir, 'assets') });
-  const auth = createAuth({ configPath: path.join(rootDir, 'data', 'admin-config.json') });
   const database = customerDatabase === undefined ? createDatabase() : customerDatabase;
+  const store = createProductStore({
+    filePath: path.join(rootDir, 'data', 'products.json'),
+    assetsRoot: path.join(rootDir, 'assets'),
+    database,
+  });
+  const auth = createAuth({ configPath: path.join(rootDir, 'data', 'admin-config.json') });
   const customerAuth = database ? createCustomerAuth({ database }) : null;
   const socialVerifier = oidcVerifier || createOidcVerifier({ providers: socialProviders });
   const orders = createOrderStore({ filePath: path.join(rootDir, 'data', 'orders.json') });

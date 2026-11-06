@@ -14,8 +14,10 @@ function createDatabase({ connectionString = process.env.DATABASE_URL, PoolClass
     if (migrated) return;
     if (!migrationPromise) {
       migrationPromise = (async () => {
-        const sql = await fs.readFile(path.join(__dirname, 'migrations', '001_customer_auth.sql'), 'utf8');
-        await pool.query(sql);
+        const authSql = await fs.readFile(path.join(__dirname, 'migrations', '001_customer_auth.sql'), 'utf8');
+        await pool.query(authSql);
+        const catalogSql = await fs.readFile(path.join(__dirname, 'migrations', '002_catalog_products.sql'), 'utf8');
+        await pool.query(catalogSql);
         migrated = true;
       })().finally(() => { migrationPromise = null; });
     }
