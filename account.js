@@ -69,6 +69,7 @@
         </form>
         <div class="account-social">
           <div class="account-divider"><span>və ya</span></div>
+          <div id="googleButtonSlot" style="display:none;width:100%;margin-bottom:8px;justify-content:center;"></div>
           <button class="account-provider account-provider-google" type="button" data-provider="google"><span aria-hidden="true">G</span>Google ilə davam et</button>
           <p class="account-social-message" id="accountSocialMessage" role="status" aria-live="polite" hidden></p>
           <p class="account-provider-note">Google ilə bir kliklə sürətli giriş və qeydiyyat.</p>
@@ -258,7 +259,48 @@
     passwordToggle.setAttribute('aria-label', visible ? 'Şifrəni gizlət' : 'Şifrəni göstər');
   });
   const providerButtons = [...overlay.querySelectorAll('[data-provider]')];
+  const googleSlot = overlay.querySelector('#googleButtonSlot');
+  const googleBtn = overlay.querySelector('.account-provider-google');
   let providerConfig = {};
+
+  async function setupGoogleGsi(config) {
+    if (!config?.clientId || !googleSlot) return;
+    try {
+      await loadProviderScript('https://accounts.google.com/gsi/client');
+      if (!window.google?.accounts?.id) return;
+      window.google.accounts.id.initialize({
+        client_id: config.clientId,
+        callback: async (response) => {
+          socialStatus('Google ilə daxil olunur…');
+          try {
+            await finishSocial('google', response.credential);
+          } catch (error) {
+            socialStatus(error.message || 'Giriş tamamlanmadı.', true);
+          }
+        },
+        auto_select: false,
+        cancel_on_tap_outside: true,
+      });
+
+      googleSlot.style.display = 'flex';
+      window.google.accounts.id.renderButton(googleSlot, {
+        theme: 'outline',
+        size: 'large',
+        type: 'standard',
+        shape: 'rectangular',
+        text: 'continue_with',
+        logo_alignment: 'left',
+        width: 320,
+        locale: 'az',
+      });
+      if (googleBtn) {
+        googleBtn.style.display = 'none';
+      }
+    } catch (e) {
+      console.warn('Google GSI render error:', e);
+    }
+  }
+
   fetch('/api/auth/providers', { credentials: 'same-origin' }).then((response) => response.ok ? response.json() : null).then((providers) => {
     providerConfig = providers || {};
     providerButtons.forEach((button) => {
@@ -267,6 +309,9 @@
       button.disabled = !enabled;
       if (!enabled) button.title = 'Bu giriş üsulu serverdə hələ konfiqurasiya edilməyib.';
     });
+    if (providerConfig.google?.enabled && providerConfig.google?.clientId) {
+      setupGoogleGsi(providerConfig.google);
+    }
   }).catch(() => {});
 
   const socialMessage = overlay.querySelector('#accountSocialMessage');
@@ -302,6 +347,12 @@
   async function signInWithGoogle(config) {
     await loadProviderScript('https://accounts.google.com/gsi/client');
     if (!window.google?.accounts?.id) throw new Error('Google giriş xidməti yüklənmədi.');
+    await setupGoogleGsi(config);
+    const innerBtn = googleSlot?.querySelector('div[role="button"]') || googleSlot?.querySelector('iframe');
+    if (innerBtn) {
+      innerBtn.click();
+      return;
+    }
     await new Promise((resolve, reject) => {
       let completed = false;
       window.google.accounts.id.initialize({
@@ -316,9 +367,11 @@
       window.google.accounts.id.prompt((notice) => {
         if (!completed && (notice.isNotDisplayed?.() || notice.isSkippedMoment?.())) {
           completed = true;
-          reject(new Error('Google hesab seçimi açılmadı. Brauzerdə üçüncü tərəf girişinə icazə verib yenidən yoxlayın.'));
+          socialStatus('Google seçim pəncərəsi açılmadısa, brauzerdə üçüncü tərəf kukilərini aktiv edin və ya rəsmi Google düyməsinə klikləyin.', true);
+          resolve();
         }
       });
+      setTimeout(() => { if (!completed) { completed = true; resolve(); } }, 4000);
     });
   }
   providerButtons.forEach((button) => button.addEventListener('click', async () => {

@@ -83,8 +83,17 @@ function createServer({
   return server;
 }
 
+const DEFAULT_DATABASE_URL = 'postgresql://neondb_owner:npg_ltAnd58yPUqD@ep-rough-surf-be1iq2yi-pooler.c-9.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+const DEFAULT_GOOGLE_CLIENT_ID = '443463054982-hk0m0slfp7da7pfabojfp99btrjh5f9c.apps.googleusercontent.com';
+
 if (require.main === module) {
   loadEnv();
+  if (!process.env.DATABASE_URL) {
+    process.env.DATABASE_URL = DEFAULT_DATABASE_URL;
+  }
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    process.env.GOOGLE_CLIENT_ID = DEFAULT_GOOGLE_CLIENT_ID;
+  }
   const host = process.env.HOST || (process.env.PORT ? '0.0.0.0' : '127.0.0.1');
   const port = Number(process.env.PORT || 8017);
   const server = createServer({ rootDir: __dirname, host, port });
