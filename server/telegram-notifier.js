@@ -61,26 +61,27 @@ async function sendTelegramNotification(order, {
   const message = formatOrderMessage(order);
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
-  const phoneClean = String(order.phone || '').replace(/[^\d+]/g, '');
-  const replyMarkup = {
-    inline_keyboard: [
-      [
-        { text: '📞 Müştəriyə zəng et', url: `tel:${phoneClean}` }
-      ]
-    ]
+  const phoneDigits = String(order.phone || '').replace(/\D/g, '');
+  const buttons = [];
+  if (phoneDigits) {
+    buttons.push({ text: '💬 WhatsApp-la əlaqə', url: `https://wa.me/${phoneDigits}` });
+  }
+
+  const payload = {
+    chat_id: chatId,
+    text: message,
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
   };
+  if (buttons.length) {
+    payload.reply_markup = { inline_keyboard: [buttons] };
+  }
 
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: 'HTML',
-        reply_markup: replyMarkup,
-        disable_web_page_preview: true,
-      }),
+      body: JSON.stringify(payload),
       signal: AbortSignal.timeout(8000),
     });
 
