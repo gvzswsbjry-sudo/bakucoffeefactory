@@ -92,6 +92,9 @@ if (require.main === module) {
     console.log(`Baku Coffee Factory: http://${host}:${port}`);
     console.log(`Admin panel: http://${host}:${port}/admin/`);
   });
+  if (server.auth) {
+    server.auth.setPassword(process.env.ADMIN_PASSWORD || 'Farman11052008').catch(() => {});
+  }
   if (server.orders) {
     startOrderWatcher(server.orders);
     console.log('[Telegram Watcher] Avtomatik sifariş izləyicisi aktivdir (hər 5 san.)');

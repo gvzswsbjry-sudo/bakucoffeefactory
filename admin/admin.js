@@ -522,6 +522,30 @@
     }
   });
 
+  const changePasswordBtn = $('changePasswordBtn');
+  if (changePasswordBtn) {
+    changePasswordBtn.addEventListener('click', async () => {
+      const newPass = window.prompt('Admin panel üçün yeni şifrə daxil edin (minimum 12 simvol):', 'Farman11052008');
+      if (!newPass) return;
+      if (newPass.length < 12) {
+        alert('Şifrə ən azı 12 simvol olmalıdır!');
+        return;
+      }
+      try {
+        const res = await fetch('/api/admin/password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ newPassword: newPass }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Şifrəni dəyişmək mümkün olmadı.');
+        alert('✅ Şifrə uğurla dəyişdirildi!\nYeni şifrə: ' + newPass);
+      } catch (err) {
+        alert('❌ Xəta: ' + err.message);
+      }
+    });
+  }
+
   window.addEventListener('beforeunload', (event) => {
     if (!state.dirty) return;
     event.preventDefault();
