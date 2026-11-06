@@ -94,8 +94,12 @@ function createOrderStore({ filePath }) {
   function create(order) {
     const operation = queue.then(async () => {
       const orders = await list();
-      const saved = { id: `BCF-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
-        createdAt: new Date().toISOString(), ...order };
+      const saved = {
+        id: `BCF-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`,
+        createdAt: new Date().toISOString(),
+        telegramNotified: false,
+        ...order,
+      };
       orders.unshift(saved);
       await write(orders);
       return saved;
@@ -116,7 +120,23 @@ function createOrderStore({ filePath }) {
     queue = operation.catch(() => {});
     return operation;
   }
-  return { list, create, updateStatus };
+  function markNotified(id) {
+    const operation = queue.then(async () => {
+      const orders = await list();
+      const index = orders.findIndex((order) => order.id === id);
+      if (index < 0) return null;
+      orders[index] = {
+        ...orders[index],
+        telegramNotified: true,
+        telegramNotifiedAt: new Date().toISOString(),
+      };
+      await write(orders);
+      return orders[index];
+    });
+    queue = operation.catch(() => {});
+    return operation;
+  }
+  return { list, create, updateStatus, markNotified };
 }
 
 module.exports = { prepareOrder, createOrderStore, resolveOrderSelection };

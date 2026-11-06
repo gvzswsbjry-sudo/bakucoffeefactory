@@ -1,7 +1,32 @@
 'use strict';
 
+const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
+
+function loadEnv(envPath = path.join(__dirname, '.env')) {
+  try {
+    if (fs.existsSync(envPath)) {
+      const lines = fs.readFileSync(envPath, 'utf8').split(/\r?\n/);
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const eq = trimmed.indexOf('=');
+        if (eq > 0) {
+          const key = trimmed.slice(0, eq).trim();
+          let val = trimmed.slice(eq + 1).trim();
+          if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+            val = val.slice(1, -1);
+          }
+          if (process.env[key] === undefined) {
+            process.env[key] = val;
+          }
+        }
+      }
+    }
+  } catch {}
+}
+
 const { createProductStore } = require('./server/product-store');
 const { createAuth } = require('./server/auth');
 const { createRequestHandler } = require('./server/routes');
@@ -10,6 +35,7 @@ const { createCustomerAuth } = require('./server/customer-auth');
 const { createOrderStore } = require('./server/order-store');
 const { createOidcVerifier } = require('./server/oidc-verifier');
 const { createAnalyticsStore } = require('./server/analytics-store');
+const { startOrderWatcher } = require('./server/telegram-notifier');
 
 function parseAllowedOrigins(value) {
   return String(value || '').split(',').map((origin) => origin.trim()).filter(Boolean);
@@ -52,10 +78,13 @@ function createServer({
   server.customerDatabase = database;
   server.adminHost = host;
   server.adminPort = port;
+  server.orders = orders;
+  server.store = store;
   return server;
 }
 
 if (require.main === module) {
+  loadEnv();
   const host = process.env.HOST || (process.env.PORT ? '0.0.0.0' : '127.0.0.1');
   const port = Number(process.env.PORT || 8017);
   const server = createServer({ rootDir: __dirname, host, port });
@@ -63,6 +92,10 @@ if (require.main === module) {
     console.log(`Baku Coffee Factory: http://${host}:${port}`);
     console.log(`Admin panel: http://${host}:${port}/admin/`);
   });
+  if (server.orders) {
+    startOrderWatcher(server.orders);
+    console.log('[Telegram Watcher] Avtomatik sifariş izləyicisi aktivdir (hər 5 san.)');
+  }
 }
 
-module.exports = { createServer, parseAllowedOrigins };
+module.exports = { createServer, parseAllowedOrigins, loadEnv };

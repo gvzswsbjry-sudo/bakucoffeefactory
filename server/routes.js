@@ -6,7 +6,12 @@ const crypto = require('node:crypto');
 const { handleCustomerAuthRequest, customerCookie, sameOrigin } = require('./customer-auth-routes');
 const { prepareOrder } = require('./order-store');
 const { createAnalyticsStore } = require('./analytics-store');
-const { sendTelegramNotification, sendTestMessage } = require('./telegram-notifier');
+const {
+  sendTelegramNotification,
+  sendTestMessage,
+  checkAndNotifyOrders,
+  getTelegramStatus,
+} = require('./telegram-notifier');
 const {
   applySecurityHeaders,
   createRateLimiter,
@@ -255,7 +260,11 @@ function createRequestHandler({
             if (customer) order.customerId = customer.id;
           }
           const saved = await orders.create(order);
-          sendTelegramNotification(saved).catch((err) => {
+          sendTelegramNotification(saved).then((res) => {
+            if (res && res.ok && typeof orders.markNotified === 'function') {
+              orders.markNotified(saved.id).catch(() => {});
+            }
+          }).catch((err) => {
             console.warn('[Telegram Notification] Göndərilə bilmədi:', err.message);
           });
           return json(res, 201, { orderId: saved.id, total: saved.total });
@@ -351,6 +360,13 @@ function createRequestHandler({
 
         if (req.method === 'GET' && pathname === '/api/admin/orders') return json(res, 200, await orders.list());
         if (req.method === 'GET' && pathname === '/api/admin/analytics') return json(res, 200, await analytics.getStats());
+        if (req.method === 'GET' && pathname === '/api/admin/telegram/status') {
+          return json(res, 200, getTelegramStatus());
+        }
+        if (req.method === 'POST' && pathname === '/api/admin/telegram/check') {
+          const result = await checkAndNotifyOrders(orders);
+          return json(res, 200, { ok: true, ...result });
+        }
         if (req.method === 'POST' && pathname === '/api/admin/telegram/test') {
           try {
             await sendTestMessage();

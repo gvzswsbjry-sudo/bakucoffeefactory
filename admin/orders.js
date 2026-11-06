@@ -2,7 +2,14 @@
   const list = document.getElementById('ordersList');
   const message = document.getElementById('ordersMessage');
   const filter = document.getElementById('orderStatusFilter');
+  const refreshBtn = document.getElementById('manualRefreshBtn');
   let orders = [];
+  let knownIds = new Set();
+  let newlyArrivedIds = new Set();
+  let isFirstLoad = true;
+  let isFetching = false;
+  let pollInterval = null;
+
   const money = (value) => `${Number(value || 0).toFixed(2)} ₼`;
   const totalLabel = (value, quoteRequired = false) => {
     const known = Number(value || 0);
@@ -17,6 +24,25 @@
     return node;
   };
 
+  function playAlertSound() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.35);
+    } catch {}
+  }
+
   function render() {
     list.innerHTML = '';
     const visible = orders.filter((order) => filter.value === 'all' || normalizedStatus(order) === filter.value);
@@ -29,7 +55,8 @@
     if (orders.length && !visible.length) list.append(element('p', 'orders-empty', 'Bu statusda sifariş yoxdur.'));
     visible.forEach((order) => {
       const status = normalizedStatus(order);
-      const card = element('article', `order-card ${status}`);
+      const isNewArrival = newlyArrivedIds.has(order.id);
+      const card = element('article', `order-card ${status}${isNewArrival ? ' newly-arrived' : ''}`);
       card.dataset.orderId = order.id;
       const top = element('div', 'order-top');
       const heading = element('div');
@@ -88,16 +115,55 @@
     }
   }
 
-  async function load() {
+  async function load({ isPoll = false } = {}) {
+    if (isFetching) return;
+    isFetching = true;
     try {
       const response = await fetch('/api/admin/orders', { credentials: 'same-origin' });
       if (response.status === 401) { location.href = './'; return; }
       if (!response.ok) throw new Error('Sifarişləri yükləmək mümkün olmadı.');
-      orders = await response.json();
-      render();
+      const incoming = await response.json();
+
+      if (isFirstLoad) {
+        orders = incoming;
+        incoming.forEach((o) => knownIds.add(o.id));
+        isFirstLoad = false;
+        render();
+      } else {
+        const brandNew = incoming.filter((o) => !knownIds.has(o.id));
+        let changed = brandNew.length > 0 || incoming.length !== orders.length;
+
+        if (!changed) {
+          for (let i = 0; i < incoming.length; i++) {
+            if (incoming[i].id !== orders[i]?.id || incoming[i].status !== orders[i]?.status) {
+              changed = true;
+              break;
+            }
+          }
+        }
+
+        if (changed) {
+          if (brandNew.length > 0) {
+            brandNew.forEach((o) => {
+              knownIds.add(o.id);
+              newlyArrivedIds.add(o.id);
+            });
+            playAlertSound();
+            setTimeout(() => {
+              newlyArrivedIds.clear();
+            }, 4000);
+          }
+          orders = incoming;
+          render();
+        }
+      }
     } catch (error) {
-      message.className = 'order-error';
-      message.textContent = error.message;
+      if (!isPoll) {
+        message.className = 'order-error';
+        message.textContent = error.message;
+      }
+    } finally {
+      isFetching = false;
     }
   }
 
@@ -106,5 +172,19 @@
     const button = event.target.closest('[data-status-order]');
     if (button) updateStatus(button);
   });
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+      refreshBtn.disabled = true;
+      load().finally(() => {
+        setTimeout(() => { refreshBtn.disabled = false; }, 600);
+      });
+    });
+  }
+
+  // Səhifə açılanda dərhal yüklə
   load();
+
+  // Hər 4 saniyədən bir avtomatik yoxlayır, səhifəni yeniləməyə ehtiyac qalmır
+  pollInterval = setInterval(() => load({ isPoll: true }), 4000);
+  window.addEventListener('focus', () => load({ isPoll: true }));
 })();
