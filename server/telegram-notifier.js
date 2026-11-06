@@ -6,14 +6,14 @@ const path = require('node:path');
 /**
  * Baku Coffee Factory - Telegram Sifariş Bildirişçisi
  * 
- * Yeni sifariş daxil olduqda Telegram botu vasitəsilə dərhal adminə
- * ətraflı bildiriş mesajı göndərir.
+ * Yeni sifariş daxil olduqda Telegram botu vasitəsilə dərhal adminlərə
+ * (həm sizə, həm də iş yoldaşınıza) ətraflı bildiriş mesajı göndərir.
  * Həmçinin arxa planda hər 5 saniyədən bir sifarişləri yoxlayaraq
  * çatdırılmamış sifariş qalmadığına əmin olur.
  */
 
 const DEFAULT_BOT_TOKEN = '9001088933:AAGNDuXbV2cf2cKt7AqeAMVsf0HmSINCRRg';
-const DEFAULT_CHAT_ID = '7106879887';
+const DEFAULT_CHAT_IDS = ['7106879887', '8570959804'];
 
 function getEnvValue(key, fallback = '') {
   if (process.env[key]) return process.env[key];
@@ -39,18 +39,41 @@ function getEnvValue(key, fallback = '') {
   return fallback;
 }
 
+function parseChatIds(value) {
+  if (Array.isArray(value)) {
+    return value.map((id) => String(id).trim()).filter(Boolean);
+  }
+  if (!value) return [];
+  return String(value)
+    .split(',')
+    .map((id) => id.trim())
+    .filter(Boolean);
+}
+
 function getBotCredentials(options = {}) {
   const botToken = options.botToken ||
     options.token ||
     process.env.TELEGRAM_BOT_TOKEN ||
     getEnvValue('TELEGRAM_BOT_TOKEN', DEFAULT_BOT_TOKEN);
 
-  const chatId = options.chatId ||
+  const rawChatId = options.chatId ||
     options.targetChatId ||
+    options.chatIds ||
     process.env.TELEGRAM_CHAT_ID ||
-    getEnvValue('TELEGRAM_CHAT_ID', DEFAULT_CHAT_ID);
+    getEnvValue('TELEGRAM_CHAT_ID', '');
 
-  return { botToken, chatId };
+  let chatIds = parseChatIds(rawChatId);
+  if (chatIds.length === 0) {
+    chatIds = [...DEFAULT_CHAT_IDS];
+  } else {
+    for (const defId of DEFAULT_CHAT_IDS) {
+      if (!chatIds.includes(defId)) {
+        chatIds.push(defId);
+      }
+    }
+  }
+
+  return { botToken, chatIds, chatId: chatIds[0] };
 }
 
 function isTestEnvironment() {
@@ -103,25 +126,8 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;');
 }
 
-async function sendTelegramNotification(order, options = {}) {
-  if (isTestEnvironment() && !options.forceNetwork) {
-    return { ok: true, skipped: true, reason: 'test-environment' };
-  }
-
-  const { botToken, chatId } = getBotCredentials(options);
-  if (!botToken || !chatId) {
-    return { ok: false, skipped: true, reason: 'TELEGRAM_BOT_TOKEN və ya TELEGRAM_CHAT_ID təyin edilməyib.' };
-  }
-
-  const message = formatOrderMessage(order);
+async function sendToSingleChat({ botToken, chatId, message, buttons = [] }) {
   const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-  const phoneDigits = String(order.phone || '').replace(/\D/g, '');
-  const buttons = [];
-  if (phoneDigits) {
-    buttons.push({ text: '💬 WhatsApp-la əlaqə', url: `https://wa.me/${phoneDigits}` });
-  }
-
   const payload = {
     chat_id: chatId,
     text: message,
@@ -142,40 +148,84 @@ async function sendTelegramNotification(order, options = {}) {
 
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data.ok) {
-      console.warn('[Telegram Notification] Xəta:', data.description || response.statusText);
-      return { ok: false, error: data.description || response.statusText };
+      console.warn(`[Telegram Notification] Chat ${chatId} xətası:`, data.description || response.statusText);
+      return { ok: false, chatId, error: data.description || response.statusText };
     }
 
-    return { ok: true, messageId: data.result?.message_id };
+    return { ok: true, chatId, messageId: data.result?.message_id };
   } catch (err) {
-    console.warn('[Telegram Notification] Şəbəkə xətası:', err.message);
-    return { ok: false, error: err.message };
+    console.warn(`[Telegram Notification] Chat ${chatId} şəbəkə xətası:`, err.message);
+    return { ok: false, chatId, error: err.message };
   }
 }
 
+async function sendTelegramNotification(order, options = {}) {
+  if (isTestEnvironment() && !options.forceNetwork) {
+    return { ok: true, skipped: true, reason: 'test-environment' };
+  }
+
+  const { botToken, chatIds } = getBotCredentials(options);
+  if (!botToken || chatIds.length === 0) {
+    return { ok: false, skipped: true, reason: 'TELEGRAM_BOT_TOKEN və ya TELEGRAM_CHAT_ID təyin edilməyib.' };
+  }
+
+  const message = formatOrderMessage(order);
+  const phoneDigits = String(order.phone || '').replace(/\D/g, '');
+  const buttons = [];
+  if (phoneDigits) {
+    buttons.push({ text: '💬 WhatsApp-la əlaqə', url: `https://wa.me/${phoneDigits}` });
+  }
+
+  const results = await Promise.allSettled(
+    chatIds.map((targetId) => sendToSingleChat({ botToken, chatId: targetId, message, buttons }))
+  );
+
+  const delivery = results.map((r, i) => r.status === 'fulfilled' ? r.value : { ok: false, chatId: chatIds[i], error: r.reason?.message });
+  const anySuccess = delivery.some((d) => d.ok);
+
+  return {
+    ok: anySuccess,
+    delivery,
+    recipientsCount: chatIds.length,
+    successCount: delivery.filter((d) => d.ok).length,
+  };
+}
+
 async function sendTestMessage(options = {}) {
-  const { botToken, chatId } = getBotCredentials(options);
-  if (!botToken || !chatId) {
+  const { botToken, chatIds } = getBotCredentials(options);
+  if (!botToken || chatIds.length === 0) {
     throw new Error('TELEGRAM_BOT_TOKEN və ya TELEGRAM_CHAT_ID tapılmadı.');
   }
 
-  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text: '☕ <b>Baku Coffee Factory</b>\n\n✅ Təbriklər! Telegram bildiriş botu aktivdir. Sifarişlər həm anında, həm də arxa plan yoxlayıcısı ilə telefonunuza çatdırılacaq!',
-      parse_mode: 'HTML',
-    }),
-    signal: AbortSignal.timeout(8000),
-  });
+  const text = '☕ <b>Baku Coffee Factory</b>\n\n✅ Təbriklər! Telegram bildiriş botu aktivdir. Sifarişlər həm anında, həm də arxa plan yoxlayıcısı ilə telefonunuza çatdırılacaq!';
+  const results = await Promise.allSettled(
+    chatIds.map(async (chatId) => {
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          parse_mode: 'HTML',
+        }),
+        signal: AbortSignal.timeout(8000),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.ok) {
+        throw new Error(`Chat ${chatId}: ${data.description || response.statusText}`);
+      }
+      return { chatId, messageId: data.result?.message_id };
+    })
+  );
 
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok || !data.ok) {
-    throw new Error(data.description || response.statusText);
+  const successful = results.filter((r) => r.status === 'fulfilled').map((r) => r.value);
+  const failed = results.filter((r) => r.status === 'rejected').map((r) => r.reason?.message);
+
+  if (successful.length === 0) {
+    throw new Error(failed.join('; '));
   }
-  return data.result;
+  return { successful, failed };
 }
 
 let watcherTimer = null;
@@ -209,7 +259,7 @@ async function checkAndNotifyOrders(ordersStore, options = {}) {
         } else {
           order.telegramNotified = true;
         }
-        console.log(`[Telegram Watcher] Sifariş bildirişi çatdırıldı: ${order.id}`);
+        console.log(`[Telegram Watcher] Sifariş bildirişi çatdırıldı: ${order.id} (${result.successCount || 1} alıcıya)`);
       } else {
         console.warn(`[Telegram Watcher] Sifariş göndərilə bilmədi (${order.id}):`, result.error || result.reason);
       }
@@ -252,12 +302,12 @@ function stopOrderWatcher() {
 }
 
 function getTelegramStatus() {
-  const { botToken, chatId } = getBotCredentials();
+  const { botToken, chatIds } = getBotCredentials();
   return {
-    configured: Boolean(botToken && chatId),
+    configured: Boolean(botToken && chatIds.length > 0),
     hasToken: Boolean(botToken),
-    chatId: chatId ? `${chatId.slice(0, 3)}***` : null,
-    fullChatId: chatId || null,
+    chatIds: chatIds.map((id) => `${id.slice(0, 3)}***`),
+    recipients: chatIds,
     botUsername: '@Bfc_order_bot',
     watcherActive: Boolean(watcherTimer),
   };
@@ -272,4 +322,5 @@ module.exports = {
   stopOrderWatcher,
   getTelegramStatus,
   getBotCredentials,
+  parseChatIds,
 };
