@@ -367,6 +367,16 @@ function createRequestHandler({
           const result = await checkAndNotifyOrders(orders);
           return json(res, 200, { ok: true, ...result });
         }
+        if (req.method === 'POST' && pathname === '/api/admin/password') {
+          if (!requireJson(req, res)) return;
+          try {
+            const body = await parseJson(req);
+            await auth.setPassword(body.newPassword);
+            return json(res, 200, { ok: true, message: 'Admin şifrəsi uğurla yeniləndi!' });
+          } catch (error) {
+            return json(res, 400, { ok: false, error: error.message });
+          }
+        }
         if (req.method === 'POST' && pathname === '/api/admin/telegram/test') {
           try {
             await sendTestMessage();

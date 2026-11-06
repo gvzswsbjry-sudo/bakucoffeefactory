@@ -81,7 +81,22 @@ function createAuth({ configPath, now = () => Date.now() }) {
     return sessions.delete(token);
   }
 
-  return { isConfigured, setup, login, verifySession, logout };
+  async function setPassword(newPassword) {
+    if (typeof newPassword !== 'string' || newPassword.length < MIN_PASSWORD_LENGTH || newPassword.length > MAX_PASSWORD_LENGTH) {
+      throw new Error(`Password must be between ${MIN_PASSWORD_LENGTH} and ${MAX_PASSWORD_LENGTH} characters`);
+    }
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = await derive(newPassword, salt);
+    const config = { algorithm: 'scrypt', salt, hash, updatedAt: new Date(now()).toISOString() };
+    await fs.mkdir(path.dirname(configPath), { recursive: true });
+    const tempPath = `${configPath}.tmp`;
+    await fs.writeFile(tempPath, `${JSON.stringify(config, null, 2)}\n`, { mode: 0o600 });
+    await fs.rename(tempPath, configPath);
+    sessions.clear();
+    return true;
+  }
+
+  return { isConfigured, setup, login, verifySession, logout, setPassword };
 }
 
 module.exports = { createAuth, SESSION_TTL, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH };
