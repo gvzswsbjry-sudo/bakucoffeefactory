@@ -23,6 +23,7 @@
     if (value !== undefined) node.textContent = String(value);
     return node;
   };
+  const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 
   function playAlertSound() {
     try {
@@ -65,6 +66,15 @@
       time.dateTime = order.createdAt;
       heading.append(time);
       top.append(heading, element('strong', '', totalLabel(order.total, order.quoteRequired)));
+      const customerBox = element('div', 'order-customer-box');
+      const customerName = order.customerName || order.fullName;
+      const parts = [];
+      if (customerName) parts.push(`<span>👤 <strong>${escapeHtml(customerName)}</strong></span>`);
+      if (order.username) parts.push(`<span>🏷 <strong>@${escapeHtml(order.username)}</strong></span>`);
+      if (order.email) parts.push(`<span>✉️ <a href="mailto:${escapeHtml(order.email)}">${escapeHtml(order.email)}</a></span>`);
+      if (parts.length) {
+        customerBox.innerHTML = parts.join(' · ');
+      }
       const contact = element('div', 'order-contact');
       const phone = element('a', '', order.phone);
       phone.href = `tel:${order.phone}`;
@@ -90,7 +100,9 @@
         );
         items.append(row);
       });
-      card.append(top, contact, items);
+      card.append(top);
+      if (parts.length) card.append(customerBox);
+      card.append(contact, items);
       if (order.note) card.append(element('p', 'order-note', `Satıcıya qeyd: ${order.note}`));
       list.append(card);
     });

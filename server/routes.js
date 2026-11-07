@@ -252,12 +252,28 @@ function createRequestHandler({
         if (!sameOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
         if (!requireJson(req, res)) return;
         try {
-          const order = prepareOrder(await parseJson(req, 48 * 1024), await store.list());
+          const rawOrder = await parseJson(req, 48 * 1024);
           const token = customerCookie(req);
-          if (token && customerDatabase && customerAuth) {
+          let customer = null;
+          if (customerDatabase && customerAuth) {
             await customerDatabase.migrate();
-            const customer = await customerAuth.getSession(token);
-            if (customer) order.customerId = customer.id;
+            if (token) {
+              customer = await customerAuth.getSession(token);
+            }
+            if (!customer) {
+              return json(res, 401, { error: 'Sifariş vermək üçün hesaba daxil olmalısınız.' });
+            }
+            if (!rawOrder.phone && customer.phone) {
+              rawOrder.phone = customer.phone;
+            }
+          }
+          const order = prepareOrder(rawOrder, await store.list());
+          if (customer) {
+            order.customerId = customer.id;
+            order.customerName = customer.fullName || customer.username;
+            order.username = customer.username;
+            order.phone = customer.phone || order.phone;
+            order.email = customer.email || null;
           }
           const saved = await orders.create(order);
           sendTelegramNotification(saved).then((res) => {

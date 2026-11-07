@@ -21,6 +21,7 @@ html.account-open, body.account-open { overflow: hidden !important; touch-action
 .account-tab { flex: 1; border: 0; border-bottom: 2px solid transparent; padding: 10px; background: transparent; font: 700 14px var(--sans, sans-serif); cursor: pointer; }
 .account-tab.active { color: #a34e34; border-color: #a34e34; }
 .account-field { display: grid; gap: 7px; margin-bottom: 16px; font: 600 12px var(--sans, sans-serif); }
+.account-field-hint { color: #8d847c; font-weight: 400; font-size: 11px; margin-left: 4px; }
 .account-field input { width: 100%; min-height: 48px; border: 1px solid #c9bdae; border-radius: 0; padding: 11px 12px; background: #fff; color: #211b17; font: 16px var(--sans, sans-serif); }
 .account-field input:focus-visible, .account-consent input:focus-visible { outline: 2px solid #a34e34; outline-offset: 1px; }
 .account-contact-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: -2px 0 16px; padding: 4px; border-radius: 999px; background: #ebe5dc; }

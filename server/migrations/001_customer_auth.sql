@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS customer_users (
   id UUID PRIMARY KEY,
+  full_name TEXT,
   username TEXT NOT NULL,
   username_normalized TEXT NOT NULL UNIQUE,
   phone_e164 TEXT UNIQUE,
@@ -18,6 +19,7 @@ CREATE TABLE IF NOT EXISTS customer_users (
 
 ALTER TABLE customer_users ALTER COLUMN phone_e164 DROP NOT NULL;
 ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS email_normalized TEXT;
+ALTER TABLE customer_users ADD COLUMN IF NOT EXISTS full_name TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS customer_users_email_normalized_idx ON customer_users(email_normalized);
 
 CREATE TABLE IF NOT EXISTS customer_sessions (

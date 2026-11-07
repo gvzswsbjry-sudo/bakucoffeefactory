@@ -55,7 +55,13 @@ async function verifyPassword(password, salt, hash) {
 }
 
 const tokenHash = (token) => crypto.createHash('sha256').update(String(token)).digest('hex');
-const publicUser = (row) => ({ id: row.id, username: row.username, phone: row.phone_e164 || null, email: row.email_normalized || null });
+const publicUser = (row) => ({
+  id: row.id,
+  fullName: row.full_name || row.username,
+  username: row.username,
+  phone: row.phone_e164 || null,
+  email: row.email_normalized || null,
+});
 const attemptKey = (ip, identifier) => tokenHash(`${String(ip || 'unknown').slice(0, 80)}\0${identifier}`);
 
 function createCustomerAuth({ database, now = () => new Date() }) {
@@ -89,23 +95,24 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     return token;
   }
 
-  async function register({ phone, email, username, password, privacyAccepted, ip, userAgent } = {}) {
+  async function register({ fullName, phone, email, username, password, privacyAccepted, ip, userAgent } = {}) {
     if (privacyAccepted !== true) throw authError('Məxfilik siyasətinə razılıq tələb olunur.');
     if (!phone && !email) throw authError('Telefon nömrəsi və ya e-poçt ünvanı daxil edin.');
     const phoneE164 = phone ? normalizePhone(phone) : null;
     const emailNormalized = email ? normalizeEmail(email) : null;
     const usernameNormalized = normalizeUsername(username);
     const displayName = String(username).trim().normalize('NFKC');
+    const customerFullName = String(fullName || displayName).trim().normalize('NFKC').slice(0, 100);
     const { salt, hash } = await hashPassword(password);
-    const key = attemptKey(ip, phoneE164 || emailNormalized);
+    const key = attemptKey(ip, phoneE164 || emailNormalized || usernameNormalized);
     await checkAttempts(key);
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
       const { rows } = await client.query(`INSERT INTO customer_users
-        (id, username, username_normalized, phone_e164, email_normalized, password_salt, password_hash, privacy_consent_at, privacy_policy_version, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $8, $8) RETURNING id, username, phone_e164, email_normalized`,
-      [crypto.randomUUID(), displayName, usernameNormalized, phoneE164, emailNormalized, salt, hash, current(), POLICY_VERSION]);
+        (id, full_name, username, username_normalized, phone_e164, email_normalized, password_salt, password_hash, privacy_consent_at, privacy_policy_version, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $9, $9) RETURNING id, full_name, username, phone_e164, email_normalized`,
+      [crypto.randomUUID(), customerFullName, displayName, usernameNormalized, phoneE164, emailNormalized, salt, hash, current(), POLICY_VERSION]);
       const token = await createSession(client, rows[0].id, userAgent);
       await client.query('COMMIT');
       return { user: publicUser(rows[0]), token };
@@ -127,14 +134,31 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     let normalized;
     let field;
     try {
-      field = raw.includes('@') ? 'email_normalized' : raw.startsWith('+') || /^00\d/.test(raw) ? 'phone_e164' : 'username_normalized';
-      normalized = field === 'phone_e164' ? normalizePhone(raw) : field === 'email_normalized' ? normalizeEmail(raw) : normalizeUsername(raw);
+      if (raw.includes('@')) {
+        field = 'email_normalized';
+        normalized = normalizeEmail(raw);
+      } else if (raw.startsWith('+') || /^00\d/.test(raw)) {
+        field = 'phone_e164';
+        normalized = normalizePhone(raw);
+      } else {
+        const cleanDigits = raw.replace(/[\s().-]/g, '');
+        if (/^0[1-9]\d{8}$/.test(cleanDigits)) {
+          field = 'phone_e164';
+          normalized = `+994${cleanDigits.slice(1)}`;
+        } else if (/^994[1-9]\d{8}$/.test(cleanDigits)) {
+          field = 'phone_e164';
+          normalized = `+${cleanDigits}`;
+        } else {
+          field = 'username_normalized';
+          normalized = normalizeUsername(raw);
+        }
+      }
     } catch {
       throw authError('Giriş məlumatları düzgün deyil.', 401);
     }
     const key = attemptKey(ip, normalized);
     await checkAttempts(key);
-    const { rows } = await pool.query(`SELECT id, username, phone_e164, email_normalized, password_salt, password_hash FROM customer_users WHERE ${field} = $1 AND is_active = TRUE`, [normalized]);
+    const { rows } = await pool.query(`SELECT id, full_name, username, phone_e164, email_normalized, password_salt, password_hash FROM customer_users WHERE ${field} = $1 AND is_active = TRUE`, [normalized]);
     const user = rows[0];
     const passwordOk = await verifyPassword(password, user?.password_salt || DUMMY_SALT, user?.password_hash || '00'.repeat(64));
     if (!user || !passwordOk) {
@@ -149,7 +173,7 @@ function createCustomerAuth({ database, now = () => new Date() }) {
 
   async function getSession(token) {
     if (!/^[0-9a-f]{64}$/.test(String(token ?? ''))) return null;
-    const { rows } = await pool.query(`SELECT u.id, u.username, u.phone_e164, u.email_normalized FROM customer_sessions s
+    const { rows } = await pool.query(`SELECT u.id, u.full_name, u.username, u.phone_e164, u.email_normalized FROM customer_sessions s
       JOIN customer_users u ON u.id = s.user_id
       WHERE s.token_hash = $1 AND s.expires_at > $2 AND u.is_active = TRUE`, [tokenHash(token), current()]);
     return rows[0] ? publicUser(rows[0]) : null;
@@ -170,7 +194,7 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     const key = attemptKey(ip, `${rawProvider}:${subjectNormalized}`);
     await checkAttempts(key);
 
-    const { rows: identityRows } = await pool.query(`SELECT u.id, u.username, u.phone_e164, u.email_normalized
+    const { rows: identityRows } = await pool.query(`SELECT u.id, u.full_name, u.username, u.phone_e164, u.email_normalized
       FROM customer_identities i JOIN customer_users u ON u.id = i.user_id
       WHERE i.provider = $1 AND i.subject = $2 AND u.is_active = TRUE`, [rawProvider, subjectNormalized]);
 
@@ -185,7 +209,7 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     const emailNormalized = normalizeEmail(email);
 
     const { rows: existingRows } = await pool.query(
-      'SELECT id, username, phone_e164, email_normalized FROM customer_users WHERE email_normalized = $1 AND is_active = TRUE',
+      'SELECT id, full_name, username, phone_e164, email_normalized FROM customer_users WHERE email_normalized = $1 AND is_active = TRUE',
       [emailNormalized]);
 
     if (existingRows.length > 0) {
@@ -233,9 +257,9 @@ function createCustomerAuth({ database, now = () => new Date() }) {
       const { salt, hash } = await hashPassword(randomPassword);
 
       const { rows } = await client.query(`INSERT INTO customer_users
-        (id, username, username_normalized, phone_e164, email_normalized, password_salt, password_hash, privacy_consent_at, privacy_policy_version, created_at, updated_at, last_login_at)
-        VALUES ($1, $2, $3, NULL, $4, $5, $6, $7, $8, $7, $7, $7) RETURNING id, username, phone_e164, email_normalized`,
-      [crypto.randomUUID(), candidateUsername, candidateNormalized, emailNormalized, salt, hash, current(), POLICY_VERSION]);
+        (id, full_name, username, username_normalized, phone_e164, email_normalized, password_salt, password_hash, privacy_consent_at, privacy_policy_version, created_at, updated_at, last_login_at)
+        VALUES ($1, $2, $3, $4, NULL, $5, $6, $7, $8, $9, $8, $8, $8) RETURNING id, full_name, username, phone_e164, email_normalized`,
+      [crypto.randomUUID(), baseName, candidateUsername, candidateNormalized, emailNormalized, salt, hash, current(), POLICY_VERSION]);
 
       await client.query(`INSERT INTO customer_identities(provider, subject, user_id, email_normalized, created_at)
         VALUES($1, $2, $3, $4, $5)`, [rawProvider, subjectNormalized, rows[0].id, emailNormalized, current()]);

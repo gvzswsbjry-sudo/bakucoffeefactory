@@ -97,16 +97,20 @@ function formatOrderMessage(order) {
     ? '<i>Dəqiqləşdirilməli (Sorğu)</i>'
     : `<b>${Number(order.total || 0).toFixed(2)} ₼</b>`;
 
-  const noteStr = order.note ? `\n📝 <b>Müştəri qeydi:</b>\n<i>${escapeHtml(order.note)}</i>` : '';
+  const noteStr = order.note ? `\n📝 <b>Müştəri qeydi:</b>\n<i>${escapeHtml(order.note)}</i>\n` : '';
   const phoneClean = String(order.phone || '').replace(/[^\d+]/g, '');
+
+  const customerName = order.customerName || order.fullName;
+  const customerNameStr = customerName ? `👤 <b>Müştəri (Ad):</b> ${escapeHtml(customerName)}\n` : '';
+  const usernameStr = order.username ? `🏷 <b>İstifadəçi adı:</b> @${escapeHtml(order.username)}\n` : '';
+  const emailStr = order.email ? `✉️ <b>E-poçt:</b> ${escapeHtml(order.email)}\n` : '';
 
   return `🔔 <b>YENİ SİFARİŞ! #${escapeHtml(order.id)}</b>
 ━━━━━━━━━━━━━━━━━━━━
 ⏰ <b>Tarix:</b> ${dateStr}
-📞 <b>Telefon:</b> <a href="tel:${phoneClean}">${escapeHtml(order.phone)}</a>
-💰 <b>Ümumi məbləğ:</b> ${totalStr}
+${customerNameStr}${usernameStr}📞 <b>Telefon:</b> <a href="tel:${phoneClean}">${escapeHtml(order.phone)}</a>
+${emailStr}💰 <b>Ümumi məbləğ:</b> ${totalStr}
 ${noteStr}
-
 📦 <b>Sifariş edilən məhsullar:</b>
 ${itemsList || '<i>Məhsul siyahısı boşdur</i>'}
 ━━━━━━━━━━━━━━━━━━━━

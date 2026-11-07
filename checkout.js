@@ -33,16 +33,23 @@
       <div class="checkout-form-view">
         <p class="checkout-eyebrow">SİFARİŞ SORĞUSU</p>
         <h2 id="checkoutTitle">Sifarişi tamamlayın.</h2>
-        <p class="checkout-intro">Əlaqə nömrənizi qeyd edin. Komandamız sifarişinizi və mövcudluğu sizinlə dəqiqləşdirəcək.</p>
+        <div class="checkout-customer-box" id="checkoutCustomerBox" hidden>
+          <div class="checkout-customer-avatar" aria-hidden="true">👤</div>
+          <div class="checkout-customer-details">
+            <strong class="checkout-customer-name" id="checkoutCustomerName"></strong>
+            <span class="checkout-customer-phone" id="checkoutCustomerPhone"></span>
+            <span class="checkout-customer-username" id="checkoutCustomerUser"></span>
+          </div>
+        </div>
         <form id="checkoutForm">
-          <fieldset class="checkout-phone-field">
+          <fieldset class="checkout-phone-field" style="display:none;" hidden>
             <legend>Telefon nömrəsi</legend>
             <div class="checkout-phone-row">
               <label class="checkout-country"><span class="checkout-sr-only">Ölkə kodu</span>
                 <select name="countryCode" aria-label="Ölkə və telefon kodu">${countryOptions.map(([code, name]) => `<option value="${code}">${name} (${code})</option>`).join('')}</select>
               </label>
               <label><span class="checkout-sr-only">Telefon nömrəsinin qalan hissəsi</span>
-                <input name="phoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123456789" maxlength="14" required />
+                <input name="phoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123456789" maxlength="14" />
               </label>
             </div>
           </fieldset>
@@ -99,6 +106,70 @@
     } else previousFocus?.focus();
   }
 
+  let currentUser = null;
+  let pendingCheckoutAfterAuth = false;
+
+  async function checkCurrentUser() {
+    try {
+      const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      if (response.ok) {
+        const data = await response.json();
+        currentUser = data?.user || null;
+      } else {
+        currentUser = null;
+      }
+    } catch {
+      currentUser = null;
+    }
+    return currentUser;
+  }
+
+  window.addEventListener('bcf:auth-changed', (event) => {
+    currentUser = event.detail?.user || null;
+    if (currentUser && pendingCheckoutAfterAuth) {
+      pendingCheckoutAfterAuth = false;
+      setTimeout(() => {
+        openCheckout();
+      }, 150);
+    }
+  });
+
+  function openCheckout() {
+    const items = readCart();
+    if (!items.length) return;
+    previousFocus = document.activeElement;
+    formView.hidden = false;
+    successView.hidden = true;
+    errorBox.textContent = '';
+    form.reset();
+
+    const customerBox = overlay.querySelector('#checkoutCustomerBox');
+    if (customerBox) {
+      const nameEl = customerBox.querySelector('#checkoutCustomerName');
+      const phoneEl = customerBox.querySelector('#checkoutCustomerPhone');
+      const userEl = customerBox.querySelector('#checkoutCustomerUser');
+      if (currentUser) {
+        if (nameEl) nameEl.textContent = currentUser.fullName || currentUser.username || '';
+        if (phoneEl) phoneEl.textContent = currentUser.phone ? `📞 ${currentUser.phone}` : (currentUser.email ? `✉️ ${currentUser.email}` : '');
+        if (userEl) userEl.textContent = currentUser.username ? `@${currentUser.username}` : '';
+        customerBox.hidden = false;
+      } else {
+        customerBox.hidden = true;
+      }
+    }
+
+    if (currentUser?.phone) {
+      const savedPhone = splitPhone(currentUser.phone);
+      if (form.elements.countryCode) form.elements.countryCode.value = savedPhone.code;
+      if (form.elements.phoneLocal) form.elements.phoneLocal.value = savedPhone.local;
+    }
+
+    overlay.querySelector('#checkoutTotal').textContent = cartTotalLabel(Object.fromEntries(items.map((item) => [item.id, item])));
+    overlay.hidden = false;
+    document.body.classList.add('checkout-active');
+    dialog.focus();
+  }
+
   openButton.addEventListener('click', async () => {
     const items = readCart();
     if (!items.length) {
@@ -106,27 +177,23 @@
       setTimeout(() => { openButton.textContent = 'Sifariş et'; }, 2200);
       return;
     }
-    previousFocus = document.activeElement;
-    formView.hidden = false;
-    successView.hidden = true;
-    errorBox.textContent = '';
-    form.reset();
-    form.elements.countryCode.value = '+994';
-    overlay.querySelector('#checkoutTotal').textContent = cartTotalLabel(Object.fromEntries(items.map((item) => [item.id, item])));
-    overlay.hidden = false;
-    document.body.classList.add('checkout-active');
-    dialog.focus();
-    try {
-      const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
-      if (response.ok && !overlay.hidden) {
-        const data = await response.json();
-        if (data.user?.phone && !form.elements.phoneLocal.value) {
-          const savedPhone = splitPhone(data.user.phone);
-          form.elements.countryCode.value = savedPhone.code;
-          form.elements.phoneLocal.value = savedPhone.local;
-        }
+
+    const user = await checkCurrentUser();
+    if (!user) {
+      pendingCheckoutAfterAuth = true;
+      if (window.bcfAccount?.open) {
+        window.bcfAccount.open({
+          mode: 'register',
+          message: 'Sifariş vermək üçün zəhmət olmasa hesabınıza daxil olun və ya qeydiyyatdan keçin.',
+        });
+      } else {
+        const trigger = document.getElementById('accountTrigger');
+        if (trigger) trigger.click();
       }
-    } catch {}
+      return;
+    }
+
+    openCheckout();
   });
 
   const WHATSAPP_TARGET_NUMBER = '994556452204';
@@ -181,13 +248,25 @@
       errorBox.textContent = 'Sifariş göndərmək üçün saytı fayl kimi deyil, işləyən server ünvanından açın.';
       return;
     }
-    const localDigits = form.elements.phoneLocal.value.replace(/\D/g, '');
-    const phone = `${form.elements.countryCode.value}${localDigits}`;
-    if (!/^\+[1-9]\d{6,14}$/.test(phone)) {
-      errorBox.textContent = 'Ölkə kodunu seçin və telefon nömrəsinin qalan rəqəmlərini daxil edin.';
-      form.elements.phoneLocal.focus();
+
+    const user = await checkCurrentUser();
+    if (!user) {
+      errorBox.textContent = 'Sifariş göndərmək üçün zəhmət olmasa hesaba daxil olun.';
+      pendingCheckoutAfterAuth = true;
+      if (window.bcfAccount?.open) {
+        window.bcfAccount.open({ mode: 'register', message: 'Sifariş vermək üçün hesaba daxil olun və ya qeydiyyatdan keçin.' });
+      }
       return;
     }
+
+    const localDigits = form.elements.phoneLocal ? form.elements.phoneLocal.value.replace(/\D/g, '') : '';
+    const formPhone = form.elements.countryCode && localDigits ? `${form.elements.countryCode.value}${localDigits}` : '';
+    const phone = user.phone || formPhone;
+    if (!phone || !/^\+[1-9]\d{6,14}$/.test(phone)) {
+      errorBox.textContent = 'Hesabınızda qeydiyyatdan keçmiş telefon nömrəsi tapılmadı.';
+      return;
+    }
+
     const cartSnapshot = readCart();
     const items = cartSnapshot.map(({ id, quantity }) => ({ id, quantity }));
     if (!items.length) { errorBox.textContent = 'Səbətiniz boşdur.'; return; }

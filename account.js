@@ -36,29 +36,32 @@
           <button type="button" class="account-tab" data-mode="register" role="tab" aria-selected="false">Qeydiyyat</button>
         </div>
         <form id="accountForm" novalidate>
-          <label class="account-field account-login-only">İstifadəçi adı, telefon və ya e-poçt
-            <input name="identifier" autocomplete="username" placeholder="Adınız, telefonunuz və ya e-poçtiniz" />
+          <label class="account-field account-login-only">İstifadəçi adı və ya telefon nömrəsi
+            <input name="identifier" autocomplete="username" placeholder="İstifadəçi adı, telefon və ya e-poçt" />
           </label>
-          <label class="account-field account-register-only" hidden>İstifadəçi adı
-            <input name="username" autocomplete="username" minlength="3" maxlength="30" />
+          <label class="account-field account-register-only" hidden>Ad və Soyad
+            <input name="fullName" autocomplete="name" placeholder="Ad və soyadınız" maxlength="100" />
           </label>
-          <div class="account-contact-choice account-register-only" role="group" aria-label="Qeydiyyat üsulu" hidden>
+          <label class="account-field account-register-only" hidden>İstifadəçi adı <span class="account-field-hint">(unikal olmalıdır)</span>
+            <input name="username" autocomplete="username" minlength="3" maxlength="30" placeholder="İstifadəçi adınız (məs: farman08)" />
+          </label>
+          <div class="account-contact-choice account-register-only" role="group" aria-label="Qeydiyyat üsulu" style="display:none;" hidden>
             <button type="button" class="active" data-contact="phone" aria-pressed="true">Telefon</button>
             <button type="button" data-contact="email" aria-pressed="false">E-poçt</button>
           </div>
           <div class="account-field account-register-only account-phone-contact" hidden>
-            <span>Telefon nömrəsi</span>
+            <span>Mobil nömrə</span>
             <div class="account-phone-row">
               <label class="account-code-picker"><span class="account-sr-only">Ölkə kodu</span><span class="account-code-display" aria-hidden="true"><span class="account-code-value">+994</span><span class="account-code-arrows"><svg viewBox="0 0 12 18" width="12" height="18"><path d="m2 7 4-4 4 4M2 11l4 4 4-4" /></svg></span></span><select name="countryCode" aria-label="Ölkə və telefon kodu">${countryOptions.map(([code, name]) => `<option value="${code}">${name} (${code})</option>`).join('')}<option value="other">Digər ölkə kodu…</option></select></label>
               <label><span class="account-sr-only">Telefon nömrəsi</span><input name="phoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123456789" /></label>
             </div>
             <input class="account-custom-code" name="customCode" type="tel" inputmode="tel" placeholder="Ölkə kodu, məsələn +81" aria-label="Digər ölkə kodu" hidden />
           </div>
-          <label class="account-field account-register-only account-email-contact" hidden>E-poçt ünvanı
+          <label class="account-field account-register-only account-email-contact" style="display:none;" hidden>E-poçt ünvanı
             <input name="email" type="email" inputmode="email" autocomplete="email" placeholder="ad@example.com" />
           </label>
           <label class="account-field">Şifrə
-            <span class="account-password-wrap"><input name="password" type="password" autocomplete="current-password" minlength="12" /><button class="account-password-toggle" type="button" aria-label="Şifrəni göstər" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span>
+            <span class="account-password-wrap"><input name="password" type="password" autocomplete="current-password" minlength="12" placeholder="Ən azı 12 simvol" /><button class="account-password-toggle" type="button" aria-label="Şifrəni göstər" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span>
           </label>
           <label class="account-consent account-register-only" hidden>
             <input name="privacyAccepted" type="checkbox" />
@@ -107,6 +110,7 @@
   let user = null;
   let previousFocus = null;
   function announceAuthChange() {
+    window.bcfCurrentUser = user;
     window.dispatchEvent(new CustomEvent('bcf:auth-changed', { detail: { user } }));
   }
   function escapeHtml(value) {
@@ -162,8 +166,8 @@
       trigger.setAttribute('aria-label', `Hesab: ${user.username}`);
       trigger.title = user.username;
       trigger.innerHTML = '<span class="account-user-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></span>';
-      profile.querySelector('.account-greeting').textContent = `Salam, ${user.username}!`;
-      profile.querySelector('.account-phone').textContent = user.phone || user.email || '';
+      profile.querySelector('.account-greeting').textContent = `Salam, ${user.fullName || user.username}!`;
+      profile.querySelector('.account-phone').textContent = user.phone ? `Tel: ${user.phone}` : (user.email || '');
     } else {
       trigger.classList.remove('is-logged-in');
       trigger.removeAttribute('aria-label');
@@ -410,23 +414,55 @@
     const password = form.elements.password.value;
     const dialCode = countryCode.value === 'other' ? customCode.value.trim() : countryCode.value;
     const localDigits = form.elements.phoneLocal.value.replace(/\D/g, '');
+    const phone = `${dialCode}${localDigits}`;
+    const fullName = form.elements.fullName ? form.elements.fullName.value.trim() : '';
+    const username = form.elements.username ? form.elements.username.value.trim() : '';
+
+    if (mode === 'register') {
+      if (!fullName) {
+        message.textContent = 'Ad və soyadınızı daxil edin.';
+        form.elements.fullName?.focus();
+        return;
+      }
+      if (!username || username.length < 3) {
+        message.textContent = 'İstifadəçi adı ən azı 3 simvol olmalıdır.';
+        form.elements.username?.focus();
+        return;
+      }
+      if (!/^\+[1-9]\d{0,3}$/.test(dialCode) || !/^\d{5,14}$/.test(localDigits)) {
+        message.textContent = 'Mobil telefon nömrənizi tam daxil edin.';
+        form.elements.phoneLocal?.focus();
+        return;
+      }
+      if (!password || password.length < 12) {
+        message.textContent = 'Şifrə ən azı 12 simvoldan ibarət olmalıdır.';
+        form.elements.password?.focus();
+        return;
+      }
+      if (!form.elements.privacyAccepted?.checked) {
+        message.textContent = 'Məxfilik siyasətinə razılıq verin.';
+        return;
+      }
+    } else {
+      if (!form.elements.identifier?.value.trim()) {
+        message.textContent = 'İstifadəçi adı və ya telefon nömrənizi daxil edin.';
+        form.elements.identifier?.focus();
+        return;
+      }
+      if (!password) {
+        message.textContent = 'Şifrənizi daxil edin.';
+        form.elements.password?.focus();
+        return;
+      }
+    }
+
     const body = mode === 'register' ? {
-      username: form.elements.username.value.trim(),
-      ...(contactMode === 'phone' ? { phone: `${dialCode}${localDigits}` } : { email: form.elements.email.value.trim() }),
-      password, privacyAccepted: form.elements.privacyAccepted.checked,
+      fullName,
+      username,
+      ...(contactMode === 'email' && form.elements.email?.value.trim() ? { email: form.elements.email.value.trim() } : { phone }),
+      password,
+      privacyAccepted: form.elements.privacyAccepted.checked,
     } : { identifier: form.elements.identifier.value.trim(), password };
-    if (mode === 'register' && contactMode === 'phone' && (!/^\+[1-9]\d{0,3}$/.test(dialCode) || !/^\d{5,14}$/.test(localDigits))) {
-      message.textContent = 'Ölkə kodunu seçin və telefon nömrəsinin qalan rəqəmlərini daxil edin.';
-      return;
-    }
-    if (mode === 'register' && contactMode === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
-      message.textContent = 'Düzgün e-poçt ünvanı daxil edin.';
-      return;
-    }
-    if (mode === 'register' && !body.privacyAccepted) {
-      message.textContent = 'Məxfilik siyasətinə razılıq verin.';
-      return;
-    }
     submit.disabled = true;
     try {
       const result = await request(mode, body);
@@ -453,6 +489,20 @@
     renderUser();
     close();
   });
+
+  window.bcfAccount = {
+    getUser: () => user,
+    open: (options = {}) => {
+      previousFocus = document.activeElement;
+      overlay.hidden = false;
+      document.body.classList.add('account-open');
+      document.documentElement.classList.add('account-open');
+      if (options.mode) setMode(options.mode);
+      if (options.message) message.textContent = options.message;
+      dialog.focus();
+    },
+    close: () => close(),
+  };
 
   setMode('login');
   renderUser();
