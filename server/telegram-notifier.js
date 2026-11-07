@@ -13,7 +13,7 @@ const path = require('node:path');
  */
 
 const DEFAULT_BOT_TOKEN = '9001088933:AAGNDuXbV2cf2cKt7AqeAMVsf0HmSINCRRg';
-const DEFAULT_CHAT_IDS = ['7106879887', '8570959804', '-5598772996'];
+const DEFAULT_CHAT_IDS = ['-5598772996'];
 
 function getEnvValue(key, fallback = '') {
   if (process.env[key]) return process.env[key];
@@ -65,12 +65,6 @@ function getBotCredentials(options = {}) {
   let chatIds = parseChatIds(rawChatId);
   if (chatIds.length === 0) {
     chatIds = [...DEFAULT_CHAT_IDS];
-  } else {
-    for (const defId of DEFAULT_CHAT_IDS) {
-      if (!chatIds.includes(defId)) {
-        chatIds.push(defId);
-      }
-    }
   }
 
   return { botToken, chatIds, chatId: chatIds[0] };
