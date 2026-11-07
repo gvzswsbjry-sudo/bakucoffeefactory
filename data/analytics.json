@@ -24,6 +24,12 @@
       "visitors": [
         "s_mw2gaxfa_t05h2o6"
       ]
+    },
+    "2026-11-07": {
+      "pageviews": 4,
+      "visitors": [
+        "s_mw6gfp1g_gwx83j4"
+      ]
     }
   },
   "pages": {
@@ -32,7 +38,7 @@
       "totalDurationSeconds": 6565
     },
     "/avadanliqlar.html": {
-      "views": 4,
+      "views": 5,
       "totalDurationSeconds": 325
     },
     "/": {
@@ -40,17 +46,17 @@
       "totalDurationSeconds": 160
     },
     "/menyu.html": {
-      "views": 4,
+      "views": 6,
       "totalDurationSeconds": 1175
     },
     "/caylar.html": {
-      "views": 4,
-      "totalDurationSeconds": 12915
+      "views": 5,
+      "totalDurationSeconds": 14790
     },
     "/mehsul.html": {
       "views": 1,
       "totalDurationSeconds": 5
     }
   },
-  "lastUpdated": "2026-11-05T09:08:55.620Z"
+  "lastUpdated": "2026-11-07T14:40:26.433Z"
 }

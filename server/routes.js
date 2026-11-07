@@ -267,7 +267,7 @@ function createRequestHandler({
           }).catch((err) => {
             console.warn('[Telegram Notification] Göndərilə bilmədi:', err.message);
           });
-          return json(res, 201, { orderId: saved.id, total: saved.total });
+          return json(res, 201, { orderId: saved.id, total: saved.total, items: saved.items });
         } catch (error) {
           return json(res, error.status || 500, { error: error.status ? error.message : 'Sifariş hazırda qəbul edilə bilmir.' });
         }

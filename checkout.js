@@ -51,15 +51,23 @@
           </label>
           <div class="checkout-total"><span>Cəmi</span><strong id="checkoutTotal">0.00 ₼</strong></div>
           <p class="checkout-error" role="alert" aria-live="polite"></p>
-          <button class="checkout-confirm" type="submit">Sifarişi təsdiqlə</button>
+          <button class="checkout-confirm" type="submit">Sifarişi təsdiqlə və WhatsApp-a göndər</button>
+          <p class="checkout-destination-note">✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 55 645 22 04) göndərilir</p>
         </form>
       </div>
       <div class="checkout-success" hidden role="status" aria-live="polite">
         <span class="checkout-success-icon" aria-hidden="true">✓</span>
         <p class="checkout-eyebrow">SİFARİŞ QEYDƏ ALINDI</p>
         <h2>Sifariş sorğunuz qəbul edildi.</h2>
-        <p>Seçdiyiniz məhsulları nəzərdən keçirəcəyik. Təsdiq və növbəti addımlar üçün göstərdiyiniz telefon nömrəsi ilə əlaqə saxlayacağıq.</p>
         <p class="checkout-reference"></p>
+        <div class="checkout-wa-box">
+          <p class="checkout-wa-hint">Sifarişiniz sistemə qeyd olundu! Sürətli təsdiq üçün birbaşa WhatsApp-a göndərin:</p>
+          <a class="checkout-wa-btn" id="checkoutWhatsAppBtn" target="_blank" rel="noopener noreferrer" href="#">
+            <svg class="checkout-wa-icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.9 11.9 0 0 0 12.06 0C5.46 0 .09 5.37.09 11.97c0 2.11.55 4.16 1.6 5.97L0 24l6.23-1.63a11.93 11.93 0 0 0 5.83 1.51h.01c6.6 0 11.97-5.37 11.97-11.97 0-3.2-1.25-6.21-3.52-8.43zm-8.46 18.42h-.01a9.92 9.92 0 0 1-5.06-1.39l-.36-.22-3.76.99 1-3.66-.24-.38a9.92 9.92 0 0 1-1.52-5.27c0-5.48 4.46-9.94 9.95-9.94 2.66 0 5.15 1.03 7.03 2.91a9.88 9.88 0 0 1 2.91 7.03c0 5.48-4.47 9.93-9.94 9.93zm5.45-7.44c-.3-.15-1.77-.87-2.04-.97-.28-.1-.48-.15-.68.15-.2.3-.78.97-.95 1.17-.18.2-.35.23-.65.08-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.52-.07-.15-.68-1.64-.93-2.25-.24-.59-.49-.51-.68-.52h-.58c-.2 0-.52.08-.8.38-.27.3-1.05 1.03-1.05 2.51 0 1.48 1.08 2.91 1.23 3.11.15.2 2.12 3.24 5.14 4.54.72.31 1.28.5 1.72.64.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.18-1.42-.08-.13-.28-.2-.58-.35z"/></svg>
+            <span>WhatsApp ilə göndər</span>
+          </a>
+        </div>
+        <p class="checkout-subnote">Komandamız həmçinin göstərdiyiniz telefon nömrəsi ilə əlaqə saxlayacaq.</p>
         <button class="checkout-done" type="button">Alış-verişə davam et</button>
       </div>
     </section>`;
@@ -121,6 +129,51 @@
     } catch {}
   });
 
+  const WHATSAPP_TARGET_NUMBER = '994556452204';
+
+  function formatWhatsAppOrderMessage({ orderId, phone, note, items, total }) {
+    const lines = [
+      '☕ *Baku Coffee Factory — Yeni Sifariş*',
+      `📋 *Sifariş №:* ${orderId || 'Yeni'}`,
+      `📞 *Müştəri Tel:* ${phone}`,
+      '',
+      '*Sifariş edilən məhsullar:*',
+    ];
+
+    (items || []).forEach((item, index) => {
+      const qty = item.unit === 'g' || item.unit === 'q'
+        ? `${item.quantity} q`
+        : `${item.quantity} ədəd`;
+      let line = `${index + 1}. *${item.name || item.id}* — ${qty}`;
+      const itemTotal = typeof getCartItemTotal === 'function'
+        ? getCartItemTotal(item)
+        : (item.total ?? (item.price ? item.price * item.quantity : null));
+      if (itemTotal != null && itemTotal > 0) {
+        line += ` (${Number(itemTotal).toFixed(2)} ₼)`;
+      } else if (item.quoteRequired || item.price == null) {
+        line += ` (Qiymət dəqiqləşdiriləcək)`;
+      }
+      lines.push(line);
+    });
+
+    lines.push('');
+    if (total != null && total > 0) {
+      lines.push(`💰 *Cəmi məbləğ:* ${Number(total).toFixed(2)} ₼`);
+    }
+    if (note && note.trim()) {
+      lines.push(`📝 *Qeyd:* ${note.trim()}`);
+    }
+    lines.push('');
+    lines.push('Salam! Saytdan sifariş verdim, zəhmət olmasa təsdiqləyəsiniz.');
+
+    return lines.join('\n');
+  }
+
+  function getWhatsAppUrl(orderData) {
+    const text = formatWhatsAppOrderMessage(orderData);
+    return `https://wa.me/${WHATSAPP_TARGET_NUMBER}?text=${encodeURIComponent(text)}`;
+  }
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     errorBox.textContent = '';
@@ -148,17 +201,38 @@
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.error || 'Sifarişi göndərmək mümkün olmadı. Yenidən cəhd edin.');
+
+      const note = form.elements.note.value.trim();
+      const itemsForWhatsApp = result.items && result.items.length ? result.items : cartSnapshot;
+      const totalForWhatsApp = result.total ?? Math.round(cartSnapshot.reduce((sum, item) => sum + getCartItemTotal(item), 0) * 100) / 100;
+      const waUrl = getWhatsAppUrl({
+        orderId: result.orderId,
+        phone,
+        note,
+        items: itemsForWhatsApp,
+        total: totalForWhatsApp,
+      });
+
+      const waBtn = successView.querySelector('#checkoutWhatsAppBtn');
+      if (waBtn) {
+        waBtn.href = waUrl;
+      }
+
       window.dispatchEvent(new CustomEvent('bcf:orders-changed', { detail: { id: result.orderId } }));
       saveSharedCart({});
       formView.hidden = true;
       successView.hidden = false;
       successView.querySelector('.checkout-reference').textContent = `Sifariş nömrəsi: ${result.orderId}`;
       successView.querySelector('.checkout-done').focus();
+
+      try {
+        window.open(waUrl, '_blank');
+      } catch {}
     } catch (error) {
       errorBox.textContent = error.message;
     } finally {
       confirmButton.disabled = false;
-      confirmButton.textContent = 'Sifarişi təsdiqlə';
+      confirmButton.textContent = 'Sifarişi təsdiqlə və WhatsApp-a göndər';
     }
   });
 
