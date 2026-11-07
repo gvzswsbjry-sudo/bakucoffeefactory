@@ -139,7 +139,12 @@
   function extractDominantColors(imagePath, callback, maxCount = 6) {
     if (!imagePath) return callback([]);
     const img = new Image();
-    img.crossOrigin = 'anonymous';
+    if (imagePath.startsWith('http') && !imagePath.startsWith(window.location.origin)) {
+      img.crossOrigin = 'anonymous';
+    }
+    const cleanSrc = imagePath.startsWith('http') || imagePath.startsWith('/')
+      ? imagePath
+      : `/${imagePath.replace(/^\.?\/?/, '')}`;
     img.onload = () => {
       try {
         const canvas = document.createElement('canvas');
@@ -173,14 +178,16 @@
       }
     };
     img.onerror = () => callback([]);
-    img.src = imagePath.startsWith('http') || imagePath.startsWith('/') || imagePath.startsWith('../') ? imagePath : `../${imagePath}`;
+    img.src = cleanSrc;
   }
 
   let activeColorPickerCallback = null;
+  let activePickerImageInput = null;
   let pickerHoveredHex = '#8b8177';
 
-  function openImageColorPicker(imagePath, onPick) {
+  function openImageColorPicker(imagePath, onPick, associatedImageInput = null) {
     activeColorPickerCallback = onPick;
+    activePickerImageInput = associatedImageInput;
     const canvas = $('imageColorCanvas');
     const ctx = canvas.getContext('2d');
     const palette = $('imageColorPalette');
@@ -188,22 +195,28 @@
     const badge = $('pickedColorBadge');
     const hexLabel = $('pickedColorHex');
 
-    palette.innerHTML = '<span style="font-size:11px;color:var(--muted);">Rənglər aşkar edilir…</span>';
+    palette.innerHTML = '<span style="font-size:11px;color:var(--muted);">Şəkil açılır və rənglər aşkar edilir…</span>';
     loupe.hidden = true;
     pickerHoveredHex = '#8b8177';
     badge.style.background = pickerHoveredHex;
     hexLabel.textContent = pickerHoveredHex;
 
     const img = new Image();
-    img.crossOrigin = 'anonymous';
+    if (imagePath.startsWith('http') && !imagePath.startsWith(window.location.origin)) {
+      img.crossOrigin = 'anonymous';
+    }
+    const cleanSrc = imagePath.startsWith('http') || imagePath.startsWith('/')
+      ? imagePath
+      : `/${imagePath.replace(/^\.?\/?/, '')}`;
+
     img.onload = () => {
-      canvas.width = img.naturalWidth || 500;
-      canvas.height = img.naturalHeight || 500;
-      ctx.drawImage(img, 0, 0);
+      canvas.width = img.naturalWidth || 600;
+      canvas.height = img.naturalHeight || 400;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
       extractDominantColors(imagePath, (colors) => {
         if (!colors.length) {
-          palette.innerHTML = '<span style="font-size:11px;color:var(--muted);">Şəkil üzərinə klikləyərək rəngi seçin</span>';
+          palette.innerHTML = '<span style="font-size:11px;color:var(--muted);">Şəklin üzərinə klikləyərək rəngi seçin</span>';
           return;
         }
         palette.innerHTML = colors.map((c) =>
@@ -211,7 +224,10 @@
         ).join('');
       });
     };
-    img.src = imagePath.startsWith('http') || imagePath.startsWith('/') || imagePath.startsWith('../') ? imagePath : `../${imagePath}`;
+    img.onerror = () => {
+      palette.innerHTML = '<span style="font-size:12px;color:var(--danger);">Şəkil açılmadı. Zəhmət olmasa "Şəkli dəyiş" düyməsi ilə başqa şəkil seçin.</span>';
+    };
+    img.src = cleanSrc;
 
     imageColorDialog.showModal();
   }
@@ -364,28 +380,20 @@
     sizeInput.addEventListener('input', markDirty);
 
     const eyedropperBtn = wrapper.querySelector('[data-eyedropper]');
-    eyedropperBtn.addEventListener('click', async () => {
-      if (window.EyeDropper) {
-        try {
-          const dropper = new EyeDropper();
-          const result = await dropper.open();
-          if (result?.sRGBHex) {
-            applyColor(result.sRGBHex.toLowerCase());
-            return;
-          }
-        } catch (err) {
-          if (err.name === 'AbortError') return;
-        }
-      }
-
+    eyedropperBtn.addEventListener('click', () => {
       const targetImg = imageInput.value.trim() || $('productImage').value.trim();
       if (!targetImg) {
-        alert('Şəkildən rəng götürmək üçün əvvəlcə variant və ya məhsul şəkli seçin.');
+        alert('Şəkildən rəng seçmək üçün əvvəlcə variant və ya məhsul şəkli seçin.');
+        openAssetLibrary(imageInput, (selectedAsset) => {
+          openImageColorPicker(selectedAsset, (pickedColor) => {
+            applyColor(pickedColor);
+          }, imageInput);
+        });
         return;
       }
       openImageColorPicker(targetImg, (pickedColor) => {
         applyColor(pickedColor);
-      });
+      }, imageInput);
     });
 
     function loadVariantExtractedColors(imgPath) {
@@ -637,8 +645,9 @@
     ).join('');
   }
 
-  function openAssetLibrary(target) {
+  function openAssetLibrary(target, onSelectCallback = null) {
     state.assetTarget = target;
+    state.assetCallback = onSelectCallback;
     $('assetUploadMessage').textContent = '';
     $('assetUploadMessage').classList.remove('error');
     $('assetSearch').value = '';
@@ -648,9 +657,9 @@
 
   function selectAsset(asset) {
     const target = state.assetTarget || $('productImage');
-    target.value = asset;
+    if (target) target.value = asset;
     if (target === $('productImage')) setImagePreview(asset);
-    const row = target.closest?.('.variant-row');
+    const row = target?.closest?.('.variant-row');
     if (row) {
       const container = row.querySelector('.extracted-color-swatches');
       const strip = row.querySelector('.variant-extracted-strip');
@@ -666,6 +675,11 @@
           }
         });
       }
+    }
+    if (state.assetCallback) {
+      const cb = state.assetCallback;
+      state.assetCallback = null;
+      cb(asset);
     }
     markDirty();
   }
@@ -919,24 +933,30 @@
       const rect = colorCanvas.getBoundingClientRect();
       const scaleX = colorCanvas.width / (rect.width || 1);
       const scaleY = colorCanvas.height / (rect.height || 1);
-      const x = Math.max(0, Math.min(colorCanvas.width - 1, Math.floor((e.clientX - rect.left) * scaleX)));
-      const y = Math.max(0, Math.min(colorCanvas.height - 1, Math.floor((e.clientY - rect.top) * scaleY)));
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = Math.max(0, Math.min(colorCanvas.width - 1, Math.floor((clientX - rect.left) * scaleX)));
+      const y = Math.max(0, Math.min(colorCanvas.height - 1, Math.floor((clientY - rect.top) * scaleY)));
       const p = colorCtx.getImageData(x, y, 1, 1).data;
       return '#' + [p[0], p[1], p[2]].map((c) => c.toString(16).padStart(2, '0')).join('');
     }
 
-    colorCanvas.addEventListener('mousemove', (e) => {
+    function updateLoupe(e) {
       try {
         const hex = getPointHex(e);
         pickerHoveredHex = hex;
-        colorLoupe.style.left = `${e.offsetX}px`;
-        colorLoupe.style.top = `${e.offsetY}px`;
+        const rect = colorCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        colorLoupe.style.left = `${clientX - rect.left}px`;
+        colorLoupe.style.top = `${clientY - rect.top}px`;
         loupePrev.style.background = hex;
         loupeTxt.textContent = hex;
         colorLoupe.hidden = false;
       } catch {}
-    });
+    }
 
+    colorCanvas.addEventListener('mousemove', updateLoupe);
     colorCanvas.addEventListener('mouseleave', () => { colorLoupe.hidden = true; });
 
     colorCanvas.addEventListener('click', (e) => {
@@ -947,6 +967,19 @@
         hexTxt.textContent = hex;
       } catch {}
     });
+
+    colorCanvas.addEventListener('touchstart', (e) => {
+      try {
+        const hex = getPointHex(e);
+        pickerHoveredHex = hex;
+        colorBadge.style.background = hex;
+        hexTxt.textContent = hex;
+      } catch {}
+    }, { passive: true });
+
+    colorCanvas.addEventListener('touchmove', (e) => {
+      updateLoupe(e);
+    }, { passive: true });
 
     $('imageColorPalette').addEventListener('click', (e) => {
       const swatch = e.target.closest('[data-hex]');
@@ -962,6 +995,15 @@
       }
       imageColorDialog.close();
     });
+
+    const changePickerImgBtn = $('changePickerImageBtn');
+    if (changePickerImgBtn) {
+      changePickerImgBtn.addEventListener('click', () => {
+        openAssetLibrary(activePickerImageInput || $('productImage'), (newAsset) => {
+          openImageColorPicker(newAsset, activeColorPickerCallback, activePickerImageInput);
+        });
+      });
+    }
 
     $('closeImageColorDialog').addEventListener('click', () => imageColorDialog.close());
   }

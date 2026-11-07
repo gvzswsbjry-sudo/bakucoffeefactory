@@ -478,8 +478,12 @@ function createRequestHandler({
       try {
         const body = await fs.readFile(absolute);
         const extension = path.extname(absolute).toLowerCase();
-        res.writeHead(200, { 'content-type': MIME_TYPES[extension] || 'application/octet-stream',
-          'cache-control': ['.html', '.css', '.js'].includes(extension) ? 'no-cache' : 'public, max-age=3600' });
+        const headers = {
+          'content-type': MIME_TYPES[extension] || 'application/octet-stream',
+          'cache-control': ['.html', '.css', '.js'].includes(extension) ? 'no-cache' : 'public, max-age=3600',
+        };
+        if (isPublicAsset) headers['access-control-allow-origin'] = '*';
+        res.writeHead(200, headers);
         res.end(req.method === 'HEAD' ? undefined : body);
       } catch (error) {
         if (error.code === 'ENOENT' || error.code === 'EISDIR') return json(res, 404, { error: 'File not found' });
