@@ -332,6 +332,40 @@
     </div>
   </dialog>
 
+  <!-- Şəkildən Rəng Seçmə Dialoqu (Image Color Picker & Eyedropper) -->
+  <dialog id="imageColorDialog" class="image-color-dialog" role="dialog" aria-labelledby="imageColorDialogTitle">
+    <header>
+      <div>
+        <p class="eyebrow">RƏNG PİPETKASI</p>
+        <h2 id="imageColorDialogTitle">Şəkilin üzərindən rəng seçin</h2>
+      </div>
+      <button type="button" id="closeImageColorDialog" aria-label="Bağla">×</button>
+    </header>
+    <div class="image-color-content">
+      <div class="image-color-bar">
+        <span class="image-color-hint">💡 Şəklin üzərində gəzərək istədiyiniz nöqtəyə klikləyin və ya şəkildən aşkar edilən əsas rənglərdən seçin:</span>
+        <div id="imageColorPalette" class="image-color-palette"></div>
+      </div>
+      <div class="image-color-canvas-wrap" id="canvasContainer">
+        <canvas id="imageColorCanvas"></canvas>
+        <div id="imageColorLoupe" class="image-color-loupe" hidden>
+          <div id="loupePreview" class="loupe-preview"></div>
+          <span id="loupeHex" class="loupe-hex">#000000</span>
+        </div>
+      </div>
+      <div class="image-color-footer">
+        <div class="picked-preview-box">
+          <span id="pickedColorBadge" class="picked-color-badge" style="background:#8b8177;"></span>
+          <div class="picked-color-info">
+            <strong id="pickedColorHex">#8b8177</strong>
+            <small id="pickedColorName">Seçilmiş rəng</small>
+          </div>
+        </div>
+        <button type="button" id="confirmPickedColorBtn" class="confirm-color-btn">Bu rəngi təsdiq et</button>
+      </div>
+    </div>
+  </dialog>
+
   <script src="product-values.js"></script><script src="admin-api.js"></script><script src="admin.js"></script>
 </body>
 </html>

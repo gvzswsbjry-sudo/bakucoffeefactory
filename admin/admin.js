@@ -5,6 +5,7 @@
   const EMPTY_STATE_CLASS = 'empty-state';
   const assetDialog = $('assetDialog');
   const deleteDialog = $('deleteDialog');
+  const imageColorDialog = $('imageColorDialog');
   const state = { products: [], assets: [], category: 'all', editingId: null, dirty: false, assetTarget: null, idManuallyEdited: false };
   const categoryNames = { coffee: 'Qəhvə', tea: 'Çay', equipment: 'Avadanlıq / Fincan' };
   const catalogTitles = { all: 'Bütün məhsullar', coffee: 'Qəhvələr', tea: 'Çaylar', equipment: 'Avadanlıq və Fincanlar' };
@@ -135,26 +136,300 @@
     $('variantPricingHint').hidden = !pricing.usesVariantPrices;
   }
 
+  function extractDominantColors(imagePath, callback, maxCount = 6) {
+    if (!imagePath) return callback([]);
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const size = 64;
+        canvas.width = size;
+        canvas.height = size;
+        ctx.drawImage(img, 0, 0, size, size);
+        const imgData = ctx.getImageData(0, 0, size, size).data;
+        const colorBuckets = new Map();
+        for (let i = 0; i < imgData.length; i += 4) {
+          const a = imgData[i + 3];
+          if (a < 128) continue;
+          const r = Math.round(imgData[i] / 24) * 24;
+          const g = Math.round(imgData[i + 1] / 24) * 24;
+          const b = Math.round(imgData[i + 2] / 24) * 24;
+          const key = `${Math.min(255, r)},${Math.min(255, g)},${Math.min(255, b)}`;
+          colorBuckets.set(key, (colorBuckets.get(key) || 0) + 1);
+        }
+        const sorted = [...colorBuckets.entries()].sort((a, b) => b[1] - a[1]);
+        const result = [];
+        for (const [key] of sorted) {
+          const [r, g, b] = key.split(',').map(Number);
+          const hex = '#' + [r, g, b].map((c) => c.toString(16).padStart(2, '0')).join('');
+          if (!result.includes(hex)) result.push(hex);
+          if (result.length >= maxCount) break;
+        }
+        callback(result);
+      } catch {
+        callback([]);
+      }
+    };
+    img.onerror = () => callback([]);
+    img.src = imagePath.startsWith('http') || imagePath.startsWith('/') || imagePath.startsWith('../') ? imagePath : `../${imagePath}`;
+  }
+
+  let activeColorPickerCallback = null;
+  let pickerHoveredHex = '#8b8177';
+
+  function openImageColorPicker(imagePath, onPick) {
+    activeColorPickerCallback = onPick;
+    const canvas = $('imageColorCanvas');
+    const ctx = canvas.getContext('2d');
+    const palette = $('imageColorPalette');
+    const loupe = $('imageColorLoupe');
+    const badge = $('pickedColorBadge');
+    const hexLabel = $('pickedColorHex');
+
+    palette.innerHTML = '<span style="font-size:11px;color:var(--muted);">Rənglər aşkar edilir…</span>';
+    loupe.hidden = true;
+    pickerHoveredHex = '#8b8177';
+    badge.style.background = pickerHoveredHex;
+    hexLabel.textContent = pickerHoveredHex;
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      canvas.width = img.naturalWidth || 500;
+      canvas.height = img.naturalHeight || 500;
+      ctx.drawImage(img, 0, 0);
+
+      extractDominantColors(imagePath, (colors) => {
+        if (!colors.length) {
+          palette.innerHTML = '<span style="font-size:11px;color:var(--muted);">Şəkil üzərinə klikləyərək rəngi seçin</span>';
+          return;
+        }
+        palette.innerHTML = colors.map((c) =>
+          `<button type="button" class="detected-swatch" data-hex="${c}" style="background:${c};" title="Aşkar edilmiş rəng: ${c}"></button>`
+        ).join('');
+      });
+    };
+    img.src = imagePath.startsWith('http') || imagePath.startsWith('/') || imagePath.startsWith('../') ? imagePath : `../${imagePath}`;
+
+    imageColorDialog.showModal();
+  }
+
   function variantRow(variant = {}) {
     const wrapper = document.createElement('div');
     wrapper.className = 'variant-row';
-    wrapper.innerHTML = `<div class="variant-row-heading"><strong>Variant <span data-variant-number></span></strong><button type="button" data-remove-variant>✕ Variantı sil</button></div>
+    const initialColor = variant.color || '#8b8177';
+    const initialSize = variant.size || '';
+
+    wrapper.innerHTML = `<div class="variant-row-heading">
+      <strong>Variant <span data-variant-number></span></strong>
+      <button type="button" data-remove-variant>✕ Variantı sil</button>
+    </div>
     <div class="variant-row-grid">
       <label>Variant ID<input data-variant="id" value="${escapeHtml(variant.id || '')}" placeholder="məs: 250g, qara" /></label>
-      <label>Variant adı<input data-variant="name" value="${escapeHtml(variant.name || '')}" placeholder="məs: 250 qram" /></label>
+      <label>Variant adı<input data-variant="name" value="${escapeHtml(variant.name || '')}" placeholder="məs: 250 qram və ya Qara" /></label>
       <label>Qiymət, AZN<input data-variant="price" type="number" min="0" step="0.01" value="${escapeHtml(variant.price ?? '')}" placeholder="0.00" /></label>
     </div>
+
+    <!-- Ölçü Seçimi Bölməsi -->
+    <div class="variant-size-block">
+      <div class="variant-size-header">
+        <label>Ölçü / Həcm</label>
+        <div class="variant-quick-sizes">
+          <span class="quick-size-label">Sürətli:</span>
+          <button type="button" class="size-chip" data-size-val="100 qr">100 qr</button>
+          <button type="button" class="size-chip" data-size-val="250 qr">250 qr</button>
+          <button type="button" class="size-chip" data-size-val="500 qr">500 qr</button>
+          <button type="button" class="size-chip" data-size-val="1 kq">1 kq</button>
+          <button type="button" class="size-chip" data-size-val="250 ml">250 ml</button>
+          <button type="button" class="size-chip" data-size-val="350 ml">350 ml</button>
+          <button type="button" class="size-chip" data-size-val="600 ml">600 ml</button>
+          <button type="button" class="size-chip" data-size-val="850 ml">850 ml</button>
+          <button type="button" class="size-chip" data-size-val="S">S</button>
+          <button type="button" class="size-chip" data-size-val="M">M</button>
+          <button type="button" class="size-chip" data-size-val="L">L</button>
+          <button type="button" class="size-chip" data-size-val="Standart">Standart</button>
+        </div>
+      </div>
+      <input data-variant="size" value="${escapeHtml(initialSize)}" placeholder="Ölçü seçin və ya sərbəst yazın (məs: 250 qr, 600 ml, 54 mm)" />
+    </div>
+
+    <!-- Variant Şəkli -->
     <div class="variant-image-field">
       <label>Variant şəkli<input data-variant="image" value="${escapeHtml(variant.image || '')}" readonly placeholder="Şəkil seçilməyib" /></label>
       <button type="button" data-pick-variant-image>🖼️ Şəkil seç</button>
     </div>
-    <div class="variant-row-grid variant-row-meta">
-      <label>Rəng kodu<input data-variant="color" value="${escapeHtml(variant.color || '#8b8177')}" placeholder="#8b8177" /></label>
-      <label class="variant-alt">Şəkil açıqlaması<input data-variant="alt" value="${escapeHtml(variant.alt || '')}" placeholder="Məhsul təsviri" /></label>
+
+    <!-- Rəng Seçimi, Palet və Pipetka Bölməsi -->
+    <div class="variant-color-block">
+      <div class="variant-row-grid variant-row-meta">
+        <div class="color-field-wrap">
+          <label>Rəng kodu</label>
+          <div class="color-inputs-bar">
+            <input data-variant="color" value="${escapeHtml(initialColor)}" placeholder="#8b8177" />
+            <label class="color-picker-trigger" title="Rəng palitrasını aç">
+              <input type="color" data-variant="native-color" value="${escapeHtml(initialColor.startsWith('#') && initialColor.length === 7 ? initialColor : '#8b8177')}" />
+              <span class="color-swatch-badge" style="background:${escapeHtml(initialColor)};"></span>
+            </label>
+            <button type="button" class="eyedropper-btn" data-eyedropper title="Şəkilin üzərindən və ya ekrandan rəng götür (Pipetka)">
+              💉 Şəkildən götür
+            </button>
+          </div>
+        </div>
+        <label class="variant-alt">Şəkil açıqlaması<input data-variant="alt" value="${escapeHtml(variant.alt || '')}" placeholder="Məhsul təsviri" /></label>
+      </div>
+
+      <!-- Hazır Rəng Paleti (Preset Swatches) -->
+      <div class="variant-palette-strip">
+        <span class="palette-strip-title">Hazır palet:</span>
+        <div class="preset-color-swatches">
+          <button type="button" class="preset-swatch" data-preset="#1a1a1a" data-name="Qara" title="Qara (#1a1a1a)" style="background:#1a1a1a;"></button>
+          <button type="button" class="preset-swatch" data-preset="#242321" data-name="Mat qara" title="Mat qara (#242321)" style="background:#242321;"></button>
+          <button type="button" class="preset-swatch" data-preset="#3b271d" data-name="Tünd espresso" title="Tünd espresso (#3b271d)" style="background:#3b271d;"></button>
+          <button type="button" class="preset-swatch" data-preset="#5c3a21" data-name="Qəhvəyi" title="Qəhvəyi (#5c3a21)" style="background:#5c3a21;"></button>
+          <button type="button" class="preset-swatch" data-preset="#7a563d" data-name="Taxta" title="Taxta (#7a563d)" style="background:#7a563d;"></button>
+          <button type="button" class="preset-swatch" data-preset="#a9703e" data-name="Mis" title="Mis (#a9703e)" style="background:#a9703e;"></button>
+          <button type="button" class="preset-swatch" data-preset="#b18a45" data-name="Bürünc" title="Bürünc (#b18a45)" style="background:#b18a45;"></button>
+          <button type="button" class="preset-swatch" data-preset="#d4af37" data-name="Qızılı" title="Qızılı (#d4af37)" style="background:#d4af37;"></button>
+          <button type="button" class="preset-swatch" data-preset="#c6c5c0" data-name="Gümüşü" title="Gümüşü (#c6c5c0)" style="background:#c6c5c0;"></button>
+          <button type="button" class="preset-swatch" data-preset="#8f8982" data-name="Titan" title="Titan (#8f8982)" style="background:#8f8982;"></button>
+          <button type="button" class="preset-swatch" data-preset="#e8d8c8" data-name="Krem" title="Krem (#e8d8c8)" style="background:#e8d8c8;"></button>
+          <button type="button" class="preset-swatch" data-preset="#ffffff" data-name="Ağ" title="Ağ (#ffffff)" style="background:#ffffff;border:1px solid #ccc;"></button>
+          <button type="button" class="preset-swatch" data-preset="#b22222" data-name="Qırmızı" title="Qırmızı (#b22222)" style="background:#b22222;"></button>
+          <button type="button" class="preset-swatch" data-preset="#2d5a27" data-name="Yaşıl" title="Yaşıl (#2d5a27)" style="background:#2d5a27;"></button>
+          <button type="button" class="preset-swatch" data-preset="#1e3f66" data-name="Göy" title="Göy (#1e3f66)" style="background:#1e3f66;"></button>
+        </div>
+      </div>
+
+      <!-- Şəkildən Avtomatik Aşkar Edilən Rənglər -->
+      <div class="variant-extracted-strip" hidden>
+        <span class="palette-strip-title">Şəkildən rənglər:</span>
+        <div class="extracted-color-swatches"></div>
+      </div>
     </div>
-    <span class="variant-color-preview" style="--variant-color:${escapeHtml(variant.color || '#8b8177')}" aria-hidden="true"></span>`;
+    <span class="variant-color-preview" style="--variant-color:${escapeHtml(initialColor)}" aria-hidden="true"></span>`;
+
+    const colorInput = wrapper.querySelector('[data-variant="color"]');
+    const nativeColor = wrapper.querySelector('[data-variant="native-color"]');
+    const colorBadge = wrapper.querySelector('.color-swatch-badge');
+    const colorPreview = wrapper.querySelector('.variant-color-preview');
+    const sizeInput = wrapper.querySelector('[data-variant="size"]');
+    const nameInput = wrapper.querySelector('[data-variant="name"]');
+    const idInput = wrapper.querySelector('[data-variant="id"]');
+    const imageInput = wrapper.querySelector('[data-variant="image"]');
+
+    function applyColor(hex, colorName = '') {
+      if (!hex) return;
+      const cleanHex = hex.startsWith('#') ? hex : `#${hex}`;
+      colorInput.value = cleanHex;
+      if (cleanHex.length === 7) nativeColor.value = cleanHex;
+      colorBadge.style.background = cleanHex;
+      colorPreview.style.setProperty('--variant-color', cleanHex);
+
+      if (colorName && !nameInput.value.trim()) {
+        const sizeVal = sizeInput.value.trim();
+        nameInput.value = sizeVal ? `${colorName} · ${sizeVal}` : colorName;
+        if (!idInput.value.trim()) idInput.value = slugify(nameInput.value);
+      }
+      markDirty();
+    }
+
+    colorInput.addEventListener('input', () => {
+      const val = colorInput.value.trim();
+      if (/^#[0-9a-f]{6}$/i.test(val)) nativeColor.value = val;
+      colorBadge.style.background = val;
+      colorPreview.style.setProperty('--variant-color', val);
+      markDirty();
+    });
+
+    nativeColor.addEventListener('input', () => {
+      applyColor(nativeColor.value);
+    });
+
+    wrapper.querySelector('.preset-color-swatches').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-preset]');
+      if (!btn) return;
+      applyColor(btn.dataset.preset, btn.dataset.name);
+    });
+
+    wrapper.querySelector('.variant-quick-sizes').addEventListener('click', (e) => {
+      const chip = e.target.closest('[data-size-val]');
+      if (!chip) return;
+      const sizeVal = chip.dataset.sizeVal;
+      sizeInput.value = sizeVal;
+      wrapper.querySelectorAll('.size-chip').forEach((c) => c.classList.toggle('active', c === chip));
+
+      const currentName = nameInput.value.trim();
+      const existingSizes = ['100 qr', '250 qr', '500 qr', '1 kq', '250 ml', '350 ml', '600 ml', '850 ml', 'S', 'M', 'L', 'Standart'];
+      if (!currentName || existingSizes.includes(currentName)) {
+        nameInput.value = sizeVal;
+        if (!idInput.value.trim() || existingSizes.map(slugify).includes(idInput.value.trim())) {
+          idInput.value = slugify(sizeVal);
+        }
+      } else if (currentName.includes(' · ')) {
+        const parts = currentName.split(' · ');
+        nameInput.value = `${parts[0]} · ${sizeVal}`;
+        if (!idInput.value.trim()) idInput.value = slugify(nameInput.value);
+      }
+      markDirty();
+    });
+
+    sizeInput.addEventListener('input', markDirty);
+
+    const eyedropperBtn = wrapper.querySelector('[data-eyedropper]');
+    eyedropperBtn.addEventListener('click', async () => {
+      if (window.EyeDropper) {
+        try {
+          const dropper = new EyeDropper();
+          const result = await dropper.open();
+          if (result?.sRGBHex) {
+            applyColor(result.sRGBHex.toLowerCase());
+            return;
+          }
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      const targetImg = imageInput.value.trim() || $('productImage').value.trim();
+      if (!targetImg) {
+        alert('Şəkildən rəng götürmək üçün əvvəlcə variant və ya məhsul şəkli seçin.');
+        return;
+      }
+      openImageColorPicker(targetImg, (pickedColor) => {
+        applyColor(pickedColor);
+      });
+    });
+
+    function loadVariantExtractedColors(imgPath) {
+      if (!imgPath) return;
+      const container = wrapper.querySelector('.extracted-color-swatches');
+      const strip = wrapper.querySelector('.variant-extracted-strip');
+      extractDominantColors(imgPath, (colors) => {
+        if (colors.length) {
+          container.innerHTML = colors.map((c) =>
+            `<button type="button" class="extracted-swatch" data-preset="${c}" style="background:${c};" title="Şəkildən rəng: ${c}"></button>`
+          ).join('');
+          strip.hidden = false;
+        } else {
+          strip.hidden = true;
+        }
+      });
+    }
+
+    wrapper.querySelector('.extracted-color-swatches').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-preset]');
+      if (!btn) return;
+      applyColor(btn.dataset.preset);
+    });
+
+    if (variant.image) {
+      loadVariantExtractedColors(variant.image);
+    }
+
     wrapper.querySelector('[data-remove-variant]').addEventListener('click', () => { wrapper.remove(); updateVariantInterface(); markDirty(); });
-    wrapper.querySelector('[data-pick-variant-image]').addEventListener('click', () => openAssetLibrary(wrapper.querySelector('[data-variant="image"]')));
+    wrapper.querySelector('[data-pick-variant-image]').addEventListener('click', () => openAssetLibrary(imageInput));
     $('variantRows').append(wrapper);
     updateVariantInterface();
   }
@@ -229,6 +504,7 @@
     const variants = [...$('variantRows').querySelectorAll('.variant-row')].map((row) => ({
       id: row.querySelector('[data-variant="id"]').value.trim(),
       name: row.querySelector('[data-variant="name"]').value.trim(),
+      size: row.querySelector('[data-variant="size"]')?.value.trim() || undefined,
       price: Number(row.querySelector('[data-variant="price"]').value),
       image: row.querySelector('[data-variant="image"]').value.trim(),
       color: row.querySelector('[data-variant="color"]').value.trim(),
@@ -360,6 +636,23 @@
     const target = state.assetTarget || $('productImage');
     target.value = asset;
     if (target === $('productImage')) setImagePreview(asset);
+    const row = target.closest?.('.variant-row');
+    if (row) {
+      const container = row.querySelector('.extracted-color-swatches');
+      const strip = row.querySelector('.variant-extracted-strip');
+      if (container && strip) {
+        extractDominantColors(asset, (colors) => {
+          if (colors.length) {
+            container.innerHTML = colors.map((c) =>
+              `<button type="button" class="extracted-swatch" data-preset="${c}" style="background:${c};" title="Şəkildən rəng: ${c}"></button>`
+            ).join('');
+            strip.hidden = false;
+          } else {
+            strip.hidden = true;
+          }
+        });
+      }
+    }
     markDirty();
   }
 
@@ -597,6 +890,66 @@
         alert('❌ Xəta: ' + err.message);
       }
     });
+  }
+
+  if ($('imageColorCanvas')) {
+    const colorCanvas = $('imageColorCanvas');
+    const colorCtx = colorCanvas.getContext('2d');
+    const colorLoupe = $('imageColorLoupe');
+    const loupePrev = $('loupePreview');
+    const loupeTxt = $('loupeHex');
+    const colorBadge = $('pickedColorBadge');
+    const hexTxt = $('pickedColorHex');
+
+    function getPointHex(e) {
+      const rect = colorCanvas.getBoundingClientRect();
+      const scaleX = colorCanvas.width / (rect.width || 1);
+      const scaleY = colorCanvas.height / (rect.height || 1);
+      const x = Math.max(0, Math.min(colorCanvas.width - 1, Math.floor((e.clientX - rect.left) * scaleX)));
+      const y = Math.max(0, Math.min(colorCanvas.height - 1, Math.floor((e.clientY - rect.top) * scaleY)));
+      const p = colorCtx.getImageData(x, y, 1, 1).data;
+      return '#' + [p[0], p[1], p[2]].map((c) => c.toString(16).padStart(2, '0')).join('');
+    }
+
+    colorCanvas.addEventListener('mousemove', (e) => {
+      try {
+        const hex = getPointHex(e);
+        pickerHoveredHex = hex;
+        colorLoupe.style.left = `${e.offsetX}px`;
+        colorLoupe.style.top = `${e.offsetY}px`;
+        loupePrev.style.background = hex;
+        loupeTxt.textContent = hex;
+        colorLoupe.hidden = false;
+      } catch {}
+    });
+
+    colorCanvas.addEventListener('mouseleave', () => { colorLoupe.hidden = true; });
+
+    colorCanvas.addEventListener('click', (e) => {
+      try {
+        const hex = getPointHex(e);
+        pickerHoveredHex = hex;
+        colorBadge.style.background = hex;
+        hexTxt.textContent = hex;
+      } catch {}
+    });
+
+    $('imageColorPalette').addEventListener('click', (e) => {
+      const swatch = e.target.closest('[data-hex]');
+      if (!swatch) return;
+      pickerHoveredHex = swatch.dataset.hex;
+      colorBadge.style.background = pickerHoveredHex;
+      hexTxt.textContent = pickerHoveredHex;
+    });
+
+    $('confirmPickedColorBtn').addEventListener('click', () => {
+      if (activeColorPickerCallback && pickerHoveredHex) {
+        activeColorPickerCallback(pickerHoveredHex);
+      }
+      imageColorDialog.close();
+    });
+
+    $('closeImageColorDialog').addEventListener('click', () => imageColorDialog.close());
   }
 
   window.addEventListener('beforeunload', (event) => {

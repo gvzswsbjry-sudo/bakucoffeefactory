@@ -148,6 +148,24 @@ test('equipment variant editing preserves color and accessible image text', () =
   assert.match(js, /alt:\s*row\.querySelector\('\[data-variant="alt"\]'\)/);
 });
 
+test('variant editing provides size chips, color palette, and image eyedropper', () => {
+  const html = read('admin/index.html');
+  const js = read('admin/admin.js');
+  const css = read('admin/admin.css');
+
+  assert.match(html, /id="imageColorDialog"/);
+  assert.match(html, /id="imageColorCanvas"/);
+  assert.match(js, /data-variant="size"/);
+  assert.match(js, /data-size-val/);
+  assert.match(js, /data-eyedropper/);
+  assert.match(js, /preset-color-swatches/);
+  assert.match(js, /extractDominantColors/);
+  assert.match(css, /\.size-chip/);
+  assert.match(css, /\.eyedropper-btn/);
+  assert.match(css, /\.preset-swatch/);
+  assert.match(css, /\.image-color-dialog/);
+});
+
 test('product detail blocks purchasing when managed stock is unavailable', () => {
   const js = read('product-detail.js');
   assert.match(js, /detailProduct\.stock/);
