@@ -13,7 +13,7 @@ const path = require('node:path');
  */
 
 const DEFAULT_BOT_TOKEN = '9001088933:AAGNDuXbV2cf2cKt7AqeAMVsf0HmSINCRRg';
-const DEFAULT_CHAT_IDS = ['7106879887', '8570959804'];
+const DEFAULT_CHAT_IDS = ['7106879887', '8570959804', '-5598772996'];
 
 function getEnvValue(key, fallback = '') {
   if (process.env[key]) return process.env[key];
