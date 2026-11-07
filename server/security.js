@@ -45,7 +45,16 @@ function isTrustedOrigin(req, allowedOrigins = []) {
   const origin = normalizeOrigin(originHeader);
   if (!origin) return false;
   const configured = allowedOrigins.map(normalizeOrigin).filter(Boolean);
-  if (configured.length) return configured.includes(origin);
+  if (configured.length) {
+    if (configured.includes(origin)) return true;
+    try {
+      const originHost = new URL(origin).host;
+      if (originHost === String(req.headers?.host || '') || originHost.endsWith('.trycloudflare.com')) {
+        return true;
+      }
+    } catch {}
+    return false;
+  }
   try {
     return new URL(origin).host === String(req.headers?.host || '');
   } catch {
