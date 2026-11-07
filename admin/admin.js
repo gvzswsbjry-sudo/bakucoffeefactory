@@ -223,13 +223,18 @@
     const initialSize = variant.size || '';
 
     wrapper.innerHTML = `<div class="variant-row-heading">
-      <strong>Variant <span data-variant-number></span></strong>
+      <div>
+        <strong>Variant <span data-variant-number></span></strong>
+        <span class="variant-auto-hint"> · Ad və ID məhsulla eyni (avtomatik)</span>
+      </div>
       <button type="button" data-remove-variant>✕ Variantı sil</button>
     </div>
-    <div class="variant-row-grid">
-      <label>Variant ID<input data-variant="id" value="${escapeHtml(variant.id || '')}" placeholder="məs: 250g, qara" /></label>
-      <label>Variant adı<input data-variant="name" value="${escapeHtml(variant.name || '')}" placeholder="məs: 250 qram və ya Qara" /></label>
-      <label>Qiymət, AZN<input data-variant="price" type="number" min="0" step="0.01" value="${escapeHtml(variant.price ?? '')}" placeholder="0.00" /></label>
+    <input type="hidden" data-variant="id" value="${escapeHtml(variant.id || '')}" />
+    <input type="hidden" data-variant="name" value="${escapeHtml(variant.name || '')}" />
+    <div class="variant-price-row">
+      <label>Qiymət, AZN <span class="required">*</span>
+        <input data-variant="price" type="number" min="0" step="0.01" value="${escapeHtml(variant.price ?? '')}" placeholder="0.00" />
+      </label>
     </div>
 
     <!-- Ölçü Seçimi Bölməsi -->
@@ -319,19 +324,13 @@
     const idInput = wrapper.querySelector('[data-variant="id"]');
     const imageInput = wrapper.querySelector('[data-variant="image"]');
 
-    function applyColor(hex, colorName = '') {
+    function applyColor(hex) {
       if (!hex) return;
       const cleanHex = hex.startsWith('#') ? hex : `#${hex}`;
       colorInput.value = cleanHex;
       if (cleanHex.length === 7) nativeColor.value = cleanHex;
       colorBadge.style.background = cleanHex;
       colorPreview.style.setProperty('--variant-color', cleanHex);
-
-      if (colorName && !nameInput.value.trim()) {
-        const sizeVal = sizeInput.value.trim();
-        nameInput.value = sizeVal ? `${colorName} · ${sizeVal}` : colorName;
-        if (!idInput.value.trim()) idInput.value = slugify(nameInput.value);
-      }
       markDirty();
     }
 
@@ -350,7 +349,7 @@
     wrapper.querySelector('.preset-color-swatches').addEventListener('click', (e) => {
       const btn = e.target.closest('[data-preset]');
       if (!btn) return;
-      applyColor(btn.dataset.preset, btn.dataset.name);
+      applyColor(btn.dataset.preset);
     });
 
     wrapper.querySelector('.variant-quick-sizes').addEventListener('click', (e) => {
@@ -359,19 +358,6 @@
       const sizeVal = chip.dataset.sizeVal;
       sizeInput.value = sizeVal;
       wrapper.querySelectorAll('.size-chip').forEach((c) => c.classList.toggle('active', c === chip));
-
-      const currentName = nameInput.value.trim();
-      const existingSizes = ['100 qr', '250 qr', '500 qr', '1 kq', '250 ml', '350 ml', '600 ml', '850 ml', 'S', 'M', 'L', 'Standart'];
-      if (!currentName || existingSizes.includes(currentName)) {
-        nameInput.value = sizeVal;
-        if (!idInput.value.trim() || existingSizes.map(slugify).includes(idInput.value.trim())) {
-          idInput.value = slugify(sizeVal);
-        }
-      } else if (currentName.includes(' · ')) {
-        const parts = currentName.split(' · ');
-        nameInput.value = `${parts[0]} · ${sizeVal}`;
-        if (!idInput.value.trim()) idInput.value = slugify(nameInput.value);
-      }
       markDirty();
     });
 
@@ -501,15 +487,43 @@
       $('sortOrder').value = sortOrder;
     }
 
-    const variants = [...$('variantRows').querySelectorAll('.variant-row')].map((row) => ({
-      id: row.querySelector('[data-variant="id"]').value.trim(),
-      name: row.querySelector('[data-variant="name"]').value.trim(),
-      size: row.querySelector('[data-variant="size"]')?.value.trim() || undefined,
-      price: Number(row.querySelector('[data-variant="price"]').value),
-      image: row.querySelector('[data-variant="image"]').value.trim(),
-      color: row.querySelector('[data-variant="color"]').value.trim(),
-      alt: row.querySelector('[data-variant="alt"]').value.trim(),
-    }));
+    const prodName = $('productName').value.trim() || 'Məhsul';
+    const prodId = id || slugify(prodName) || 'mehsul';
+    const seenVarIds = new Set();
+
+    const variants = [...$('variantRows').querySelectorAll('.variant-row')].map((row, index) => {
+      const size = row.querySelector('[data-variant="size"]')?.value.trim() || undefined;
+      const colorVal = row.querySelector('[data-variant="color"]')?.value.trim() || '#8b8177';
+      const price = Number(row.querySelector('[data-variant="price"]').value);
+      const image = row.querySelector('[data-variant="image"]').value.trim() || $('productImage').value.trim() || 'assets/catalog/fincan.jpg';
+
+      let varName = row.querySelector('[data-variant="name"]')?.value.trim();
+      if (!varName) varName = prodName;
+
+      let varId = row.querySelector('[data-variant="id"]')?.value.trim();
+      if (!varId || varId === prodId) {
+        const sizeSlug = size ? slugify(size) : '';
+        const colorSlug = colorVal && colorVal !== '#8b8177' ? slugify(colorVal.replace('#', 'c-')) : '';
+        const suffix = [sizeSlug, colorSlug].filter(Boolean).join('-') || `v${index + 1}`;
+        varId = `${prodId}-${suffix}`.replace(/--+/g, '-');
+      }
+
+      let finalId = varId;
+      if (seenVarIds.has(finalId)) {
+        finalId = `${finalId}-${index + 1}`;
+      }
+      seenVarIds.add(finalId);
+
+      return {
+        id: finalId,
+        name: varName,
+        size,
+        price,
+        image,
+        color: row.querySelector('[data-variant="color"]').value.trim() || '#8b8177',
+        alt: row.querySelector('[data-variant="alt"]').value.trim() || '',
+      };
+    });
 
     return alignDefaultPrice({
       id,
@@ -545,8 +559,8 @@
       errors.push('Stok sayı müsbət tam ədəd olmalıdır.');
     }
     product.variants.forEach((variant, index) => {
-      if (!variant.id || !variant.name || !variant.image || !Number.isFinite(variant.price)) {
-        errors.push(`${index + 1}-ci variantın bütün sahələrini doldurun.`);
+      if (!variant.image || !Number.isFinite(variant.price) || variant.price < 0) {
+        errors.push(`${index + 1}-ci variantın qiymət və şəkil sahələrini doldurun.`);
       }
     });
     return errors;

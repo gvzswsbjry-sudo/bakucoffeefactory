@@ -57,10 +57,34 @@
       description: item.description,
       imageFit: item.meta?.imageFit || 'cover',
       stock: item.stock,
-      variants: (item.variants?.length ? item.variants : [{ id: item.id, name: item.name, price: item.price, image: item.image }]).map((variant) => ({
-        id: variant.id, label: variant.name, price: variant.price, image: variant.image,
-        color: variant.color || '#8b8177', alt: variant.alt || item.name,
-      })),
+      variants: (item.variants?.length ? item.variants : [{ id: item.id, name: item.name, price: item.price, image: item.image }]).map((variant, index) => {
+        const size = variant.size;
+        const color = variant.color || '#8b8177';
+        let label = variant.label;
+        if (!label) {
+          if (size && color && color !== '#8b8177') {
+            label = `${size} · ${color}`;
+          } else if (size) {
+            label = size;
+          } else if (variant.name && variant.name !== item.name) {
+            label = variant.name;
+          } else if (color && color !== '#8b8177') {
+            label = color;
+          } else {
+            label = `Seçim ${index + 1}`;
+          }
+        }
+        return {
+          id: variant.id,
+          name: variant.name || item.name,
+          label,
+          size,
+          price: variant.price,
+          image: variant.image,
+          color,
+          alt: variant.alt || item.name,
+        };
+      }),
     }));
   }
 

@@ -147,8 +147,12 @@
     return product.variants[next];
   };
 
-  const getEquipmentVariantName = (product, variant) =>
-    product.variants.length > 1 ? `${product.name} · ${variant.label}` : product.name;
+  const getEquipmentVariantName = (product, variant) => {
+    if (!variant) return product?.name || '';
+    if (product?.variants?.length <= 1) return product.name;
+    const desc = variant.label || variant.size || (variant.name !== product.name ? variant.name : '');
+    return desc ? `${product.name} · ${desc}` : product.name;
+  };
 
   const buildEquipmentDetailUrl = (productId, filter = 'all') => {
     const url = `mehsul.html?id=${encodeURIComponent(productId)}`;

@@ -41,13 +41,14 @@ const renderVariant = () => {
   if (!detailProduct || !selectedVariant) return;
   const index = detailProduct.variants.findIndex((variant) => variant.id === selectedVariant.id);
   detailImage.src = selectedVariant.image;
-  detailImage.alt = selectedVariant.alt;
+  detailImage.alt = selectedVariant.alt || detailProduct.name;
   detailGallery.classList.toggle('image-contain', detailProduct.imageFit === 'contain');
   detailCategory.textContent = detailProduct.categoryLabel;
   detailTitle.textContent = detailProduct.name;
-  detailDescription.textContent = detailProduct.description;
+  const variantDesc = selectedVariant.alt && selectedVariant.alt !== detailProduct.name ? selectedVariant.alt : '';
+  detailDescription.textContent = variantDesc ? `${detailProduct.description} (${variantDesc})` : detailProduct.description;
   detailPrice.textContent = formatDetailPrice(selectedVariant.price);
-  variantLabel.textContent = selectedVariant.label;
+  variantLabel.textContent = selectedVariant.label || selectedVariant.size || selectedVariant.name;
   galleryCount.textContent = `${String(index + 1).padStart(2, '0')} / ${String(detailProduct.variants.length).padStart(2, '0')}`;
   detailVariantCount.textContent = `${detailProduct.variants.length} seçim`;
 
@@ -76,10 +77,13 @@ const renderDetail = () => {
   }
 
   document.title = `${detailProduct.name} — Yeni Baku Coffee Factory`;
-  variantSwatches.innerHTML = detailProduct.variants.map((variant) => `
-    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${escapeDetailHtml(variant.color)}" aria-label="${escapeDetailHtml(variant.label)}" aria-pressed="false">
-      <span></span><small>${escapeDetailHtml(variant.label)}</small>
-    </button>`).join('');
+  variantSwatches.innerHTML = detailProduct.variants.map((variant) => {
+    const label = escapeDetailHtml(variant.label || variant.size || variant.name);
+    return `
+    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${escapeDetailHtml(variant.color || '#8b8177')}" aria-label="${label}" aria-pressed="false">
+      <span></span><small>${label}</small>
+    </button>`;
+  }).join('');
 
   const hasMultiple = detailProduct.variants.length > 1;
   detailPrev.hidden = !hasMultiple;
