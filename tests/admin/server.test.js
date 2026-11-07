@@ -56,6 +56,23 @@ test('auth expires sessions after twelve hours', async (t) => {
   assert.equal(auth.verifySession(session.token), false);
 });
 
+test('auth persists sessions across restarts within TTL', async (t) => {
+  const dir = await tempDir(t);
+  const configPath = path.join(dir, 'admin-config.json');
+  const auth1 = createAuth({ configPath });
+  const session = await auth1.setup(TEST_PASSWORD);
+  assert.equal(auth1.verifySession(session.token), true);
+
+  // Simulate server restart: new instance loads persisted sessions
+  const auth2 = createAuth({ configPath });
+  assert.equal(auth2.verifySession(session.token), true);
+
+  // Logout clears persisted session
+  assert.equal(auth2.logout(session.token), true);
+  const auth3 = createAuth({ configPath });
+  assert.equal(auth3.verifySession(session.token), false);
+});
+
 async function startFixture(t, options = {}) {
   const rootDir = await tempDir(t);
   await fs.mkdir(path.join(rootDir, 'assets', 'nested'), { recursive: true });

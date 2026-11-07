@@ -3,7 +3,7 @@
     "id": "1001-gece",
     "category": "tea",
     "name": "1001 Gecə Çayı",
-    "price": 5,
+    "price": 7,
     "unit": "g",
     "image": "assets/tea-packages/1001-gece.jpg",
     "description": "Yaşıl və tünd çay yarpaqlarının rəngli çiçək ləçəkləri və meyvə parçaları ilə birləşdiyi zərif qarışıqdır. İlk qurtumda təravətli yarpaq dadı, ardınca yumşaq çiçək ətri və meyvəli şirinlik hiss olunur. Orta gövdəli və uzun, ətirli bitişlidir.",
@@ -1072,6 +1072,35 @@
     "variants": []
   },
   {
+    "id": "test",
+    "category": "equipment",
+    "name": "Test",
+    "price": 1,
+    "unit": "piece",
+    "image": "assets/equipment/french-press.jpg",
+    "description": "Sınaq və yoxlama üçün test avadanlığı.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 14,
+    "meta": {
+      "categoryLabel": "Aksesuar",
+      "equipmentCategory": "accessory"
+    },
+    "variants": [
+      {
+        "id": "test",
+        "alt": "Test avadanlığı",
+        "name": "Standart",
+        "color": "#8b8177",
+        "image": "assets/equipment/french-press.jpg",
+        "price": 1
+      }
+    ]
+  },
+  {
     "id": "qara-cay",
     "category": "tea",
     "name": "Qara Çay",
@@ -1139,34 +1168,5 @@
       "pricePending": true
     },
     "variants": []
-  },
-  {
-    "id": "test",
-    "category": "equipment",
-    "name": "Test",
-    "price": 1,
-    "unit": "piece",
-    "image": "assets/equipment/french-press.jpg",
-    "description": "Sınaq və yoxlama üçün test avadanlığı.",
-    "active": true,
-    "stock": {
-      "status": "available",
-      "quantity": null
-    },
-    "sortOrder": 14,
-    "meta": {
-      "equipmentCategory": "accessory",
-      "categoryLabel": "Aksesuar"
-    },
-    "variants": [
-      {
-        "id": "test",
-        "name": "Standart",
-        "price": 1,
-        "image": "assets/equipment/french-press.jpg",
-        "color": "#8b8177",
-        "alt": "Test avadanlığı"
-      }
-    ]
   }
 ]

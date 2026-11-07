@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('node:fs/promises');
+const fsSync = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const { promisify } = require('node:util');
@@ -12,6 +13,43 @@ const MAX_PASSWORD_LENGTH = 128;
 
 function createAuth({ configPath, now = () => Date.now() }) {
   const sessions = new Map();
+  const sessionsPath = path.join(path.dirname(configPath), 'admin-sessions.json');
+
+  function loadSessions() {
+    try {
+      if (fsSync.existsSync(sessionsPath)) {
+        const raw = fsSync.readFileSync(sessionsPath, 'utf8');
+        const entries = JSON.parse(raw);
+        if (Array.isArray(entries)) {
+          const currentTime = now();
+          for (const [token, expiresAt] of entries) {
+            if (typeof token === 'string' && typeof expiresAt === 'number' && expiresAt > currentTime) {
+              sessions.set(token, expiresAt);
+            }
+          }
+        }
+      }
+    } catch {}
+  }
+
+  function saveSessions() {
+    try {
+      const currentTime = now();
+      const valid = [];
+      for (const [token, expiresAt] of sessions.entries()) {
+        if (expiresAt > currentTime) {
+          valid.push([token, expiresAt]);
+        }
+      }
+      const dir = path.dirname(sessionsPath);
+      if (!fsSync.existsSync(dir)) {
+        fsSync.mkdirSync(dir, { recursive: true });
+      }
+      fsSync.writeFileSync(sessionsPath, JSON.stringify(valid), { mode: 0o600 });
+    } catch {}
+  }
+
+  loadSessions();
 
   async function readConfig() {
     try {
@@ -30,6 +68,7 @@ function createAuth({ configPath, now = () => Date.now() }) {
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = now() + SESSION_TTL;
     sessions.set(token, expiresAt);
+    saveSessions();
     return { token, expiresAt };
   }
 
@@ -69,16 +108,23 @@ function createAuth({ configPath, now = () => Date.now() }) {
   }
 
   function verifySession(token) {
-    if (!token || !sessions.has(token)) return false;
+    if (!token) return false;
+    if (!sessions.has(token)) {
+      loadSessions();
+    }
+    if (!sessions.has(token)) return false;
     if (sessions.get(token) <= now()) {
       sessions.delete(token);
+      saveSessions();
       return false;
     }
     return true;
   }
 
   function logout(token) {
-    return sessions.delete(token);
+    const res = sessions.delete(token);
+    saveSessions();
+    return res;
   }
 
   async function setPassword(newPassword) {
@@ -93,6 +139,7 @@ function createAuth({ configPath, now = () => Date.now() }) {
     await fs.writeFile(tempPath, `${JSON.stringify(config, null, 2)}\n`, { mode: 0o600 });
     await fs.rename(tempPath, configPath);
     sessions.clear();
+    try { fsSync.unlinkSync(sessionsPath); } catch {}
     return true;
   }
 

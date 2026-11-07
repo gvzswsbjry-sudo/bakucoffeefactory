@@ -300,6 +300,30 @@
       closeEditor(true);
       await loadCatalog();
     } catch (error) {
+      if (error.status === 401 || /authentication required/i.test(error.message)) {
+        const pass = window.prompt('⚠️ Sessiyanızın vaxtı bitib. Zəhmət olmasa admin şifrəsini daxil edin (məlumatlar itməyəcək və məhsul dərhal saxlanılacaq):');
+        if (pass) {
+          try {
+            await api.login(pass);
+            if (state.editingId) {
+              await api.updateProduct(state.editingId, product);
+              $('appMessage').textContent = `✅ "${product.name}" uğurla yeniləndi və saxlanıldı.`;
+            } else {
+              await api.createProduct(product);
+              $('appMessage').textContent = `✅ Yeni məhsul "${product.name}" uğurla əlavə edildi.`;
+            }
+            closeEditor(true);
+            await loadCatalog();
+            return;
+          } catch (loginErr) {
+            showValidation(['Giriş uğursuz oldu: ' + (loginErr.message || 'Şifrə yanlışdır') + '. Zəhmət olmasa yenidən cəhd edin.']);
+            return;
+          }
+        } else {
+          showValidation(['Sessiyanız bitib. Zəhmət olmasa admin şifrəsi ilə daxil olun.']);
+          return;
+        }
+      }
       showValidation([error.message]);
     } finally {
       $('saveProductButton').disabled = false;
@@ -386,6 +410,18 @@
       if (message) message.textContent = '✅ Şəkil əlavə edildi və seçildi.';
       if (statusMsg) { statusMsg.textContent = '✅ Şəkil yükləndi: ' + result.path.split('/').pop(); statusMsg.style.color = 'var(--green)'; }
     } catch (error) {
+      if (error.status === 401 || /authentication required/i.test(error.message)) {
+        const pass = window.prompt('⚠️ Sessiyanızın vaxtı bitib. Şəkli yükləmək üçün admin şifrəsini daxil edin:');
+        if (pass) {
+          try {
+            await api.login(pass);
+            return await uploadAsset(file);
+          } catch (loginErr) {
+            alert('Şifrə yanlışdır: ' + (loginErr.message || 'Giriş uğursuz'));
+            return;
+          }
+        }
+      }
       if (message) { message.textContent = error.message; message.classList.add('error'); }
       if (statusMsg) { statusMsg.textContent = 'Xəta: ' + error.message; statusMsg.style.color = 'var(--danger)'; }
     }
@@ -517,6 +553,23 @@
       $('appMessage').textContent = '✅ Məhsul saytdan və bazadan silindi.';
       await loadCatalog();
     } catch (error) {
+      if (error.status === 401 || /authentication required/i.test(error.message)) {
+        const pass = window.prompt('⚠️ Sessiyanızın vaxtı bitib. Məhsulu silmək üçün admin şifrəsini daxil edin:');
+        if (pass) {
+          try {
+            await api.login(pass);
+            await api.deleteProduct(state.editingId);
+            $('deleteDialog').close();
+            closeEditor(true);
+            $('appMessage').textContent = '✅ Məhsul saytdan və bazadan silindi.';
+            await loadCatalog();
+            return;
+          } catch (loginErr) {
+            alert('Şifrə yanlışdır: ' + (loginErr.message || 'Giriş uğursuz'));
+            return;
+          }
+        }
+      }
       $('deleteDialog').close();
       showValidation([error.message]);
     }

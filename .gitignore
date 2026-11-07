@@ -31,6 +31,8 @@ pnpm-debug.log*
 
 # Local customer/order/admin data must never be published.
 data/admin-config.json
+data/admin-sessions.json
+data/*.tmp
 data/orders.json
 data/products.json.bak
 data/products.local.json
