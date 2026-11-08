@@ -47,6 +47,9 @@ test('i18n css enforces dropdown visibility rules and RTL header collision preve
   assert.ok(css.includes('.lang-dropdown[hidden]'), 'has explicit [hidden] display:none rule');
   assert.ok(css.includes('[dir="rtl"] .site-header'), 'has RTL site-header rule');
   assert.ok(css.includes('direction: ltr !important'), 'preserves header structural direction to prevent collisions');
+  assert.ok(css.includes('[dir="rtl"] .site-header .main-nav a'), 'has explicit Arabic navigation link styling');
+  assert.ok(css.includes('font-size: 13px !important'), 'desktop Arabic nav link size matches Latin uppercase presence');
+  assert.ok(css.includes('font-size: 11px !important'), 'mobile Arabic nav link size matches Latin presence');
 });
 
 test('i18n PHRASE_MAP translates all coffees, teas, equipment, and menu items', () => {

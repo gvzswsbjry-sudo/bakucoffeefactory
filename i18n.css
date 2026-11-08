@@ -1,4 +1,5 @@
 /* Baku Coffee Factory - Multi-language (i18n) Styling */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
 
 .lang-selector {
   position: relative;
@@ -227,6 +228,22 @@
 [dir="rtl"] .site-header .main-nav a {
   direction: rtl;
   font-family: 'Cairo', 'Noto Sans Arabic', Tahoma, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.2 !important;
+  text-transform: none !important;
+}
+
+[dir="rtl"] .site-header .main-nav a::after {
+  right: 0 !important;
+  left: auto !important;
+}
+
+@media (max-width: 980px) {
+  [dir="rtl"] .site-header .main-nav a {
+    font-size: 12px !important;
+  }
 }
 
 [dir="rtl"] .site-header .lang-selector {
@@ -256,6 +273,22 @@
   [dir="rtl"] .site-header .main-nav {
     flex-direction: row !important;
     direction: ltr !important;
+    justify-content: space-between !important;
+    gap: 6px !important;
+  }
+
+  [dir="rtl"] .site-header .main-nav a {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+    padding: 8px 0 9px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  [dir="rtl"] .site-header .main-nav a {
+    font-size: 10px !important;
+    letter-spacing: 0 !important;
   }
 }
 
