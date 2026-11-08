@@ -36,12 +36,32 @@
     const entries = Object.values(cart || {}).filter((item) => Number(item?.quantity) > 0);
     const knownTotal = formatCartPrice(entries.reduce((sum, item) => sum + getCartItemTotal(item), 0));
     if (!entries.some((item) => item.price == null)) return knownTotal;
+    const lang = (typeof window !== 'undefined' && window.BCF_I18N?.getLanguage?.()) || 'az';
+    if (lang === 'en') return `${knownTotal} + price to be confirmed`;
+    if (lang === 'ru') return `${knownTotal} + цена уточняется`;
+    if (lang === 'ar') return `${knownTotal} + السعر قيد التأكيد`;
     return `${knownTotal} + qiyməti təsdiqlənəcək`;
   };
 
   const getProductCategory = (id, item) => {
-    if (String(id).startsWith('coffee-') || item?.category === 'coffee') return 'Qəhvə';
-    if (String(id).startsWith('tea-') || item?.category === 'tea') return 'Çay';
+    const lang = (typeof window !== 'undefined' && window.BCF_I18N?.getLanguage?.()) || 'az';
+    const isCoffee = String(id).startsWith('coffee-') || item?.category === 'coffee';
+    const isTea = String(id).startsWith('tea-') || item?.category === 'tea';
+    if (isCoffee) {
+      if (lang === 'en') return 'Coffee';
+      if (lang === 'ru') return 'Кофе';
+      if (lang === 'ar') return 'القهوة';
+      return 'Qəhvə';
+    }
+    if (isTea) {
+      if (lang === 'en') return 'Tea';
+      if (lang === 'ru') return 'Чай';
+      if (lang === 'ar') return 'الشاي';
+      return 'Çay';
+    }
+    if (lang === 'en') return 'Equipment';
+    if (lang === 'ru') return 'Оборудование';
+    if (lang === 'ar') return 'المعدات';
     return 'Avadanlıq';
   };
 
@@ -49,6 +69,9 @@
     const lang = (typeof window !== 'undefined' && window.BCF_I18N?.getLanguage?.()) || 'az';
     if (lang === 'en') {
       return item?.unit === 'g' ? `${item.quantity}g` : `${item.quantity} pcs`;
+    }
+    if (lang === 'ru') {
+      return item?.unit === 'g' ? `${item.quantity} г` : `${item.quantity} шт.`;
     }
     if (lang === 'ar') {
       return item?.unit === 'g' ? `${item.quantity} جم` : `${item.quantity} قطعة`;
@@ -85,7 +108,14 @@
     .filter((item) => Number(item?.quantity) > 0)
     .reduce((sum, item) => sum + (item.unit === 'g' ? 1 : Number(item.quantity)), 0);
 
-  const formatCartCount = (cart) => `${getCartBadgeCount(cart)} məhsul`;
+  const formatCartCount = (cart) => {
+    const lang = (typeof window !== 'undefined' && window.BCF_I18N?.getLanguage?.()) || 'az';
+    const count = getCartBadgeCount(cart);
+    if (lang === 'en') return `${count} items`;
+    if (lang === 'ru') return `${count} шт.`;
+    if (lang === 'ar') return `${count} منتجات`;
+    return `${count} məhsul`;
+  };
 
   const hydrateEquipmentCart = (cart, products = []) => {
     const hydrated = cart || {};

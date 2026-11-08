@@ -85,9 +85,16 @@ document.querySelectorAll('.menu-tab').forEach((tab) => tab.addEventListener('cl
   });
   document.querySelectorAll('.menu-panel').forEach((panel) => panel.classList.remove('active'));
   document.getElementById(tab.dataset.menuTarget)?.classList.add('active');
-  if (menuIntroHeading) menuIntroHeading.innerHTML = tab.dataset.menuTarget === 'dessertMenu'
-    ? 'Şirin bir<br /><em>fasilə.</em>'
-    : 'Bir fincan<br /><em>seçin.</em>';
+  if (menuIntroHeading) {
+    const isDessert = tab.dataset.menuTarget === 'dessertMenu';
+    const key = isDessert ? 'menuHeadingDessert' : 'menuHeadingDrink';
+    menuIntroHeading.setAttribute('data-i18n', key);
+    if (window.BCF_I18N && typeof window.BCF_I18N.t === 'function') {
+      menuIntroHeading.innerHTML = window.BCF_I18N.t(key, isDessert ? 'Şirin bir<br /><em>fasilə.</em>' : 'Bir fincan<br /><em>seçin.</em>');
+    } else {
+      menuIntroHeading.innerHTML = isDessert ? 'Şirin bir<br /><em>fasilə.</em>' : 'Bir fincan<br /><em>seçin.</em>';
+    }
+  }
 }));
 
 if (!document.querySelector('link[href^="catalog.css"]')) {

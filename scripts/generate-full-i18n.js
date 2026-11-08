@@ -10,6 +10,205 @@ vm.createContext(ctx);
 vm.runInContext(builderContent + '\nthis.PHRASE_MAP = PHRASE_MAP;', ctx);
 const PHRASE_MAP = ctx.PHRASE_MAP;
 
+const { RU_MAP } = require('./add-russian-translations.js');
+
+const EXTRA_PHRASES = {
+  'Qiymət təsdiqlənəcək': {
+    en: 'Price to be confirmed',
+    ar: 'السعر قيد التأكيد',
+    ru: 'Цена уточняется'
+  },
+  'Sifariş sorğusuna əlavə et': {
+    en: 'Add to order request',
+    ar: 'إضافة إلى طلب الشراء',
+    ru: 'Добавить в заявку'
+  },
+  'Çay kolleksiyası': {
+    en: 'Tea collection',
+    ar: 'مجموعة الشاي',
+    ru: 'Чайная коллекция'
+  },
+  'Yumşaq şirinliyi, canlı meyvə xarakteri və kakaolu bitişi ilə balanslı gündəlik qəhvə.': {
+    en: 'Balanced everyday coffee with soft sweetness, lively fruit character, and a cocoa finish.',
+    ar: 'قهوة يومية متوازنة مع حلاوة ناعمة وطابع فاكهي حيوي ونهاية بنكهة الكاكاو.',
+    ru: 'Сбалансированный кофе на каждый день с мягкой сладостью, ярким фруктовым характером и нотками какао.'
+  },
+  'Dərin, klassik və şokoladlı gövdəsi olan çox yönlü qəhvə.': {
+    en: 'Versatile coffee with a deep, classic, and chocolatey body.',
+    ar: 'قهوة متعددة الاستخدامات بقوام عميق وكلاسيكي ونكهة شوكولاتة غنية.',
+    ru: 'Универсальный кофе с глубоким, классическим и выразительным шоколадным телом.'
+  },
+  'Aşağı turşuluqlu, kremli və şokoladlı espresso profili.': {
+    en: 'Low-acidity, creamy, and chocolatey espresso profile.',
+    ar: 'ملف إسبريسو منخفض الحموضة، كريمي وغني بالشوكولاتة.',
+    ru: 'Кремовый шоколадный эспрессо-профиль с низкой кислотностью.'
+  },
+  'Meyvə təravəti və kakaolu rahatlığı birləşdirən canlı profil.': {
+    en: 'Lively profile uniting fresh fruitiness with cocoa comfort.',
+    ar: 'ملف حيوي يجمع بين انتعاش الفواكه ودفء الكاكاو المريح.',
+    ru: 'Яркий профиль, сочетающий свежесть фруктов с теплом и уютом какао.'
+  },
+  'Güclü, intensiv və dolğun içim üçün seçilən qəhvə.': {
+    en: 'Selected coffee for a strong, intense, and full-bodied cup.',
+    ar: 'قهوة مختارة لمن يبحث عن مذاق قوي ومكثف وقوام غني.',
+    ru: 'Отборный кофе для крепкого, насыщенного и полнотелого вкуса.'
+  },
+  'Parlaq turşuluq və balabənzər şirinliyi olan təmiz fincan.': {
+    en: 'Clean cup with bright acidity and honey-like sweetness.',
+    ar: 'فنجان نقي بحموضة ساطعة وحلاوة تشبه العسل.',
+    ru: 'Чистая чашка с яркой кислотностью и медовой сладостью.'
+  },
+  'Ətirli, zərif və parlaq xarakterli, çayabənzər yüngül fincan.': {
+    en: 'Aromatic, delicate, and bright cup with a tea-like light body.',
+    ar: 'فنجان عطري رقيق بنفحات زاهية وقوام خفيف يشبه الشاي.',
+    ru: 'Ароматная, утонченная и яркая чашка с легким чайным характером.'
+  },
+  'Şirəli meyvə xarakteri və parlaq turşuluğu ilə ifadəli qəhvə.': {
+    en: 'Expressive coffee with juicy fruit character and vibrant acidity.',
+    ar: 'قهوة معبرة تتميز بطابع فاكهي غني وحموضة ساطعة.',
+    ru: 'Выразительный кофе с сочным фруктовым характером и яркой кислотностью.'
+  },
+  'Kofeinsiz, yumşaq və dolğun qəhvə seçimi.': {
+    en: 'Decaffeinated, smooth, and full-flavored coffee choice.',
+    ar: 'خيار منزوع الكافيين، ناعم وكامل النكهة.',
+    ru: 'Декофеинизированный кофе — мягкий, насыщенный и сбалансированный.'
+  },
+  'Dolğun bədənli, aşağı–orta turşuluqlu və uzun kakaolu fincan.': {
+    en: 'Full-bodied cup with low-to-medium acidity and a long cocoa finish.',
+    ar: 'فنجان ممتلئ القوام بحموضة منخفضة إلى متوسطة ونهاية كاكاو طويلة.',
+    ru: 'Полнотелая чашка с низкой или средней кислотностью и долгим послевкусием какао.'
+  },
+  'Kiçik qeyd': {
+    en: 'Quick note',
+    ar: 'ملاحظة سريعة',
+    ru: 'Примечание'
+  },
+  'Yaşıl çay üçün qaynar suyu bir qədər soyudun. Qara və meyvəli qarışıqlarda isə daha yüksək temperatur aromanı və gövdəni tam açır.': {
+    en: 'Let boiling water cool slightly for green tea. For black and fruit blends, higher temperatures bring out full aroma and body.',
+    ar: 'اترك الماء المغلي يبرد قليلاً للشاي الأخضر. أما للشاي الأسود وخلطات الفواكه، فالحرارة الأعلى تُبرز النكهة والقوام بالكامل.',
+    ru: 'Для зеленого чая дайте кипятку немного остыть. Для черного и фруктовых сборов более высокая температура полностью раскрывает аромат и тело.'
+  },
+  'Tamper': {
+    en: 'Tamper',
+    ar: 'مكبس القهوة (تامبر)',
+    ru: 'Темпер'
+  },
+  'Fincan': {
+    en: 'Coffee Cup',
+    ar: 'فنجان قهوة',
+    ru: 'Чашка'
+  },
+  'Fincan(handmade)': {
+    en: 'Cup (handmade)',
+    ar: 'فنجان (صناعة يدوية)',
+    ru: 'Чашка ручной работы'
+  },
+  'Milli Fincan (qaşıqlı)': {
+    en: 'National Cup (with spoon)',
+    ar: 'فنجان تراثي (مع ملعقة)',
+    ru: 'Национальная чашка с ложкой'
+  },
+  'Zərif qəhvə fincanı.': {
+    en: 'Elegant coffee cup.',
+    ar: 'فنجان قهوة أنيق.',
+    ru: 'Изящная кофейная чашка.'
+  },
+  'Xüsusi naxışlı milli qəhvə fincanı və qaşıq dəsti.': {
+    en: 'Specially patterned traditional coffee cup and spoon set.',
+    ar: 'طقم فنجان قهوة تراثي بنقوش مميزة مع ملعقة.',
+    ru: 'Кофейная чашка в национальном стиле с узором и ложкой.'
+  },
+  'Ana menyu': {
+    en: 'Main Menu',
+    ar: 'القائمة الرئيسية',
+    ru: 'Главное меню'
+  },
+  'Summer menu': {
+    en: 'Summer Menu',
+    ar: 'قائمة الصيف',
+    ru: 'Летнее меню'
+  },
+  'Desert': {
+    en: 'Dessert',
+    ar: 'الحلويات',
+    ru: 'Десерты'
+  },
+  'Ana menyu 01': {
+    en: 'Main Menu 01',
+    ar: 'القائمة الرئيسية 01',
+    ru: 'Главное меню 01'
+  },
+  'Summer menu 02': {
+    en: 'Summer Menu 02',
+    ar: 'قائمة الصيف 02',
+    ru: 'Летнее меню 02'
+  },
+  'Desert 03': {
+    en: 'Dessert 03',
+    ar: 'الحلويات 03',
+    ru: 'Десерты 03'
+  },
+  'Fresh Lemonades': {
+    en: 'Fresh Lemonades',
+    ar: 'ليموناضة طازجة',
+    ru: 'Свежие лимонады'
+  },
+  'Bir fincan seçin.': {
+    en: 'Choose a cup.',
+    ar: 'اختر فنجانك.',
+    ru: 'Выберите чашку.'
+  },
+  'Şirin bir fasilə.': {
+    en: 'A sweet break.',
+    ar: 'استراحة حلوة.',
+    ru: 'Сладкая пауза.'
+  },
+  '01 · Ana menyu': {
+    en: '01 · Main Menu',
+    ar: '01 · القائمة الرئيسية',
+    ru: '01 · Главное меню'
+  },
+  '02 · Mövsümi kolleksiya': {
+    en: '02 · Seasonal Collection',
+    ar: '02 · تشكيلة موسمية',
+    ru: '02 · Сезонная коллекция'
+  },
+  '03 · Desert menyusu': {
+    en: '03 · Dessert Menu',
+    ar: '03 · قائمة الحلويات',
+    ru: '03 · Десертное меню'
+  },
+  '01—04': {
+    en: '01—04',
+    ar: '01—04',
+    ru: '01—04'
+  },
+  '05—08': {
+    en: '05—08',
+    ar: '05—08',
+    ru: '05—08'
+  },
+  'Desertlər': {
+    en: 'Desserts',
+    ar: 'الحلويات',
+    ru: 'Десерты'
+  },
+  'Menyu': {
+    en: 'Menu',
+    ar: 'القائمة',
+    ru: 'Меню'
+  }
+};
+
+for (const [k, v] of Object.entries(EXTRA_PHRASES)) {
+  PHRASE_MAP[k] = Object.assign({}, PHRASE_MAP[k] || {}, v);
+}
+
+for (const [k, v] of Object.entries(RU_MAP)) {
+  if (!PHRASE_MAP[k]) PHRASE_MAP[k] = {};
+  PHRASE_MAP[k].ru = v;
+}
+
 const fullI18nJs = `(() => {
   'use strict';
 
@@ -22,6 +221,7 @@ const fullI18nJs = `(() => {
   const LANGUAGES = {
     az: { code: 'az', name: 'Azərbaycan', flag: '🇦🇿', dir: 'ltr' },
     en: { code: 'en', name: 'English', flag: '🇬🇧', dir: 'ltr' },
+    ru: { code: 'ru', name: 'Русский', flag: '🇷🇺', dir: 'ltr' },
     ar: { code: 'ar', name: 'العربية', flag: '🇸🇦', dir: 'rtl' },
   };
 
@@ -61,6 +261,9 @@ const fullI18nJs = `(() => {
       all: 'Hamısı',
       moreDetails: 'Daha çox',
       lessDetails: 'Daha az',
+      pricePending: 'Qiymət təsdiqlənəcək',
+      addToOrderRequest: 'Sifariş sorğusuna əlavə et',
+      quickNote: 'Kiçik qeyd',
 
       // Coffee
       coffeeHeroEyebrow: 'Mənşə qəhvələri · 100 q',
@@ -210,6 +413,9 @@ const fullI18nJs = `(() => {
       all: 'All',
       moreDetails: 'More details',
       lessDetails: 'Less details',
+      pricePending: 'Price to be confirmed',
+      addToOrderRequest: 'Add to order request',
+      quickNote: 'Quick note',
 
       // Coffee
       coffeeHeroEyebrow: 'Single Origin Coffee · 100g',
@@ -324,6 +530,158 @@ const fullI18nJs = `(() => {
       orderWithWolt: 'Order with Wolt',
     },
 
+    ru: {
+      // Nav
+      navHome: 'Главная',
+      navCoffee: 'Кофе',
+      navTea: 'Чай',
+      navEquipment: 'Оборудование',
+      navMenu: 'Меню',
+      navContact: 'Контакты',
+      navAbout: 'О нас',
+      navAccount: 'Аккаунт',
+      navFavorites: 'Избранное',
+      navCart: 'Корзина',
+
+      // Brand & General
+      brandTitle: 'Baku Coffee Factory',
+      brandSubtitle: 'Новый',
+      footerCopyright: '© 2026 · Баку, Азербайджан',
+
+      // Actions
+      addToCart: 'В корзину',
+      added: 'Добавлено',
+      soldOut: 'Распродано',
+      available: 'В наличии',
+      orderNow: 'Заказать',
+      close: 'Закрыть',
+      total: 'Итого',
+      price: 'Цена',
+      quantity: 'Количество',
+      gram: 'Грамм',
+      piece: 'шт.',
+      selection: 'варианты',
+      variant: 'Вариант',
+      all: 'Все',
+      moreDetails: 'Подробнее',
+      lessDetails: 'Скрыть',
+      pricePending: 'Цена уточняется',
+      addToOrderRequest: 'Добавить в заявку',
+      quickNote: 'Примечание',
+
+      // Coffee
+      coffeeHeroEyebrow: 'Моносорта кофе · 100 г',
+      coffeeHeroTitle: 'Почувствуйте происхождение<br /><em>в каждой чашке.</em>',
+      coffeeHeroDesc: 'Кислотность, тело и баланс оценены от 1 до 5 для каждого сорта. Ноты вкуса отражают происхождение и оптимальную среднюю обжарку.',
+      coffeeHeroNoteTitle: 'Важное примечание',
+      coffeeHeroNoteDesc: 'Точный вкус меняется в зависимости от лота, обработки, обжарки и способа заваривания. По мере поступления данных с ферм профили уточняются.',
+      acidity: 'Кислотность',
+      body: 'Тело',
+      balance: 'Баланс',
+      tastingNotes: 'Ноты вкуса',
+      brewingMethod: 'Способ заваривания',
+      roast: 'Степень обжарки',
+      coffeeQtyKicker: 'Выбор количества',
+      max2kg: 'Максимум 2 кг',
+
+      // Tea
+      teaHeroEyebrow: 'BCF · Отборные чаи',
+      teaHeroTitle: 'Теплое заваривание из<br /><em>нежных чайных листьев.</em>',
+      teaCollectionTitle: 'Коллекция чая BCF',
+      teaCollectionDesc: 'Натуральный и ароматный чай, собранный с лучших плантаций мира.',
+      teaFactsBrew: 'Заваривание',
+
+      // Equipment
+      equipmentHeroEyebrow: 'Baku Coffee Factory · Оборудование',
+      equipmentHeroTitle: 'Инструменты,<br /><em>отобранные для заваривания.</em>',
+      equipmentHeroNoteCount: '13 товаров · 24 варианта',
+      equipmentHeroNoteDesc: 'Кофеварки, ручные кофемолки и аксессуары для сервировки дома и для бариста.',
+      equipmentCatalog: 'Каталог',
+      allProducts: 'Все товары',
+      catBrewing: 'Заваривание',
+      catGrinder: 'Кофемолка',
+      catKettle: 'Чайник',
+      catService: 'Сервировка',
+      catAccessory: 'Аксессуар',
+      backToEquipment: '← Все оборудование',
+      productNotFound: 'Товар не найден',
+      productNotFoundDesc: 'Данный товар в настоящее время недоступен.',
+      returnToCatalog: 'Вернуться в каталог',
+      tempPriceNote: 'Ориентировочная цена',
+
+      // Menu
+      menuTopEyebrow: 'Baku Coffee Factory',
+      menuHeadingDrink: 'Выберите<br /><em>чашку.</em>',
+      menuHeadingDessert: 'Сладкая<br /><em>пауза.</em>',
+      tabMainMenu: 'Основное меню',
+      tabSummerMenu: 'Летнее меню',
+      tabDessertMenu: 'Десерты',
+
+      // Cart
+      cartYourChoice: 'Ваш выбор',
+      cartTitle: 'Корзина',
+      cartEmpty: 'Ваша корзина пока пуста.',
+      cartUnifiedNote: 'Кофе, чай и оборудование оформляются в единой корзине.',
+      cartAddedToast: 'Успешно добавлено в корзину',
+
+      // Checkout
+      checkoutEyebrow: 'ЗАПРОС НА ЗАКАЗ',
+      checkoutTitle: 'Оформление заказа.',
+      sellerNote: 'Примечание к заказу',
+      optional: '(необязательно)',
+      notePlaceholder: 'Укажите пожелания или детали к заказу, если есть',
+      confirmCheckoutBtn: 'Подтвердить заказ и отправить в WhatsApp',
+      checkoutDestinationNote: '✓ Заказ отправляется в панель управления, Telegram и WhatsApp (+994 55 645 22 04)',
+      orderReceivedEyebrow: 'ЗАКАЗ ПРИНЯТ',
+      orderReceivedTitle: 'Ваш запрос на заказ успешно принят.',
+      orderWhatsAppHint: 'Ваш заказ зафиксирован! Для быстрого подтверждения отправьте в WhatsApp:',
+      sendWhatsAppBtn: 'Отправить в WhatsApp',
+      teamContactSubnote: 'Наша команда также свяжется с вами по указанному номеру телефона.',
+      continueShopping: 'Продолжить покупки',
+
+      // Account
+      accountHeading: 'Личный кабинет',
+      accountDetailsTab: 'Данные аккаунта',
+      accountOrdersTab: 'История заказов',
+      tabLogin: 'Вход',
+      tabRegister: 'Регистрация',
+      identifierLabel: 'Имя пользователя или номер телефона',
+      identifierPlaceholder: 'Имя пользователя, телефон или email',
+      fullNameLabel: 'Имя и фамилия',
+      fullNamePlaceholder: 'Ваше имя и фамилия',
+      usernameLabel: 'Имя пользователя',
+      usernameHint: '(должно быть уникальным)',
+      usernamePlaceholder: 'Имя пользователя (напр. farman08)',
+      phoneLabel: 'Номер телефона',
+      passwordLabel: 'Пароль',
+      passwordPlaceholder: 'Минимум 12 символов',
+      loginSubmit: 'Войти',
+      registerSubmit: 'Создать аккаунт',
+      continueWithGoogle: 'Продолжить с Google',
+      logoutBtn: 'Выйти из аккаунта',
+      socialOr: 'или',
+      noOrdersYet: 'Заказов пока нет.',
+      noOrdersDesc: 'Заказы, оформленные в вашем аккаунте, будут отображаться здесь.',
+
+      // Favorites
+      favoritesTitle: 'Избранное',
+      favoritesEmpty: 'В избранном пока ничего нет.',
+      clearFavorites: 'Очистить список',
+
+      // Home
+      homeEyebrow: 'Баку · кофе · беседы',
+      homeHeroTitle: 'Baku Coffee Factory<br /><em>мир кофе.</em>',
+      homeHeroLink: 'Узнать больше <span>↓</span>',
+      homeHeroMeta: 'Новый Baku Coffee Factory',
+      homeAboutEyebrow: 'О нас · Контакты',
+      homeAboutTitle: 'Отличный повод<br /><em>выпить кофе.</em>',
+      contactPhone: 'Телефон',
+      contactAddress: 'Адрес',
+      openInMaps: 'Открыть в Google Maps',
+      contactDelivery: 'Доставка',
+      orderWithWolt: 'Заказать через Wolt',
+    },
+
     ar: {
       // Nav
       navHome: 'الرئيسية',
@@ -359,6 +717,9 @@ const fullI18nJs = `(() => {
       all: 'الكل',
       moreDetails: 'المزيد',
       lessDetails: 'أقل',
+      pricePending: 'السعر قيد التأكيد',
+      addToOrderRequest: 'إضافة إلى طلب الشراء',
+      quickNote: 'ملاحظة سريعة',
 
       // Coffee
       coffeeHeroEyebrow: 'قهوة أحادية المنشأ · 100 جم',
@@ -502,7 +863,7 @@ const fullI18nJs = `(() => {
     document.documentElement.dir = LANGUAGES[lang].dir;
 
     // Body language classes
-    document.body.classList.remove('lang-az', 'lang-en', 'lang-ar');
+    document.body.classList.remove('lang-az', 'lang-en', 'lang-ru', 'lang-ar');
     document.body.classList.add(\`lang-\${lang}\`);
 
     updateLanguageSelector();
@@ -593,6 +954,7 @@ const fullI18nJs = `(() => {
         .coffee-taste > span,
         .coffee-taste p,
         .coffee-more summary,
+        .tea-more summary,
         .coffee-summary,
         .coffee-details span,
         .coffee-details p,
@@ -611,7 +973,11 @@ const fullI18nJs = `(() => {
         .tea-summary,
         .tea-facts dt,
         .tea-facts dd,
+        .tea-more-content,
         .tea-modal-close,
+        .tea-price,
+        .tea-note-box span,
+        .tea-note-box p,
         #coffeeOrderTitle,
         #teaOrderTitle,
         #teaOrderUnit,
@@ -642,6 +1008,9 @@ const fullI18nJs = `(() => {
         .variant-picker > div:first-child span,
         .detail-price-row span,
         .detail-price-note,
+        .menu-top .eyebrow,
+        .menu-top h1,
+        #menuPageHeading,
         .menu-page-header .eyebrow,
         .menu-page-header .menu-meta,
         .menu-panel-heading .eyebrow,
@@ -710,13 +1079,41 @@ const fullI18nJs = `(() => {
   function updateDocumentTitle() {
     const page = window.location?.pathname ? window.location.pathname.split('/').pop() || 'index.html' : 'index.html';
     const titles = {
-      'index.html': { en: 'New Baku Coffee Factory', ar: 'نيو باكو كوفي فاكتوري' },
-      'qehveler.html': { en: 'Coffee — New Baku Coffee Factory', ar: 'القهوة — نيو باكو كوفي فاكتوري' },
-      'caylar.html': { en: 'Tea — New Baku Coffee Factory', ar: 'الشاي — نيو باكو كوفي فاكتوري' },
-      'avadanliqlar.html': { en: 'Equipment — New Baku Coffee Factory', ar: 'المعدات — نيو باكو كوفي فاكتوري' },
-      'mehsul.html': { en: 'Product — New Baku Coffee Factory', ar: 'المنتج — نيو باكو كوفي فاكتوري' },
-      'menyu.html': { en: 'Menu — New Baku Coffee Factory', ar: 'القائمة — نيو باكو كوفي فاكتوري' },
-      'mexfilik.html': { en: 'Privacy Policy — New Baku Coffee Factory', ar: 'سياسة الخصوصية — نيو باكو كوفي فاكتوري' },
+      'index.html': {
+        en: 'New Baku Coffee Factory',
+        ru: 'Главная — New Baku Coffee Factory',
+        ar: 'نيو باكو كوفي فاكتوري',
+      },
+      'qehveler.html': {
+        en: 'Coffee — New Baku Coffee Factory',
+        ru: 'Кофе — New Baku Coffee Factory',
+        ar: 'القهوة — نيو باكو كوفي فاكتوري',
+      },
+      'caylar.html': {
+        en: 'Tea — New Baku Coffee Factory',
+        ru: 'Чай — New Baku Coffee Factory',
+        ar: 'الشاي — نيو باكو كوفي فاكتوري',
+      },
+      'avadanliqlar.html': {
+        en: 'Equipment — New Baku Coffee Factory',
+        ru: 'Оборудование — New Baku Coffee Factory',
+        ar: 'المعدات — نيو باكو كوفي فاكتوري',
+      },
+      'mehsul.html': {
+        en: 'Product — New Baku Coffee Factory',
+        ru: 'Товар — New Baku Coffee Factory',
+        ar: 'المنتج — نيو باكو كوفي فاكتوري',
+      },
+      'menyu.html': {
+        en: 'Menu — New Baku Coffee Factory',
+        ru: 'Меню — New Baku Coffee Factory',
+        ar: 'القائمة — نيو باكو كوفي فاكتوري',
+      },
+      'mexfilik.html': {
+        en: 'Privacy Policy — New Baku Coffee Factory',
+        ru: 'Политика конфиденциальности — New Baku Coffee Factory',
+        ar: 'سياسة الخصوصية — نيو باكو كوفي فاكتوري',
+      },
     };
 
     if (titles[page]?.[currentLang]) {
@@ -753,6 +1150,11 @@ const fullI18nJs = `(() => {
         <button type="button" class="lang-option \${currentLang === 'en' ? 'active' : ''}" data-lang="en" role="menuitem" aria-selected="\${currentLang === 'en'}">
           <span class="lang-flag" aria-hidden="true">🇬🇧</span>
           <span class="lang-label">English</span>
+          <span class="lang-check" aria-hidden="true">✓</span>
+        </button>
+        <button type="button" class="lang-option \${currentLang === 'ru' ? 'active' : ''}" data-lang="ru" role="menuitem" aria-selected="\${currentLang === 'ru'}">
+          <span class="lang-flag" aria-hidden="true">🇷🇺</span>
+          <span class="lang-label">Русский</span>
           <span class="lang-check" aria-hidden="true">✓</span>
         </button>
         <button type="button" class="lang-option \${currentLang === 'ar' ? 'active' : ''}" data-lang="ar" role="menuitem" aria-selected="\${currentLang === 'ar'}">

@@ -10,6 +10,7 @@ function runPlumbingCommit(message) {
     'cart-utils.js',
     'server/routes.js',
     'script.js',
+    'tea-shop.js',
     'index.html',
     'qehveler.html',
     'caylar.html',
@@ -19,6 +20,7 @@ function runPlumbingCommit(message) {
     'mexfilik.html',
     'tests/i18n.test.js',
     'scripts/build-i18n-dictionary.js',
+    'scripts/add-russian-translations.js',
     'scripts/generate-full-i18n.js',
     'scripts/fast-commit.js'
   ];

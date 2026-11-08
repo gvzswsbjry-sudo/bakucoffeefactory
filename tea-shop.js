@@ -113,7 +113,7 @@ document.querySelectorAll('.tea-product').forEach((card) => {
   if (longDescription) {
     const more = document.createElement('details');
     more.className = 'tea-more';
-    more.innerHTML = '<summary>Daha çox</summary>';
+    more.innerHTML = '<summary data-i18n="moreDetails">Daha çox</summary>';
     more.append(longDescription);
     if (teaFacts) teaFacts.insertAdjacentElement('afterend', more);
     else copy.append(more);
@@ -122,15 +122,19 @@ document.querySelectorAll('.tea-product').forEach((card) => {
   buy.className = 'tea-buy';
   const soldOut = tea.stock?.status === 'out' || (tea.stock?.status === 'counted' && tea.stock.quantity <= 0);
   if (soldOut) {
-    buy.innerHTML = '<span class="tea-price tea-price-pending">Bitib</span>';
+    buy.innerHTML = '<span class="tea-price tea-price-pending" data-i18n="soldOut">Bitib</span>';
   } else if (tea.price == null) {
-    buy.innerHTML = `<span class="tea-price tea-price-pending">Qiymət təsdiqlənəcək</span><button class="tea-add-button" type="button" data-tea-id="${tea.id}">Sifariş sorğusuna əlavə et</button>`;
+    buy.innerHTML = `<span class="tea-price tea-price-pending" data-i18n="pricePending">Qiymət təsdiqlənəcək</span><button class="tea-add-button" type="button" data-tea-id="${tea.id}" data-i18n="addToOrderRequest">Sifariş sorğusuna əlavə et</button>`;
   } else {
     const unit = tea.unit === 'g' ? '100 q' : 'ədəd';
-    buy.innerHTML = `<span class="tea-price">${formatCartPrice(tea.price)} <small>/ ${unit}</small></span><button class="tea-add-button" type="button" data-tea-id="${tea.id}">Səbətə əlavə et</button>`;
+    buy.innerHTML = `<span class="tea-price">${formatCartPrice(tea.price)} <small>/ ${unit}</small></span><button class="tea-add-button" type="button" data-tea-id="${tea.id}" data-i18n="addToCart">Səbətə əlavə et</button>`;
   }
   copy.append(buy);
 });
+
+if (typeof window !== 'undefined' && window.BCF_I18N && typeof window.BCF_I18N.getLanguage === 'function' && window.BCF_I18N.getLanguage() !== 'az') {
+  window.dispatchEvent(new CustomEvent('bcf:catalog-ready'));
+}
 
 teaProductsRoot?.addEventListener('click', (event) => {
   const button = event.target.closest('.tea-add-button');

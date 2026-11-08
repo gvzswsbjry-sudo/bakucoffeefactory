@@ -3,15 +3,43 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const path = require('node:vm');
-const fsPromises = require('node:fs/promises');
+const vm = require('node:vm');
 
-test('i18n module provides az, en, and ar with matching dictionaries', () => {
+function createSandbox(pathname = '/index.html') {
+  return {
+    window: {
+      location: { pathname },
+      dispatchEvent: () => {},
+      addEventListener: () => {},
+    },
+    CustomEvent: class CustomEvent {
+      constructor(type, init) {
+        this.type = type;
+        this.detail = init?.detail;
+      }
+    },
+    document: {
+      addEventListener: () => {},
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      getElementById: () => null,
+      documentElement: { lang: 'az', dir: 'ltr' },
+      body: { classList: { remove: () => {}, add: () => {} } },
+    },
+    localStorage: { getItem: () => null, setItem: () => {} },
+  };
+}
+
+test('i18n module provides az, en, ru, and ar with matching dictionaries', () => {
   const content = fs.readFileSync('i18n.js', 'utf8');
   assert.ok(content.includes("az: {"), 'contains az dictionary');
   assert.ok(content.includes("en: {"), 'contains en dictionary');
+  assert.ok(content.includes("ru: {"), 'contains ru dictionary');
   assert.ok(content.includes("ar: {"), 'contains ar dictionary');
+  assert.ok(content.includes("data-lang=\"ru\""), 'contains Russian dropdown button');
+  assert.ok(content.includes("🇷🇺"), 'contains Russian flag in selector');
   assert.ok(content.includes("dir: 'rtl'"), 'Arabic is configured as RTL');
+  assert.ok(content.includes("ru: { code: 'ru', name: 'Русский'"), 'Russian language metadata configured');
 });
 
 test('server routes whitelist /i18n.css and /i18n.js in PUBLIC_FILES', () => {
@@ -29,10 +57,11 @@ test('all storefront HTML files include i18n resources', () => {
   }
 });
 
-test('script.js ensures i18n is dynamically loaded if absent', () => {
+test('script.js ensures i18n is dynamically loaded and updates menu headings with data-i18n', () => {
   const script = fs.readFileSync('script.js', 'utf8');
   assert.ok(script.includes('i18n.css'), 'script.js links i18n.css');
   assert.ok(script.includes('i18n.js'), 'script.js links i18n.js');
+  assert.ok(script.includes('menuIntroHeading.setAttribute(\'data-i18n\''), 'script.js sets data-i18n on menu intro heading');
 });
 
 test('i18n script contains infinite-loop guard and does not observe entire main tree', () => {
@@ -52,26 +81,47 @@ test('i18n css enforces dropdown visibility rules and RTL header collision preve
   assert.ok(css.includes('font-size: 11px !important'), 'mobile Arabic nav link size matches Latin presence');
 });
 
-test('i18n PHRASE_MAP translates all coffees, teas, equipment, and menu items', () => {
-  const content = fs.readFileSync('i18n.js', 'utf8');
-  const vm = require('node:vm');
-  const sandbox = {
-    window: {
-      location: { pathname: '/index.html' },
-      dispatchEvent: () => {},
-      addEventListener: () => {},
+test('cart-utils.js provides Russian formatting for quantities, units, and categories', () => {
+  const cartUtils = require('../cart-utils.js');
+
+  // Test with mock window language 'ru'
+  global.window = {
+    BCF_I18N: {
+      getLanguage: () => 'ru',
     },
-    CustomEvent: class CustomEvent { constructor(type, init) { this.type = type; this.detail = init?.detail; } },
-    document: {
-      addEventListener: () => {},
-      querySelector: () => null,
-      querySelectorAll: () => [],
-      getElementById: () => null,
-      documentElement: { lang: 'az', dir: 'ltr' },
-      body: { classList: { remove: () => {}, add: () => {} } },
-    },
-    localStorage: { getItem: () => null, setItem: () => {} },
   };
+
+  const gramItem = { quantity: 250, unit: 'g' };
+  const pieceItem = { quantity: 2, unit: 'piece' };
+
+  assert.equal(cartUtils.formatCartItemQuantity(gramItem), '250 г');
+  assert.equal(cartUtils.formatCartItemQuantity(pieceItem), '2 шт.');
+  assert.equal(cartUtils.formatCartCount({ a: { quantity: 3, unit: 'piece' } }), '3 шт.');
+  assert.equal(cartUtils.getProductCategory('coffee-colombia'), 'Кофе');
+  assert.equal(cartUtils.getProductCategory('tea-1001'), 'Чай');
+  assert.equal(cartUtils.getProductCategory('gear-tamper'), 'Оборудование');
+
+  delete global.window;
+});
+
+test('tea-shop.js attaches data-i18n attributes to summary and pending price buttons', () => {
+  const teaShopContent = fs.readFileSync('tea-shop.js', 'utf8');
+  assert.ok(teaShopContent.includes('data-i18n="moreDetails"'), 'tea-shop.js adds data-i18n="moreDetails"');
+  assert.ok(teaShopContent.includes('data-i18n="pricePending"'), 'tea-shop.js adds data-i18n="pricePending"');
+  assert.ok(teaShopContent.includes('data-i18n="addToOrderRequest"'), 'tea-shop.js adds data-i18n="addToOrderRequest"');
+});
+
+test('menyu.html has data-i18n on page heading and menu tabs', () => {
+  const menuHtml = fs.readFileSync('menyu.html', 'utf8');
+  assert.ok(menuHtml.includes('data-i18n="menuHeadingDrink"'), 'menyu.html has data-i18n="menuHeadingDrink" on h1');
+  assert.ok(menuHtml.includes('data-i18n="tabMainMenu"'), 'menyu.html has data-i18n="tabMainMenu"');
+  assert.ok(menuHtml.includes('data-i18n="tabSummerMenu"'), 'menyu.html has data-i18n="tabSummerMenu"');
+  assert.ok(menuHtml.includes('data-i18n="tabDessertMenu"'), 'menyu.html has data-i18n="tabDessertMenu"');
+});
+
+test('i18n PHRASE_MAP translates all coffees, teas, equipment, menu items, and dynamic catalog descriptions into English, Arabic, and Russian', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+  const sandbox = createSandbox('/qehveler.html');
   vm.createContext(sandbox);
   vm.runInContext(content, sandbox);
   const phraseMap = sandbox.window.BCF_I18N.PHRASE_MAP;
@@ -82,9 +132,29 @@ test('i18n PHRASE_MAP translates all coffees, teas, equipment, and menu items', 
   for (const c of coffeeOrigins) {
     assert.ok(phraseMap[c]?.en, `Coffee ${c} has English translation`);
     assert.ok(phraseMap[c]?.ar, `Coffee ${c} has Arabic translation`);
+    assert.ok(phraseMap[c]?.ru, `Coffee ${c} has Russian translation`);
   }
 
-  // 2. Teas
+  // 2. Coffee short descriptions from products.json
+  const coffeeDescs = [
+    'Yumşaq şirinliyi, canlı meyvə xarakteri və kakaolu bitişi ilə balanslı gündəlik qəhvə.',
+    'Dərin, klassik və şokoladlı gövdəsi olan çox yönlü qəhvə.',
+    'Aşağı turşuluqlu, kremli və şokoladlı espresso profili.',
+    'Meyvə təravəti və kakaolu rahatlığı birləşdirən canlı profil.',
+    'Güclü, intensiv və dolğun içim üçün seçilən qəhvə.',
+    'Parlaq turşuluq və balabənzər şirinliyi olan təmiz fincan.',
+    'Ətirli, zərif və parlaq xarakterli, çayabənzər yüngül fincan.',
+    'Şirəli meyvə xarakteri və parlaq turşuluğu ilə ifadəli qəhvə.',
+    'Kofeinsiz, yumşaq və dolğun qəhvə seçimi.',
+    'Dolğun bədənli, aşağı–orta turşuluqlu və uzun kakaolu fincan.',
+  ];
+  for (const desc of coffeeDescs) {
+    assert.ok(phraseMap[desc]?.en, `Coffee desc "${desc.slice(0, 20)}..." has English translation`);
+    assert.ok(phraseMap[desc]?.ar, `Coffee desc "${desc.slice(0, 20)}..." has Arabic translation`);
+    assert.ok(phraseMap[desc]?.ru, `Coffee desc "${desc.slice(0, 20)}..." has Russian translation`);
+  }
+
+  // 3. Teas
   const teaNames = [
     '1001 Gecə Çayı', 'Admiral', 'Geyşa Qara', 'Jasmin Çayı', 'Limon Çayı',
     'Malina Şərbəti', 'Meyvəli Çay', 'Nar Çayı', 'Portağal Çayı', 'Qarpız Çayı',
@@ -94,28 +164,32 @@ test('i18n PHRASE_MAP translates all coffees, teas, equipment, and menu items', 
   for (const t of teaNames) {
     assert.ok(phraseMap[t]?.en, `Tea ${t} has English translation`);
     assert.ok(phraseMap[t]?.ar, `Tea ${t} has Arabic translation`);
+    assert.ok(phraseMap[t]?.ru, `Tea ${t} has Russian translation`);
   }
 
-  // 3. Equipment
+  // 4. Equipment
   const equipmentNames = [
     'French Press', 'Əl dəyirmanı', 'Naxışlı əl dəyirmanı', 'Moka Pot',
     'Naxışlı cezvə', 'Gooseneck çaydan', 'Naxışlı Dallah', 'Manual Press',
     'Çarxlı əl dəyirmanı', 'Şüşə server · 400 ml', 'Azərbaycan qəhvə dəsti',
-    'Espresso tamper', 'Şərq üslublu servis dəsti'
+    'Espresso tamper', 'Şərq üslublu servis dəsti', 'Tamper', 'Fincan',
+    'Fincan(handmade)', 'Milli Fincan (qaşıqlı)'
   ];
   for (const eq of equipmentNames) {
     assert.ok(phraseMap[eq]?.en, `Equipment ${eq} has English translation`);
     assert.ok(phraseMap[eq]?.ar, `Equipment ${eq} has Arabic translation`);
+    assert.ok(phraseMap[eq]?.ru, `Equipment ${eq} has Russian translation`);
   }
 
-  // 4. Menu Items
+  // 5. Menu Items
   const menuItems = [
     'Espresso (Single)', 'Triple Joy', 'Americano (S / M / L)', 'Latte (S / M / L)',
-    'Türk qəhvəsi', 'İsti şokolad', 'Bumble Coffee', 'Mojito', 'San Sebastian', 'Ballı tort'
+    'Türk qəhvəsi', 'İsti şokolad', 'Bumble Coffee', 'Mojito', 'San Sebastian', 'Ballı tort',
+    'Bir fincan seçin.', 'Şirin bir fasilə.', 'Ana menyu', 'Summer menu', 'Desert', 'Fresh Lemonades'
   ];
   for (const item of menuItems) {
     assert.ok(phraseMap[item]?.en, `Menu item ${item} has English translation`);
     assert.ok(phraseMap[item]?.ar, `Menu item ${item} has Arabic translation`);
+    assert.ok(phraseMap[item]?.ru, `Menu item ${item} has Russian translation`);
   }
 });
-
