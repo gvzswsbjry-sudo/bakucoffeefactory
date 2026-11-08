@@ -29,14 +29,18 @@ document.querySelectorAll('.site-header .brand').forEach((brand) => {
   if (logo.complete && logo.naturalWidth > 0) brand.replaceChildren(logo);
 });
 
-const i18nStyles = document.createElement('link');
-i18nStyles.rel = 'stylesheet';
-i18nStyles.href = 'i18n.css?v=20261108-v1';
-document.head.append(i18nStyles);
-const i18nScript = document.createElement('script');
-i18nScript.src = 'i18n.js?v=20261108-v1';
-i18nScript.async = false;
-document.body.append(i18nScript);
+if (!document.querySelector('link[href*="i18n.css"]')) {
+  const i18nStyles = document.createElement('link');
+  i18nStyles.rel = 'stylesheet';
+  i18nStyles.href = 'i18n.css?v=20261108-v2';
+  document.head.append(i18nStyles);
+}
+if (!window.BCF_I18N && !window.__BCF_I18N_INITIALIZED__ && !document.querySelector('script[src*="i18n.js"]')) {
+  const i18nScript = document.createElement('script');
+  i18nScript.src = 'i18n.js?v=20261108-v2';
+  i18nScript.async = false;
+  document.body.append(i18nScript);
+}
 
 const accountStyles = document.createElement('link');
 accountStyles.rel = 'stylesheet';

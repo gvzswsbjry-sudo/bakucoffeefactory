@@ -34,3 +34,10 @@ test('script.js ensures i18n is dynamically loaded if absent', () => {
   assert.ok(script.includes('i18n.css'), 'script.js links i18n.css');
   assert.ok(script.includes('i18n.js'), 'script.js links i18n.js');
 });
+
+test('i18n script contains infinite-loop guard and does not observe entire main tree', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+  assert.ok(content.includes('let isTranslating = false;'), 'has isTranslating mutex');
+  assert.ok(content.includes('window.__BCF_I18N_INITIALIZED__'), 'has singleton initialization guard');
+  assert.ok(!content.includes('observer.observe(main'), 'does NOT attach unthrottled mutation observer to entire main');
+});

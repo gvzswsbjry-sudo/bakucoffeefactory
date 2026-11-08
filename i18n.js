@@ -1,6 +1,9 @@
 (() => {
   'use strict';
 
+  if (window.__BCF_I18N_INITIALIZED__) return;
+  window.__BCF_I18N_INITIALIZED__ = true;
+
   const STORAGE_KEY = 'bcf_language';
   const DEFAULT_LANG = 'az';
 
@@ -580,107 +583,113 @@
     });
   }
 
+  let isTranslating = false;
+
   function translateDom(root = document) {
-    // 1. data-i18n elements
-    root.querySelectorAll('[data-i18n]').forEach((el) => {
-      const key = el.dataset.i18n;
-      const translation = DICTIONARY[currentLang]?.[key];
-      if (translation !== undefined) {
-        if (!el._bcfOrigHtml) el._bcfOrigHtml = el.innerHTML;
-        if (translation.includes('<') && translation.includes('>')) {
-          el.innerHTML = translation;
-        } else {
-          el.textContent = translation;
+    if (isTranslating) return;
+    isTranslating = true;
+    try {
+      // 1. data-i18n elements
+      root.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.dataset.i18n;
+        const translation = DICTIONARY[currentLang]?.[key];
+        if (translation !== undefined) {
+          if (!el._bcfOrigHtml) el._bcfOrigHtml = el.innerHTML;
+          if (translation.includes('<') && translation.includes('>')) {
+            if (el.innerHTML !== translation) el.innerHTML = translation;
+          } else {
+            if (el.textContent !== translation) el.textContent = translation;
+          }
+        } else if (currentLang === 'az' && el._bcfOrigHtml) {
+          if (el.innerHTML !== el._bcfOrigHtml) el.innerHTML = el._bcfOrigHtml;
         }
-      } else if (currentLang === 'az' && el._bcfOrigHtml) {
-        el.innerHTML = el._bcfOrigHtml;
-      }
-    });
+      });
 
-    // 2. data-i18n-placeholder
-    root.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-      const key = el.dataset.i18nPlaceholder;
-      const translation = DICTIONARY[currentLang]?.[key];
-      if (translation !== undefined) {
-        if (!el._bcfOrigPlaceholder) el._bcfOrigPlaceholder = el.placeholder;
-        el.placeholder = translation;
-      } else if (currentLang === 'az' && el._bcfOrigPlaceholder) {
-        el.placeholder = el._bcfOrigPlaceholder;
-      }
-    });
+      // 2. data-i18n-placeholder
+      root.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+        const key = el.dataset.i18nPlaceholder;
+        const translation = DICTIONARY[currentLang]?.[key];
+        if (translation !== undefined) {
+          if (!el._bcfOrigPlaceholder) el._bcfOrigPlaceholder = el.placeholder;
+          if (el.placeholder !== translation) el.placeholder = translation;
+        } else if (currentLang === 'az' && el._bcfOrigPlaceholder) {
+          if (el.placeholder !== el._bcfOrigPlaceholder) el.placeholder = el._bcfOrigPlaceholder;
+        }
+      });
 
-    // 3. data-i18n-aria
-    root.querySelectorAll('[data-i18n-aria]').forEach((el) => {
-      const key = el.dataset.i18nAria;
-      const translation = DICTIONARY[currentLang]?.[key];
-      if (translation !== undefined) {
-        el.setAttribute('aria-label', translation);
-      }
-    });
+      // 3. data-i18n-aria
+      root.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+        const key = el.dataset.i18nAria;
+        const translation = DICTIONARY[currentLang]?.[key];
+        if (translation !== undefined) {
+          el.setAttribute('aria-label', translation);
+        }
+      });
 
-    // 4. Auto-translate known text nodes in UI
-    const targets = root.querySelectorAll(`
-      .main-nav a,
-      .filter-chip,
-      .menu-tab,
-      .account-tab,
-      .account-center-tab,
-      .coffee-add-button,
-      .tea-add-button,
-      .add-to-cart,
-      .detail-add,
-      .product-buy .add-to-cart,
-      .contact-line span,
-      .contact-line strong,
-      .coffee-scores span,
-      .coffee-taste > span,
-      .tea-facts dt,
-      .tea-facts dd,
-      .tea-kicker,
-      .cart-header h2,
-      .cart-summary span,
-      .floating-cart-badge,
-      .checkout-open,
-      .checkout-confirm,
-      .checkout-done,
-      .checkout-eyebrow,
-      .account-field > span,
-      .account-submit,
-      .account-logout,
-      .account-eyebrow,
-      .favorites-drawer h2,
-      .favorites-empty h3,
-      .favorites-empty p,
-      .favorites-clear,
-      .product-back,
-      .variant-picker > div:first-child span,
-      .detail-price-row span,
-      footer p
-    `);
+      // 4. Auto-translate known text nodes in UI
+      const targets = root.querySelectorAll(`
+        .main-nav a,
+        .filter-chip,
+        .menu-tab,
+        .account-tab,
+        .account-center-tab,
+        .coffee-add-button,
+        .tea-add-button,
+        .add-to-cart,
+        .detail-add,
+        .product-buy .add-to-cart,
+        .contact-line span,
+        .contact-line strong,
+        .coffee-scores span,
+        .coffee-taste > span,
+        .tea-facts dt,
+        .tea-facts dd,
+        .tea-kicker,
+        .cart-header h2,
+        .cart-summary span,
+        .checkout-open,
+        .checkout-confirm,
+        .checkout-done,
+        .checkout-eyebrow,
+        .account-field > span,
+        .account-submit,
+        .account-logout,
+        .account-eyebrow,
+        .favorites-drawer h2,
+        .favorites-empty h3,
+        .favorites-empty p,
+        .favorites-clear,
+        .product-back,
+        .variant-picker > div:first-child span,
+        .detail-price-row span
+      `);
 
-    targets.forEach((el) => {
-      if (el.hasAttribute('data-i18n')) return;
-      const raw = (el._bcfOrigText || el.textContent || '').trim();
-      if (!raw) return;
+      targets.forEach((el) => {
+        if (el.hasAttribute('data-i18n')) return;
+        const raw = (el._bcfOrigText || el.textContent || '').trim();
+        if (!raw) return;
 
-      if (!el._bcfOrigText) {
-        el._bcfOrigText = raw;
-      }
+        if (!el._bcfOrigText) {
+          el._bcfOrigText = raw;
+        }
 
-      const orig = el._bcfOrigText;
-      if (currentLang === 'az') {
-        if (el.textContent.trim() !== orig) el.textContent = orig;
-        return;
-      }
+        const orig = el._bcfOrigText;
+        if (currentLang === 'az') {
+          if (el.textContent.trim() !== orig) el.textContent = orig;
+          return;
+        }
 
-      // Check phrase map
-      if (PHRASE_MAP[orig]?.[currentLang]) {
-        el.textContent = PHRASE_MAP[orig][currentLang];
-      }
-    });
+        const targetText = PHRASE_MAP[orig]?.[currentLang];
+        if (targetText && el.textContent.trim() !== targetText) {
+          el.textContent = targetText;
+        }
+      });
 
-    // Update document title if needed
-    updateDocumentTitle();
+      // Update document title if needed
+      updateDocumentTitle();
+    } finally {
+      isTranslating = false;
+    }
   }
 
   function updateDocumentTitle() {
@@ -784,20 +793,33 @@
     mountLanguageSelector();
     setLanguage(currentLang);
 
-    // Watch for dynamic DOM additions (e.g. coffee / tea list hydration)
-    const observer = new MutationObserver(() => {
+    // Watch for dynamic product additions (bcf:catalog-ready event)
+    window.addEventListener('bcf:catalog-ready', () => {
       if (currentLang !== 'az') {
         translateDom();
       }
     });
 
-    const main = document.querySelector('main');
-    if (main) {
-      observer.observe(main, { childList: true, subtree: true });
-    }
+    // Translate modals/drawers when opened
+    document.addEventListener('click', (e) => {
+      const trigger = e.target.closest('#accountTrigger, .account-trigger, #floatingCartTrigger, .floating-cart-btn, .tea-header-cart, #openCartBtn, #openGearCartBtn, #favoritesTrigger, .favorites-trigger');
+      if (trigger && currentLang !== 'az') {
+        requestAnimationFrame(() => translateDom());
+      }
+    });
+
+    // Safely observe cart items (debounced, without infinite loops)
+    let cartDebounceTimer = null;
     const cartItems = document.querySelector('.cart-items');
     if (cartItems) {
-      observer.observe(cartItems, { childList: true, subtree: true });
+      const cartObserver = new MutationObserver(() => {
+        if (isTranslating || currentLang === 'az') return;
+        clearTimeout(cartDebounceTimer);
+        cartDebounceTimer = setTimeout(() => {
+          translateDom(cartItems);
+        }, 60);
+      });
+      cartObserver.observe(cartItems, { childList: true });
     }
   }
 
