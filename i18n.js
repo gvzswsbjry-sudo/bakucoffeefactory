@@ -2663,6 +2663,22 @@
   }
 };
 
+  // Reverse lookup map to recover original Azerbaijani key from any translated text
+  const REVERSE_MAP = {};
+  for (const [azKey, trans] of Object.entries(PHRASE_MAP)) {
+    if (trans.en) REVERSE_MAP[trans.en] = azKey;
+    if (trans.ru) REVERSE_MAP[trans.ru] = azKey;
+    if (trans.ar) REVERSE_MAP[trans.ar] = azKey;
+  }
+
+  function isKnownTranslation(candidate, origKey) {
+    if (!candidate || !origKey) return false;
+    if (candidate === origKey) return true;
+    const entry = PHRASE_MAP[origKey];
+    if (!entry) return false;
+    return candidate === entry.en || candidate === entry.ru || candidate === entry.ar;
+  }
+
   let currentLang = DEFAULT_LANG;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -2877,9 +2893,20 @@
         const text = (el.textContent || '').trim();
         if (!text) return;
 
-        // If not cached, or if JS changed text to a new AZ value
-        if (!el._bcfOrigText || (text !== el._bcfOrigText && text !== PHRASE_MAP[el._bcfOrigText]?.[currentLang])) {
-          el._bcfOrigText = text;
+        if (!el._bcfOrigText) {
+          if (PHRASE_MAP[text]) {
+            el._bcfOrigText = text;
+          } else if (REVERSE_MAP[text]) {
+            el._bcfOrigText = REVERSE_MAP[text];
+          } else {
+            el._bcfOrigText = text;
+          }
+        } else if (!isKnownTranslation(text, el._bcfOrigText)) {
+          if (PHRASE_MAP[text]) {
+            el._bcfOrigText = text;
+          } else if (REVERSE_MAP[text]) {
+            el._bcfOrigText = REVERSE_MAP[text];
+          }
         }
 
         const orig = el._bcfOrigText;

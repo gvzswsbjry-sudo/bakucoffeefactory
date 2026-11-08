@@ -193,3 +193,108 @@ test('i18n PHRASE_MAP translates all coffees, teas, equipment, menu items, and d
     assert.ok(phraseMap[item]?.ru, `Menu item ${item} has Russian translation`);
   }
 });
+
+test('every storefront HTML page includes data-i18n on header navigation links', () => {
+  const files = ['index.html', 'qehveler.html', 'caylar.html', 'avadanliqlar.html', 'mehsul.html', 'menyu.html', 'mexfilik.html'];
+  const requiredKeys = ['navHome', 'navCoffee', 'navTea', 'navEquipment', 'navMenu'];
+  for (const file of files) {
+    const html = fs.readFileSync(file, 'utf8');
+    for (const key of requiredKeys) {
+      assert.ok(
+        html.includes(`data-i18n="${key}"`),
+        `${file} must contain navigation link with data-i18n="${key}"`
+      );
+    }
+  }
+});
+
+test('switching languages dynamically translates navigation and phrases without requiring page reload', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+
+  class MockElement {
+    constructor(tag, text = '', attrs = {}) {
+      this.tagName = tag.toUpperCase();
+      this.textContent = text;
+      this.attrs = Object.assign({}, attrs);
+      this.dataset = {};
+      for (const [k, v] of Object.entries(attrs)) {
+        if (k.startsWith('data-')) {
+          const camel = k.slice(5).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+          this.dataset[camel] = v;
+        }
+      }
+      this.classList = { contains: () => false, add: () => {}, remove: () => {}, toggle: () => {} };
+      this.style = {};
+    }
+    getAttribute(n) { return this.attrs[n]; }
+    setAttribute(n, v) { this.attrs[n] = v; }
+    hasAttribute(n) { return n in this.attrs; }
+  }
+
+  const navHome = new MockElement('a', 'Ana səhifə', { 'data-i18n': 'navHome' });
+  const navCoffee = new MockElement('a', 'Qəhvələr', { 'data-i18n': 'navCoffee' });
+  const navTea = new MockElement('a', 'Çaylar', { 'data-i18n': 'navTea' });
+  const navMenu = new MockElement('a', 'Menyu', { 'data-i18n': 'navMenu' });
+  const unlabelledTarget = new MockElement('a', 'Qəhvələr', {});
+
+  const allElements = [navHome, navCoffee, navTea, navMenu, unlabelledTarget];
+
+  const mockDoc = {
+    readyState: 'complete',
+    documentElement: { lang: 'az', dir: 'ltr' },
+    body: { classList: { add: () => {}, remove: () => {} } },
+    querySelector: () => null,
+    querySelectorAll: (sel) => {
+      if (sel.includes('[data-i18n]')) return allElements.filter(e => e.hasAttribute('data-i18n'));
+      if (sel.includes('.main-nav a')) return allElements;
+      return [];
+    },
+    getElementById: () => null,
+    addEventListener: () => {}
+  };
+
+  const mockWindow = {
+    addEventListener: () => {},
+    dispatchEvent: () => {},
+    location: { pathname: '/qehveler.html' }
+  };
+
+  const sandbox = {
+    window: mockWindow,
+    document: mockDoc,
+    localStorage: { getItem: () => null, setItem: () => {} },
+    CustomEvent: class { constructor(t, i) { this.type = t; this.detail = i?.detail; } }
+  };
+
+  vm.createContext(sandbox);
+  vm.runInContext(content, sandbox);
+
+  // 1. Switch to Russian
+  sandbox.window.BCF_I18N.setLanguage('ru');
+  assert.equal(navCoffee.textContent, 'Кофе', 'navCoffee -> Russian');
+  assert.equal(navTea.textContent, 'Чай', 'navTea -> Russian');
+  assert.equal(navMenu.textContent, 'Меню', 'navMenu -> Russian');
+  assert.equal(unlabelledTarget.textContent, 'Кофе', 'unlabelledTarget -> Russian');
+
+  // 2. Switch to English (without reloading page)
+  sandbox.window.BCF_I18N.setLanguage('en');
+  assert.equal(navCoffee.textContent, 'Coffee', 'navCoffee -> English');
+  assert.equal(navTea.textContent, 'Tea', 'navTea -> English');
+  assert.equal(navMenu.textContent, 'Menu', 'navMenu -> English');
+  assert.equal(unlabelledTarget.textContent, 'Coffee', 'unlabelledTarget -> English');
+
+  // 3. Switch to Arabic (without reloading page)
+  sandbox.window.BCF_I18N.setLanguage('ar');
+  assert.equal(navCoffee.textContent, 'القهوة', 'navCoffee -> Arabic');
+  assert.equal(navTea.textContent, 'الشاي', 'navTea -> Arabic');
+  assert.equal(navMenu.textContent, 'القائمة', 'navMenu -> Arabic');
+  assert.equal(unlabelledTarget.textContent, 'القهوة', 'unlabelledTarget -> Arabic');
+
+  // 4. Switch back to Azerbaijani (without reloading page)
+  sandbox.window.BCF_I18N.setLanguage('az');
+  assert.equal(navCoffee.textContent, 'Qəhvələr', 'navCoffee -> Azerbaijani');
+  assert.equal(navTea.textContent, 'Çaylar', 'navTea -> Azerbaijani');
+  assert.equal(navMenu.textContent, 'Menyu', 'navMenu -> Azerbaijani');
+  assert.equal(unlabelledTarget.textContent, 'Qəhvələr', 'unlabelledTarget -> Azerbaijani');
+});
+
