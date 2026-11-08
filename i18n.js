@@ -760,22 +760,27 @@
     const dropdown = wrapper.querySelector('#langDropdown');
 
     function toggleDropdown(open) {
-      const isVisible = open !== undefined ? open : dropdown.hidden;
+      const isVisible = open !== undefined ? Boolean(open) : !dropdown.classList.contains('open');
       dropdown.hidden = !isVisible;
+      dropdown.classList.toggle('open', isVisible);
+      dropdown.classList.toggle('is-open', isVisible);
+      dropdown.style.display = isVisible ? 'flex' : 'none';
       trigger.setAttribute('aria-expanded', String(isVisible));
     }
 
     trigger.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       toggleDropdown();
     });
 
     wrapper.querySelectorAll('.lang-option').forEach((opt) => {
       opt.addEventListener('click', (e) => {
+        e.preventDefault();
         e.stopPropagation();
         const selectedLang = opt.dataset.lang;
-        setLanguage(selectedLang);
         toggleDropdown(false);
+        setLanguage(selectedLang);
       });
     });
 
@@ -786,6 +791,10 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') toggleDropdown(false);
     });
+
+    window.addEventListener('scroll', () => {
+      toggleDropdown(false);
+    }, { passive: true });
   }
 
   // Initialize

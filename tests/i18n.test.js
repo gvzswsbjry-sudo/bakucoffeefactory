@@ -41,3 +41,10 @@ test('i18n script contains infinite-loop guard and does not observe entire main 
   assert.ok(content.includes('window.__BCF_I18N_INITIALIZED__'), 'has singleton initialization guard');
   assert.ok(!content.includes('observer.observe(main'), 'does NOT attach unthrottled mutation observer to entire main');
 });
+
+test('i18n css enforces dropdown visibility rules and RTL header collision prevention', () => {
+  const css = fs.readFileSync('i18n.css', 'utf8');
+  assert.ok(css.includes('.lang-dropdown[hidden]'), 'has explicit [hidden] display:none rule');
+  assert.ok(css.includes('[dir="rtl"] .site-header'), 'has RTL site-header rule');
+  assert.ok(css.includes('direction: ltr !important'), 'preserves header structural direction to prevent collisions');
+});

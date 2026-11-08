@@ -70,6 +70,7 @@
 
 /* Dropdown Menu */
 .lang-dropdown {
+  display: none !important;
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
@@ -80,15 +81,24 @@
   background: #ffffff;
   border: 1px solid rgba(74, 53, 37, 0.15);
   box-shadow: 0 14px 34px rgba(35, 25, 20, 0.18), 0 2px 6px rgba(35, 25, 20, 0.08);
-  display: flex;
   flex-direction: column;
   gap: 3px;
+}
+
+.lang-dropdown.open,
+.lang-dropdown.is-open {
+  display: flex !important;
   animation: langFadeIn .15s ease-out;
 }
 
+.lang-dropdown[hidden] {
+  display: none !important;
+}
+
 [dir="rtl"] .lang-dropdown {
-  right: auto;
-  left: 0;
+  right: 0;
+  left: auto;
+  direction: rtl;
 }
 
 @keyframes langFadeIn {
@@ -152,10 +162,11 @@
 /* Mobile Header Layout */
 @media (max-width: 720px) {
   .site-header .lang-selector {
-    position: absolute;
+    position: absolute !important;
     z-index: 8;
-    top: max(16px, calc(12px + env(safe-area-inset-top)));
-    right: 175px;
+    top: max(16px, calc(12px + env(safe-area-inset-top))) !important;
+    right: 175px !important;
+    left: auto !important;
   }
 
   .site-header .lang-trigger {
@@ -171,34 +182,19 @@
   }
 
   .site-header:not(:has(.tea-header-cart)) .lang-selector {
-    right: 128px;
-  }
-
-  [dir="rtl"] .site-header .lang-selector {
-    right: auto;
-    left: 175px;
-  }
-
-  [dir="rtl"] .site-header:not(:has(.tea-header-cart)) .lang-selector {
-    right: auto;
-    left: 128px;
+    right: 128px !important;
+    left: auto !important;
   }
 }
 
 @media (max-width: 380px) {
   .site-header .lang-selector {
-    right: 152px;
+    right: 152px !important;
+    left: auto !important;
   }
   .site-header:not(:has(.tea-header-cart)) .lang-selector {
-    right: 110px;
-  }
-  [dir="rtl"] .site-header .lang-selector {
-    right: auto;
-    left: 152px;
-  }
-  [dir="rtl"] .site-header:not(:has(.tea-header-cart)) .lang-selector {
-    right: auto;
-    left: 110px;
+    right: 110px !important;
+    left: auto !important;
   }
   .site-header .lang-chevron {
     display: none;
@@ -211,21 +207,67 @@
   text-align: right;
 }
 
-[dir="rtl"] .brand {
-  margin-right: 0 !important;
-  margin-left: auto !important;
-  text-align: right;
+/* 1. Header Stability in RTL: Logo stays on left, Nav in center, Actions on right. NO collisions! */
+[dir="rtl"] .site-header {
+  direction: ltr !important;
 }
 
-[dir="rtl"] .main-nav {
+[dir="rtl"] .site-header .brand {
+  direction: ltr !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  text-align: left !important;
+}
+
+[dir="rtl"] .site-header .main-nav {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+}
+
+[dir="rtl"] .site-header .main-nav a {
   direction: rtl;
+  font-family: 'Cairo', 'Noto Sans Arabic', Tahoma, sans-serif !important;
 }
 
+[dir="rtl"] .site-header .lang-selector {
+  direction: ltr !important;
+}
+
+[dir="rtl"] .site-header .lang-dropdown {
+  direction: rtl !important;
+  text-align: right !important;
+  right: 0 !important;
+  left: auto !important;
+}
+
+@media (max-width: 720px) {
+  [dir="rtl"] .site-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  [dir="rtl"] .site-header .brand {
+    align-self: flex-start !important;
+    margin: 0 !important;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+  }
+
+  [dir="rtl"] .site-header .main-nav {
+    flex-direction: row !important;
+    direction: ltr !important;
+  }
+}
+
+/* 2. Page Typography & Direction */
 [dir="rtl"] .hero-content h1,
 [dir="rtl"] .home-about h2,
 [dir="rtl"] .home-contact h2,
 [dir="rtl"] .page-intro h1,
-[dir="rtl"] .menu-top h1 {
+[dir="rtl"] .menu-top h1,
+[dir="rtl"] .coffee-title h2,
+[dir="rtl"] .tea-product-title,
+[dir="rtl"] .gear-title {
   font-family: 'Cairo', 'Noto Sans Arabic', Tahoma, sans-serif !important;
   font-weight: 700;
 }
