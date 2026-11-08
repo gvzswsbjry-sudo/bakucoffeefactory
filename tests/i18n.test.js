@@ -48,3 +48,71 @@ test('i18n css enforces dropdown visibility rules and RTL header collision preve
   assert.ok(css.includes('[dir="rtl"] .site-header'), 'has RTL site-header rule');
   assert.ok(css.includes('direction: ltr !important'), 'preserves header structural direction to prevent collisions');
 });
+
+test('i18n PHRASE_MAP translates all coffees, teas, equipment, and menu items', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+  const vm = require('node:vm');
+  const sandbox = {
+    window: {
+      location: { pathname: '/index.html' },
+      dispatchEvent: () => {},
+      addEventListener: () => {},
+    },
+    CustomEvent: class CustomEvent { constructor(type, init) { this.type = type; this.detail = init?.detail; } },
+    document: {
+      addEventListener: () => {},
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      getElementById: () => null,
+      documentElement: { lang: 'az', dir: 'ltr' },
+      body: { classList: { remove: () => {}, add: () => {} } },
+    },
+    localStorage: { getItem: () => null, setItem: () => {} },
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(content, sandbox);
+  const phraseMap = sandbox.window.BCF_I18N.PHRASE_MAP;
+  assert.ok(phraseMap, 'PHRASE_MAP is exported');
+
+  // 1. Coffees
+  const coffeeOrigins = ['Colombia', 'Guatemala', 'Brasil', 'Honduras', 'Robusta', 'Costa Rica', 'Efiopiya', 'Keniya', 'Decaf', 'Uqanda'];
+  for (const c of coffeeOrigins) {
+    assert.ok(phraseMap[c]?.en, `Coffee ${c} has English translation`);
+    assert.ok(phraseMap[c]?.ar, `Coffee ${c} has Arabic translation`);
+  }
+
+  // 2. Teas
+  const teaNames = [
+    '1001 Gecə Çayı', 'Admiral', 'Geyşa Qara', 'Jasmin Çayı', 'Limon Çayı',
+    'Malina Şərbəti', 'Meyvəli Çay', 'Nar Çayı', 'Portağal Çayı', 'Qarpız Çayı',
+    'Geyşa Yaşıl', 'Yaşıl Çay', 'Mango Kürəsi', 'Mango Çayı', 'Qara Çay',
+    'Jasminli Qara Çay', 'Hibiskus'
+  ];
+  for (const t of teaNames) {
+    assert.ok(phraseMap[t]?.en, `Tea ${t} has English translation`);
+    assert.ok(phraseMap[t]?.ar, `Tea ${t} has Arabic translation`);
+  }
+
+  // 3. Equipment
+  const equipmentNames = [
+    'French Press', 'Əl dəyirmanı', 'Naxışlı əl dəyirmanı', 'Moka Pot',
+    'Naxışlı cezvə', 'Gooseneck çaydan', 'Naxışlı Dallah', 'Manual Press',
+    'Çarxlı əl dəyirmanı', 'Şüşə server · 400 ml', 'Azərbaycan qəhvə dəsti',
+    'Espresso tamper', 'Şərq üslublu servis dəsti'
+  ];
+  for (const eq of equipmentNames) {
+    assert.ok(phraseMap[eq]?.en, `Equipment ${eq} has English translation`);
+    assert.ok(phraseMap[eq]?.ar, `Equipment ${eq} has Arabic translation`);
+  }
+
+  // 4. Menu Items
+  const menuItems = [
+    'Espresso (Single)', 'Triple Joy', 'Americano (S / M / L)', 'Latte (S / M / L)',
+    'Türk qəhvəsi', 'İsti şokolad', 'Bumble Coffee', 'Mojito', 'San Sebastian', 'Ballı tort'
+  ];
+  for (const item of menuItems) {
+    assert.ok(phraseMap[item]?.en, `Menu item ${item} has English translation`);
+    assert.ok(phraseMap[item]?.ar, `Menu item ${item} has Arabic translation`);
+  }
+});
+

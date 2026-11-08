@@ -46,6 +46,13 @@
   };
 
   const formatCartItemQuantity = (item) => {
+    const lang = (typeof window !== 'undefined' && window.BCF_I18N?.getLanguage?.()) || 'az';
+    if (lang === 'en') {
+      return item?.unit === 'g' ? `${item.quantity}g` : `${item.quantity} pcs`;
+    }
+    if (lang === 'ar') {
+      return item?.unit === 'g' ? `${item.quantity} جم` : `${item.quantity} قطعة`;
+    }
     return item?.unit === 'g' ? `${item.quantity} q` : `${item.quantity} ədəd`;
   };
 
@@ -331,6 +338,14 @@
         { passive: false, capture: true }
       );
     }
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('bcf:language-changed', () => {
+      try {
+        syncUnifiedCartDom(loadSharedCart());
+      } catch {}
+    });
   }
 
   return {
