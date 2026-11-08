@@ -854,11 +854,29 @@ const fullI18nJs = `(() => {
     return candidate === entry.en || candidate === entry.ru || candidate === entry.ar;
   }
 
-  let currentLang = DEFAULT_LANG;
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved && LANGUAGES[saved]) currentLang = saved;
-  } catch {}
+  function getSavedLanguage() {
+    try {
+      const fromLocal = localStorage.getItem(STORAGE_KEY);
+      if (fromLocal && LANGUAGES[fromLocal]) return fromLocal;
+    } catch {}
+    try {
+      const match = document.cookie.match(/(?:^|;\s*)bcf_language=([^;]+)/);
+      if (match && LANGUAGES[match[1]]) return match[1];
+    } catch {}
+    return DEFAULT_LANG;
+  }
+
+  function persistLanguage(lang) {
+    if (!LANGUAGES[lang]) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, lang);
+    } catch {}
+    try {
+      document.cookie = 'bcf_language=' + encodeURIComponent(lang) + '; path=/; max-age=31536000; SameSite=Lax';
+    } catch {}
+  }
+
+  let currentLang = getSavedLanguage();
 
   function getLanguage() {
     return currentLang;
@@ -871,9 +889,7 @@ const fullI18nJs = `(() => {
   function setLanguage(lang) {
     if (!LANGUAGES[lang]) return;
     currentLang = lang;
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-    } catch {}
+    persistLanguage(lang);
 
     document.documentElement.lang = lang;
     document.documentElement.dir = LANGUAGES[lang].dir;
@@ -1252,9 +1268,16 @@ const fullI18nJs = `(() => {
       }
     });
 
+    // Sync language choice across open browser tabs
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY && e.newValue && LANGUAGES[e.newValue] && e.newValue !== currentLang) {
+        setLanguage(e.newValue);
+      }
+    });
+
     // Translate modals, drawers, swatches, and filter chips on user interaction
     document.addEventListener('click', (e) => {
-      const trigger = e.target.closest('#accountTrigger, .account-trigger, #floatingCartTrigger, .floating-cart-btn, .tea-header-cart, #openCartBtn, #openGearCartBtn, #favoritesTrigger, .favorites-trigger, .coffee-add-button, .tea-add-button, .add-to-cart, .variant-swatch, .gallery-arrow, .filter-chip, .menu-tab, .account-tab, .menu-toggle');
+      const trigger = e.target.closest('#accountTrigger, .account-trigger, #floatingCartTrigger, .floating-cart-btn, .tea-header-cart, #openCartBtn, #openGearCartBtn, #favoritesTrigger, .favorites-trigger, .coffee-add-button, .tea-add-button, .add-to-cart, .variant-swatch, .gallery-arrow, .filter-chip, .menu-tab, .account-tab, .menu-toggle, #checkoutOpen, .checkout-open');
       if (trigger && currentLang !== 'az') {
         requestAnimationFrame(() => translateDom());
       }

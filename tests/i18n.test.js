@@ -298,3 +298,64 @@ test('switching languages dynamically translates navigation and phrases without 
   assert.equal(unlabelledTarget.textContent, 'Qəhvələr', 'unlabelledTarget -> Azerbaijani');
 });
 
+test('first-time visitor defaults to Azerbaijani and language persists across visits', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+  let memoryStorage = {};
+  let cookieString = '';
+
+  function createSession() {
+    const sandbox = {
+      window: {
+        location: { pathname: '/index.html' },
+        addEventListener: () => {},
+        dispatchEvent: () => {}
+      },
+      document: {
+        readyState: 'complete',
+        documentElement: { lang: 'az', dir: 'ltr' },
+        body: { classList: { add: () => {}, remove: () => {} } },
+        querySelector: () => null,
+        querySelectorAll: () => [],
+        getElementById: () => null,
+        addEventListener: () => {},
+        get cookie() { return cookieString; },
+        set cookie(val) {
+          const pair = val.split(';')[0].split('=');
+          cookieString = pair[0] + '=' + pair[1];
+        }
+      },
+      localStorage: {
+        getItem: (k) => memoryStorage[k] || null,
+        setItem: (k, v) => { memoryStorage[k] = String(v); }
+      },
+      CustomEvent: class { constructor(t, i) { this.type = t; this.detail = i?.detail; } }
+    };
+    vm.createContext(sandbox);
+    vm.runInContext(content, sandbox);
+    return sandbox;
+  }
+
+  // 1. Initial visit without any prior choice must default to Azerbaijani (az)
+  const session1 = createSession();
+  assert.equal(session1.window.BCF_I18N.getLanguage(), 'az', 'Default language must be Azerbaijani (az)');
+
+  // 2. User explicitly chooses Russian
+  session1.window.BCF_I18N.setLanguage('ru');
+  assert.equal(session1.window.BCF_I18N.getLanguage(), 'ru');
+  assert.equal(memoryStorage['bcf_language'], 'ru', 'Must be saved to localStorage');
+  assert.ok(cookieString.includes('bcf_language=ru'), 'Must be saved to cookie');
+
+  // 3. User returns next time (new browser session) -> Russian is automatically restored
+  const session2 = createSession();
+  assert.equal(session2.window.BCF_I18N.getLanguage(), 'ru', 'Returning user automatically gets previously chosen language (ru)');
+
+  // 4. User chooses English -> English is saved
+  session2.window.BCF_I18N.setLanguage('en');
+  assert.equal(memoryStorage['bcf_language'], 'en');
+
+  // 5. User returns next time -> English is automatically restored
+  const session3 = createSession();
+  assert.equal(session3.window.BCF_I18N.getLanguage(), 'en', 'Returning user automatically gets English (en)');
+});
+
+
