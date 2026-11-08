@@ -29,6 +29,15 @@ document.querySelectorAll('.site-header .brand').forEach((brand) => {
   if (logo.complete && logo.naturalWidth > 0) brand.replaceChildren(logo);
 });
 
+const i18nStyles = document.createElement('link');
+i18nStyles.rel = 'stylesheet';
+i18nStyles.href = 'i18n.css?v=20261108-v1';
+document.head.append(i18nStyles);
+const i18nScript = document.createElement('script');
+i18nScript.src = 'i18n.js?v=20261108-v1';
+i18nScript.async = false;
+document.body.append(i18nScript);
+
 const accountStyles = document.createElement('link');
 accountStyles.rel = 'stylesheet';
 accountStyles.href = 'account.css?v=20261103-v3';

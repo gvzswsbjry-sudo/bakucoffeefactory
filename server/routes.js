@@ -44,6 +44,7 @@ const PUBLIC_FILES = new Set([
   '/tea-shop.js', '/tea-data.js', '/gear-shop.js', '/equipment-data.js',
   '/product-detail.js', '/account.js', '/favorites.js', '/admin/admin.js', '/admin/admin-api.js',
   '/checkout.js', '/analytics.js',
+  '/i18n.css', '/i18n.js',
   '/admin/product-values.js',
 ]);
 

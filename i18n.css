@@ -1,0 +1,253 @@
+/* Baku Coffee Factory - Multi-language (i18n) Styling */
+
+.lang-selector {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.lang-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 11px;
+  border: 1px solid rgba(74, 53, 37, 0.35);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink, #1e1e1e);
+  font: 700 11px var(--sans, sans-serif);
+  letter-spacing: .03em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all .15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lang-trigger:hover,
+.lang-trigger:focus-visible {
+  border-color: #4a3525;
+  background: #eee7dd;
+}
+
+.lang-trigger[aria-expanded="true"] {
+  background: #4a3525;
+  color: #fff;
+  border-color: #4a3525;
+}
+
+.lang-trigger[aria-expanded="true"] .lang-globe-icon,
+.lang-trigger[aria-expanded="true"] .lang-chevron {
+  stroke: #fff;
+}
+
+.lang-globe-icon {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+
+.lang-current-code {
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.lang-chevron {
+  width: 8px;
+  height: 5px;
+  stroke: currentColor;
+  transition: transform .15s ease;
+  flex-shrink: 0;
+}
+
+.lang-trigger[aria-expanded="true"] .lang-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.lang-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10001;
+  min-width: 160px;
+  padding: 6px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(74, 53, 37, 0.15);
+  box-shadow: 0 14px 34px rgba(35, 25, 20, 0.18), 0 2px 6px rgba(35, 25, 20, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  animation: langFadeIn .15s ease-out;
+}
+
+[dir="rtl"] .lang-dropdown {
+  right: auto;
+  left: 0;
+}
+
+@keyframes langFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #2b1d14;
+  font: 600 12px var(--sans, sans-serif);
+  text-align: left;
+  cursor: pointer;
+  transition: all .12s ease;
+  user-select: none;
+}
+
+[dir="rtl"] .lang-option {
+  text-align: right;
+}
+
+.lang-option:hover,
+.lang-option:focus-visible {
+  background: #f5efe6;
+  color: #1a0f07;
+}
+
+.lang-option.active {
+  background: #eee5da;
+  font-weight: 700;
+  color: #4a3525;
+}
+
+.lang-flag {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.lang-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.lang-check {
+  font-size: 12px;
+  color: #4a3525;
+  opacity: 0;
+}
+
+.lang-option.active .lang-check {
+  opacity: 1;
+}
+
+/* Mobile Header Layout */
+@media (max-width: 720px) {
+  .site-header .lang-selector {
+    position: absolute;
+    z-index: 8;
+    top: max(16px, calc(12px + env(safe-area-inset-top)));
+    right: 175px;
+  }
+
+  .site-header .lang-trigger {
+    height: 32px;
+    padding: 0 8px;
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .site-header .lang-globe-icon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .site-header:not(:has(.tea-header-cart)) .lang-selector {
+    right: 128px;
+  }
+
+  [dir="rtl"] .site-header .lang-selector {
+    right: auto;
+    left: 175px;
+  }
+
+  [dir="rtl"] .site-header:not(:has(.tea-header-cart)) .lang-selector {
+    right: auto;
+    left: 128px;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-header .lang-selector {
+    right: 152px;
+  }
+  .site-header:not(:has(.tea-header-cart)) .lang-selector {
+    right: 110px;
+  }
+  [dir="rtl"] .site-header .lang-selector {
+    right: auto;
+    left: 152px;
+  }
+  [dir="rtl"] .site-header:not(:has(.tea-header-cart)) .lang-selector {
+    right: auto;
+    left: 110px;
+  }
+  .site-header .lang-chevron {
+    display: none;
+  }
+}
+
+/* RTL (Arabic) Support */
+[dir="rtl"] body {
+  font-family: 'Cairo', 'Noto Sans Arabic', Tahoma, sans-serif !important;
+  text-align: right;
+}
+
+[dir="rtl"] .brand {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+  text-align: right;
+}
+
+[dir="rtl"] .main-nav {
+  direction: rtl;
+}
+
+[dir="rtl"] .hero-content h1,
+[dir="rtl"] .home-about h2,
+[dir="rtl"] .home-contact h2,
+[dir="rtl"] .page-intro h1,
+[dir="rtl"] .menu-top h1 {
+  font-family: 'Cairo', 'Noto Sans Arabic', Tahoma, sans-serif !important;
+  font-weight: 700;
+}
+
+[dir="rtl"] .hero-link span,
+[dir="rtl"] .home-about a span {
+  display: inline-block;
+  transform: scaleX(-1);
+  margin-left: 0;
+  margin-right: 15px;
+}
+
+[dir="rtl"] .contact-line i,
+[dir="rtl"] .coffee-more summary span {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .menu-tabs {
+  direction: rtl;
+}
+
+[dir="rtl"] .product-back {
+  direction: rtl;
+}
