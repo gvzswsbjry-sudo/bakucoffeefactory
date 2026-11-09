@@ -32,12 +32,12 @@ document.querySelectorAll('.site-header .brand').forEach((brand) => {
 if (!document.querySelector('link[href*="i18n.css"]')) {
   const i18nStyles = document.createElement('link');
   i18nStyles.rel = 'stylesheet';
-  i18nStyles.href = 'i18n.css?v=20261108-v2';
+  i18nStyles.href = 'i18n.css?v=20261109-1';
   document.head.append(i18nStyles);
 }
 if (!window.BCF_I18N && !window.__BCF_I18N_INITIALIZED__ && !document.querySelector('script[src*="i18n.js"]')) {
   const i18nScript = document.createElement('script');
-  i18nScript.src = 'i18n.js?v=20261108-v2';
+  i18nScript.src = 'i18n.js?v=20261109-1';
   i18nScript.async = false;
   document.body.append(i18nScript);
 }
@@ -47,16 +47,16 @@ accountStyles.rel = 'stylesheet';
 accountStyles.href = 'account.css?v=20261103-v3';
 document.head.append(accountStyles);
 const accountScript = document.createElement('script');
-accountScript.src = 'account.js?v=20261103-v3';
+accountScript.src = 'account.js?v=20261109-v4';
 accountScript.async = false;
 document.body.append(accountScript);
 
 const favoritesStyles = document.createElement('link');
 favoritesStyles.rel = 'stylesheet';
-favoritesStyles.href = 'favorites.css';
+favoritesStyles.href = 'favorites.css?v=20261109-v4';
 document.head.append(favoritesStyles);
 const favoritesScript = document.createElement('script');
-favoritesScript.src = 'favorites.js';
+favoritesScript.src = 'favorites.js?v=20261109-v4';
 favoritesScript.async = false;
 document.body.append(favoritesScript);
 

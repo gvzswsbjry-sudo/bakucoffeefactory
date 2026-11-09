@@ -1,4 +1,6 @@
 const equipmentCartKey = typeof BCF_CART_KEY === 'string' ? BCF_CART_KEY : 'bcf-equipment-cart-v1';
+const tr = (key, fallback) => window.BCF_I18N?.t?.(key, fallback) ?? fallback;
+const dyn = (text) => window.BCF_I18N?.translateDynamicText?.(text) ?? text;
 
 const shopProducts = document.getElementById('shopProducts');
 const shopFilters = document.getElementById('shopFilters');
@@ -80,28 +82,34 @@ const renderProducts = () => {
     const soldOut = product.stock?.status === 'out' || (product.stock?.status === 'counted' && product.stock.quantity <= 0);
     const fitClass = product.imageFit === 'contain' ? 'product-image-contain' : '';
     const variants = product.variants.length > 1
-      ? `<div class="product-variant-preview" aria-label="${product.variants.length} seçim">${product.variants.map((item) => `<span style="--swatch:${escapeShopHtml(item.color)}" title="${escapeShopHtml(item.label)}"></span>`).join('')}</div>`
+      ? `<div class="product-variant-preview" aria-label="${escapeShopHtml(dyn(`${product.variants.length} seçim`))}">${product.variants.map((item) => `<span style="--swatch:${escapeShopHtml(item.color)}" title="${escapeShopHtml(dyn(item.label))}"></span>`).join('')}</div>`
       : '';
 
     const productId = escapeShopHtml(product.id);
-    const productName = escapeShopHtml(product.name);
+    const productName = escapeShopHtml(dyn(product.name));
+    const categoryLabel = escapeShopHtml(dyn(product.categoryLabel));
+    const productDesc = escapeShopHtml(dyn(product.description));
+    const variantAlt = escapeShopHtml(dyn(variant.alt));
     const variantImage = escapeShopHtml(safeShopImage(variant.image));
+    const buttonKey = soldOut ? 'soldOut' : 'addToCart';
+    const buttonLabel = soldOut ? tr('soldOut', 'Bitib') : tr('addToCart', 'Səbətə əlavə et');
 
     return `
-      <article class="shop-product" data-category="${escapeShopHtml(product.category)}" data-product-id="${productId}" data-product-url="${escapeShopHtml(buildEquipmentDetailUrl(product.id))}" tabindex="0" role="link" aria-label="${productName} məhsuluna bax">
-        <figure class="${fitClass}"><img src="${variantImage}" alt="${escapeShopHtml(variant.alt)}" loading="${product.id === 'french-press' || product.id === 'wood-grinder' ? 'eager' : 'lazy'}" /></figure>
+      <article class="shop-product" data-category="${escapeShopHtml(product.category)}" data-product-id="${productId}" data-product-url="${escapeShopHtml(buildEquipmentDetailUrl(product.id))}" tabindex="0" role="link" aria-label="${productName}">
+        <figure class="${fitClass}"><img src="${variantImage}" alt="${variantAlt}" loading="${product.id === 'french-press' || product.id === 'wood-grinder' ? 'eager' : 'lazy'}" /></figure>
         <div class="product-copy">
-          <p class="product-category">${escapeShopHtml(product.categoryLabel)}</p>
+          <p class="product-category">${categoryLabel}</p>
           <h3>${productName}</h3>
-          <p class="product-description">${escapeShopHtml(product.description)}</p>
+          <p class="product-description">${productDesc}</p>
           ${variants}
           <div class="product-buy">
             <span class="product-price">${escapeShopHtml(formatPrice(variant.price))}</span>
-            <button class="add-to-cart" type="button" data-product-id="${productId}" ${soldOut ? 'disabled' : ''}>${soldOut ? 'Bitib' : 'Səbətə əlavə et'}</button>
+            <button class="add-to-cart" type="button" data-product-id="${productId}" data-i18n="${buttonKey}" ${soldOut ? 'disabled' : ''}>${escapeShopHtml(buttonLabel)}</button>
           </div>
         </div>
       </article>`;
   }).join('');
+  window.BCF_I18N?.translateDom?.(shopProducts);
 };
 
 const renderCart = () => {
@@ -208,10 +216,12 @@ shopProducts?.addEventListener('click', (event) => {
     if (!product) return;
     addVariantToCart(product, product.variants[0]);
     button.classList.add('added');
-    button.textContent = 'Əlavə edildi';
+    button.dataset.i18n = 'added';
+    button.textContent = tr('added', 'Əlavə edildi');
     window.setTimeout(() => {
       button.classList.remove('added');
-      button.textContent = 'Səbətə əlavə et';
+      button.dataset.i18n = 'addToCart';
+      button.textContent = tr('addToCart', 'Səbətə əlavə et');
     }, 900);
     return;
   }
@@ -275,3 +285,15 @@ if (shopFilters) {
   }
 }
 renderCart();
+window.BCF_I18N?.translateDom?.();
+window.addEventListener('bcf:language-changed', () => {
+  renderProducts();
+  if (shopFilters) {
+    const activeFilter = shopFilters.querySelector('.filter-chip.active')?.dataset.filter || 'all';
+    const matchingChip = shopFilters.querySelector(`.filter-chip[data-filter="${activeFilter}"]`);
+    if (matchingChip) applyShopFilter(matchingChip, false);
+    if (shopSort?.value && shopSort.value !== 'featured') applyShopSort(shopSort.value, false);
+  }
+  renderCart();
+  window.BCF_I18N?.translateDom?.();
+});

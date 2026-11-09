@@ -6,6 +6,8 @@
 })(typeof window !== 'undefined' ? window : globalThis, function (root) {
   const STORAGE_KEY = 'bcf-favorites-v1';
   const CARD_SELECTOR = '.coffee-profile, .tea-product, .shop-product';
+  const tr = (key, fallback) => root.BCF_I18N?.t?.(key, fallback) ?? fallback;
+  const dyn = (text) => root.BCF_I18N?.translateDynamicText?.(text) ?? text;
   let drawer;
   let overlay;
   let trigger;
@@ -195,16 +197,21 @@
     if (!drawer || !trigger) return;
     const favorites = Object.values(read());
     trigger.querySelector('.favorites-count').textContent = String(favorites.length);
-    trigger.setAttribute('aria-label', `Favorilər: ${favorites.length} məhsul`);
+    trigger.setAttribute('aria-label', `${tr('favoritesDrawerTitle', 'Favorilər')}: ${favorites.length} ${tr('favoritesCountItems', 'məhsul')}`);
     const list = drawer.querySelector('.favorites-list');
-    list.innerHTML = favorites.length ? favorites.map((item) => `
+    list.innerHTML = favorites.length ? favorites.map((item) => {
+      const displayName = dyn(item.name);
+      const displayCategory = dyn(item.category);
+      const displayPrice = item.price ? dyn(item.price) : dyn('Məhsula bax');
+      return `
       <article class="favorites-list-item" data-favorite-key="${escapeHtml(item.key)}">
         <a href="${escapeHtml(safeProductUrl(item.url))}">
           <img src="${escapeHtml(safeImage(item.image))}" alt="" />
-          <span><small>${escapeHtml(item.category)}</small><strong>${escapeHtml(item.name)}</strong><em>${escapeHtml(item.price || 'Məhsula bax')}</em></span>
+          <span><small>${escapeHtml(displayCategory)}</small><strong>${escapeHtml(displayName)}</strong><em>${escapeHtml(displayPrice)}</em></span>
         </a>
-        <button type="button" data-remove-favorite="${escapeHtml(item.key)}" aria-label="${escapeHtml(item.name)} favoritlərdən sil">Sil</button>
-      </article>`).join('') : '<div class="favorites-empty"><span aria-hidden="true">♡</span><h3>Favorit siyahınız boşdur.</h3><p>Məhsul kartındakı ürək işarəsinə toxunaraq seçimlərinizi burada toplayın.</p></div>';
+        <button type="button" data-remove-favorite="${escapeHtml(item.key)}" data-i18n="removeBtn" aria-label="${escapeHtml(displayName)}">${escapeHtml(tr('removeBtn', 'Sil'))}</button>
+      </article>`;
+    }).join('') : `<div class="favorites-empty"><span aria-hidden="true">♡</span><h3 data-i18n="favoritesDrawerEmptyTitle">${escapeHtml(tr('favoritesDrawerEmptyTitle', 'Favorit siyahınız boşdur.'))}</h3><p data-i18n="favoritesDrawerEmptyDesc">${escapeHtml(tr('favoritesDrawerEmptyDesc', 'Məhsul kartındakı ürək işarəsinə toxunaraq seçimlərinizi burada toplayın.'))}</p></div>`;
   }
 
   function sync() {
@@ -231,6 +238,7 @@
   function openDrawer() {
     previousFocus = document.activeElement;
     renderDrawer();
+    root.BCF_I18N?.translateDom?.(drawer);
     overlay.hidden = false;
     drawer.hidden = false;
     document.documentElement.classList.add('favorites-open');
@@ -281,7 +289,7 @@
     drawer.setAttribute('aria-modal', 'true');
     drawer.setAttribute('aria-labelledby', 'favoritesTitle');
     drawer.innerHTML = `
-      <header><div><p>SİZİN SEÇİMLƏRİNİZ</p><h2 id="favoritesTitle">Favorilər</h2></div><button class="favorites-close" type="button" aria-label="Bağla">×</button></header>
+      <header><div><p data-i18n="favoritesEyebrow">${escapeHtml(tr('favoritesEyebrow', 'SİZİN SEÇİMLƏRİNİZ'))}</p><h2 id="favoritesTitle" data-i18n="favoritesDrawerTitle">${escapeHtml(tr('favoritesDrawerTitle', 'Favorilər'))}</h2></div><button class="favorites-close" type="button" aria-label="Bağla">×</button></header>
       <p class="favorites-sync-status" role="status" aria-live="polite"></p>
       <div class="favorites-list"></div>`;
 
@@ -306,6 +314,8 @@
   function init() {
     createDrawer();
     sync();
+    root.BCF_I18N?.translateDom?.(drawer);
+    root.dispatchEvent?.(new CustomEvent('bcf:ui-mounted'));
     const observer = new MutationObserver((records) => {
       placeTriggerBesideAccount();
       if (records.some((record) => [...record.addedNodes].some((node) => node.nodeType === 1 && (node.matches?.(CARD_SELECTOR) || node.querySelector?.(CARD_SELECTOR))))) sync();
@@ -313,6 +323,10 @@
     observer.observe(document.body, { childList: true, subtree: true });
     root.addEventListener('storage', (event) => { if (event.key === STORAGE_KEY) sync(); });
     root.addEventListener('bcf:favorites-changed', sync);
+    root.addEventListener('bcf:language-changed', () => {
+      sync();
+      root.BCF_I18N?.translateDom?.(drawer);
+    });
     root.addEventListener('bcf:auth-changed', (event) => { changeAccount(event.detail?.user); });
   }
 

@@ -143,7 +143,7 @@
         return;
       }
       const script = documentRef.createElement('script');
-      const url = src.includes('?') ? src : `${src}?v=20261103-cart-fallback1`;
+      const url = src.includes('?') ? src : `${src}?v=20261109-1`;
       script.src = url;
       script.async = false;
       script.onload = () => resolve(src);
@@ -163,7 +163,8 @@
     const message = documentRef.createElement('p');
     message.className = 'catalog-load-error';
     message.setAttribute('role', 'alert');
-    message.textContent = 'Məhsullar hazırda yüklənə bilmir. Səhifəni yeniləyib yenidən cəhd edin.';
+    const fallbackMsg = 'Məhsullar hazırda yüklənə bilmir. Səhifəni yeniləyib yenidən cəhd edin.';
+    message.textContent = globalThis.window?.BCF_I18N?.translateDynamicText?.(fallbackMsg) || fallbackMsg;
     target.append(message);
     if (globalThis.console?.error) globalThis.console.error('Catalog load failed:', error?.message || error);
   }

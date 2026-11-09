@@ -22,6 +22,9 @@ const sharedCartCount = document.getElementById('cartCount');
 const sharedCartTotal = document.getElementById('cartTotal');
 const teaCartToast = document.getElementById('teaCartToast');
 
+const tr = (key, fallback) => window.BCF_I18N?.t?.(key, fallback) ?? fallback;
+const dyn = (text) => window.BCF_I18N?.translateDynamicText?.(text) ?? text;
+
 let teaCart = loadSharedCart();
 let selectedTea = null;
 let modalReturnFocus = null;
@@ -29,7 +32,7 @@ let teaToastTimer = null;
 
 const showTeaToast = () => {
   if (!teaCartToast) return;
-  teaCartToast.textContent = 'Səbətə uğurla əlavə edildi';
+  teaCartToast.textContent = tr('cartAddedToast', 'Səbətə uğurla əlavə edildi');
   teaCartToast.hidden = false;
   clearTimeout(teaToastTimer);
   teaToastTimer = setTimeout(() => { teaCartToast.hidden = true; }, 2600);
@@ -47,7 +50,7 @@ const renderTeaCart = () => {
 const updateModalTotal = () => {
   if (!selectedTea) return;
   const quantity = normalizeTeaQuantity(teaQuantity.value, selectedTea.unit);
-  teaOrderTotal.textContent = selectedTea.price == null ? 'Qiymət təsdiqlənəcək' : formatCartPrice(getCartItemTotal({ ...selectedTea, quantity }));
+  teaOrderTotal.textContent = selectedTea.price == null ? tr('pricePending', 'Qiymət təsdiqlənəcək') : formatCartPrice(getCartItemTotal({ ...selectedTea, quantity }));
 };
 
 const setModalQuantity = (value) => {
@@ -61,18 +64,19 @@ const openTeaModal = (tea, trigger) => {
   modalReturnFocus = trigger;
   const isWeight = tea.unit === 'g';
   teaOrderImage.src = tea.image;
-  teaOrderImage.alt = tea.name;
-  teaOrderTitle.textContent = tea.name;
-  teaOrderUnit.textContent = tea.price == null ? 'Qiymət sifarişdən sonra dəqiqləşdiriləcək'
-    : isWeight ? `${formatCartPrice(tea.price)} / 100 q` : `${formatCartPrice(tea.price)} / ədəd`;
-  teaQuantityLabel.textContent = isWeight ? 'Qram' : 'Ədəd';
-  teaOrderLimit.textContent = isWeight ? 'Maksimum 1 kq' : '1–20 ədəd seçə bilərsiniz';
+  teaOrderImage.alt = dyn(tea.name);
+  teaOrderTitle.textContent = dyn(tea.name);
+  teaOrderUnit.textContent = tea.price == null ? tr('priceConfirmAfterOrder', 'Qiymət sifarişdən sonra dəqiqləşdiriləcək')
+    : dyn(isWeight ? `${formatCartPrice(tea.price)} / 100 q` : `${formatCartPrice(tea.price)} / ədəd`);
+  teaQuantityLabel.textContent = isWeight ? tr('gram', 'Qram') : tr('qtyPieces', 'Ədəd');
+  teaOrderLimit.textContent = dyn(isWeight ? 'Maksimum 1 kq' : '1–20 ədəd seçə bilərsiniz');
   teaQuantity.value = isWeight ? '100' : '1';
   updateModalTotal();
   teaOrderModal.hidden = false;
   teaModalOverlay.hidden = false;
   teaOrderModal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('tea-modal-open');
+  window.BCF_I18N?.translateDom?.(teaOrderModal);
 };
 
 const closeTeaModal = () => {
@@ -122,16 +126,17 @@ document.querySelectorAll('.tea-product').forEach((card) => {
   buy.className = 'tea-buy';
   const soldOut = tea.stock?.status === 'out' || (tea.stock?.status === 'counted' && tea.stock.quantity <= 0);
   if (soldOut) {
-    buy.innerHTML = '<span class="tea-price tea-price-pending" data-i18n="soldOut">Bitib</span>';
+    buy.innerHTML = `<span class="tea-price tea-price-pending" data-i18n="soldOut">${tr('soldOut', 'Bitib')}</span>`;
   } else if (tea.price == null) {
-    buy.innerHTML = `<span class="tea-price tea-price-pending" data-i18n="pricePending">Qiymət təsdiqlənəcək</span><button class="tea-add-button" type="button" data-tea-id="${tea.id}" data-i18n="addToOrderRequest">Sifariş sorğusuna əlavə et</button>`;
+    buy.innerHTML = `<span class="tea-price tea-price-pending" data-i18n="pricePending">${tr('pricePending', 'Qiymət təsdiqlənəcək')}</span><button class="tea-add-button" type="button" data-tea-id="${tea.id}" data-i18n="addToOrderRequest">${tr('addToOrderRequest', 'Sifariş sorğusuna əlavə et')}</button>`;
   } else {
-    const unit = tea.unit === 'g' ? '100 q' : 'ədəd';
-    buy.innerHTML = `<span class="tea-price">${formatCartPrice(tea.price)} <small>/ ${unit}</small></span><button class="tea-add-button" type="button" data-tea-id="${tea.id}" data-i18n="addToCart">Səbətə əlavə et</button>`;
+    const unit = dyn(tea.unit === 'g' ? '/ 100 q' : '/ ədəd');
+    buy.innerHTML = `<span class="tea-price">${formatCartPrice(tea.price)} <small>${unit}</small></span><button class="tea-add-button" type="button" data-tea-id="${tea.id}" data-i18n="addToCart">${tr('addToCart', 'Səbətə əlavə et')}</button>`;
   }
   copy.append(buy);
 });
 
+window.BCF_I18N?.translateDom?.();
 if (typeof window !== 'undefined' && window.BCF_I18N && typeof window.BCF_I18N.getLanguage === 'function' && window.BCF_I18N.getLanguage() !== 'az') {
   window.dispatchEvent(new CustomEvent('bcf:catalog-ready'));
 }
@@ -211,4 +216,16 @@ document.addEventListener('keydown', (event) => {
 });
 
 renderTeaCart();
+window.addEventListener('bcf:language-changed', () => {
+  if (selectedTea && !teaOrderModal?.hidden) {
+    const isWeight = selectedTea.unit === 'g';
+    teaOrderTitle.textContent = dyn(selectedTea.name);
+    teaOrderUnit.textContent = selectedTea.price == null ? tr('priceConfirmAfterOrder', 'Qiymət sifarişdən sonra dəqiqləşdiriləcək')
+      : dyn(isWeight ? `${formatCartPrice(selectedTea.price)} / 100 q` : `${formatCartPrice(selectedTea.price)} / ədəd`);
+    teaQuantityLabel.textContent = isWeight ? tr('gram', 'Qram') : tr('qtyPieces', 'Ədəd');
+    teaOrderLimit.textContent = dyn(isWeight ? 'Maksimum 1 kq' : '1–20 ədəd seçə bilərsiniz');
+    updateModalTotal();
+  }
+  window.BCF_I18N?.translateDom?.();
+});
 

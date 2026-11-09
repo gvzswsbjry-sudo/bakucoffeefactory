@@ -157,19 +157,27 @@
 
   const renderUnifiedCartItemsHtml = (cart) => {
     const entries = Object.entries(cart || {}).filter(([, item]) => Number(item?.quantity) > 0);
+    const i18n = typeof window !== 'undefined' ? window.BCF_I18N : null;
+    const lang = i18n?.getLanguage?.() || 'az';
     if (!entries.length) {
-      return '<p class="cart-empty">Səbətiniz hələ boşdur.</p>';
+      const emptyText = i18n?.t?.('cartEmpty', 'Səbətiniz hələ boşdur.') || 'Səbətiniz hələ boşdur.';
+      return `<p class="cart-empty" data-i18n="cartEmpty">${escapeCartHtml(emptyText)}</p>`;
     }
     return entries.map(([id, item]) => {
       const cat = getProductCategory(id, item);
+      const isCoffeeItem = String(id).startsWith('coffee-') || item?.category === 'coffee';
       const isGram = item.unit === 'g';
       const maxLimit = item.maxQuantity || (String(id).startsWith('coffee-') ? 2000 : (isGram ? 1000 : 20));
-      const total = item.price == null ? 'Qiymət təsdiqlənəcək' : formatCartPrice(getCartItemTotal(item));
-      const qtyBadge = isGram ? `${item.quantity}q` : `${item.quantity}`;
+      const pendingText = i18n?.t?.('pricePending', 'Qiymət təsdiqlənəcək') || 'Qiymət təsdiqlənəcək';
+      const total = item.price == null ? pendingText : formatCartPrice(getCartItemTotal(item));
+      const gramUnit = lang === 'en' ? 'g' : (lang === 'ru' ? ' г' : (lang === 'ar' ? ' جم' : 'q'));
+      const qtyBadge = isGram ? `${item.quantity}${gramUnit}` : `${item.quantity}`;
       const safeId = escapeCartHtml(id);
-      const safeName = escapeCartHtml(item.name);
+      const displayName = i18n?.translateDynamicText?.(item.name) || item.name;
+      const safeName = escapeCartHtml(displayName);
       const safeCat = escapeCartHtml(cat);
-      const image = safeCartAssetPath(cat === 'Qəhvə' ? 'assets/coffee/cart-coffee-beans.png' : item.image);
+      const removeText = i18n?.t?.('removeBtn', 'Sil') || 'Sil';
+      const image = safeCartAssetPath(isCoffeeItem ? 'assets/coffee/cart-coffee-beans.png' : item.image);
       const thumb = image
         ? `<img class="cart-item-thumb" src="${escapeCartHtml(image)}" alt="${safeName}" />`
         : `<span class="cart-item-thumb cart-item-thumb-empty" aria-hidden="true"></span>`;
@@ -181,12 +189,12 @@
             <span class="cart-item-cat">${safeCat}</span>
             <h3>${safeName}</h3>
             <p>${escapeCartHtml(formatCartItemQuantity(item))} · ${escapeCartHtml(total)}</p>
-            <button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${safeId}" aria-label="${safeName} məhsulunu səbətdən sil">Sil</button>
+            <button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${safeId}" data-i18n="removeBtn" aria-label="${safeName} — ${escapeCartHtml(removeText)}">${escapeCartHtml(removeText)}</button>
           </div>
-          <div class="cart-quantity" aria-label="${safeName} miqdarı">
-            <button type="button" data-cart-action="decrease" data-product-id="${safeId}" aria-label="Miqdarı azalt">−</button>
+          <div class="cart-quantity" aria-label="${safeName}">
+            <button type="button" data-cart-action="decrease" data-product-id="${safeId}" aria-label="−">−</button>
             <span>${escapeCartHtml(qtyBadge)}</span>
-            <button type="button" data-cart-action="increase" data-product-id="${safeId}" aria-label="Miqdarı artır" ${item.quantity >= maxLimit ? 'disabled' : ''}>+</button>
+            <button type="button" data-cart-action="increase" data-product-id="${safeId}" aria-label="+" ${item.quantity >= maxLimit ? 'disabled' : ''}>+</button>
           </div>
         </article>
       `;
@@ -196,7 +204,6 @@
   const syncUnifiedCartDom = (cartParam) => {
     if (typeof document === 'undefined') return;
     const cart = cartParam || loadSharedCart();
-    const entries = Object.entries(cart).filter(([, item]) => Number(item?.quantity) > 0);
     const countText = formatCartCount(cart);
     const totalText = cartTotalLabel(cart);
     const itemsHtml = renderUnifiedCartItemsHtml(cart);
@@ -213,7 +220,10 @@
 
     ['cartItems', 'coffeeCartItems'].forEach((id) => {
       const el = document.getElementById(id);
-      if (el) el.innerHTML = itemsHtml;
+      if (el) {
+        el.innerHTML = itemsHtml;
+        window.BCF_I18N?.translateDom?.(el);
+      }
     });
 
     const badgeCount = getCartBadgeCount(cart);
@@ -266,11 +276,11 @@
     if (document.querySelector('.cart-summary') && !document.getElementById('checkoutScript')) {
       const stylesheet = document.createElement('link');
       stylesheet.rel = 'stylesheet';
-      stylesheet.href = 'checkout.css?v=20261027-2';
+      stylesheet.href = 'checkout.css?v=20261109-1';
       document.head.append(stylesheet);
       const checkoutScript = document.createElement('script');
       checkoutScript.id = 'checkoutScript';
-      checkoutScript.src = 'checkout.js?v=20261102-orderfix2';
+      checkoutScript.src = 'checkout.js?v=20261109-1';
       document.body.append(checkoutScript);
     }
     window.addEventListener('storage', (event) => {

@@ -74,7 +74,17 @@
       teaHeroTitle: 'Zərif yarpaqlardan<br /><em>isti dəmləmə.</em>',
       teaCollectionTitle: 'BCF Çay Kolleksiyası',
       teaCollectionDesc: 'Dünyanın ən yaxşı bağlarından toplanmış təbii və ətirli çaylar.',
+      teaCollectionEyebrow: 'Yarpaqlı çay kolleksiyası · 17 seçim',
+      teaCollectionHeadline: 'Hər yarpaqda<br /><em>başqa bir əhval.</em>',
+      teaCollectionIntro: 'Çiçəkli, meyvəli və dolğun çayları dad xarakteri ilə tanıyın. Hər seçim üçün ideal su temperaturunu və dəmləmə müddətini də qeyd etdik.',
+      teaHeroCta: 'Kolleksiyaya bax <span>↓</span>',
       teaFactsBrew: 'Dəmləmə',
+      max1kg: 'Maksimum 1 kq',
+      limit1to20: '1–20 ədəd seçə bilərsiniz',
+      qtyPieces: 'Ədəd',
+      priceConfirmAfterOrder: 'Qiymət sifarişdən sonra dəqiqləşdiriləcək',
+      outOfStockNote: 'Bu məhsul hazırda stokda yoxdur.',
+      addedToCartSentence: 'səbətə əlavə edildi.',
 
       // Equipment
       equipmentHeroEyebrow: 'Baku Coffee Factory · Avadanlıqlar',
@@ -108,6 +118,7 @@
       cartEmpty: 'Səbətiniz hələ boşdur.',
       cartUnifiedNote: 'Qəhvə, çay və avadanlıqlar vahid səbətdə hesablanır.',
       cartAddedToast: 'Səbətə uğurla əlavə edildi',
+      removeBtn: 'Sil',
 
       // Checkout
       checkoutEyebrow: 'SİFARİŞ SORĞUSU',
@@ -123,6 +134,17 @@
       sendWhatsAppBtn: 'WhatsApp ilə göndər',
       teamContactSubnote: 'Komandamız həmçinin göstərdiyiniz telefon nömrəsi ilə əlaqə saxlayacaq.',
       continueShopping: 'Alış-verişə davam et',
+      phoneLegend: 'Telefon nömrəsi',
+      phoneRemainderLabel: 'Telefon nömrəsinin qalan hissəsi',
+      checkoutEmptyBtn: 'Səbətiniz boşdur',
+      checkoutSubmittingBtn: 'Sifariş göndərilir…',
+      checkoutAuthPrompt: 'Sifariş vermək üçün zəhmət olmasa hesabınıza daxil olun və ya qeydiyyatdan keçin.',
+      checkoutAuthRequired: 'Sifariş göndərmək üçün zəhmət olmasa hesaba daxil olun.',
+      checkoutFileError: 'Sifariş göndərmək üçün saytı fayl kimi deyil, işləyən server ünvanından açın.',
+      checkoutNoPhoneError: 'Hesabınızda qeydiyyatdan keçmiş telefon nömrəsi tapılmadı.',
+      checkoutEmptyError: 'Səbətiniz boşdur.',
+      checkoutGenericError: 'Sifarişi göndərmək mümkün olmadı. Yenidən cəhd edin.',
+      orderReferencePrefix: 'Sifariş nömrəsi:',
 
       // Account
       accountHeading: 'Hesabınız',
@@ -147,11 +169,57 @@
       socialOr: 'və ya',
       noOrdersYet: 'Hələ sifariş yoxdur.',
       noOrdersDesc: 'Hesabınıza daxil olaraq verdiyiniz sifarişlər burada görünəcək.',
+      emailShortLabel: 'E-poçt',
+      emailLabel: 'E-poçt ünvanı',
+      emailPlaceholder: 'ad@example.com',
+      countryCodeLabel: 'Ölkə kodu',
+      phoneNumberLabel: 'Telefon nömrəsi',
+      customCodePlaceholder: 'Ölkə kodu, məsələn +81',
+      otherLabel: 'Digər',
+      privacyConsentHtml: '<a href="mexfilik.html" target="_blank" rel="noopener">Məxfilik siyasətini</a> oxudum və şəxsi məlumatlarımın hesab yaratmaq üçün işlənməsinə razıyam.',
+      googleProviderNote: 'Google ilə bir kliklə sürətli giriş və qeydiyyat.',
+      accountGuestNote: 'Hesab açmadan da sayta baxa və səbətə məhsul əlavə edə bilərsiniz.',
+      accountSecurityNote: 'Hesabınız bu cihazda təhlükəsiz sessiya ilə açıqdır.',
+      ordersArchiveEyebrow: 'SİFARİŞ ARXİVİ',
+      accountOrdersSignInTitle: 'Hesabınıza daxil olun.',
+      accountOrdersSignInDesc: 'Şəxsi sifariş tarixçəniz giriş etdikdən sonra burada görünəcək.',
+      ordersLoading: 'Sifarişlər yüklənir…',
+      orderPrefix: 'Sifariş #',
+      orderStatusReceived: 'Sifariş qeydə alınıb',
+      greetingPrefix: 'Salam',
+      phoneShortPrefix: 'Tel',
+      authFullNameRequired: 'Ad və soyadınızı daxil edin.',
+      authUsernameMin: 'İstifadəçi adı ən azı 3 simvol olmalıdır.',
+      authPhoneRequired: 'Mobil telefon nömrənizi tam daxil edin.',
+      authPasswordMin: 'Şifrə ən azı 12 simvoldan ibarət olmalıdır.',
+      authPrivacyRequired: 'Məxfilik siyasətinə razılıq verin.',
+      authIdentifierRequired: 'İstifadəçi adı və ya telefon nömrənizi daxil edin.',
+      authPasswordRequired: 'Şifrənizi daxil edin.',
+      authGoogleSigningIn: 'Google ilə daxil olunur…',
+      authGoogleOpening: 'Google hesab seçimi açılır…',
+      authGoogleNotReady: 'Google giriş xidməti yüklənmədi.',
+      authProviderUnavailable: 'Bu giriş üsulu serverdə hələ aktiv edilməyib.',
+      authNotCompleted: 'Giriş tamamlanmadı.',
+      authFileError: 'Hesab üçün saytı fayl kimi deyil, işləyən server ünvanından açın.',
+      authServiceUnavailable: 'Hesab xidməti serverdə hələ aktiv deyil. PostgreSQL bazası qoşulduqdan sonra sifariş tarixçəsi işləyəcək.',
+      authReauthRequired: 'Sifarişlərinizi görmək üçün hesabınıza yenidən daxil olun.',
+      authOrdersError: 'Sifariş tarixçəsini yükləmək mümkün olmadı. Yenidən cəhd edin.',
+      authShowPassword: 'Şifrəni göstər',
+      authHidePassword: 'Şifrəni gizlət',
 
       // Favorites
       favoritesTitle: 'Seçilmişlər',
       favoritesEmpty: 'Hələ heç bir məhsul seçilməyib.',
       clearFavorites: 'Siyahını təmizlə',
+      favoritesEyebrow: 'SİZİN SEÇİMLƏRİNİZ',
+      favoritesDrawerTitle: 'Favorilər',
+      favoritesDrawerEmptyTitle: 'Favorit siyahınız boşdur.',
+      favoritesDrawerEmptyDesc: 'Məhsul kartındakı ürək işarəsinə toxunaraq seçimlərinizi burada toplayın.',
+      favoritesCountItems: 'məhsul',
+
+      // Privacy Policy
+      policyContactHtml: 'Hesab yaratmadan sayta baxmaq və məhsulları səbətə əlavə etmək mümkündür. Hesab məlumatlarınızla bağlı sual, düzəliş və silinmə müraciəti üçün <a href="tel:+994703901009">070 390 10 09</a> nömrəsi ilə əlaqə saxlayın.',
+      backToHome: '← Ana səhifəyə qayıt',
 
       // Home
       homeEyebrow: 'Bakı · qəhvə · söhbət',
@@ -165,6 +233,7 @@
       openInMaps: 'Google Maps-də aç',
       contactDelivery: 'Çatdırılma',
       orderWithWolt: 'Wolt ilə sifariş et',
+      aboutCopyHtml: 'Baku Coffee Factory<br />Fresh roasted &amp; specialty coffee<br />Takeaway • Coffeeshop.',
     },
 
     en: {
@@ -226,7 +295,17 @@
       teaHeroTitle: 'Warm brewing from<br /><em>delicate leaves.</em>',
       teaCollectionTitle: 'BCF Tea Collection',
       teaCollectionDesc: 'Natural and fragrant teas harvested from the world’s finest gardens.',
+      teaCollectionEyebrow: 'Loose-leaf tea collection · 17 selections',
+      teaCollectionHeadline: 'In every leaf<br /><em>another mood.</em>',
+      teaCollectionIntro: 'Explore floral, fruity, and rich teas by flavor profile. We also note the ideal water temperature and steeping time for every selection.',
+      teaHeroCta: 'View collection <span>↓</span>',
       teaFactsBrew: 'Brewing',
+      max1kg: 'Maximum 1 kg',
+      limit1to20: 'You can select 1–20 pieces',
+      qtyPieces: 'Pieces',
+      priceConfirmAfterOrder: 'Price will be confirmed after order',
+      outOfStockNote: 'This product is currently out of stock.',
+      addedToCartSentence: 'added to cart.',
 
       // Equipment
       equipmentHeroEyebrow: 'Baku Coffee Factory · Equipment',
@@ -260,6 +339,7 @@
       cartEmpty: 'Your cart is currently empty.',
       cartUnifiedNote: 'Coffee, tea, and equipment are calculated in a unified cart.',
       cartAddedToast: 'Successfully added to cart',
+      removeBtn: 'Remove',
 
       // Checkout
       checkoutEyebrow: 'ORDER REQUEST',
@@ -275,6 +355,17 @@
       sendWhatsAppBtn: 'Send via WhatsApp',
       teamContactSubnote: 'Our team will also reach out to your provided phone number.',
       continueShopping: 'Continue Shopping',
+      phoneLegend: 'Phone number',
+      phoneRemainderLabel: 'Remaining phone digits',
+      checkoutEmptyBtn: 'Your cart is empty',
+      checkoutSubmittingBtn: 'Sending order…',
+      checkoutAuthPrompt: 'Please sign in or register to place an order.',
+      checkoutAuthRequired: 'Please sign in to submit an order.',
+      checkoutFileError: 'To send an order, open the site from the running server instead of a local file.',
+      checkoutNoPhoneError: 'No registered phone number was found on your account.',
+      checkoutEmptyError: 'Your cart is empty.',
+      checkoutGenericError: 'Could not send order. Please try again.',
+      orderReferencePrefix: 'Order ID:',
 
       // Account
       accountHeading: 'Your Account',
@@ -299,11 +390,57 @@
       socialOr: 'or',
       noOrdersYet: 'No orders yet.',
       noOrdersDesc: 'Orders placed while logged into your account will appear here.',
+      emailShortLabel: 'Email',
+      emailLabel: 'Email address',
+      emailPlaceholder: 'name@example.com',
+      countryCodeLabel: 'Country code',
+      phoneNumberLabel: 'Phone number',
+      customCodePlaceholder: 'Country code, e.g. +81',
+      otherLabel: 'Other',
+      privacyConsentHtml: 'I have read the <a href="mexfilik.html" target="_blank" rel="noopener">Privacy Policy</a> and consent to processing my personal data to create an account.',
+      googleProviderNote: 'Fast one-click sign in and registration with Google.',
+      accountGuestNote: 'You can browse the site and add items to your cart without creating an account.',
+      accountSecurityNote: 'Your account is signed in with a secure session on this device.',
+      ordersArchiveEyebrow: 'ORDER ARCHIVE',
+      accountOrdersSignInTitle: 'Sign in to your account.',
+      accountOrdersSignInDesc: 'Your personal order history will appear here once signed in.',
+      ordersLoading: 'Loading orders…',
+      orderPrefix: 'Order #',
+      orderStatusReceived: 'Order received',
+      greetingPrefix: 'Hello',
+      phoneShortPrefix: 'Tel',
+      authFullNameRequired: 'Please enter your full name.',
+      authUsernameMin: 'Username must be at least 3 characters.',
+      authPhoneRequired: 'Please enter your full mobile phone number.',
+      authPasswordMin: 'Password must be at least 12 characters long.',
+      authPrivacyRequired: 'Please accept the Privacy Policy.',
+      authIdentifierRequired: 'Please enter your username or phone number.',
+      authPasswordRequired: 'Please enter your password.',
+      authGoogleSigningIn: 'Signing in with Google…',
+      authGoogleOpening: 'Opening Google account selection…',
+      authGoogleNotReady: 'Google sign-in service failed to load.',
+      authProviderUnavailable: 'This sign-in method is not enabled on the server yet.',
+      authNotCompleted: 'Sign-in was not completed.',
+      authFileError: 'Open the site from the running server rather than a file URL to use your account.',
+      authServiceUnavailable: 'Account service is not active on the server yet. Order history will work once PostgreSQL is connected.',
+      authReauthRequired: 'Please sign in again to view your orders.',
+      authOrdersError: 'Could not load order history. Please try again.',
+      authShowPassword: 'Show password',
+      authHidePassword: 'Hide password',
 
       // Favorites
       favoritesTitle: 'Favorites',
       favoritesEmpty: 'No items saved to favorites yet.',
       clearFavorites: 'Clear list',
+      favoritesEyebrow: 'YOUR SELECTIONS',
+      favoritesDrawerTitle: 'Favorites',
+      favoritesDrawerEmptyTitle: 'Your favorites list is empty.',
+      favoritesDrawerEmptyDesc: 'Tap the heart icon on any product card to save your selections here.',
+      favoritesCountItems: 'items',
+
+      // Privacy Policy
+      policyContactHtml: 'You can browse the site and add products to your cart without creating an account. For questions, updates, or deletion requests regarding your account data, call <a href="tel:+994703901009">070 390 10 09</a>.',
+      backToHome: '← Back to Home',
 
       // Home
       homeEyebrow: 'Baku · Coffee · Conversation',
@@ -317,6 +454,7 @@
       openInMaps: 'Open in Google Maps',
       contactDelivery: 'Delivery',
       orderWithWolt: 'Order with Wolt',
+      aboutCopyHtml: 'Baku Coffee Factory<br />Fresh roasted &amp; specialty coffee<br />Takeaway • Coffeeshop.',
     },
 
     ru: {
@@ -378,7 +516,17 @@
       teaHeroTitle: 'Теплое заваривание из<br /><em>нежных чайных листьев.</em>',
       teaCollectionTitle: 'Коллекция чая BCF',
       teaCollectionDesc: 'Натуральный и ароматный чай, собранный с лучших плантаций мира.',
+      teaCollectionEyebrow: 'Коллекция листового чая · 17 позиций',
+      teaCollectionHeadline: 'В каждом листе —<br /><em>особое настроение.</em>',
+      teaCollectionIntro: 'Познакомьтесь с цветочными, фруктовыми и насыщенными сортами по их вкусовому профилю. Для каждого сорта указаны идеальная температура воды и время заваривания.',
+      teaHeroCta: 'Смотреть коллекцию <span>↓</span>',
       teaFactsBrew: 'Заваривание',
+      max1kg: 'Максимум 1 кг',
+      limit1to20: 'Можно выбрать от 1 до 20 шт.',
+      qtyPieces: 'Шт.',
+      priceConfirmAfterOrder: 'Цена уточняется после оформления заказа',
+      outOfStockNote: 'Этого товара сейчас нет в наличии.',
+      addedToCartSentence: 'добавлено в корзину.',
 
       // Equipment
       equipmentHeroEyebrow: 'Baku Coffee Factory · Оборудование',
@@ -412,6 +560,7 @@
       cartEmpty: 'Ваша корзина пока пуста.',
       cartUnifiedNote: 'Кофе, чай и оборудование оформляются в единой корзине.',
       cartAddedToast: 'Успешно добавлено в корзину',
+      removeBtn: 'Удалить',
 
       // Checkout
       checkoutEyebrow: 'ЗАПРОС НА ЗАКАЗ',
@@ -427,6 +576,17 @@
       sendWhatsAppBtn: 'Отправить в WhatsApp',
       teamContactSubnote: 'Наша команда также свяжется с вами по указанному номеру телефона.',
       continueShopping: 'Продолжить покупки',
+      phoneLegend: 'Номер телефона',
+      phoneRemainderLabel: 'Оставшаяся часть номера',
+      checkoutEmptyBtn: 'Ваша корзина пуста',
+      checkoutSubmittingBtn: 'Отправка заказа…',
+      checkoutAuthPrompt: 'Для оформления заказа войдите в аккаунт или зарегистрируйтесь.',
+      checkoutAuthRequired: 'Войдите в аккаунт для отправки заказа.',
+      checkoutFileError: 'Для отправки заказа откройте сайт через запущенный сервер, а не локальный файл.',
+      checkoutNoPhoneError: 'В вашем аккаунте не найден зарегистрированный номер телефона.',
+      checkoutEmptyError: 'Ваша корзина пуста.',
+      checkoutGenericError: 'Не удалось отправить заказ. Повторите попытку.',
+      orderReferencePrefix: 'Номер заказа:',
 
       // Account
       accountHeading: 'Личный кабинет',
@@ -451,11 +611,57 @@
       socialOr: 'или',
       noOrdersYet: 'Заказов пока нет.',
       noOrdersDesc: 'Заказы, оформленные в вашем аккаунте, будут отображаться здесь.',
+      emailShortLabel: 'Эл. почта',
+      emailLabel: 'Адрес эл. почты',
+      emailPlaceholder: 'name@example.com',
+      countryCodeLabel: 'Код страны',
+      phoneNumberLabel: 'Номер телефона',
+      customCodePlaceholder: 'Код страны, напр. +81',
+      otherLabel: 'Другой',
+      privacyConsentHtml: 'Я ознакомился(ась) с <a href="mexfilik.html" target="_blank" rel="noopener">Политикой конфиденциальности</a> и согласен(на) на обработку моих персональных данных для создания аккаунта.',
+      googleProviderNote: 'Быстрый вход и регистрация в один клик через Google.',
+      accountGuestNote: 'Вы можете просматривать сайт и добавлять товары в корзину без регистрации.',
+      accountSecurityNote: 'Ваш аккаунт открыт в защищённой сессии на этом устройстве.',
+      ordersArchiveEyebrow: 'АРХИВ ЗАКАЗОВ',
+      accountOrdersSignInTitle: 'Войдите в свой аккаунт.',
+      accountOrdersSignInDesc: 'Ваша история заказов появится здесь после входа.',
+      ordersLoading: 'Загрузка заказов…',
+      orderPrefix: 'Заказ №',
+      orderStatusReceived: 'Заказ принят',
+      greetingPrefix: 'Здравствуйте',
+      phoneShortPrefix: 'Тел',
+      authFullNameRequired: 'Введите имя и фамилию.',
+      authUsernameMin: 'Имя пользователя должно содержать не менее 3 символов.',
+      authPhoneRequired: 'Введите полный номер мобильного телефона.',
+      authPasswordMin: 'Пароль должен содержать не менее 12 символов.',
+      authPrivacyRequired: 'Подтвердите согласие с Политикой конфиденциальности.',
+      authIdentifierRequired: 'Введите имя пользователя или номер телефона.',
+      authPasswordRequired: 'Введите пароль.',
+      authGoogleSigningIn: 'Вход через Google…',
+      authGoogleOpening: 'Открытие выбора аккаунта Google…',
+      authGoogleNotReady: 'Сервис входа через Google не загружен.',
+      authProviderUnavailable: 'Этот способ входа пока не настроен на сервере.',
+      authNotCompleted: 'Вход не завершён.',
+      authFileError: 'Для работы с аккаунтом откройте сайт через работающий сервер, а не локальный файл.',
+      authServiceUnavailable: 'Сервис аккаунтов ещё не активен на сервере. История заказов заработает после подключения PostgreSQL.',
+      authReauthRequired: 'Войдите в аккаунт повторно для просмотра заказов.',
+      authOrdersError: 'Не удалось загрузить историю заказов. Повторите попытку.',
+      authShowPassword: 'Показать пароль',
+      authHidePassword: 'Скрыть пароль',
 
       // Favorites
       favoritesTitle: 'Избранное',
       favoritesEmpty: 'В избранном пока ничего нет.',
       clearFavorites: 'Очистить список',
+      favoritesEyebrow: 'ВАШ ВЫБОР',
+      favoritesDrawerTitle: 'Избранное',
+      favoritesDrawerEmptyTitle: 'Список избранного пуст.',
+      favoritesDrawerEmptyDesc: 'Нажмите на значок сердечка на карточке товара, чтобы сохранить его здесь.',
+      favoritesCountItems: 'товаров',
+
+      // Privacy Policy
+      policyContactHtml: 'Вы можете просматривать сайт и добавлять товары в корзину без регистрации. По вопросам, изменениям и удалению данных аккаунта свяжитесь с нами по номеру <a href="tel:+994703901009">070 390 10 09</a>.',
+      backToHome: '← Вернуться на главную',
 
       // Home
       homeEyebrow: 'Баку · кофе · беседы',
@@ -469,6 +675,7 @@
       openInMaps: 'Открыть в Google Maps',
       contactDelivery: 'Доставка',
       orderWithWolt: 'Заказать через Wolt',
+      aboutCopyHtml: 'Baku Coffee Factory<br />Свежеобжаренный спешелти кофе<br />Навынос • Кофейня.',
     },
 
     ar: {
@@ -530,7 +737,17 @@
       teaHeroTitle: 'تخمير دافئ من<br /><em>أوراق الشاي الفاخرة.</em>',
       teaCollectionTitle: 'مجموعة شاي بي سي إف',
       teaCollectionDesc: 'شاي طبيعي وعطري منتقى بعناية من أفضل مزارع الشاي حول العالم.',
+      teaCollectionEyebrow: 'تشكيلة شاي أوراق كاملة · 17 خياراً',
+      teaCollectionHeadline: 'في كل ورقة<br /><em>مزاج مختلف.</em>',
+      teaCollectionIntro: 'تعرّف على أنواع الشاي الزهرية والفاكهية والغنية من خلال طابعها المذاقي. كما حددنا حرارة الماء المثالية ومدة التخمير لكل نوع.',
+      teaHeroCta: 'تصفح المجموعة <span>↓</span>',
       teaFactsBrew: 'طريقة التحضير',
+      max1kg: 'الحد الأقصى 1 كجم',
+      limit1to20: 'يمكنك اختيار من 1 إلى 20 قطعة',
+      qtyPieces: 'القطع',
+      priceConfirmAfterOrder: 'سيتم تأكيد السعر بعد الطلب',
+      outOfStockNote: 'هذا المنتج غير متوفر في المخزون حالياً.',
+      addedToCartSentence: 'تمت إضافته إلى السلة.',
 
       // Equipment
       equipmentHeroEyebrow: 'باكو كوفي فاكتوري · المعدات',
@@ -564,6 +781,7 @@
       cartEmpty: 'سلتك فارغة حالياً.',
       cartUnifiedNote: 'يتم احتساب القهوة والشاي والمعدات في سلة موحدة.',
       cartAddedToast: 'تمت الإضافة إلى السلة بنجاح',
+      removeBtn: 'إزالة',
 
       // Checkout
       checkoutEyebrow: 'طلب شراء',
@@ -579,6 +797,17 @@
       sendWhatsAppBtn: 'إرسال عبر واتساب',
       teamContactSubnote: 'سيتواصل فريقنا أيضاً معك عبر رقم الهاتف المسجل.',
       continueShopping: 'متابعة التسوق',
+      phoneLegend: 'رقم الهاتف',
+      phoneRemainderLabel: 'باقي رقم الهاتف',
+      checkoutEmptyBtn: 'سلتك فارغة',
+      checkoutSubmittingBtn: 'جارٍ إرسال الطلب…',
+      checkoutAuthPrompt: 'يرجى تسجيل الدخول أو إنشاء حساب لإتمام الطلب.',
+      checkoutAuthRequired: 'يرجى تسجيل الدخول لإرسال الطلب.',
+      checkoutFileError: 'لإرسال الطلب، افتح الموقع عبر الخادم النشط وليس كملف محلي.',
+      checkoutNoPhoneError: 'لم يتم العثور على رقم هاتف مسجل في حسابك.',
+      checkoutEmptyError: 'سلتك فارغة.',
+      checkoutGenericError: 'تعذر إرسال الطلب. يرجى المحاولة مرة أخرى.',
+      orderReferencePrefix: 'رقم الطلب:',
 
       // Account
       accountHeading: 'حسابك الشخصي',
@@ -603,11 +832,57 @@
       socialOr: 'أو',
       noOrdersYet: 'لا توجد طلبات سابقة بعد.',
       noOrdersDesc: 'الطلبات التي تجريها أثناء تسجيل الدخول ستظهر هنا.',
+      emailShortLabel: 'البريد الإلكتروني',
+      emailLabel: 'البريد الإلكتروني',
+      emailPlaceholder: 'name@example.com',
+      countryCodeLabel: 'رمز الدولة',
+      phoneNumberLabel: 'رقم الهاتف',
+      customCodePlaceholder: 'رمز الدولة، مثال +81',
+      otherLabel: 'أخرى',
+      privacyConsentHtml: 'لقد قرأت <a href="mexfilik.html" target="_blank" rel="noopener">سياسة الخصوصية</a> وأوافق على معالجة بياناتي الشخصية لإنشاء حساب.',
+      googleProviderNote: 'تسجيل الدخول وإنشاء الحساب بنقرة واحدة عبر جوجل.',
+      accountGuestNote: 'يمكنك تصفح الموقع وإضافة المنتجات إلى السلة دون إنشاء حساب.',
+      accountSecurityNote: 'حسابك مسجّل الدخول بجلسة آمنة على هذا الجهاز.',
+      ordersArchiveEyebrow: 'أرشيف الطلبات',
+      accountOrdersSignInTitle: 'سجّل الدخول إلى حسابك.',
+      accountOrdersSignInDesc: 'سيظهر سجل طلباتك الشخصي هنا بعد تسجيل الدخول.',
+      ordersLoading: 'جارٍ تحميل الطلبات…',
+      orderPrefix: 'الطلب #',
+      orderStatusReceived: 'تم تسجيل الطلب',
+      greetingPrefix: 'مرحباً',
+      phoneShortPrefix: 'هاتف',
+      authFullNameRequired: 'يرجى إدخال الاسم الكامل.',
+      authUsernameMin: 'يجب أن يتكون اسم المستخدم من 3 أحرف على الأقل.',
+      authPhoneRequired: 'يرجى إدخال رقم الهاتف المحمول كاملاً.',
+      authPasswordMin: 'يجب أن تتكون كلمة المرور من 12 حرفاً على الأقل.',
+      authPrivacyRequired: 'يرجى الموافقة على سياسة الخصوصية.',
+      authIdentifierRequired: 'يرجى إدخال اسم المستخدم أو رقم الهاتف.',
+      authPasswordRequired: 'يرجى إدخال كلمة المرور.',
+      authGoogleSigningIn: 'جارٍ تسجيل الدخول عبر جوجل…',
+      authGoogleOpening: 'جارٍ فتح نافذة اختيار حساب جوجل…',
+      authGoogleNotReady: 'تعذر تحميل خدمة تسجيل الدخول عبر جوجل.',
+      authProviderUnavailable: 'طريقة الدخول هذه غير مفعّلة على الخادم حالياً.',
+      authNotCompleted: 'لم يكتمل تسجيل الدخول.',
+      authFileError: 'لاستخدام الحساب، افتح الموقع عبر الخادم النشط وليس كملف محلي.',
+      authServiceUnavailable: 'خدمة الحسابات غير مفعلة على الخادم بعد. سيعمل سجل الطلبات بعد ربط قاعدة البيانات.',
+      authReauthRequired: 'يرجى تسجيل الدخول مجدداً لعرض طلباتك.',
+      authOrdersError: 'تعذر تحميل سجل الطلبات. يرجى المحاولة مرة أخرى.',
+      authShowPassword: 'إظهار كلمة المرور',
+      authHidePassword: 'إخفاء كلمة المرور',
 
       // Favorites
       favoritesTitle: 'المفضلة',
       favoritesEmpty: 'لم تقم بحفظ أي منتج في المفضلة بعد.',
       clearFavorites: 'مسح القائمة',
+      favoritesEyebrow: 'اختياراتك المفضلة',
+      favoritesDrawerTitle: 'المفضلة',
+      favoritesDrawerEmptyTitle: 'قائمة المفضلة فارغة.',
+      favoritesDrawerEmptyDesc: 'اضغط على أيقونة القلب في بطاقة المنتج لحفظ اختياراتك هنا.',
+      favoritesCountItems: 'منتجات',
+
+      // Privacy Policy
+      policyContactHtml: 'يمكنك تصفح الموقع وإضافة المنتجات إلى السلة دون إنشاء حساب. للاستفسار أو تعديل أو حذف بيانات حسابك، تواصل عبر الرقم <a href="tel:+994703901009">070 390 10 09</a>.',
+      backToHome: '← العودة إلى الرئيسية',
 
       // Home
       homeEyebrow: 'باكو · قهوة · حديث',
@@ -621,6 +896,7 @@
       openInMaps: 'افتح في خرائط جوجل',
       contactDelivery: 'التوصيل',
       orderWithWolt: 'اطلب عبر فولت',
+      aboutCopyHtml: 'باكو كوفي فاكتوري<br />قهوة مختصة ومحمصة طازجة<br />سفري • كافيه.',
     },
   };
 
@@ -837,7 +1113,7 @@
     "ru": "Ваша корзина пока пуста."
   },
   "Sizin seçiminiz": {
-    "en": "Your Selection",
+    "en": "Your selection",
     "ar": "اختياراتك",
     "ru": "Ваш выбор"
   },
@@ -847,13 +1123,13 @@
     "ru": "Выбор количества"
   },
   "Qram": {
-    "en": "Gram",
+    "en": "Grams",
     "ar": "جرام",
     "ru": "Грамм"
   },
   "Ədəd": {
     "en": "Pieces",
-    "ar": "قطع",
+    "ar": "القطع",
     "ru": "Штук"
   },
   "ədəd": {
@@ -872,8 +1148,8 @@
     "ru": "Максимум 1 кг"
   },
   "1–20 ədəd seçə bilərsiniz": {
-    "en": "You can select 1–20 items",
-    "ar": "يمكنك اختيار 1–20 قطعة",
+    "en": "You can select 1–20 pieces",
+    "ar": "يمكنك اختيار من 1 إلى 20 قطعة",
     "ru": "Можно выбрать от 1 до 20 шт."
   },
   "Qiymət sifarişdən sonra dəqiqləşdiriləcək": {
@@ -918,7 +1194,7 @@
   },
   "Seçim": {
     "en": "Options",
-    "ar": "خيارات",
+    "ar": "الخيارات",
     "ru": "Опции"
   },
   "Müvəqqəti qiymət": {
@@ -932,8 +1208,8 @@
     "ru": "Товар не найден"
   },
   "Bu məhsul mövcud deyil.": {
-    "en": "This product does not exist.",
-    "ar": "هذا المنتج غير متوفر.",
+    "en": "This product is currently not available.",
+    "ar": "هذا المنتج غير متوفر حالياً.",
     "ru": "Данный товар не существует."
   },
   "Kataloqa qayıt": {
@@ -1018,7 +1294,7 @@
   },
   "Sil": {
     "en": "Remove",
-    "ar": "حذف",
+    "ar": "إزالة",
     "ru": "Удалить"
   },
   "Bizi tanıyın ↓": {
@@ -1187,7 +1463,7 @@
     "ru": "Уганда · 100 г"
   },
   "Mənşə qəhvələri · 100 q": {
-    "en": "Single Origin Coffees · 100g",
+    "en": "Single Origin Coffee · 100g",
     "ar": "قهوة أحادية المنشأ · 100 جم",
     "ru": "Моносорта кофе · 100 г"
   },
@@ -1702,8 +1978,8 @@
     "ru": "Коллекция"
   },
   "Dadın açılması üçün suyu çayın xarakterinə uyğunlaşdırın.": {
-    "en": "Adjust the water to the character of the tea to reveal its flavor.",
-    "ar": "اضبط درجة حرارة الماء وفقاً لطبيعة الشاي لإبراز نكهته.",
+    "en": "Match water temperature to the tea character for full flavor.",
+    "ar": "اضبط حرارة الماء لتناسب طبيعة الشاي لإبراز النكهة الكاملة.",
     "ru": "Подбирайте температуру воды под характер чая для полного раскрытия вкуса."
   },
   "Yaşıl çay · çiçəkli": {
@@ -2660,23 +2936,726 @@
     "en": "05—08",
     "ar": "05—08",
     "ru": "05—08"
+  },
+  "1001 Gecə": {
+    "en": "1001 Nights",
+    "ar": "ألف ليلة وليلة",
+    "ru": "1001 ночь"
+  },
+  "Jasmin": {
+    "en": "Jasmine",
+    "ar": "الياسمين",
+    "ru": "Жасмин"
+  },
+  "Limon": {
+    "en": "Lemon",
+    "ar": "الليمون",
+    "ru": "Лимон"
+  },
+  "Malina": {
+    "en": "Raspberry",
+    "ar": "توت العليق",
+    "ru": "Малина"
+  },
+  "Meyvəli": {
+    "en": "Fruit Blend",
+    "ar": "شاي الفواكه",
+    "ru": "Фруктовый"
+  },
+  "Nar": {
+    "en": "Pomegranate",
+    "ar": "الرمان",
+    "ru": "Гранат"
+  },
+  "Portağal": {
+    "en": "Orange",
+    "ar": "البرتقال",
+    "ru": "Апельсин"
+  },
+  "Qarpız": {
+    "en": "Watermelon",
+    "ar": "البطيخ",
+    "ru": "Арбуз"
+  },
+  "Jasminli Qara": {
+    "en": "Jasmine Black",
+    "ar": "شاي أسود بالياسمين",
+    "ru": "Чёрный с жасмином"
+  },
+  "Yarpaqlı çay kolleksiyası · 17 seçim": {
+    "en": "Loose-leaf tea collection · 17 selections",
+    "ar": "تشكيلة شاي أوراق كاملة · 17 خياراً",
+    "ru": "Коллекция листового чая · 17 позиций"
+  },
+  "Kolleksiyaya bax ↓": {
+    "en": "View collection ↓",
+    "ar": "تصفح المجموعة ↓",
+    "ru": "Смотреть коллекцию ↓"
+  },
+  "Minimum 50 q · maksimum 1 kq": {
+    "en": "Minimum 50 g · maximum 1 kg",
+    "ar": "الحد الأدنى 50 جم · الحد الأقصى 1 كجم",
+    "ru": "Минимум 50 г · максимум 1 кг"
+  },
+  "Səbətə uğurla əlavə edildi": {
+    "en": "Successfully added to cart",
+    "ar": "تمت الإضافة إلى السلة بنجاح",
+    "ru": "Успешно добавлено в корзину"
+  },
+  "Məhsullar hazırda yüklənə bilmir. Səhifəni yeniləyib yenidən cəhd edin.": {
+    "en": "Products cannot be loaded right now. Please refresh and try again.",
+    "ar": "تعذر تحميل المنتجات حالياً. يرجى تحديث الصفحة والمحاولة مرة أخرى.",
+    "ru": "Не удалось загрузить товары. Обновите страницу и повторите попытку."
+  },
+  "SİZİN SEÇİMLƏRİNİZ": {
+    "en": "YOUR SELECTIONS",
+    "ar": "اختياراتك المفضلة",
+    "ru": "ВАШ ВЫБОР"
+  },
+  "və ya": {
+    "en": "or",
+    "ar": "أو",
+    "ru": "или"
+  },
+  "Digər": {
+    "en": "Other",
+    "ar": "أخرى",
+    "ru": "Другой"
+  },
+  "Hesabınız": {
+    "en": "Your Account",
+    "ar": "حسابك الشخصي",
+    "ru": "Личный кабинет"
+  },
+  "SİFARİŞ ARXİVİ": {
+    "en": "ORDER ARCHIVE",
+    "ar": "أرشيف الطلبات",
+    "ru": "АРХИВ ЗАКАЗОВ"
+  },
+  "Hesabınıza daxil olun.": {
+    "en": "Sign in to your account.",
+    "ar": "سجّل الدخول إلى حسابك.",
+    "ru": "Войдите в свой аккаунт."
+  },
+  "Şəxsi sifariş tarixçəniz giriş etdikdən sonra burada görünəcək.": {
+    "en": "Your personal order history will appear here once signed in.",
+    "ar": "سيظهر سجل طلباتك الشخصي هنا بعد تسجيل الدخول.",
+    "ru": "Ваша история заказов появится здесь после входа."
+  },
+  "Sifarişlər yüklənir…": {
+    "en": "Loading orders…",
+    "ar": "جارٍ تحميل الطلبات…",
+    "ru": "Загрузка заказов…"
+  },
+  "Hesab açmadan da sayta baxa və səbətə məhsul əlavə edə bilərsiniz.": {
+    "en": "You can browse the site and add items to your cart without creating an account.",
+    "ar": "يمكنك تصفح الموقع وإضافة المنتجات إلى السلة دون إنشاء حساب.",
+    "ru": "Вы можете просматривать сайт и добавлять товары в корзину без регистрации."
+  },
+  "Hesabınız bu cihazda təhlükəsiz sessiya ilə açıqdır.": {
+    "en": "Your account is signed in with a secure session on this device.",
+    "ar": "حسابك مسجّل الدخول بجلسة آمنة على هذا الجهاز.",
+    "ru": "Ваш аккаунт открыт в защищённой сессии на этом устройстве."
+  },
+  "Google ilə bir kliklə sürətli giriş və qeydiyyat.": {
+    "en": "Fast one-click sign in and registration with Google.",
+    "ar": "تسجيل الدخول وإنشاء الحساب بنقرة واحدة عبر جوجل.",
+    "ru": "Быстрый вход и регистрация в один клик через Google."
+  },
+  "E-poçt": {
+    "en": "Email",
+    "ar": "البريد الإلكتروني",
+    "ru": "Эл. почта"
+  },
+  "E-poçt ünvanı": {
+    "en": "Email address",
+    "ar": "البريد الإلكتروني",
+    "ru": "Адрес эл. почты"
+  },
+  "Favorilər": {
+    "en": "Favorites",
+    "ar": "المفضلة",
+    "ru": "Избранное"
+  },
+  "Favorit siyahınız boşdur.": {
+    "en": "Your favorites list is empty.",
+    "ar": "قائمة المفضلة فارغة.",
+    "ru": "Список избранного пуст."
+  },
+  "Məhsul kartındakı ürək işarəsinə toxunaraq seçimlərinizi burada toplayın.": {
+    "en": "Tap the heart icon on any product card to save your selections here.",
+    "ar": "اضغط على أيقونة القلب في بطاقة المنتج لحفظ اختياراتك هنا.",
+    "ru": "Нажмите на значок сердечка на карточке товара, чтобы сохранить его здесь."
+  },
+  "Qiymət mağazada": {
+    "en": "In-store price",
+    "ar": "السعر في المتجر",
+    "ru": "Цена в магазине"
+  },
+  "Məhsula bax": {
+    "en": "View product",
+    "ar": "عرض المنتج",
+    "ru": "Посмотреть товар"
+  },
+  "Bu məhsul hazırda stokda yoxdur.": {
+    "en": "This product is currently out of stock.",
+    "ar": "هذا المنتج غير متوفر في المخزون حالياً.",
+    "ru": "Этого товара сейчас нет в наличии."
+  },
+  "Səbətiniz boşdur": {
+    "en": "Your cart is empty",
+    "ar": "سلتك فارغة",
+    "ru": "Ваша корзина пуста"
+  },
+  "← Ana səhifəyə qayıt": {
+    "en": "← Back to Home",
+    "ar": "← العودة إلى الرئيسية",
+    "ru": "← Вернуться на главную"
+  },
+  "600 millilitrlik şüşə və paslanmayan polad French Press": {
+    "en": "600 ml glass and stainless steel French Press",
+    "ar": "فرينش برس 600 مل من الزجاج والفولاذ المقاوم للصدأ",
+    "ru": "Френч-пресс 600 мл из стекла и нержавеющей стали"
+  },
+  "350 millilitrlik şüşə və paslanmayan polad French Press": {
+    "en": "350 ml glass and stainless steel French Press",
+    "ar": "فرينش برس 350 مل من الزجاج والفولاذ المقاوم للصدأ",
+    "ru": "Френч-пресс 350 мл из стекла и нержавеющей стали"
+  },
+  "850 millilitrlik şüşə və paslanmayan polad French Press": {
+    "en": "850 ml glass and stainless steel French Press",
+    "ar": "فرينش برس 850 مل من الزجاج والفولاذ المقاوم للصدأ",
+    "ru": "Френч-пресс 850 мл из стекла и нержавеющей стали"
+  },
+  "Taxta gövdəli əl qəhvə dəyirmanı": {
+    "en": "Manual coffee grinder with wooden body",
+    "ar": "مطحنة قهوة يدوية بهيكل خشبي",
+    "ru": "Ручная кофемолка с деревянным корпусом"
+  },
+  "Bürünc rəngli naxışlı əl qəhvə dəyirmanı": {
+    "en": "Ornate bronze manual coffee grinder",
+    "ar": "مطحنة قهوة يدوية برونزية مزخرفة",
+    "ru": "Резная ручная кофемолка бронзового цвета"
+  },
+  "Paslanmayan poladdan Moka Pot": {
+    "en": "Stainless steel Moka Pot",
+    "ar": "موكا بوت من الفولاذ المقاوم للصدأ",
+    "ru": "Мока-пот из нержавеющей стали"
+  },
+  "Boz xallı klassik Moka Pot": {
+    "en": "Speckled gray classic Moka Pot",
+    "ar": "موكا بوت كلاسيكي رمادي مرقط",
+    "ru": "Классический серый мока-пот в крапинку"
+  },
+  "Naxışlı mis rəngli cezvə": {
+    "en": "Engraved copper-toned cezve",
+    "ar": "ركوة نحاسية مزخرفة",
+    "ru": "Чеканная турка медного цвета"
+  },
+  "Taxta saplı klassik bürünc cezvə": {
+    "en": "Classic brass cezve with wooden handle",
+    "ar": "ركوة نحاسية كلاسيكية بمقبض خشبي",
+    "ru": "Классическая латунная турка с деревянной ручкой"
+  },
+  "Taxta saplı yivli bürünc cezvə": {
+    "en": "Fluted brass cezve with wooden handle",
+    "ar": "ركوة نحاسية مضلعة بمقبض خشبي",
+    "ru": "Рифленая латунная турка с деревянной ручкой"
+  },
+  "Taxta saplı qapaqlı bürünc cezvə": {
+    "en": "Lidded brass cezve with wooden handle",
+    "ar": "ركوة نحاسية بغطاء ومقبض خشبي",
+    "ru": "Латунная турка с крышкой и деревянной ручкой"
+  },
+  "Paslanmayan poladdan qu quşu ağızlı çaydan": {
+    "en": "Stainless steel gooseneck pouring kettle",
+    "ar": "إبريق صب عنق الإوزة من الفولاذ المقاوم للصدأ",
+    "ru": "Чайник гусиная шея из нержавеющей стали"
+  },
+  "Yaşıl daşlı dekorativ Dallah qəhvədan": {
+    "en": "Decorative Dallah pot with green accents",
+    "ar": "دلة قهوة مزخرفة بأحجار خضراء",
+    "ru": "Декоративная далла с зелеными вставками"
+  },
+  "Naxışlı gümüşü rəngli Dallah qəhvədan": {
+    "en": "Ornate silver-toned Dallah coffee pot",
+    "ar": "دلة قهوة فضية مزخرفة",
+    "ru": "Серебристая узорчатая далла"
+  },
+  "Silindrik əl presi dəmləyici": {
+    "en": "Cylindrical manual press coffee brewer",
+    "ar": "أداة تحضير يدوية أسطوانية بالضغط",
+    "ru": "Цилиндрический ручной пресс для кофе"
+  },
+  "Böyük çarxlı klassik əl qəhvə dəyirmanı": {
+    "en": "Classic cast-wheel manual coffee grinder",
+    "ar": "مطحنة قهوة يدوية كلاسيكية بعجلة كبيرة",
+    "ru": "Классическая ручная кофемолка с колесом"
+  },
+  "Qara tutacaqlı 400 millilitrlik şüşə server": {
+    "en": "400 ml glass server with black handle",
+    "ar": "سيرفر زجاجي 400 مل بمقبض أسود",
+    "ru": "Стеклянный сервер 400 мл с черной ручкой"
+  },
+  "Taxta qutuda bürünc rəngli Azərbaycan qəhvə dəsti": {
+    "en": "Bronze Azerbaijan coffee gift set in wooden box",
+    "ar": "طقم قهوة أذربيجاني برونزي في صندوق خشبي",
+    "ru": "Бронзовый азербайджанский кофейный набор в деревянной шкатулке"
+  },
+  "Taxta qutuda gümüşü rəngli Azərbaycan qəhvə dəsti": {
+    "en": "Silver Azerbaijan coffee gift set in wooden box",
+    "ar": "طقم قهوة أذربيجاني فضي في صندوق خشبي",
+    "ru": "Серебряный азербайджанский кофейный набор в деревянной шкатулке"
+  },
+  "Taxta üstlü qara espresso tamperi": {
+    "en": "Black espresso tamper with wooden top",
+    "ar": "مكبس إسبريسو أسود بمقبض خشبي",
+    "ru": "Черный темпер для эспрессо с деревянной ручкой"
+  },
+  "Gümüşü rəngli espresso tamperi": {
+    "en": "Silver stainless espresso tamper",
+    "ar": "مكبس إسبريسو فضي",
+    "ru": "Серебристый темпер для эспрессо"
+  },
+  "Qara rəngli espresso tamperi": {
+    "en": "Matte black espresso tamper",
+    "ar": "مكبس إسبريسو أسود",
+    "ru": "Черный темпер для эспрессо"
+  },
+  "Naxışlı metal altlıqda altı fincanlı Şərq üslublu servis dəsti": {
+    "en": "Six-cup Oriental serving set on ornate metal tray",
+    "ar": "طقم ضيافة شرقي من ستة فناجين على صينية معدنية مزخرفة",
+    "ru": "Восточный сервиз на 6 чашек на узорном металлическом подносе"
+  },
+  "Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti": {
+    "en": "Two-cup Oriental serving set on ornate metal tray",
+    "ar": "طقم ضيافة شرقي من فنجانين على صينية معدنية مزخرفة",
+    "ru": "Восточный сервиз на 2 чашки на узорном металлическом подносе"
+  },
+  "Test avadanlığı": {
+    "en": "Test equipment",
+    "ar": "معدات اختبار",
+    "ru": "Тестовое оборудование"
+  },
+  "HESAB · MƏLUMATLAR": {
+    "en": "ACCOUNT · DATA",
+    "ar": "الحساب · البيانات",
+    "ru": "АККАУНТ · ДАННЫЕ"
+  },
+  "Məxfilik siyasəti": {
+    "en": "Privacy Policy",
+    "ar": "سياسة الخصوصية",
+    "ru": "Политика конфиденциальности"
+  },
+  "Yenilənmə: 27 oktyabr 2026. Bu sənəd Baku Coffee Factory saytında hesab və sifariş sorğuları üçün təqdim edilən məlumatların necə istifadə olunduğunu izah edir.": {
+    "en": "Updated: October 27, 2026. This document explains how data submitted for accounts and order requests on Baku Coffee Factory is used.",
+    "ar": "التحديث: 27 أكتوبر 2026. توضح هذه الوثيقة كيفية استخدام البيانات المقدمة للحسابات وطلبات الشراء على موقع باكو كوفي فاكتوري.",
+    "ru": "Обновлено: 27 октября 2026 г. Настоящий документ объясняет порядок использования данных, предоставленных для аккаунтов и заявок на сайте Baku Coffee Factory."
+  },
+  "Hansı məlumatları alırıq?": {
+    "en": "What information do we collect?",
+    "ar": "ما هي البيانات التي نجمعها؟",
+    "ru": "Какие данные мы собираем?"
+  },
+  "Qeydiyyat zamanı istifadəçi adı, seçiminizə əsasən ölkə kodu ilə telefon nömrəsi və ya e-poçt ünvanı, həmçinin şifrə qəbul edilir. Şifrə açıq mətn kimi saxlanmır; təhlükəsiz hash formasında saxlanır. Hesabın təhlükəsizliyi üçün giriş vaxtı, sessiya və uğursuz giriş cəhdləri haqqında texniki məlumatlar da işlənir. Sifariş sorğusu göndərdikdə əlaqə məlumatınız, seçdiyiniz məhsullar, miqdar, qiymət və yazdığınız qeyd saxlanır.": {
+    "en": "During registration, we collect your username, phone number with country code or email address, and password. Passwords are never stored as plain text; they are kept as secure cryptographic hashes. For security, technical login timestamps, session tokens, and failed attempt logs are processed. When placing an order request, your contact details, chosen products, quantities, prices, and notes are stored.",
+    "ar": "أثناء التسجيل، يتم جمع اسم المستخدم ورقم الهاتف مع رمز الدولة أو البريد الإلكتروني وكلمة المرور. لا يتم حفظ كلمات المرور كنص عادي بل بتجزئة آمنة. ولأغراض الأمان يتم تسجيل وقت الدخول والجلسة ومحاولات الدخول الفاشلة. عند إرسال طلب، يتم حفظ بيانات التواصل والمنتجات والكميات والأسعار والملاحظات.",
+    "ru": "При регистрации принимаются имя пользователя, номер телефона с кодом страны или email, а также пароль. Пароль не хранится в открытом виде и сохраняется в виде надёжного криптографического хеша. Для безопасности обрабатываются технические данные о времени входа, сессиях и неудачных попытках. При отправке заявки сохраняются контактные данные, выбранные товары, количество, цена и комментарий."
+  },
+  "Məlumatların məqsədi": {
+    "en": "Purpose of data processing",
+    "ar": "الغرض من معالجة البيانات",
+    "ru": "Цель обработки данных"
+  },
+  "Bu məlumatlardan hesab yaratmaq, sizi daxil etmək, sessiyanı qorumaq, sifariş sorğunuzu yoxlayıb sizinlə əlaqə saxlamaq və sui-istifadənin qarşısını almaq üçün istifadə edirik. Hazırkı qeydiyyat telefon nömrəsini SMS ilə təsdiqləmir; nömrəyə sahiblik ayrıca yoxlanmır. Marketinq mesajları göndərmək üçün bu razılıqdan istifadə edilmir.": {
+    "en": "We use this information to create your account, sign you in, maintain your session, verify and contact you regarding your order request, and prevent abuse. Current registration does not verify phone ownership via SMS. This consent is never used to send marketing messages.",
+    "ar": "نستخدم هذه البيانات لإنشاء حسابك وتسجيل دخولك وحماية الجلسة ومراجعة طلبك والتواصل معك ومنع إساءة الاستخدام. لا يتضمن التسجيل الحالي تأكيد الهاتف عبر رسائل SMS. ولا يُستخدم هذا التفويض لإرسال رسائل تسويقية.",
+    "ru": "Мы используем эти данные для создания аккаунта, входа в систему, защиты сессии, проверки вашей заявки на заказ, связи с вами и предотвращения злоупотреблений. Текущая регистрация не подтверждает номер телефона по SMS. Данное согласие не используется для отправки маркетинговых рассылок."
+  },
+  "Saxlama və təhlükəsizlik": {
+    "en": "Storage and security",
+    "ar": "التخزين والأمان",
+    "ru": "Хранение и безопасность"
+  },
+  "Hesab məlumatları server verilənlər bazasında, sifariş sorğuları isə serverin qorunan məlumat faylında saxlanır və yalnız admin girişindən sonra görünür. Giriş sessiyası 30 günədək aktiv qala bilər; hesabdan çıxanda həmin sessiya ləğv edilir. Sayt yayımlandıqda HTTPS bağlantısı, giriş məhdudlaşdırması və server giriş nəzarəti tətbiq edilməlidir.": {
+    "en": "Account information is stored in the server database, while order requests are kept in protected server storage accessible only to authenticated admins. Login sessions remain active for up to 30 days and are invalidated upon sign-out. In production, HTTPS, rate limiting, and server access controls are enforced.",
+    "ar": "تُحفظ بيانات الحساب في قاعدة بيانات الخادم، وتُحفظ طلبات الشراء في تخزين محمي يظهر فقط بعد دخول المسؤول. قد تبقى الجلسة نشطة لمدة تصل إلى 30 يوماً وتُلغى عند تسجيل الخروج. يتم تطبيق HTTPS والحد من الطلبات وضوابط وصول الخادم عند النشر.",
+    "ru": "Данные аккаунта хранятся в базе данных на сервере, а заявки на заказы — в защищённом хранилище и доступны только администратору после входа. Сессия активна до 30 дней и аннулируется при выходе из аккаунта. При публикации применяются HTTPS, ограничение запросов и контроль доступа."
+  },
+  "Seçiminiz və əlaqə": {
+    "en": "Your choice and contact",
+    "ar": "خيارك والتواصل",
+    "ru": "Ваш выбор и контакты"
+  },
+  "Bu mətn yayım öncəsi hüquqi şəxs məlumatları, saxlanma müddətləri və tətbiq edilən hüquqi tələblər baxımından sayt sahibi tərəfindən yoxlanmalıdır.": {
+    "en": "This text should be reviewed by the site owner regarding legal entity details, retention periods, and applicable legal requirements prior to full release.",
+    "ar": "يجب مراجعة هذا النص من قِبل مالك الموقع بخصوص بيانات الكيان القانوني وفترات الاحتفاظ والمتطلبات القانونية قبل النشر الرسمي.",
+    "ru": "Этот текст должен быть проверен владельцем сайта в части юридических реквизитов, сроков хранения и применимых требований законодательства до официальной публикации."
+  },
+  "Yeni": {
+    "en": "New",
+    "ar": "جديد",
+    "ru": "Новый"
+  },
+  "/ 100 q": {
+    "en": "/ 100g",
+    "ar": "/ 100 جم",
+    "ru": "/ 100 г"
+  },
+  "/ ədəd": {
+    "en": "/ pc",
+    "ar": "/ قطعة",
+    "ru": "/ шт."
+  },
+  "Qiymət dəqiqləşdiriləcək": {
+    "en": "Price to be confirmed",
+    "ar": "سيتم تأكيد السعر",
+    "ru": "Цена уточняется"
+  },
+  "qiyməti təsdiqlənəcək": {
+    "en": "price to be confirmed",
+    "ar": "السعر قيد التأكيد",
+    "ru": "цена уточняется"
+  },
+  "qiymət təsdiqlənəcək": {
+    "en": "price to be confirmed",
+    "ar": "السعر قيد التأكيد",
+    "ru": "цена уточняется"
+  },
+  "Digər ölkə kodu…": {
+    "en": "Other country code…",
+    "ar": "رمز دولة آخر…",
+    "ru": "Другой код страны…"
+  },
+  "Sifariş qeydə alınıb": {
+    "en": "Order received",
+    "ar": "تم تسجيل الطلب",
+    "ru": "Заказ принят"
+  },
+  "Məhsul": {
+    "en": "Product",
+    "ar": "المنتج",
+    "ru": "Товар"
+  },
+  "Səbətiniz boşdur.": {
+    "en": "Your cart is empty.",
+    "ar": "سلتك فارغة.",
+    "ru": "Ваша корзина пуста."
+  },
+  "Sifariş göndərilir…": {
+    "en": "Sending order…",
+    "ar": "جارٍ إرسال الطلب…",
+    "ru": "Отправка заказа…"
+  },
+  "Azərbaycan": {
+    "en": "Azerbaijan",
+    "ar": "أذربيجان",
+    "ru": "Азербайджан"
+  },
+  "Türkiyə": {
+    "en": "Turkey",
+    "ar": "تركيا",
+    "ru": "Турция"
+  },
+  "Gürcüstan": {
+    "en": "Georgia",
+    "ar": "جورجيا",
+    "ru": "Грузия"
+  },
+  "Rusiya / Qazaxıstan": {
+    "en": "Russia / Kazakhstan",
+    "ar": "روسيا / كازاخستان",
+    "ru": "Россия / Казахстан"
+  },
+  "ABŞ / Kanada": {
+    "en": "USA / Canada",
+    "ar": "الولايات المتحدة / كندا",
+    "ru": "США / Канада"
+  },
+  "Birləşmiş Krallıq": {
+    "en": "United Kingdom",
+    "ar": "المملكة المتحدة",
+    "ru": "Великобритания"
+  },
+  "Almaniya": {
+    "en": "Germany",
+    "ar": "ألمانيا",
+    "ru": "Германия"
+  },
+  "Fransa": {
+    "en": "France",
+    "ar": "فرنسا",
+    "ru": "Франция"
+  },
+  "İtaliya": {
+    "en": "Italy",
+    "ar": "إيطاليا",
+    "ru": "Италия"
+  },
+  "İspaniya": {
+    "en": "Spain",
+    "ar": "إسبانيا",
+    "ru": "Испания"
+  },
+  "BƏƏ": {
+    "en": "UAE",
+    "ar": "الإمارات",
+    "ru": "ОАЭ"
+  },
+  "Ukrayna": {
+    "en": "Ukraine",
+    "ar": "أوكرانيا",
+    "ru": "Украина"
+  },
+  "Hindistan": {
+    "en": "India",
+    "ar": "الهند",
+    "ru": "Индия"
+  },
+  "Pakistan": {
+    "en": "Pakistan",
+    "ar": "باكستان",
+    "ru": "Пакистан"
+  },
+  "İran": {
+    "en": "Iran",
+    "ar": "إيران",
+    "ru": "Иран"
+  },
+  "Səudiyyə Ərəbistanı": {
+    "en": "Saudi Arabia",
+    "ar": "السعودية",
+    "ru": "Саудовская Аравия"
+  },
+  "Niderland": {
+    "en": "Netherlands",
+    "ar": "هولندا",
+    "ru": "Нидерланды"
+  },
+  "İsveçrə": {
+    "en": "Switzerland",
+    "ar": "سويسرا",
+    "ru": "Швейцария"
+  },
+  "Polşa": {
+    "en": "Poland",
+    "ar": "بولندا",
+    "ru": "Польша"
+  },
+  "Çin": {
+    "en": "China",
+    "ar": "الصين",
+    "ru": "Китай"
+  },
+  "Baku Coffee Factory · Avadanlıqlar": {
+    "en": "Baku Coffee Factory · Equipment",
+    "ar": "باكو كوفي فاكتوري · المعدات",
+    "ru": "Baku Coffee Factory · Оборудование"
+  },
+  "Hər qəhvə üçün turşuluq, bədən və balans 1–5 aralığında göstərilib. Dad notları qəhvənin ölkə-mənşə xarakterini və uyğun orta qovrum istiqamətini ifadə edir.": {
+    "en": "Acidity, body, and balance are rated 1–5 for each coffee. Tasting notes reflect regional origin and optimal medium roast profile.",
+    "ar": "تم تقييم الحموضة والقوام والتوازن من 1 إلى 5 لكل قهوة. تعكس ملاحظات التذوق طابع المنشأ واتجاه التحميص المتوسط المناسب.",
+    "ru": "Кислотность, тело и баланс оценены по шкале 1–5 для каждого сорта. Вкусовые ноты отражают характер региона и оптимальный профиль средней обжарки."
+  },
+  "Qəhvənin dəqiq dadı lot, emal üsulu, qovrum və dəmləmə ilə dəyişir. Konkret təsərrüfat məlumatı olduqda bu profilləri daha da dəqiqləşdirə bilərik.": {
+    "en": "Exact taste varies by crop lot, processing method, roast level, and brewing. As specific lot details become available, profiles are refined.",
+    "ar": "يختلف المذاق الدقيق حسب الحصاد وطريقة المعالجة ومستوى التحميص والتحضير. يمكننا تحسين هذه المواصفات عند توفر بيانات المزرعة الدقيقة.",
+    "ru": "Точный вкус зависит от лота, способа обработки, обжарки и заваривания. При наличии точных данных о ферме профили можно уточнить."
+  },
+  "Çiçəkli, meyvəli və dolğun çayları dad xarakteri ilə tanıyın. Hər seçim üçün ideal su temperaturunu və dəmləmə müddətini də qeyd etdik.": {
+    "en": "Explore floral, fruity, and rich teas by flavor profile. We also note the ideal water temperature and steeping time for every selection.",
+    "ar": "استكشف أنواع الشاي الزهرية والفاكهية والغنية حسب نكهتها. أضفنا أيضاً درجة حرارة الماء المثالية ومدة التخمير لكل اختيار.",
+    "ru": "Откройте для себя цветочные, фруктовые и насыщенные чаи. Для каждого сорта указаны идеальная температура воды и время заваривания."
+  },
+  "Hələ sifariş yoxdur.": {
+    "en": "No orders yet.",
+    "ar": "لا توجد طلبات بعد.",
+    "ru": "Заказов пока нет."
+  },
+  "Hesabınıza daxil olaraq verdiyiniz sifarişlər burada görünəcək.": {
+    "en": "Orders placed while logged into your account will appear here.",
+    "ar": "ستظهر الطلبات المقدمة أثناء تسجيل الدخول هنا.",
+    "ru": "Заказы, оформленные после входа в аккаунт, появятся здесь."
   }
 };
 
   // Reverse lookup map to recover original Azerbaijani key from any translated text
   const REVERSE_MAP = {};
+  const DICT_AZ_TO_KEY = {};
+  const DICT_REVERSE = {};
   for (const [azKey, trans] of Object.entries(PHRASE_MAP)) {
-    if (trans.en) REVERSE_MAP[trans.en] = azKey;
-    if (trans.ru) REVERSE_MAP[trans.ru] = azKey;
-    if (trans.ar) REVERSE_MAP[trans.ar] = azKey;
+    if (trans.en && !REVERSE_MAP[trans.en]) REVERSE_MAP[trans.en] = azKey;
+    if (trans.ru && !REVERSE_MAP[trans.ru]) REVERSE_MAP[trans.ru] = azKey;
+    if (trans.ar && !REVERSE_MAP[trans.ar]) REVERSE_MAP[trans.ar] = azKey;
+  }
+  for (const [key, azVal] of Object.entries(DICTIONARY.az || {})) {
+    if (!azVal || azVal.includes('<')) continue;
+    if (!DICT_AZ_TO_KEY[azVal]) DICT_AZ_TO_KEY[azVal] = key;
+    for (const l of ['en', 'ru', 'ar']) {
+      const trVal = DICTIONARY[l]?.[key];
+      if (trVal && !trVal.includes('<') && !DICT_REVERSE[trVal]) {
+        DICT_REVERSE[trVal] = azVal;
+      }
+    }
   }
 
-  function isKnownTranslation(candidate, origKey) {
-    if (!candidate || !origKey) return false;
-    if (candidate === origKey) return true;
-    const entry = PHRASE_MAP[origKey];
-    if (!entry) return false;
-    return candidate === entry.en || candidate === entry.ru || candidate === entry.ar;
+  function lookupPhrase(azText, lang) {
+    if (!azText || lang === 'az') return azText || null;
+    if (PHRASE_MAP[azText]?.[lang]) return PHRASE_MAP[azText][lang];
+    const dictKey = DICT_AZ_TO_KEY[azText];
+    if (dictKey && DICTIONARY[lang]?.[dictKey]) return DICTIONARY[lang][dictKey];
+    return null;
+  }
+
+  function recoverAzText(text) {
+    if (!text) return text;
+    if (PHRASE_MAP[text] || DICT_AZ_TO_KEY[text]) return text;
+    if (REVERSE_MAP[text]) return REVERSE_MAP[text];
+    if (DICT_REVERSE[text]) return DICT_REVERSE[text];
+
+    // R1: "<Origin> · <n> q|g|г|جم"
+    let m = text.match(/^(.+?)\s*·\s*(\d+)\s*(?:q|g|г|جم)$/i);
+    if (m) {
+      const nameAz = REVERSE_MAP[m[1].trim()] || DICT_REVERSE[m[1].trim()] || m[1].trim();
+      return nameAz + ' · ' + m[2] + ' q';
+    }
+    // R2: "<price> ₼ / 100 q|g|г|جم"
+    m = text.match(/^([\d.]+\s*₼)\s*\/\s*100\s*(?:q|g|г|جم)$/i);
+    if (m) return m[1].trim() + ' / 100 q';
+    // R3: "<price> ₼ / ədəd|pc|pcs|шт.|قطعة"
+    m = text.match(/^([\d.]+\s*₼)\s*\/\s*(?:ədəd|pcs?|шт\.?|قطعة)$/i);
+    if (m) return m[1].trim() + ' / ədəd';
+    // R4: "<n> options/варианта/خيارات"
+    if (text === 'خيار واحد') return '1 seçim';
+    if (text === 'خياران') return '2 seçim';
+    m = text.match(/^(\d+)\s+(?:seçim|options?|варианта|вариантов|вариант|خيارات|خيار)$/i);
+    if (m) return m[1] + ' seçim';
+    // R5: "Seçim N / Option N / Вариант N / الخيار N"
+    m = text.match(/^(?:Seçim|Option|Вариант|الخيار)\s+(\d+)$/i);
+    if (m) return 'Seçim ' + m[1];
+    // R6: stock remaining
+    if (text === 'متبقي قطعة واحدة') return '1 ədəd qalıb';
+    if (text === 'متبقي قطعتان') return '2 ədəd qalıb';
+    m = text.match(/^(\d+)\s+(?:ədəd qalıb|left in stock)$/i)
+      || text.match(/^Осталось\s+(\d+)\s+шт\.?$/i)
+      || text.match(/^متبقي\s+(\d+)\s+قطع(?:ة)?$/);
+    if (m) return m[1] + ' ədəd qalıb';
+    // R7: Country (+code) (before generic parentheses pattern)
+    m = text.match(/^(.+?)\s+\((\+\d+)\)$/);
+    if (m) {
+      const cAz = REVERSE_MAP[m[1].trim()] || DICT_REVERSE[m[1].trim()] || m[1].trim();
+      return cAz + ' (' + m[2] + ')';
+    }
+    // R8: "<desc> (<variantAlt>)"
+    m = text.match(/^(.+?)\s+\(([^)]+)\)$/);
+    if (m) {
+      const lTrim = m[1].trim();
+      const rTrim = m[2].trim();
+      const lAz = REVERSE_MAP[lTrim] || DICT_REVERSE[lTrim];
+      const rAz = REVERSE_MAP[rTrim] || DICT_REVERSE[rTrim];
+      if (lAz || rAz) return (lAz || lTrim) + ' (' + (rAz || rTrim) + ')';
+    }
+    // R9: "<Product> · <Variant>"
+    m = text.match(/^(.+?)\s+·\s+(.+)$/);
+    if (m) {
+      const lTrim = m[1].trim();
+      const rTrim = m[2].trim();
+      const lAz = REVERSE_MAP[lTrim] || DICT_REVERSE[lTrim];
+      const rAz = REVERSE_MAP[rTrim] || DICT_REVERSE[rTrim];
+      if (lAz || rAz) return (lAz || lTrim) + ' · ' + (rAz || rTrim);
+    }
+    return text;
+  }
+
+  function translateDynamicText(inputText, lang = currentLang) {
+    if (!inputText) return inputText;
+    const base = recoverAzText(String(inputText));
+    if (lang === 'az') return base;
+
+    const direct = lookupPhrase(base, lang);
+    if (direct) return direct;
+
+    // 1. "<Origin> · <weight> q"
+    let m = base.match(/^(.+?)\s*·\s*(\d+)\s*q$/);
+    if (m) {
+      const origin = lookupPhrase(m[1].trim(), lang) || m[1].trim();
+      const n = m[2];
+      if (lang === 'en') return origin + ' · ' + n + 'g';
+      if (lang === 'ru') return origin + ' · ' + n + ' г';
+      if (lang === 'ar') return origin + ' · ' + n + ' جم';
+    }
+    // 2. "<price> ₼ / 100 q"
+    m = base.match(/^([\d.]+\s*₼)\s*\/\s*100\s*q$/);
+    if (m) {
+      if (lang === 'en') return m[1].trim() + ' / 100g';
+      if (lang === 'ru') return m[1].trim() + ' / 100 г';
+      if (lang === 'ar') return m[1].trim() + ' / 100 جم';
+    }
+    // 3. "<price> ₼ / ədəd"
+    m = base.match(/^([\d.]+\s*₼)\s*\/\s*ədəd$/);
+    if (m) {
+      if (lang === 'en') return m[1].trim() + ' / pc';
+      if (lang === 'ru') return m[1].trim() + ' / шт.';
+      if (lang === 'ar') return m[1].trim() + ' / قطعة';
+    }
+    // 4. "<N> seçim"
+    m = base.match(/^(\d+)\s+seçim$/);
+    if (m) {
+      const n = Number(m[1]);
+      if (lang === 'en') return n === 1 ? '1 option' : n + ' options';
+      if (lang === 'ru') {
+        const mod10 = n % 10;
+        const mod100 = n % 100;
+        const form = mod10 === 1 && mod100 !== 11 ? 'вариант' : (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14) ? 'варианта' : 'вариантов');
+        return n + ' ' + form;
+      }
+      if (lang === 'ar') {
+        if (n === 1) return 'خيار واحد';
+        if (n === 2) return 'خياران';
+        return n >= 3 && n <= 10 ? n + ' خيارات' : n + ' خيار';
+      }
+    }
+    // 5. "Seçim <N>"
+    m = base.match(/^Seçim\s+(\d+)$/);
+    if (m) {
+      if (lang === 'en') return 'Option ' + m[1];
+      if (lang === 'ru') return 'Вариант ' + m[1];
+      if (lang === 'ar') return 'الخيار ' + m[1];
+    }
+    // 6. "<N> ədəd qalıb"
+    m = base.match(/^(\d+)\s+ədəd qalıb$/);
+    if (m) {
+      const n = Number(m[1]);
+      if (lang === 'en') return n + ' left in stock';
+      if (lang === 'ru') return 'Осталось ' + n + ' шт.';
+      if (lang === 'ar') {
+        if (n === 1) return 'متبقي قطعة واحدة';
+        if (n === 2) return 'متبقي قطعتان';
+        return n >= 3 && n <= 10 ? 'متبقي ' + n + ' قطع' : 'متبقي ' + n + ' قطعة';
+      }
+    }
+    // 7. Country (+code) (checked before Pattern 8)
+    m = base.match(/^(.+?)\s+\((\+\d+)\)$/);
+    if (m) {
+      const c = lookupPhrase(m[1].trim(), lang) || m[1].trim();
+      return c + ' (' + m[2] + ')';
+    }
+    // 8. "<desc> (<variantAlt>)"
+    m = base.match(/^(.+?)\s+\(([^)]+)\)$/);
+    if (m) {
+      const l = lookupPhrase(m[1].trim(), lang);
+      const r = lookupPhrase(m[2].trim(), lang);
+      if (l || r) return (l || m[1].trim()) + ' (' + (r || m[2].trim()) + ')';
+    }
+    // 9. "<Product> · <Variant>"
+    m = base.match(/^(.+?)\s+·\s+(.+)$/);
+    if (m) {
+      const l = lookupPhrase(m[1].trim(), lang);
+      const r = lookupPhrase(m[2].trim(), lang);
+      if (l || r) return (l || m[1].trim()) + ' · ' + (r || m[2].trim());
+    }
+
+    return base;
   }
 
   function getSavedLanguage() {
@@ -2685,7 +3664,7 @@
       if (fromLocal && LANGUAGES[fromLocal]) return fromLocal;
     } catch {}
     try {
-      const match = document.cookie.match(/(?:^|;s*)bcf_language=([^;]+)/);
+      const match = document.cookie.match(/(?:^|;\s*)bcf_language=([^;]+)/);
       if (match && LANGUAGES[match[1]]) return match[1];
     } catch {}
     return DEFAULT_LANG;
@@ -2702,6 +3681,10 @@
   }
 
   let currentLang = getSavedLanguage();
+  if (typeof document !== 'undefined' && document.documentElement) {
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = LANGUAGES[currentLang]?.dir || 'ltr';
+  }
 
   function getLanguage() {
     return currentLang;
@@ -2711,8 +3694,9 @@
     return DICTIONARY[currentLang]?.[key] ?? DICTIONARY[DEFAULT_LANG]?.[key] ?? fallback;
   }
 
-  function setLanguage(lang) {
+  function setLanguage(lang, options = {}) {
     if (!LANGUAGES[lang]) return;
+    const prevLang = currentLang;
     currentLang = lang;
     persistLanguage(lang);
 
@@ -2720,13 +3704,19 @@
     document.documentElement.dir = LANGUAGES[lang].dir;
 
     // Body language classes
-    document.body.classList.remove('lang-az', 'lang-en', 'lang-ru', 'lang-ar');
-    document.body.classList.add(`lang-${lang}`);
+    if (document.body?.classList) {
+      document.body.classList.remove('lang-az', 'lang-en', 'lang-ru', 'lang-ar');
+      document.body.classList.add('lang-' + lang);
+    }
 
     updateLanguageSelector();
     translateDom();
 
     window.dispatchEvent(new CustomEvent('bcf:language-changed', { detail: { lang } }));
+
+    if (options && options.reload && prevLang && prevLang !== lang && typeof window !== 'undefined' && window.location && typeof window.location.reload === 'function') {
+      window.location.reload();
+    }
   }
 
   function updateLanguageSelector() {
@@ -2736,7 +3726,7 @@
     }
     const trigger = document.getElementById('langTrigger');
     if (trigger) {
-      trigger.setAttribute('aria-label', `Dil: ${LANGUAGES[currentLang].name}`);
+      trigger.setAttribute('aria-label', 'Dil: ' + LANGUAGES[currentLang].name);
       trigger.title = LANGUAGES[currentLang].name;
     }
     document.querySelectorAll('.lang-option').forEach((btn) => {
@@ -2749,6 +3739,7 @@
   let isTranslating = false;
 
   function translateDom(root = document) {
+    if (!root || typeof root.querySelectorAll !== 'function') return;
     if (isTranslating) return;
     isTranslating = true;
     try {
@@ -2757,7 +3748,7 @@
         const key = el.dataset.i18n;
         const translation = DICTIONARY[currentLang]?.[key];
         if (translation !== undefined) {
-          if (!el._bcfOrigHtml) el._bcfOrigHtml = el.innerHTML;
+          if (!el._bcfOrigHtml && el.innerHTML !== undefined) el._bcfOrigHtml = el.innerHTML;
           if (translation.includes('<') && translation.includes('>')) {
             if (el.innerHTML !== translation) el.innerHTML = translation;
           } else {
@@ -2789,13 +3780,29 @@
         }
       });
 
+      // 3b. Preserve <span>↗</span> inside .coffee-more summary while translating its label text
+      root.querySelectorAll('.coffee-more summary').forEach((summary) => {
+        if (summary.hasAttribute('data-i18n')) return;
+        const label = DICTIONARY[currentLang]?.moreDetails || 'Daha çox';
+        const iconSpan = summary.querySelector?.('span');
+        if (iconSpan) {
+          let textNode = [...(summary.childNodes || [])].find((n) => n.nodeType === 3 && n.nodeValue.trim());
+          if (!textNode) {
+            textNode = document.createTextNode(label + ' ');
+            summary.insertBefore(textNode, iconSpan);
+          } else if (textNode.nodeValue !== label + ' ') {
+            textNode.nodeValue = label + ' ';
+          }
+        } else if (summary.textContent.trim() !== label) {
+          summary.textContent = label;
+        }
+      });
+
       // 4. Auto-translate all storefront products, notes, descriptions, and UI texts
       const targets = root.querySelectorAll(`
         .main-nav a,
-        .brand strong,
         .brand span,
         .filter-chip,
-        .menu-tab,
         .account-tab,
         .account-center-tab,
         .coffee-add-button,
@@ -2810,18 +3817,17 @@
         .coffee-scores span,
         .coffee-taste > span,
         .coffee-taste p,
-        .coffee-more summary,
         .tea-more summary,
         .coffee-summary,
         .coffee-details span,
         .coffee-details p,
+        .coffee-page-intro .eyebrow,
         .coffee-page-intro p,
         .coffee-page-intro aside span,
         .coffee-page-intro aside strong,
         .tea-kicker,
         .tea-hero h1,
         .tea-hero-copy,
-        .tea-hero-link,
         .tea-jump a,
         .tea-collection-header h2,
         .tea-collection-header p,
@@ -2831,8 +3837,11 @@
         .tea-facts dt,
         .tea-facts dd,
         .tea-more-content,
+        .tea-brew-note h2,
+        .tea-brew-note p,
         .tea-modal-close,
-        .tea-price,
+        .tea-price.tea-price-pending,
+        .tea-price small,
         .tea-note-box span,
         .tea-note-box p,
         #coffeeOrderTitle,
@@ -2844,6 +3853,11 @@
         .tea-quantity-display span,
         .tea-order-total span,
         .tea-confirm-add,
+        .tea-order-content > small,
+        .coffee-order-content > small,
+        .tea-order-content .tea-kicker,
+        #coffeeOrderTotal,
+        #teaOrderTotal,
         .equipment-hero .eyebrow,
         .equipment-hero-note span,
         .equipment-hero-note p,
@@ -2858,13 +3872,21 @@
         .product-description,
         .gear-card-desc,
         .product-back,
+        .managed-stock-label,
         #detailTitle,
         #detailCategory,
         #detailDescription,
         #variantLabel,
         .variant-picker > div:first-child span,
+        .variant-swatch small,
         .detail-price-row span,
         .detail-price-note,
+        #detailVariantCount,
+        .detail-meta dt,
+        .detail-meta dd,
+        .product-not-found .eyebrow,
+        .product-not-found h1,
+        .product-not-found a,
         .menu-top .eyebrow,
         .menu-top h1,
         #menuPageHeading,
@@ -2879,9 +3901,11 @@
         .summer-intro,
         .summer-collection-heading h3,
         .summer-drink h4,
+        .cart-header .eyebrow,
         .cart-header h2,
         .cart-summary span,
-        .cart-empty p,
+        .cart-summary small,
+        .cart-empty,
         .cart-item-cat,
         .cart-item-copy h3,
         .cart-remove,
@@ -2890,51 +3914,65 @@
         .checkout-done,
         .checkout-eyebrow,
         .checkout-note,
+        #checkoutTitle,
+        .checkout-total span,
+        .checkout-destination-note,
+        .checkout-success h2,
+        .checkout-wa-hint,
+        .checkout-wa-btn span,
+        .checkout-subnote,
+        #accountTitle,
         .account-field > span,
         .account-submit,
         .account-logout,
         .account-eyebrow,
+        .account-divider span,
+        .account-provider-note,
+        .account-note,
+        .account-security-note,
+        .account-section-heading h3,
+        .account-empty h3,
+        .account-empty p,
+        .account-list-status,
+        .account-dialog select option,
+        .checkout-dialog select option,
+        .account-code-value,
+        .favorites-drawer header p,
+        #favoritesTitle,
+        .favorites-list-item small,
+        .favorites-list-item strong,
+        .favorites-list-item em,
+        .favorites-list-item button,
         .favorites-drawer h2,
         .favorites-empty h3,
         .favorites-empty p,
         .favorites-clear,
+        .policy .eyebrow,
+        .policy h1,
+        .policy h2,
+        .policy > p,
+        .policy > p a,
         .hero-eyebrow,
         .hero-link,
         .hero-meta,
-        .about-copy
+        footer p
       `);
 
       targets.forEach((el) => {
-        if (el.hasAttribute('data-i18n')) return;
+        if (el.hasAttribute('data-i18n') || el.querySelector?.('[data-i18n]')) return;
         const text = (el.textContent || '').trim();
         if (!text) return;
 
-        if (!el._bcfOrigText) {
-          if (PHRASE_MAP[text]) {
-            el._bcfOrigText = text;
-          } else if (REVERSE_MAP[text]) {
-            el._bcfOrigText = REVERSE_MAP[text];
-          } else {
-            el._bcfOrigText = text;
-          }
-        } else if (!isKnownTranslation(text, el._bcfOrigText)) {
-          if (PHRASE_MAP[text]) {
-            el._bcfOrigText = text;
-          } else if (REVERSE_MAP[text]) {
-            el._bcfOrigText = REVERSE_MAP[text];
-          }
+        if (!el._bcfOrigText || text !== el._bcfLastTranslated) {
+          el._bcfOrigText = recoverAzText(text);
         }
 
         const orig = el._bcfOrigText;
-        if (currentLang === 'az') {
-          if (el.textContent.trim() !== orig) el.textContent = orig;
-          return;
-        }
-
-        const targetText = PHRASE_MAP[orig]?.[currentLang];
+        const targetText = currentLang === 'az' ? orig : translateDynamicText(orig, currentLang);
         if (targetText && el.textContent.trim() !== targetText) {
           el.textContent = targetText;
         }
+        el._bcfLastTranslated = targetText || text;
       });
 
       // Update document title if needed
@@ -2946,38 +3984,65 @@
 
   function updateDocumentTitle() {
     const page = window.location?.pathname ? window.location.pathname.split('/').pop() || 'index.html' : 'index.html';
+    const brandSuffix = {
+      az: 'Yeni Baku Coffee Factory',
+      en: 'New Baku Coffee Factory',
+      ru: 'New Baku Coffee Factory',
+      ar: 'نيو باكو كوفي فاكتوري',
+    };
+
+    if (page === 'mehsul.html') {
+      const notFoundEl = document.getElementById('productNotFound');
+      const detailTitleEl = document.getElementById('detailTitle');
+      if (notFoundEl && !notFoundEl.hidden) {
+        document.title = t('productNotFound', 'Məhsul tapılmadı') + ' — ' + brandSuffix[currentLang];
+        return;
+      }
+      if (detailTitleEl && detailTitleEl.textContent.trim()) {
+        document.title = detailTitleEl.textContent.trim() + ' — ' + brandSuffix[currentLang];
+        return;
+      }
+    }
+
     const titles = {
       'index.html': {
+        az: 'Yeni Baku Coffee Factory',
         en: 'New Baku Coffee Factory',
         ru: 'Главная — New Baku Coffee Factory',
         ar: 'نيو باكو كوفي فاكتوري',
       },
       'qehveler.html': {
+        az: 'Qəhvələr — Yeni Baku Coffee Factory',
         en: 'Coffee — New Baku Coffee Factory',
         ru: 'Кофе — New Baku Coffee Factory',
         ar: 'القهوة — نيو باكو كوفي فاكتوري',
       },
       'caylar.html': {
+        az: 'Çaylar — Yeni Baku Coffee Factory',
         en: 'Tea — New Baku Coffee Factory',
         ru: 'Чай — New Baku Coffee Factory',
         ar: 'الشاي — نيو باكو كوفي فاكتوري',
       },
       'avadanliqlar.html': {
+        az: 'Avadanlıqlar — Yeni Baku Coffee Factory',
         en: 'Equipment — New Baku Coffee Factory',
         ru: 'Оборудование — New Baku Coffee Factory',
         ar: 'المعدات — نيو باكو كوفي فاكتوري',
       },
       'mehsul.html': {
+        az: 'Məhsul — Yeni Baku Coffee Factory',
         en: 'Product — New Baku Coffee Factory',
         ru: 'Товар — New Baku Coffee Factory',
         ar: 'المنتج — نيو باكو كوفي فاكتوري',
       },
       'menyu.html': {
+        az: 'Menyu — Yeni Baku Coffee Factory',
         en: 'Menu — New Baku Coffee Factory',
         ru: 'Меню — New Baku Coffee Factory',
         ar: 'القائمة — نيو باكو كوفي فاكتوري',
       },
       'mexfilik.html': {
+        az: 'Məxfilik siyasəti — Baku Coffee Factory',
         en: 'Privacy Policy — New Baku Coffee Factory',
         ru: 'Политика конфиденциальности — New Baku Coffee Factory',
         ar: 'سياسة الخصوصية — نيو باكو كوفي فاكتوري',
@@ -3064,7 +4129,7 @@
         e.stopPropagation();
         const selectedLang = opt.dataset.lang;
         toggleDropdown(false);
-        setLanguage(selectedLang);
+        setLanguage(selectedLang, { reload: Boolean(selectedLang && selectedLang !== currentLang && LANGUAGES[selectedLang]) });
       });
     });
 
@@ -3086,11 +4151,13 @@
     mountLanguageSelector();
     setLanguage(currentLang);
 
-    // Watch for dynamic product additions (bcf:catalog-ready event)
-    window.addEventListener('bcf:catalog-ready', () => {
-      if (currentLang !== 'az') {
-        translateDom();
-      }
+    // Watch for dynamic additions across catalog, modals, auth, favorites, and orders
+    ['bcf:catalog-ready', 'bcf:ui-mounted', 'bcf:auth-changed', 'bcf:favorites-changed', 'bcf:orders-changed', 'load'].forEach((evtName) => {
+      window.addEventListener(evtName, () => {
+        if (currentLang !== 'az') {
+          translateDom();
+        }
+      });
     });
 
     // Sync language choice across open browser tabs
@@ -3102,7 +4169,7 @@
 
     // Translate modals, drawers, swatches, and filter chips on user interaction
     document.addEventListener('click', (e) => {
-      const trigger = e.target.closest('#accountTrigger, .account-trigger, #floatingCartTrigger, .floating-cart-btn, .tea-header-cart, #openCartBtn, #openGearCartBtn, #favoritesTrigger, .favorites-trigger, .coffee-add-button, .tea-add-button, .add-to-cart, .variant-swatch, .gallery-arrow, .filter-chip, .menu-tab, .account-tab, .menu-toggle, #checkoutOpen, .checkout-open');
+      const trigger = e.target.closest('#accountTrigger, .account-trigger, #floatingCartTrigger, .floating-cart-btn, .tea-header-cart, #openCartBtn, #openGearCartBtn, #favoritesTrigger, .favorites-trigger, .coffee-add-button, .tea-add-button, .add-to-cart, .variant-swatch, .gallery-arrow, .filter-chip, .menu-tab, .account-tab, .account-center-tab, .menu-toggle, #checkoutOpen, .checkout-open');
       if (trigger && currentLang !== 'az') {
         requestAnimationFrame(() => translateDom());
       }
@@ -3134,6 +4201,8 @@
     setLanguage,
     getLanguage,
     t,
+    translateDom,
+    translateDynamicText,
     LANGUAGES,
     DICTIONARY,
     PHRASE_MAP,

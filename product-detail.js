@@ -21,6 +21,9 @@ const detailCartNote = document.getElementById('detailCartNote');
 const detailVariantCount = document.getElementById('detailVariantCount');
 const productBack = document.getElementById('productBack');
 
+const tr = (key, fallback) => window.BCF_I18N?.t?.(key, fallback) ?? fallback;
+const dyn = (text) => window.BCF_I18N?.translateDynamicText?.(text) ?? text;
+
 const escapeDetailHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
 })[character]);
@@ -41,16 +44,17 @@ const renderVariant = () => {
   if (!detailProduct || !selectedVariant) return;
   const index = detailProduct.variants.findIndex((variant) => variant.id === selectedVariant.id);
   detailImage.src = selectedVariant.image;
-  detailImage.alt = selectedVariant.alt || detailProduct.name;
+  detailImage.alt = dyn(selectedVariant.alt || detailProduct.name);
   detailGallery.classList.toggle('image-contain', detailProduct.imageFit === 'contain');
-  detailCategory.textContent = detailProduct.categoryLabel;
-  detailTitle.textContent = detailProduct.name;
+  detailCategory.textContent = dyn(detailProduct.categoryLabel);
+  detailTitle.textContent = dyn(detailProduct.name);
   const variantDesc = selectedVariant.alt && selectedVariant.alt !== detailProduct.name ? selectedVariant.alt : '';
-  detailDescription.textContent = variantDesc ? `${detailProduct.description} (${variantDesc})` : detailProduct.description;
+  const baseDesc = variantDesc ? `${detailProduct.description} (${variantDesc})` : detailProduct.description;
+  detailDescription.textContent = dyn(baseDesc);
   detailPrice.textContent = formatDetailPrice(selectedVariant.price);
-  variantLabel.textContent = selectedVariant.label || selectedVariant.size || selectedVariant.name;
+  variantLabel.textContent = dyn(selectedVariant.label || selectedVariant.size || selectedVariant.name);
   galleryCount.textContent = `${String(index + 1).padStart(2, '0')} / ${String(detailProduct.variants.length).padStart(2, '0')}`;
-  detailVariantCount.textContent = `${detailProduct.variants.length} seçim`;
+  detailVariantCount.textContent = dyn(`${detailProduct.variants.length} seçim`);
 
   variantSwatches.querySelectorAll('.variant-swatch').forEach((button) => {
     const isActive = button.dataset.variantId === selectedVariant.id;
@@ -73,12 +77,14 @@ const renderDetail = () => {
     productDetail.hidden = true;
     productNotFound.hidden = false;
     document.title = 'Məhsul tapılmadı — Yeni Baku Coffee Factory';
+    window.BCF_I18N?.translateDom?.();
     return;
   }
 
   document.title = `${detailProduct.name} — Yeni Baku Coffee Factory`;
   variantSwatches.innerHTML = detailProduct.variants.map((variant) => {
-    const label = escapeDetailHtml(variant.label || variant.size || variant.name);
+    const rawLabel = variant.label || variant.size || variant.name;
+    const label = escapeDetailHtml(dyn(rawLabel));
     return `
     <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${escapeDetailHtml(variant.color || '#8b8177')}" aria-label="${label}" aria-pressed="false">
       <span></span><small>${label}</small>
@@ -90,10 +96,15 @@ const renderDetail = () => {
   detailNext.hidden = !hasMultiple;
   detailAdd.disabled = !purchasable;
   if (!purchasable) {
-    detailAdd.textContent = 'Bitib';
-    detailCartNote.textContent = 'Bu məhsul hazırda stokda yoxdur.';
+    detailAdd.dataset.i18n = 'soldOut';
+    detailAdd.textContent = tr('soldOut', 'Bitib');
+    detailCartNote.textContent = tr('outOfStockNote', 'Bu məhsul hazırda stokda yoxdur.');
+  } else {
+    detailAdd.dataset.i18n = 'addToCart';
+    detailAdd.textContent = tr('addToCart', 'Səbətə əlavə et');
   }
   renderVariant();
+  window.BCF_I18N?.translateDom?.();
 };
 
 const addSelectedVariant = () => {
@@ -122,12 +133,14 @@ const addSelectedVariant = () => {
   } else {
     localStorage.setItem(detailCartKey, JSON.stringify(cart));
   }
-  detailCartNote.textContent = `${cart[id].name} səbətə əlavə edildi.`;
+  detailCartNote.textContent = `${dyn(cart[id].name)} ${tr('addedToCartSentence', 'səbətə əlavə edildi.')}`;
   detailAdd.classList.add('added');
-  detailAdd.textContent = 'Əlavə edildi';
+  detailAdd.dataset.i18n = 'added';
+  detailAdd.textContent = tr('added', 'Əlavə edildi');
   window.setTimeout(() => {
     detailAdd.classList.remove('added');
-    detailAdd.textContent = 'Səbətə əlavə et';
+    detailAdd.dataset.i18n = 'addToCart';
+    detailAdd.textContent = tr('addToCart', 'Səbətə əlavə et');
   }, 900);
 };
 
@@ -148,3 +161,4 @@ document.addEventListener('keydown', (event) => {
 });
 
 renderDetail();
+window.addEventListener('bcf:language-changed', renderDetail);

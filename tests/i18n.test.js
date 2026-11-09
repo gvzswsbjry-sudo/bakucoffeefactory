@@ -358,4 +358,231 @@ test('first-time visitor defaults to Azerbaijani and language persists across vi
   assert.equal(session3.window.BCF_I18N.getLanguage(), 'en', 'Returning user automatically gets English (en)');
 });
 
+test('clicking a different language option persists choice and triggers page reload', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+  const memoryStorage = {};
+  let cookieString = '';
+  let reloadCount = 0;
+
+  function makeEl(tag, extra = {}) {
+    const attrs = {};
+    const classes = new Set();
+    const listeners = {};
+    const children = [];
+    const el = {
+      tagName: tag.toUpperCase(),
+      dataset: {},
+      style: {},
+      hidden: false,
+      children,
+      childNodes: children,
+      innerHTML: '',
+      textContent: '',
+      ...extra,
+      classList: {
+        contains: (c) => classes.has(c),
+        add: (...cs) => cs.forEach((c) => classes.add(c)),
+        remove: (...cs) => cs.forEach((c) => classes.delete(c)),
+        toggle: (c, force) => {
+          const next = force === undefined ? !classes.has(c) : Boolean(force);
+          if (next) classes.add(c); else classes.delete(c);
+          return next;
+        },
+      },
+      setAttribute: (k, v) => { attrs[k] = String(v); },
+      getAttribute: (k) => attrs[k],
+      hasAttribute: (k) => k in attrs,
+      addEventListener: (t, fn) => { (listeners[t] ||= []).push(fn); },
+      dispatch: (t, ev = {}) => (listeners[t] || []).forEach((fn) => fn({ preventDefault() {}, stopPropagation() {}, ...ev })),
+      append: (...nodes) => children.push(...nodes),
+      insertBefore: (n) => children.unshift(n),
+      contains: () => false,
+      querySelectorAll: () => [],
+      querySelector: () => null,
+    };
+    return el;
+  }
+
+  const triggerBtn = makeEl('button', { id: 'langTrigger' });
+  const dropdownEl = makeEl('div', { id: 'langDropdown', hidden: true });
+  const codeEl = makeEl('span', { id: 'langCurrentCode' });
+  const optAz = makeEl('button'); optAz.dataset.lang = 'az';
+  const optEn = makeEl('button'); optEn.dataset.lang = 'en';
+  const optRu = makeEl('button'); optRu.dataset.lang = 'ru';
+  const optAr = makeEl('button'); optAr.dataset.lang = 'ar';
+  const options = [optAz, optEn, optRu, optAr];
+
+  const wrapper = makeEl('div');
+  wrapper.querySelector = (sel) => ({ '#langTrigger': triggerBtn, '#langDropdown': dropdownEl }[sel] || null);
+  wrapper.querySelectorAll = (sel) => (sel === '.lang-option' ? options : []);
+
+  const headerEl = makeEl('header');
+  headerEl.insertBefore = (node) => { wrapper._mounted = node; };
+
+  const mockDoc = {
+    readyState: 'complete',
+    documentElement: { lang: 'az', dir: 'ltr' },
+    body: { classList: { add: () => {}, remove: () => {} } },
+    get cookie() { return cookieString; },
+    set cookie(val) { const p = val.split(';')[0].split('='); cookieString = p[0] + '=' + p[1]; },
+    createElement: (tag) => (tag === 'div' ? wrapper : makeEl(tag)),
+    querySelector: (sel) => (sel === '.site-header' ? headerEl : null),
+    querySelectorAll: (sel) => (sel === '.lang-option' ? options : []),
+    getElementById: (id) => ({ langTrigger: triggerBtn, langDropdown: dropdownEl, langCurrentCode: codeEl }[id] || null),
+    addEventListener: () => {},
+  };
+
+  const sandbox = {
+    window: {
+      location: { pathname: '/index.html', reload: () => { reloadCount += 1; } },
+      addEventListener: () => {},
+      dispatchEvent: () => {},
+    },
+    document: mockDoc,
+    localStorage: {
+      getItem: (k) => memoryStorage[k] || null,
+      setItem: (k, v) => { memoryStorage[k] = String(v); },
+    },
+    CustomEvent: class { constructor(t, i) { this.type = t; this.detail = i?.detail; } },
+  };
+
+  vm.createContext(sandbox);
+  vm.runInContext(content, sandbox);
+
+  // Initializing default AZ must never trigger reload
+  assert.equal(reloadCount, 0);
+
+  // Programmatic setLanguage without { reload: true } must never trigger reload
+  sandbox.window.BCF_I18N.setLanguage('en');
+  assert.equal(reloadCount, 0);
+
+  // Clicking the currently active option ('en') closes dropdown without reloading
+  dropdownEl.hidden = false;
+  optEn.dispatch('click');
+  assert.equal(dropdownEl.hidden, true);
+  assert.equal(reloadCount, 0);
+
+  // Clicking a different language option ('ru') persists 'ru' and reloads page
+  optRu.dispatch('click');
+  assert.equal(memoryStorage.bcf_language, 'ru');
+  assert.ok(cookieString.includes('bcf_language=ru'));
+  assert.equal(reloadCount, 1);
+
+  // Subsequent visit after reload initializes directly into 'ru' with 0 reloads
+  const sandboxAfterReload = {
+    ...sandbox,
+    window: {
+      location: { pathname: '/index.html', reload: () => { reloadCount += 1; } },
+      addEventListener: () => {},
+      dispatchEvent: () => {},
+    },
+    document: { ...mockDoc, documentElement: { lang: 'az', dir: 'ltr' }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null },
+  };
+  vm.createContext(sandboxAfterReload);
+  vm.runInContext(content, sandboxAfterReload);
+  assert.equal(sandboxAfterReload.window.BCF_I18N.getLanguage(), 'ru');
+  assert.equal(sandboxAfterReload.document.documentElement.lang, 'ru');
+  assert.equal(reloadCount, 1);
+});
+
+test('DICTIONARY has strict key parity and translateDynamicText covers dynamic strings across all 4 languages', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+  const sandbox = createSandbox('/avadanliqlar.html');
+  vm.createContext(sandbox);
+  vm.runInContext(content, sandbox);
+  const { DICTIONARY, translateDynamicText } = sandbox.window.BCF_I18N;
+
+  const baseKeys = Object.keys(DICTIONARY.az).sort();
+  for (const lang of ['en', 'ru', 'ar']) {
+    assert.deepEqual(Object.keys(DICTIONARY[lang]).sort(), baseKeys, `DICTIONARY.${lang} keys match az`);
+  }
+
+  assert.equal(translateDynamicText('Colombia · 100 q', 'ru'), 'Колумбия · 100 г');
+  assert.equal(translateDynamicText('Colombia · 100 q', 'ar'), 'كولومبيا · 100 جم');
+  assert.equal(translateDynamicText('15.00 ₼ / 100 q', 'en'), '15.00 ₼ / 100g');
+  assert.equal(translateDynamicText('2.40 ₼ / ədəd', 'ru'), '2.40 ₼ / шт.');
+  assert.equal(translateDynamicText('3 seçim', 'en'), '3 options');
+  assert.equal(translateDynamicText('3 seçim', 'ru'), '3 варианта');
+  assert.equal(translateDynamicText('1 ədəd qalıb', 'en'), '1 left in stock');
+  assert.equal(translateDynamicText('5 ədəd qalıb', 'ru'), 'Осталось 5 шт.');
+  assert.equal(translateDynamicText('Seçim 2', 'en'), 'Option 2');
+  assert.equal(translateDynamicText('Azərbaycan (+994)', 'ru'), 'Азербайджан (+994)');
+  assert.equal(
+    translateDynamicText('Sadə, dolğun və rahat dəmləmə üçün klassik pres. (600 millilitrlik şüşə və paslanmayan polad French Press)', 'en'),
+    'A classic press for simple, rich, and comforting brewing. (600 ml glass and stainless steel French Press)'
+  );
+  assert.equal(translateDynamicText('French Press · 600 ml', 'ar'), 'فرنش بريس · 600 مل');
+  assert.equal(translateDynamicText('Колумбия · 100 г', 'az'), 'Colombia · 100 q');
+});
+
+test('coffee-more summary preserves icon span while translating label and pages wire data-i18n attributes', () => {
+  const content = fs.readFileSync('i18n.js', 'utf8');
+  const textNode = { nodeType: 3, nodeValue: 'Daha çox ' };
+  const arrowSpan = { nodeType: 1, tagName: 'SPAN', textContent: '↗' };
+  const summaryEl = {
+    tagName: 'SUMMARY',
+    childNodes: [textNode, arrowSpan],
+    textContent: 'Daha çox ↗',
+    hasAttribute: () => false,
+    querySelector: (s) => (s === 'span' ? arrowSpan : null),
+    insertBefore: () => {},
+  };
+
+  const sandbox = {
+    window: { location: { pathname: '/qehveler.html' }, addEventListener: () => {}, dispatchEvent: () => {} },
+    document: {
+      readyState: 'complete',
+      documentElement: { lang: 'az', dir: 'ltr' },
+      body: { classList: { add: () => {}, remove: () => {} } },
+      querySelector: () => null,
+      querySelectorAll: (sel) => (sel.includes('.coffee-more summary') ? [summaryEl] : []),
+      getElementById: () => null,
+      addEventListener: () => {},
+    },
+    localStorage: { getItem: () => null, setItem: () => {} },
+    CustomEvent: class { constructor(t, i) { this.type = t; this.detail = i?.detail; } },
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(content, sandbox);
+
+  sandbox.window.BCF_I18N.setLanguage('en');
+  assert.equal(textNode.nodeValue, 'More details ');
+  assert.equal(arrowSpan.textContent, '↗');
+
+  sandbox.window.BCF_I18N.setLanguage('ru');
+  assert.equal(textNode.nodeValue, 'Подробнее ');
+
+  sandbox.window.BCF_I18N.setLanguage('az');
+  assert.equal(textNode.nodeValue, 'Daha çox ');
+
+  const policy = fs.readFileSync('mexfilik.html', 'utf8');
+  assert.ok(policy.includes('data-i18n="policyContactHtml"'));
+  assert.ok(policy.includes('data-i18n="backToHome"'));
+  assert.ok(fs.readFileSync('index.html', 'utf8').includes('data-i18n="aboutCopyHtml"'));
+  assert.ok(fs.readFileSync('caylar.html', 'utf8').includes('data-i18n="teaHeroCta"'));
+  assert.ok(fs.readFileSync('avadanliqlar.html', 'utf8').includes('data-i18n="equipmentHeroTitle"'));
+});
+
+test('cart-utils renders coffee bean thumbnail and translated labels in non-AZ languages', () => {
+  const cartUtils = require('../cart-utils.js');
+  global.window = {
+    BCF_I18N: {
+      getLanguage: () => 'ru',
+      t: (k, f) => ({ removeBtn: 'Удалить', cartEmpty: 'Ваша корзина пока пуста.', pricePending: 'Цена уточняется' }[k] || f),
+      translateDynamicText: (txt) => (txt === 'Colombia' ? 'Колумбия' : txt),
+    },
+  };
+
+  const html = cartUtils.renderUnifiedCartItemsHtml({
+    'coffee-colombia': { id: 'colombia', category: 'coffee', name: 'Colombia', price: 15, quantity: 200, unit: 'g' },
+  });
+  assert.ok(html.includes('assets/coffee/cart-coffee-beans.png'), 'uses coffee beans image regardless of language');
+  assert.ok(html.includes('Кофе'), 'renders Russian category label');
+  assert.ok(html.includes('Колумбия'), 'renders translated coffee title');
+  assert.ok(html.includes('200 г'), 'renders Russian gram unit');
+  assert.ok(html.includes('Удалить'), 'renders Russian remove button');
+
+  delete global.window;
+});
+
 

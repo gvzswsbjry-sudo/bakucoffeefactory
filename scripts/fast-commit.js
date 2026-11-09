@@ -10,7 +10,14 @@ function runPlumbingCommit(message) {
     'cart-utils.js',
     'server/routes.js',
     'script.js',
+    'storefront-products.js',
+    'coffee-shop.js',
     'tea-shop.js',
+    'gear-shop.js',
+    'product-detail.js',
+    'account.js',
+    'favorites.js',
+    'checkout.js',
     'index.html',
     'qehveler.html',
     'caylar.html',
@@ -70,10 +77,10 @@ function runPlumbingCommit(message) {
   function writeTree(node) {
     const lines = [];
     const sortedKeys = Object.keys(node.children).sort((a, b) => {
-      // Git tree sorting rule: tree names sort as if ending with '/'
+      // Git tree sorting rule: tree names sort as if ending with '/', compared bytewise
       const aName = node.children[a].type === 'tree' ? a + '/' : a;
       const bName = node.children[b].type === 'tree' ? b + '/' : b;
-      return aName.localeCompare(bName);
+      return aName < bName ? -1 : aName > bName ? 1 : 0;
     });
 
     for (const key of sortedKeys) {
