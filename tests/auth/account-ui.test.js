@@ -51,6 +51,17 @@ test('the shared storefront script loads the accessible account interface withou
   assert.doesNotMatch(account, /account-email-contact"[^>]*style="display:none;"/);
   assert.match(css, /\.account-reset-view\[hidden\]/);
   assert.match(css, /\.account-forgot-row\[hidden\]/);
+
+  assert.match(account, /id="accountLogoutConfirmOverlay"/);
+  assert.match(account, /role="alertdialog"/);
+  assert.match(account, /id="accountLogoutCancel"/);
+  assert.match(account, /id="accountLogoutConfirm"/);
+  assert.match(account, /openLogoutConfirm/);
+  assert.match(account, /closeLogoutConfirm/);
+  assert.match(css, /\.account-confirm-backdrop\[hidden\]/);
+  assert.match(css, /\.account-confirm-dialog/);
+  assert.match(css, /\.account-overlay\s*\{[^}]*z-index:\s*10020/);
+  assert.match(css, /\.account-confirm-backdrop\s*\{[^}]*z-index:\s*10040/);
 });
 
 test('privacy page explains the account data and contains a contact method', () => {

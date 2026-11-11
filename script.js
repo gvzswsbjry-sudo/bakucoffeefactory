@@ -37,17 +37,17 @@ if (!document.querySelector('link[href*="i18n.css"]')) {
 }
 if (!window.BCF_I18N && !window.__BCF_I18N_INITIALIZED__ && !document.querySelector('script[src*="i18n.js"]')) {
   const i18nScript = document.createElement('script');
-  i18nScript.src = 'i18n.js?v=20261111-3';
+  i18nScript.src = 'i18n.js?v=20261111-4';
   i18nScript.async = false;
   document.body.append(i18nScript);
 }
 
 const accountStyles = document.createElement('link');
 accountStyles.rel = 'stylesheet';
-accountStyles.href = 'account.css?v=20261111-3';
+accountStyles.href = 'account.css?v=20261111-5';
 document.head.append(accountStyles);
 const accountScript = document.createElement('script');
-accountScript.src = 'account.js?v=20261111-3';
+accountScript.src = 'account.js?v=20261111-4';
 accountScript.async = false;
 document.body.append(accountScript);
 

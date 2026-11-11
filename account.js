@@ -146,13 +146,29 @@
         <div class="account-section-heading"><div><p class="account-eyebrow" data-i18n="ordersArchiveEyebrow">SİFARİŞ ARXİVİ</p><h3 data-i18n="accountOrdersTab">Keçmiş sifarişlər</h3></div></div>
         <div class="account-orders-list"></div>
       </div>
-    </section>`;
+    </section>
+    <div class="account-confirm-backdrop" id="accountLogoutConfirmOverlay" hidden>
+      <div class="account-confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="accountLogoutConfirmTitle" aria-describedby="accountLogoutConfirmDesc" tabindex="-1">
+        <p class="account-confirm-eyebrow" data-i18n="logoutConfirmEyebrow">HESAB · TƏSDİQ</p>
+        <h3 id="accountLogoutConfirmTitle" data-i18n="logoutConfirmTitle">Hesabdan çıxmaq istəyirsiniz?</h3>
+        <p id="accountLogoutConfirmDesc" data-i18n="logoutConfirmDesc">Çıxış etdikdən sonra sifariş vermək və tarixçəni görmək üçün hesabınıza yenidən daxil olmalı olacaqsınız.</p>
+        <div class="account-confirm-actions">
+          <button type="button" class="account-confirm-cancel" id="accountLogoutCancel" data-i18n="logoutConfirmCancel">Xeyr, qal</button>
+          <button type="button" class="account-confirm-accept" id="accountLogoutConfirm" data-i18n="logoutConfirmAccept">Bəli, çıxış et</button>
+        </div>
+      </div>
+    </div>`;
   document.body.append(overlay);
 
   const dialog = overlay.querySelector('.account-dialog');
   const form = overlay.querySelector('#accountForm');
   const message = overlay.querySelector('#accountMessage');
   const profile = overlay.querySelector('.account-profile-view');
+  const logoutTriggerBtn = overlay.querySelector('.account-logout');
+  const logoutConfirmOverlay = overlay.querySelector('#accountLogoutConfirmOverlay');
+  const logoutConfirmDialog = logoutConfirmOverlay?.querySelector('.account-confirm-dialog');
+  const logoutCancelBtn = overlay.querySelector('#accountLogoutCancel');
+  const logoutAcceptBtn = overlay.querySelector('#accountLogoutConfirm');
   const authView = overlay.querySelector('.account-auth-view');
   const accountTabs = overlay.querySelector('.account-tabs');
   const socialSection = overlay.querySelector('.account-social');
@@ -316,7 +332,46 @@
     overlay.querySelector('.account-email-contact').hidden = !registering;
   }
 
+  let isLoggingOut = false;
+
+  function openLogoutConfirm() {
+    if (!logoutConfirmOverlay || !user) return;
+    if (logoutCancelBtn) logoutCancelBtn.disabled = false;
+    if (logoutAcceptBtn) logoutAcceptBtn.disabled = false;
+    logoutConfirmOverlay.hidden = false;
+    window.BCF_I18N?.translateDom?.(logoutConfirmOverlay);
+    (logoutCancelBtn || logoutConfirmDialog)?.focus();
+  }
+
+  function closeLogoutConfirm(restoreFocus = true) {
+    if (!logoutConfirmOverlay) return;
+    logoutConfirmOverlay.hidden = true;
+    if (logoutCancelBtn) logoutCancelBtn.disabled = false;
+    if (logoutAcceptBtn) logoutAcceptBtn.disabled = false;
+    if (restoreFocus && !overlay.hidden && !profile.hidden) {
+      logoutTriggerBtn?.focus();
+    }
+  }
+
+  async function performLogout() {
+    if (isLoggingOut) return;
+    isLoggingOut = true;
+    if (logoutCancelBtn) logoutCancelBtn.disabled = true;
+    if (logoutAcceptBtn) logoutAcceptBtn.disabled = true;
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
+    } catch {} finally {
+      isLoggingOut = false;
+      user = null;
+      announceAuthChange();
+      renderUser();
+      closeLogoutConfirm(false);
+      close();
+    }
+  }
+
   function close() {
+    closeLogoutConfirm(false);
     overlay.hidden = true;
     document.body.classList.remove('account-open');
     document.documentElement.classList.remove('account-open');
@@ -325,6 +380,7 @@
 
   trigger.addEventListener('click', () => {
     previousFocus = document.activeElement;
+    closeLogoutConfirm(false);
     overlay.hidden = false;
     document.body.classList.add('account-open');
     document.documentElement.classList.add('account-open');
@@ -337,6 +393,32 @@
   overlay.querySelector('.account-close').addEventListener('click', close);
   overlay.addEventListener('click', (event) => { if (event.target === overlay) close(); });
   overlay.addEventListener('keydown', (event) => {
+    if (logoutConfirmOverlay && !logoutConfirmOverlay.hidden) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        closeLogoutConfirm(true);
+        return;
+      }
+      if (event.key === 'Tab') {
+        const confirmFocusables = [logoutCancelBtn, logoutAcceptBtn].filter((el) => el && !el.disabled);
+        if (confirmFocusables.length) {
+          const firstConfirm = confirmFocusables[0];
+          const lastConfirm = confirmFocusables.at(-1);
+          if (!logoutConfirmDialog?.contains(document.activeElement)) {
+            event.preventDefault();
+            firstConfirm.focus();
+          } else if (event.shiftKey && document.activeElement === firstConfirm) {
+            event.preventDefault();
+            lastConfirm.focus();
+          } else if (!event.shiftKey && document.activeElement === lastConfirm) {
+            event.preventDefault();
+            firstConfirm.focus();
+          }
+        }
+        return;
+      }
+    }
     if (event.key === 'Escape') close();
     if (event.key !== 'Tab') return;
     const focusables = [...overlay.querySelectorAll('button:not([hidden]), input:not([hidden]), a')]
@@ -729,20 +811,21 @@
     }
   });
 
-  overlay.querySelector('.account-logout').addEventListener('click', async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
-    } catch {}
-    user = null;
-    announceAuthChange();
-    renderUser();
-    close();
+  logoutTriggerBtn?.addEventListener('click', openLogoutConfirm);
+  logoutCancelBtn?.addEventListener('click', () => closeLogoutConfirm(true));
+  logoutAcceptBtn?.addEventListener('click', performLogout);
+  logoutConfirmOverlay?.addEventListener('click', (event) => {
+    if (event.target === logoutConfirmOverlay) {
+      event.stopPropagation();
+      closeLogoutConfirm(true);
+    }
   });
 
   window.bcfAccount = {
     getUser: () => user,
     open: (options = {}) => {
       previousFocus = document.activeElement;
+      closeLogoutConfirm(false);
       overlay.hidden = false;
       document.body.classList.add('account-open');
       document.documentElement.classList.add('account-open');

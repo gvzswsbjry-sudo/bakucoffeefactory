@@ -1082,6 +1082,11 @@ const fullI18nJs = `(() => {
       resetCodeSentBanner: 'Hesab varsa 6 rəqəmli kod göndərildi (Gmail-ə və ya dəstək xəttinə). Gmail-də görünməsə Spam qovluğunu yoxlayın; e-poçt bağlı deyilsə WhatsApp (+994 70 390 10 09) ilə kodu əldə edin.',
       resetCodeInvalid: '6 rəqəmli təsdiq kodunu düzgün daxil edin.',
       resetPasswordMismatch: 'Yeni şifrələr uyğun gəlmir.',
+      logoutConfirmEyebrow: 'HESAB · TƏSDİQ',
+      logoutConfirmTitle: 'Hesabdan çıxmaq istəyirsiniz?',
+      logoutConfirmDesc: 'Çıxış etdikdən sonra sifariş vermək və tarixçəni görmək üçün hesabınıza yenidən daxil olmalı olacaqsınız.',
+      logoutConfirmCancel: 'Xeyr, qal',
+      logoutConfirmAccept: 'Bəli, çıxış et',
 
       // Favorites
       favoritesTitle: 'Seçilmişlər',
@@ -1322,6 +1327,11 @@ const fullI18nJs = `(() => {
       resetCodeSentBanner: 'If an account matches, a 6-digit code has been sent (to Gmail or our support line). Please check Spam in Gmail, or message us on WhatsApp (+994 70 390 10 09) if no email is linked.',
       resetCodeInvalid: 'Please enter the valid 6-digit verification code.',
       resetPasswordMismatch: 'The new passwords do not match.',
+      logoutConfirmEyebrow: 'ACCOUNT · CONFIRM',
+      logoutConfirmTitle: 'Sign out of your account?',
+      logoutConfirmDesc: 'After signing out, you will need to sign in again to place orders and view your order history.',
+      logoutConfirmCancel: 'No, stay',
+      logoutConfirmAccept: 'Yes, sign out',
 
       // Favorites
       favoritesTitle: 'Favorites',
@@ -1562,6 +1572,11 @@ const fullI18nJs = `(() => {
       resetCodeSentBanner: 'Если аккаунт найден, 6-значный код отправлен (на Gmail или в службу поддержки). Проверьте папку «Спам» в Gmail или напишите в WhatsApp (+994 70 390 10 09), если почта не привязана.',
       resetCodeInvalid: 'Введите корректный 6-значный код подтверждения.',
       resetPasswordMismatch: 'Новые пароли не совпадают.',
+      logoutConfirmEyebrow: 'АККАУНТ · ПОДТВЕРЖДЕНИЕ',
+      logoutConfirmTitle: 'Выйти из аккаунта?',
+      logoutConfirmDesc: 'После выхода вам потребуется снова войти в аккаунт, чтобы оформлять заказы и просматривать историю.',
+      logoutConfirmCancel: 'Нет, остаться',
+      logoutConfirmAccept: 'Да, выйти',
 
       // Favorites
       favoritesTitle: 'Избранное',
@@ -1802,6 +1817,11 @@ const fullI18nJs = `(() => {
       resetCodeSentBanner: 'إذا وُجد حساب مطابق، تم إرسال رمز من 6 أرقام (عبر Gmail أو فريق الدعم). تحقّق من مجلد الرسائل غير المرغوب فيها أو تواصل عبر واتساب (+994 70 390 10 09).',
       resetCodeInvalid: 'يرجى إدخال رمز التحقق الصحيح المكوّن من 6 أرقام.',
       resetPasswordMismatch: 'كلمتا المرور الجديدتان غير متطابقتين.',
+      logoutConfirmEyebrow: 'الحساب · تأكيد',
+      logoutConfirmTitle: 'هل تريد تسجيل الخروج؟',
+      logoutConfirmDesc: 'بعد تسجيل الخروج، ستحتاج إلى تسجيل الدخول مرة أخرى لتقديم الطلبات وعرض سجل طلباتك.',
+      logoutConfirmCancel: 'لا، البقاء',
+      logoutConfirmAccept: 'نعم، تسجيل الخروج',
 
       // Favorites
       favoritesTitle: 'المفضلة',
