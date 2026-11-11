@@ -85,7 +85,7 @@
           <p class="account-message" id="accountMessage" role="status" aria-live="polite"></p>
           <button class="account-submit" type="submit" data-i18n="loginSubmit">Daxil ol</button>
         </form>
-        <p class="account-note" data-i18n="accountGuestNote">Hesab açmadan da sayta baxa və səbətə məhsul əlavə edə bilərsiniz.</p>
+        <p class="account-note" data-i18n="accountGuestNote">Hesab açmadan da sayta baxa, səbətə məhsul əlavə edə və sifariş verə bilərsiniz.</p>
         <form id="socialPhoneForm" class="account-social-prompt" hidden novalidate>
           <div class="account-social-header">
             <span class="account-social-badge" aria-hidden="true">G</span>
@@ -189,7 +189,7 @@
       <div class="account-confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="accountLogoutConfirmTitle" aria-describedby="accountLogoutConfirmDesc" tabindex="-1">
         <p class="account-confirm-eyebrow" data-i18n="logoutConfirmEyebrow">HESAB · TƏSDİQ</p>
         <h3 id="accountLogoutConfirmTitle" data-i18n="logoutConfirmTitle">Hesabdan çıxmaq istəyirsiniz?</h3>
-        <p id="accountLogoutConfirmDesc" data-i18n="logoutConfirmDesc">Çıxış etdikdən sonra sifariş vermək və tarixçəni görmək üçün hesabınıza yenidən daxil olmalı olacaqsınız.</p>
+        <p id="accountLogoutConfirmDesc" data-i18n="logoutConfirmDesc">Çıxış etdikdən sonra sifariş tarixçənizi görmək və hesab məlumatlarından istifadə etmək üçün yenidən daxil olmalı olacaqsınız.</p>
         <div class="account-confirm-actions">
           <button type="button" class="account-confirm-cancel" id="accountLogoutCancel" data-i18n="logoutConfirmCancel">Xeyr, qal</button>
           <button type="button" class="account-confirm-accept" id="accountLogoutConfirm" data-i18n="logoutConfirmAccept">Bəli, çıxış et</button>

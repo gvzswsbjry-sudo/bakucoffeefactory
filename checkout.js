@@ -48,9 +48,9 @@
         <form id="checkoutForm">
           <fieldset class="checkout-phone-field" hidden>
             <legend data-i18n="phoneLegend">Telefon nömrəsi</legend>
-            <p class="checkout-phone-hint" data-i18n="checkoutPhoneHint">Hesabınızda telefon nömrəsi qeyd olunmayıb. Sifariş vermək üçün nömrənizi daxil edin (hesabınıza da əlavə ediləcək).</p>
+            <p class="checkout-phone-hint" id="checkoutPhoneHint" data-i18n="checkoutPhoneHint">Hesabınızda telefon nömrəsi qeyd olunmayıb. Sifariş vermək üçün nömrənizi daxil edin (hesabınıza da əlavə ediləcək).</p>
             <div class="checkout-phone-row">
-              <label class="checkout-country"><span class="checkout-sr-only" data-i18n="countryCodeLabel">Ölkə kodu</span>
+              <label class="checkout-country checkout-code-picker"><span class="checkout-sr-only" data-i18n="countryCodeLabel">Ölkə kodu</span><span class="checkout-code-display" aria-hidden="true"><span class="checkout-code-value" id="checkoutCodeValue">+994</span><span class="checkout-code-arrows"><svg viewBox="0 0 12 18" width="12" height="18"><path d="m2 7 4-4 4 4M2 11l4 4 4-4" /></svg></span></span>
                 <select name="countryCode" aria-label="Ölkə və telefon kodu">${countryOptions.map(([code, name]) => `<option value="${code}">${dyn(`${name} (${code})`)}</option>`).join('')}</select>
               </label>
               <label><span class="checkout-sr-only" data-i18n="phoneRemainderLabel">Telefon nömrəsinin qalan hissəsi</span>
@@ -91,7 +91,15 @@
   const confirmButton = overlay.querySelector('.checkout-confirm');
   const successView = overlay.querySelector('.checkout-success');
   const formView = overlay.querySelector('.checkout-form-view');
+  const codeValueEl = overlay.querySelector('#checkoutCodeValue');
   let previousFocus = null;
+
+  function syncCheckoutCode() {
+    if (codeValueEl && form.elements.countryCode) {
+      codeValueEl.textContent = form.elements.countryCode.value || '+994';
+    }
+  }
+  form.elements.countryCode?.addEventListener('change', syncCheckoutCode);
 
   function readCart() {
     const cart = loadSharedCart();
@@ -112,7 +120,7 @@
   }
 
   let currentUser = null;
-  let pendingCheckoutAfterAuth = false;
+  let isOpeningCheckout = false;
 
   async function checkCurrentUser() {
     try {
@@ -131,12 +139,6 @@
 
   window.addEventListener('bcf:auth-changed', (event) => {
     currentUser = event.detail?.user || null;
-    if (currentUser && pendingCheckoutAfterAuth) {
-      pendingCheckoutAfterAuth = false;
-      setTimeout(() => {
-        openCheckout();
-      }, 150);
-    }
   });
 
   function openCheckout() {
@@ -147,6 +149,7 @@
     successView.hidden = true;
     errorBox.textContent = '';
     form.reset();
+    syncCheckoutCode();
 
     const customerBox = overlay.querySelector('#checkoutCustomerBox');
     if (customerBox) {
@@ -164,14 +167,29 @@
     }
 
     const phoneField = overlay.querySelector('.checkout-phone-field');
+    const phoneHint = overlay.querySelector('#checkoutPhoneHint');
     if (phoneField) {
       phoneField.hidden = Boolean(currentUser?.phone);
+    }
+    if (phoneHint) {
+      if (currentUser && !currentUser.phone) {
+        phoneHint.dataset.i18n = 'checkoutPhoneHint';
+        phoneHint.textContent = tr('checkoutPhoneHint', 'Hesabınızda telefon nömrəsi qeyd olunmayıb. Sifariş vermək üçün nömrənizi daxil edin (hesabınıza da əlavə ediləcək).');
+      } else {
+        phoneHint.dataset.i18n = 'checkoutGuestPhoneHint';
+        phoneHint.textContent = tr('checkoutGuestPhoneHint', 'Hesab açmadan sifariş verirsiniz. Sifariş təsdiqi və çatdırılma üçün mobil nömrənizi daxil edin.');
+      }
+    }
+    if (form.elements.phoneLocal) {
+      if (currentUser?.phone) form.elements.phoneLocal.removeAttribute('aria-required');
+      else form.elements.phoneLocal.setAttribute('aria-required', 'true');
     }
 
     if (currentUser?.phone) {
       const savedPhone = splitPhone(currentUser.phone);
       if (form.elements.countryCode) form.elements.countryCode.value = savedPhone.code;
       if (form.elements.phoneLocal) form.elements.phoneLocal.value = savedPhone.local;
+      syncCheckoutCode();
     }
 
     overlay.querySelector('#checkoutTotal').textContent = cartTotalLabel(Object.fromEntries(items.map((item) => [item.id, item])));
@@ -188,23 +206,14 @@
       setTimeout(() => { openButton.textContent = tr('orderNow', 'Sifariş et'); }, 2200);
       return;
     }
-
-    const user = await checkCurrentUser();
-    if (!user) {
-      pendingCheckoutAfterAuth = true;
-      if (window.bcfAccount?.open) {
-        window.bcfAccount.open({
-          mode: 'register',
-          message: tr('checkoutAuthPrompt', 'Sifariş vermək üçün zəhmət olmasa hesabınıza daxil olun və ya qeydiyyatdan keçin.'),
-        });
-      } else {
-        const trigger = document.getElementById('accountTrigger');
-        if (trigger) trigger.click();
-      }
-      return;
+    if (isOpeningCheckout) return;
+    isOpeningCheckout = true;
+    try {
+      await checkCurrentUser();
+      openCheckout();
+    } finally {
+      isOpeningCheckout = false;
     }
-
-    openCheckout();
   });
 
   const WHATSAPP_TARGET_NUMBER = '994703901009';
@@ -261,26 +270,18 @@
     }
 
     const user = await checkCurrentUser();
-    if (!user) {
-      errorBox.textContent = tr('checkoutAuthRequired', 'Sifariş göndərmək üçün zəhmət olmasa hesaba daxil olun.');
-      pendingCheckoutAfterAuth = true;
-      if (window.bcfAccount?.open) {
-        window.bcfAccount.open({ mode: 'register', message: tr('checkoutAuthPrompt', 'Sifariş vermək üçün hesaba daxil olun və ya qeydiyyatdan keçin.') });
-      }
-      return;
-    }
 
     const rawDigits = form.elements.phoneLocal ? form.elements.phoneLocal.value.replace(/\D/g, '') : '';
     const dialCode = form.elements.countryCode ? form.elements.countryCode.value : '+994';
-    const localDigits = dialCode === '+994' && /^0[1-9]\d{8}$/.test(rawDigits) ? rawDigits.slice(1) : rawDigits;
+    const localDigits = dialCode === '+994' && /^0[1-9]\d{8}$/.test(rawDigits)
+      ? rawDigits.slice(1)
+      : (dialCode === '+994' && /^994[1-9]\d{8}$/.test(rawDigits) ? rawDigits.slice(3) : rawDigits);
     const formPhone = localDigits && /^\d{5,14}$/.test(localDigits) ? `${dialCode}${localDigits}` : '';
-    const phone = user.phone || formPhone;
+    const phone = user?.phone || formPhone;
     if (!phone || !/^\+[1-9]\d{6,14}$/.test(phone)) {
       const phoneField = overlay.querySelector('.checkout-phone-field');
       if (phoneField) phoneField.hidden = false;
-      errorBox.textContent = !user.phone
-        ? tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.')
-        : tr('checkoutNoPhoneError', 'Hesabınızda qeydiyyatdan keçmiş telefon nömrəsi tapılmadı.');
+      errorBox.textContent = tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.');
       form.elements.phoneLocal?.focus();
       return;
     }
@@ -291,7 +292,7 @@
     confirmButton.disabled = true;
     confirmButton.textContent = tr('checkoutSubmittingBtn', 'Sifariş göndərilir…');
     try {
-      if (!user.phone) {
+      if (user && !user.phone) {
         try {
           const phoneRes = await fetch('/api/auth/phone', {
             method: 'POST',

@@ -271,3 +271,83 @@ test('Google users completing phone registration can place orders immediately wi
   assert.match(orderJson.orderId, /^BCF-/);
   assert.equal(orderJson.total, 15);
 });
+
+test('guests without an account can place orders when supplying a valid phone number', async (t) => {
+  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), 'bcf-guest-orders-'));
+  t.after(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    await fs.rm(rootDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 25 });
+  });
+  await fs.mkdir(path.join(rootDir, 'data'));
+  await fs.mkdir(path.join(rootDir, 'assets'));
+  await fs.writeFile(path.join(rootDir, 'data', 'products.json'), JSON.stringify(products.map((product, index) => ({
+    ...product, description: 'Test', sortOrder: index + 1, meta: {},
+  }))));
+  const { Pool } = newDb().adapters.createPg();
+  const customerDatabase = createDatabase({ connectionString: 'postgres://local/test', PoolClass: Pool });
+  t.after(() => customerDatabase.close());
+  const server = createServer({ rootDir, port: 0, customerDatabase });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => {
+    server.closeAllConnections?.();
+    return new Promise((resolve) => server.close(resolve));
+  });
+  const base = `http://127.0.0.1:${server.address().port}`;
+
+  const missingPhone = await fetch(`${base}/api/orders`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ items: [{ id: 'coffee-colombia', quantity: 100 }] }),
+  });
+  assert.equal(missingPhone.status, 400);
+
+  const staleCookieMissingPhone = await fetch(`${base}/api/orders`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', cookie: 'bcf_customer=invalid-stale-token' },
+    body: JSON.stringify({ items: [{ id: 'coffee-colombia', quantity: 100 }] }),
+  });
+  assert.equal(staleCookieMissingPhone.status, 400);
+
+  const badPhone = await fetch(`${base}/api/orders`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ phone: '0501234567', items: [{ id: 'coffee-colombia', quantity: 100 }] }),
+  });
+  assert.equal(badPhone.status, 400);
+
+  const guestOrder = await fetch(`${base}/api/orders`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ phone: '+994501234567', note: 'Qapıda zəng edin', items: [{ id: 'coffee-colombia', quantity: 100 }] }),
+  });
+  assert.equal(guestOrder.status, 201);
+  const guestJson = await guestOrder.json();
+  assert.match(guestJson.orderId, /^BCF-/);
+  assert.equal(guestJson.total, 15);
+
+  const adminLogin = await fetch(`${base}/api/admin/session`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ password: 'coffee-test-123' }),
+  });
+  assert.equal(adminLogin.status, 200);
+  const adminOrders = await fetch(`${base}/api/admin/orders`, {
+    headers: { cookie: adminLogin.headers.get('set-cookie') },
+  });
+  assert.equal(adminOrders.status, 200);
+  const allOrders = await adminOrders.json();
+  assert.equal(allOrders[0].id, guestJson.orderId);
+  assert.equal(allOrders[0].phone, '+994501234567');
+  assert.equal(allOrders[0].customerId, undefined);
+
+  const registered = await fetch(`${base}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ username: 'guest_check_user', phone: '+994559998877', password: 'LongEnough123!', privacyAccepted: true }),
+  });
+  assert.equal(registered.status, 201);
+  const memberOrders = await fetch(`${base}/api/account/orders`, {
+    headers: { cookie: registered.headers.get('set-cookie') },
+  });
+  assert.deepEqual(await memberOrders.json(), []);
+});

@@ -257,17 +257,12 @@ function createRequestHandler({
           const rawOrder = await parseJson(req, 48 * 1024);
           const token = customerCookie(req);
           let customer = null;
-          if (customerDatabase && customerAuth) {
+          if (customerDatabase && customerAuth && token) {
             await customerDatabase.migrate();
-            if (token) {
-              customer = await customerAuth.getSession(token);
-            }
-            if (!customer) {
-              return json(res, 401, { error: 'Sifariş vermək üçün hesaba daxil olmalısınız.' });
-            }
-            if (!rawOrder.phone && customer.phone) {
-              rawOrder.phone = customer.phone;
-            }
+            customer = await customerAuth.getSession(token);
+          }
+          if (customer && !rawOrder.phone && customer.phone) {
+            rawOrder.phone = customer.phone;
           }
           const order = prepareOrder(rawOrder, await store.list());
           if (customer) {

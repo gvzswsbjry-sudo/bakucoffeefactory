@@ -35,8 +35,10 @@ test('checkout CSS includes styling for WhatsApp button and destination notice',
   assert.match(checkoutCss, /\.checkout-wa-btn/);
   assert.match(checkoutCss, /#25d366/);
   assert.match(checkoutCss, /\.checkout-destination-note/);
+  assert.match(checkoutCss, /\.checkout-customer-box\[hidden\]/);
   assert.match(checkoutCss, /\.checkout-phone-field\[hidden\]/);
   assert.match(checkoutCss, /\.checkout-phone-hint/);
+  assert.match(checkoutCss, /\.checkout-code-picker/);
 });
 
 test('checkout JS reveals phone field for accounts missing phone and saves it via /api/auth/phone', () => {
@@ -45,4 +47,15 @@ test('checkout JS reveals phone field for accounts missing phone and saves it vi
   assert.match(checkoutJs, /phoneField\.hidden\s*=\s*Boolean\(currentUser\?\.phone\)/);
   assert.match(checkoutJs, /fetch\('\/api\/auth\/phone'/);
   assert.match(checkoutJs, /data-i18n="checkoutPhoneHint"/);
+});
+
+test('checkout JS permits guest orders without account modal gating while requiring a phone number', () => {
+  const checkoutJs = read('checkout.js');
+  const i18nJs = read('i18n.js');
+  assert.doesNotMatch(checkoutJs, /window\.bcfAccount\?\.open/);
+  assert.doesNotMatch(checkoutJs, /checkoutAuthRequired/);
+  assert.match(checkoutJs, /checkoutGuestPhoneHint/);
+  assert.match(checkoutJs, /if \(user && !user\.phone\)/);
+  assert.match(checkoutJs, /\/\^994\[1-9\]\\d\{8\}\$\//);
+  assert.match(i18nJs, /checkoutGuestPhoneHint:/);
 });
