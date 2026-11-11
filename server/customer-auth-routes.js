@@ -1,6 +1,7 @@
 'use strict';
 
 const { getClientIp, isJsonRequest, isTrustedOrigin } = require('./security');
+const defaultResetNotifier = require('./password-reset-notifier');
 
 const COOKIE_NAME = 'bcf_customer';
 const COOKIE_AGE = 30 * 24 * 60 * 60;
@@ -20,7 +21,7 @@ function sameOrigin(req, allowedOrigins = []) {
 
 async function handleCustomerAuthRequest(req, res, pathname, {
   database, customerAuth, secureCookies, json, parseJson, allowedOrigins = [], trustProxy = false,
-  socialProviders = {}, oidcVerifier,
+  socialProviders = {}, oidcVerifier, resetNotifier = defaultResetNotifier,
 }) {
   if (!pathname.startsWith('/api/auth/')) return false;
   if (pathname === '/api/auth/providers' && req.method === 'GET') {
@@ -45,7 +46,7 @@ async function handleCustomerAuthRequest(req, res, pathname, {
     json(res, 200, { user: await customerAuth.getSession(customerCookie(req)) });
     return true;
   }
-  if (!['register', 'login', 'logout', 'social'].some((name) => pathname === `/api/auth/${name}`)) {
+  if (!['register', 'login', 'logout', 'social', 'forgot-password', 'reset-password'].some((name) => pathname === `/api/auth/${name}`)) {
     json(res, 404, { error: 'Account route not found' });
     return true;
   }
@@ -78,6 +79,49 @@ async function handleCustomerAuthRequest(req, res, pathname, {
       const identity = await oidcVerifier.verify(provider, body.idToken);
       const result = await customerAuth.socialAuth({ ...identity, ip: input.ip, userAgent: input.userAgent });
       json(res, result.isNew ? 201 : 200, { user: result.user }, { 'set-cookie': cookieHeader(result.token, secureCookies) });
+      return true;
+    }
+    if (pathname === '/api/auth/forgot-password') {
+      const identifier = String(body?.identifier || '').trim();
+      const emailReady = typeof resetNotifier.isEmailTransportConfigured === 'function'
+        ? Boolean(resetNotifier.isEmailTransportConfigured())
+        : defaultResetNotifier.isEmailTransportConfigured();
+      const prep = await customerAuth.requestPasswordReset({
+        identifier,
+        ip: input.ip,
+        emailTransportConfigured: emailReady,
+      });
+      if (prep.dispatched && typeof resetNotifier.sendPasswordResetCode === 'function') {
+        const sendResult = await resetNotifier.sendPasswordResetCode({
+          user: prep.user,
+          code: prep.code,
+          expiresAt: prep.expiresAt,
+          identifier,
+        });
+        if (sendResult?.fallback && sendResult.channel === 'telegram') {
+          await database.pool.query(
+            'UPDATE password_reset_tokens SET delivery_channel = $2 WHERE id = $1',
+            [prep.tokenId, 'telegram']
+          ).catch(() => {});
+        } else if (sendResult && !sendResult.ok && !sendResult.skipped) {
+          console.warn('[Password Reset] Bərpa kodu göndərilmədi:', sendResult.reason || sendResult.error);
+        }
+      }
+      json(res, 200, {
+        ok: true,
+        message: 'Əgər bu məlumata uyğun hesab mövcuddursa, 6 rəqəmli təsdiq kodu göndərildi.',
+      });
+      return true;
+    }
+    if (pathname === '/api/auth/reset-password') {
+      const result = await customerAuth.resetPassword({
+        identifier: body?.identifier,
+        code: body?.code,
+        newPassword: body?.newPassword,
+        ip: input.ip,
+        userAgent: input.userAgent,
+      });
+      json(res, 200, { ok: true, user: result.user }, { 'set-cookie': cookieHeader(result.token, secureCookies) });
       return true;
     }
     const result = pathname === '/api/auth/register' ? await customerAuth.register(input) : await customerAuth.login(input);

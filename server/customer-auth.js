@@ -64,7 +64,26 @@ const publicUser = (row) => ({
 });
 const attemptKey = (ip, identifier) => tokenHash(`${String(ip || 'unknown').slice(0, 80)}\0${identifier}`);
 
-function createCustomerAuth({ database, now = () => new Date() }) {
+function resolveAccountLookup(identifier) {
+  const raw = String(identifier ?? '').trim();
+  if (!raw) throw authError('İstifadəçi adı, telefon nömrəsi və ya e-poçt daxil edin.', 400);
+  if (raw.includes('@')) {
+    return { field: 'email_normalized', normalized: normalizeEmail(raw) };
+  }
+  if (raw.startsWith('+') || /^00\d/.test(raw)) {
+    return { field: 'phone_e164', normalized: normalizePhone(raw) };
+  }
+  const cleanDigits = raw.replace(/[\s().-]/g, '');
+  if (/^0[1-9]\d{8}$/.test(cleanDigits)) {
+    return { field: 'phone_e164', normalized: `+994${cleanDigits.slice(1)}` };
+  }
+  if (/^994[1-9]\d{8}$/.test(cleanDigits)) {
+    return { field: 'phone_e164', normalized: `+${cleanDigits}` };
+  }
+  return { field: 'username_normalized', normalized: normalizeUsername(raw) };
+}
+
+function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs = 45_000 }) {
   if (!database) throw new Error('Customer database is required');
   const pool = database.pool;
   const current = () => new Date(now());
@@ -131,34 +150,15 @@ function createCustomerAuth({ database, now = () => new Date() }) {
   async function login({ identifier, password, ip, userAgent } = {}) {
     const raw = String(identifier ?? '').trim();
     if (!raw || typeof password !== 'string') throw authError('Giriş məlumatları düzgün deyil.', 401);
-    let normalized;
-    let field;
+    let lookup;
     try {
-      if (raw.includes('@')) {
-        field = 'email_normalized';
-        normalized = normalizeEmail(raw);
-      } else if (raw.startsWith('+') || /^00\d/.test(raw)) {
-        field = 'phone_e164';
-        normalized = normalizePhone(raw);
-      } else {
-        const cleanDigits = raw.replace(/[\s().-]/g, '');
-        if (/^0[1-9]\d{8}$/.test(cleanDigits)) {
-          field = 'phone_e164';
-          normalized = `+994${cleanDigits.slice(1)}`;
-        } else if (/^994[1-9]\d{8}$/.test(cleanDigits)) {
-          field = 'phone_e164';
-          normalized = `+${cleanDigits}`;
-        } else {
-          field = 'username_normalized';
-          normalized = normalizeUsername(raw);
-        }
-      }
+      lookup = resolveAccountLookup(raw);
     } catch {
       throw authError('Giriş məlumatları düzgün deyil.', 401);
     }
-    const key = attemptKey(ip, normalized);
+    const key = attemptKey(ip, lookup.normalized);
     await checkAttempts(key);
-    const { rows } = await pool.query(`SELECT id, full_name, username, phone_e164, email_normalized, password_salt, password_hash FROM customer_users WHERE ${field} = $1 AND is_active = TRUE`, [normalized]);
+    const { rows } = await pool.query(`SELECT id, full_name, username, phone_e164, email_normalized, password_salt, password_hash FROM customer_users WHERE ${lookup.field} = $1 AND is_active = TRUE`, [lookup.normalized]);
     const user = rows[0];
     const passwordOk = await verifyPassword(password, user?.password_salt || DUMMY_SALT, user?.password_hash || '00'.repeat(64));
     if (!user || !passwordOk) {
@@ -276,7 +276,184 @@ function createCustomerAuth({ database, now = () => new Date() }) {
     }
   }
 
-  return { register, login, getSession, logout, socialAuth };
+  async function requestPasswordReset({
+    identifier,
+    ip,
+    ttlMinutes = 15,
+    cooldownMs = resetCooldownMs,
+    emailTransportConfigured = false,
+  } = {}) {
+    const raw = String(identifier ?? '').trim();
+    if (!raw) throw authError('İstifadəçi adı, telefon nömrəsi və ya e-poçt daxil edin.', 400);
+    const lookup = resolveAccountLookup(raw);
+    const key = attemptKey(ip, `reset:${lookup.normalized}`);
+    await checkAttempts(key);
+
+    const { rows } = await pool.query(
+      `SELECT id, full_name, username, phone_e164, email_normalized FROM customer_users WHERE ${lookup.field} = $1 AND is_active = TRUE`,
+      [lookup.normalized]
+    );
+    const user = rows[0];
+    if (!user) return { dispatched: false, reason: 'not-found' };
+
+    const createdAt = current();
+    if (cooldownMs > 0) {
+      const latest = await pool.query(
+        'SELECT created_at FROM password_reset_tokens WHERE user_id = $1 AND used_at IS NULL ORDER BY created_at DESC LIMIT 1',
+        [user.id]
+      );
+      if (latest.rows.length > 0 && createdAt.getTime() - new Date(latest.rows[0].created_at).getTime() < cooldownMs) {
+        return { dispatched: false, reason: 'cooldown' };
+      }
+    }
+
+    const tokenId = crypto.randomUUID();
+    const code = String(crypto.randomInt(100000, 1000000));
+    const digest = tokenHash(`${tokenId}:${user.id}:${code}`);
+    const expiresAt = new Date(createdAt.getTime() + ttlMinutes * 60 * 1000);
+    const deliveryChannel = user.email_normalized && emailTransportConfigured ? 'email' : 'telegram';
+
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        'UPDATE password_reset_tokens SET used_at = $2 WHERE user_id = $1 AND used_at IS NULL',
+        [user.id, createdAt]
+      );
+      await client.query(
+        `INSERT INTO password_reset_tokens (id, user_id, code_hash, delivery_channel, attempts, created_at, expires_at)
+         VALUES ($1, $2, $3, $4, 0, $5, $6)`,
+        [tokenId, user.id, digest, deliveryChannel, createdAt, expiresAt]
+      );
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+
+    return {
+      dispatched: true,
+      tokenId,
+      user: publicUser(user),
+      code,
+      expiresAt,
+      deliveryChannel,
+    };
+  }
+
+  async function resetPassword({ identifier, code, newPassword, ip, userAgent } = {}) {
+    const raw = String(identifier ?? '').trim();
+    if (!raw) throw authError('İstifadəçi adı, telefon nömrəsi və ya e-poçt daxil edin.', 400);
+    const cleanCode = String(code ?? '').replace(/\s+/g, '').trim();
+    if (!/^\d{6}$/.test(cleanCode)) {
+      throw authError('6 rəqəmli bərpa kodunu düzgün daxil edin.', 400);
+    }
+    if (typeof newPassword !== 'string' || newPassword.length < 12 || newPassword.length > 128) {
+      throw authError('Şifrə 12–128 simvol olmalıdır.', 400);
+    }
+
+    let lookup;
+    try {
+      lookup = resolveAccountLookup(raw);
+    } catch {
+      throw authError('Bərpa kodu yanlışdır və ya vaxtı bitib.', 400);
+    }
+
+    const key = attemptKey(ip, `reset:${lookup.normalized}`);
+    await checkAttempts(key);
+
+    const { rows } = await pool.query(
+      `SELECT id, full_name, username, phone_e164, email_normalized FROM customer_users WHERE ${lookup.field} = $1 AND is_active = TRUE`,
+      [lookup.normalized]
+    );
+    const user = rows[0];
+    if (!user) {
+      await recordFailure(key);
+      throw authError('Bərpa kodu yanlışdır və ya vaxtı bitib.', 400);
+    }
+
+    const tokenRes = await pool.query(
+      'SELECT id, code_hash, attempts, expires_at FROM password_reset_tokens WHERE user_id = $1 AND used_at IS NULL ORDER BY created_at DESC LIMIT 1',
+      [user.id]
+    );
+    const tokenRow = tokenRes.rows[0];
+    const nowTime = current();
+
+    if (!tokenRow || new Date(tokenRow.expires_at).getTime() <= nowTime.getTime()) {
+      if (tokenRow) {
+        await pool.query(
+          'UPDATE password_reset_tokens SET used_at = $2 WHERE id = $1 AND used_at IS NULL',
+          [tokenRow.id, nowTime]
+        );
+      }
+      await recordFailure(key);
+      throw authError('Bərpa kodu yanlışdır və ya vaxtı bitib.', 400);
+    }
+
+    const candidateHash = Buffer.from(tokenHash(`${tokenRow.id}:${user.id}:${cleanCode}`), 'hex');
+    const expectedHash = Buffer.from(tokenRow.code_hash, 'hex');
+    const codeMatches = candidateHash.length === expectedHash.length && crypto.timingSafeEqual(candidateHash, expectedHash);
+
+    if (!codeMatches) {
+      const nextAttempts = Number(tokenRow.attempts || 0) + 1;
+      const burned = nextAttempts >= 5;
+      await pool.query(
+        'UPDATE password_reset_tokens SET attempts = $2, used_at = $3 WHERE id = $1',
+        [tokenRow.id, nextAttempts, burned ? nowTime : null]
+      );
+      await recordFailure(key);
+      throw authError(
+        burned
+          ? 'Kod etibarsız oldu. Yenidən şifrə bərpa kodu tələb edin.'
+          : 'Bərpa kodu yanlışdır və ya vaxtı bitib.',
+        400
+      );
+    }
+
+    const { salt, hash } = await hashPassword(newPassword);
+    let sessionToken;
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        'UPDATE customer_users SET password_salt = $2, password_hash = $3, updated_at = $4, last_login_at = $4 WHERE id = $1',
+        [user.id, salt, hash, nowTime]
+      );
+      await client.query(
+        'UPDATE password_reset_tokens SET used_at = $2 WHERE user_id = $1 AND used_at IS NULL',
+        [user.id, nowTime]
+      );
+      await client.query('DELETE FROM customer_sessions WHERE user_id = $1', [user.id]);
+      sessionToken = await createSession(client, user.id, userAgent);
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+
+    await pool.query(
+      'DELETE FROM auth_attempts WHERE attempt_key = $1 OR attempt_key = $2',
+      [key, attemptKey(ip, lookup.normalized)]
+    );
+
+    return { user: publicUser(user), token: sessionToken };
+  }
+
+  return { register, login, getSession, logout, socialAuth, requestPasswordReset, resetPassword };
 }
 
-module.exports = { createCustomerAuth, normalizeEmail, normalizePhone, normalizeUsername, hashPassword, verifyPassword, tokenHash, POLICY_VERSION };
+module.exports = {
+  createCustomerAuth,
+  normalizeEmail,
+  normalizePhone,
+  normalizeUsername,
+  resolveAccountLookup,
+  hashPassword,
+  verifyPassword,
+  tokenHash,
+  POLICY_VERSION,
+};

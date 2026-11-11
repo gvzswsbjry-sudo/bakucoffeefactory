@@ -321,4 +321,7 @@ module.exports = {
   getTelegramStatus,
   getBotCredentials,
   parseChatIds,
+  sendToSingleChat,
+  isTestEnvironment,
+  escapeHtml,
 };

@@ -68,12 +68,15 @@
             </div>
             <input class="account-custom-code" name="customCode" type="tel" inputmode="tel" data-i18n-placeholder="customCodePlaceholder" placeholder="Ölkə kodu, məsələn +81" aria-label="Digər ölkə kodu" hidden />
           </div>
-          <label class="account-field account-register-only account-email-contact" style="display:none;" hidden><span data-i18n="emailLabel">E-poçt ünvanı</span>
+          <label class="account-field account-register-only account-email-contact" hidden><div><span data-i18n="emailLabel">E-poçt ünvanı</span> <span class="account-field-hint" data-i18n="emailResetHint">(şifrə bərpası üçün — istəyə bağlı)</span></div>
             <input name="email" type="email" inputmode="email" autocomplete="email" data-i18n-placeholder="emailPlaceholder" placeholder="ad@example.com" />
           </label>
           <label class="account-field"><span data-i18n="passwordLabel">Şifrə</span>
             <span class="account-password-wrap"><input name="password" type="password" autocomplete="current-password" minlength="12" data-i18n-placeholder="passwordPlaceholder" placeholder="Ən azı 12 simvol" /><button class="account-password-toggle" type="button" aria-label="Şifrəni göstər" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button></span>
           </label>
+          <div class="account-forgot-row account-login-only">
+            <button type="button" class="account-forgot-link" id="accountForgotTrigger" data-i18n="forgotPasswordBtn">Şifrəni unutdun?</button>
+          </div>
           <label class="account-consent account-register-only" hidden>
             <input name="privacyAccepted" type="checkbox" />
             <span data-i18n="privacyConsentHtml"><a href="mexfilik.html" target="_blank" rel="noopener">Məxfilik siyasətini</a> oxudum və şəxsi məlumatlarımın hesab yaratmaq üçün işlənməsinə razıyam.</span>
@@ -82,6 +85,53 @@
           <button class="account-submit" type="submit" data-i18n="loginSubmit">Daxil ol</button>
         </form>
         <p class="account-note" data-i18n="accountGuestNote">Hesab açmadan da sayta baxa və səbətə məhsul əlavə edə bilərsiniz.</p>
+        <div class="account-reset-view" hidden>
+          <div class="account-reset-head">
+            <button type="button" class="account-reset-back" id="resetBackToLogin" data-i18n="resetBackToLogin">← Girişə qayıt</button>
+            <h3 class="account-reset-title" data-i18n="resetPasswordTitle">Şifrəni yenilə</h3>
+            <p class="account-reset-note" data-i18n="resetRequestDesc">Hesabınıza bağlı istifadəçi adı, telefon nömrəsi və ya Gmail ünvanını daxil edin. E-poçtunuz varsa 6 rəqəmli kod Gmail-ə, əks halda dəstək xəttimizə (Telegram / WhatsApp) yönləndiriləcək.</p>
+          </div>
+          <form id="resetRequestForm" class="account-reset-form" novalidate>
+            <label class="account-field">
+              <span data-i18n="resetIdentifierLabel">İstifadəçi adı, telefon və ya e-poçt</span>
+              <input name="resetIdentifier" autocomplete="username" data-i18n-placeholder="identifierPlaceholder" placeholder="İstifadəçi adı, telefon və ya e-poçt" />
+            </label>
+            <p class="account-message" id="resetRequestMessage" role="status" aria-live="polite"></p>
+            <button class="account-submit" type="submit" id="resetRequestSubmit" data-i18n="resetSendCodeBtn">Təsdiq kodu göndər</button>
+            <button type="button" class="account-secondary-link" id="resetHaveCodeBtn" data-i18n="resetHaveCodeBtn">Artıq bərpa kodum var</button>
+          </form>
+          <form id="resetConfirmForm" class="account-reset-form" novalidate hidden>
+            <p class="account-reset-sent-banner" id="resetSentBanner" role="status" aria-live="polite" hidden></p>
+            <label class="account-field">
+              <span data-i18n="resetIdentifierLabel">İstifadəçi adı, telefon və ya e-poçt</span>
+              <input name="confirmIdentifier" autocomplete="username" data-i18n-placeholder="identifierPlaceholder" placeholder="İstifadəçi adı, telefon və ya e-poçt" />
+            </label>
+            <label class="account-field">
+              <span data-i18n="resetCodeLabel">6 rəqəmli təsdiq kodu</span>
+              <input name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" data-i18n-placeholder="resetCodePlaceholder" placeholder="123456" class="account-otp-input" />
+            </label>
+            <label class="account-field">
+              <span data-i18n="resetNewPasswordLabel">Yeni şifrə</span>
+              <span class="account-password-wrap">
+                <input name="newPassword" type="password" autocomplete="new-password" minlength="12" data-i18n-placeholder="passwordPlaceholder" placeholder="Ən azı 12 simvol" />
+                <button class="account-password-toggle account-reset-pw-toggle" type="button" data-target="newPassword" aria-label="Şifrəni göstər" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </span>
+            </label>
+            <label class="account-field">
+              <span data-i18n="resetConfirmPasswordLabel">Yeni şifrəni təkrarla</span>
+              <span class="account-password-wrap">
+                <input name="confirmPassword" type="password" autocomplete="new-password" minlength="12" data-i18n-placeholder="passwordPlaceholder" placeholder="Ən azı 12 simvol" />
+                <button class="account-password-toggle account-reset-pw-toggle" type="button" data-target="confirmPassword" aria-label="Şifrəni göstər" aria-pressed="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+              </span>
+            </label>
+            <p class="account-message" id="resetConfirmMessage" role="status" aria-live="polite"></p>
+            <button class="account-submit" type="submit" id="resetConfirmSubmit" data-i18n="resetConfirmSubmitBtn">Şifrəni yenilə və daxil ol</button>
+            <div class="account-reset-footer-actions">
+              <button type="button" class="account-secondary-link" id="resetResendBtn" data-i18n="resetResendCodeBtn">Yenidən kod göndər</button>
+              <a class="account-support-wa" href="https://wa.me/994703901009" target="_blank" rel="noopener" data-i18n="resetSupportWhatsApp">Kod gəlmirsə WhatsApp: 070 390 10 09</a>
+            </div>
+          </form>
+        </div>
        </div>
        <div class="account-profile-view" hidden>
         <div class="account-profile-card">
@@ -104,6 +154,17 @@
   const message = overlay.querySelector('#accountMessage');
   const profile = overlay.querySelector('.account-profile-view');
   const authView = overlay.querySelector('.account-auth-view');
+  const accountTabs = overlay.querySelector('.account-tabs');
+  const socialSection = overlay.querySelector('.account-social');
+  const guestNote = overlay.querySelector('.account-note');
+  const resetView = overlay.querySelector('.account-reset-view');
+  const resetRequestForm = overlay.querySelector('#resetRequestForm');
+  const resetConfirmForm = overlay.querySelector('#resetConfirmForm');
+  const resetRequestMessage = overlay.querySelector('#resetRequestMessage');
+  const resetConfirmMessage = overlay.querySelector('#resetConfirmMessage');
+  const resetSentBanner = overlay.querySelector('#resetSentBanner');
+  const resetRequestSubmit = overlay.querySelector('#resetRequestSubmit');
+  const resetConfirmSubmit = overlay.querySelector('#resetConfirmSubmit');
   const submit = overlay.querySelector('.account-submit');
   const countryCode = form.elements.countryCode;
   const customCode = form.elements.customCode;
@@ -111,6 +172,8 @@
   const passwordToggle = overlay.querySelector('.account-password-toggle');
   let mode = 'login';
   let contactMode = 'phone';
+  let resetMode = false;
+  let resetStep = 'request';
   let user = null;
   let previousFocus = null;
   function announceAuthChange() {
@@ -207,6 +270,40 @@
     setContactMode(contactMode);
   }
 
+  function setResetStep(nextStep) {
+    resetStep = nextStep === 'confirm' ? 'confirm' : 'request';
+    resetRequestForm.hidden = resetStep !== 'request';
+    resetConfirmForm.hidden = resetStep !== 'confirm';
+    resetRequestMessage.textContent = '';
+    resetConfirmMessage.textContent = '';
+    if (resetStep === 'request') resetSentBanner.hidden = true;
+    overlay.querySelectorAll('.account-reset-pw-toggle').forEach((btn) => {
+      const target = resetConfirmForm.elements[btn.dataset.target];
+      if (target) target.type = 'password';
+      btn.setAttribute('aria-pressed', 'false');
+      btn.setAttribute('aria-label', tr('authShowPassword', 'Şifrəni göstər'));
+    });
+    window.BCF_I18N?.translateDom?.(overlay);
+  }
+
+  function setResetMode(active, nextStep = 'request') {
+    resetMode = Boolean(active);
+    accountTabs.hidden = resetMode;
+    socialSection.hidden = resetMode;
+    form.hidden = resetMode;
+    guestNote.hidden = resetMode;
+    resetView.hidden = !resetMode;
+    message.textContent = '';
+    if (resetMode) {
+      setResetStep(nextStep);
+    } else {
+      resetRequestMessage.textContent = '';
+      resetConfirmMessage.textContent = '';
+      resetSentBanner.hidden = true;
+      window.BCF_I18N?.translateDom?.(overlay);
+    }
+  }
+
   function setContactMode(nextMode) {
     contactMode = nextMode === 'email' ? 'email' : 'phone';
     overlay.querySelectorAll('[data-contact]').forEach((button) => {
@@ -215,8 +312,8 @@
       button.setAttribute('aria-pressed', String(active));
     });
     const registering = mode === 'register';
-    overlay.querySelector('.account-phone-contact').hidden = !registering || contactMode !== 'phone';
-    overlay.querySelector('.account-email-contact').hidden = !registering || contactMode !== 'email';
+    overlay.querySelector('.account-phone-contact').hidden = !registering;
+    overlay.querySelector('.account-email-contact').hidden = !registering;
   }
 
   function close() {
@@ -232,6 +329,7 @@
     document.body.classList.add('account-open');
     document.documentElement.classList.add('account-open');
     message.textContent = '';
+    if (!user && resetMode) setResetMode(false);
     if (overlay.querySelector('[data-center="orders"]')?.classList.contains('active')) renderOrders();
     window.BCF_I18N?.translateDom?.(overlay);
     dialog.focus();
@@ -248,7 +346,10 @@
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
     if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   });
-  overlay.querySelectorAll('.account-tab').forEach((tab) => tab.addEventListener('click', () => setMode(tab.dataset.mode)));
+  overlay.querySelectorAll('.account-tab').forEach((tab) => tab.addEventListener('click', () => {
+    setResetMode(false);
+    setMode(tab.dataset.mode);
+  }));
   overlay.querySelectorAll('[data-contact]').forEach((button) => button.addEventListener('click', () => setContactMode(button.dataset.contact)));
   overlay.querySelectorAll('.account-center-tab').forEach((tab) => tab.addEventListener('click', () => {
     overlay.querySelectorAll('.account-center-tab').forEach((item) => {
@@ -429,6 +530,7 @@
     const dialCode = countryCode.value === 'other' ? customCode.value.trim() : countryCode.value;
     const localDigits = form.elements.phoneLocal.value.replace(/\D/g, '');
     const phone = `${dialCode}${localDigits}`;
+    const email = form.elements.email ? form.elements.email.value.trim() : '';
     const fullName = form.elements.fullName ? form.elements.fullName.value.trim() : '';
     const username = form.elements.username ? form.elements.username.value.trim() : '';
 
@@ -446,6 +548,11 @@
       if (!/^\+[1-9]\d{0,3}$/.test(dialCode) || !/^\d{5,14}$/.test(localDigits)) {
         message.textContent = tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.');
         form.elements.phoneLocal?.focus();
+        return;
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        message.textContent = tr('authEmailInvalid', 'E-poçt ünvanını düzgün daxil edin.');
+        form.elements.email?.focus();
         return;
       }
       if (!password || password.length < 12) {
@@ -473,7 +580,8 @@
     const body = mode === 'register' ? {
       fullName,
       username,
-      ...(contactMode === 'email' && form.elements.email?.value.trim() ? { email: form.elements.email.value.trim() } : { phone }),
+      phone,
+      ...(email ? { email } : {}),
       password,
       privacyAccepted: form.elements.privacyAccepted.checked,
     } : { identifier: form.elements.identifier.value.trim(), password };
@@ -494,6 +602,133 @@
     }
   });
 
+  overlay.querySelector('#accountForgotTrigger')?.addEventListener('click', () => {
+    const typedId = form.elements.identifier?.value.trim() || '';
+    if (typedId && resetRequestForm.elements.resetIdentifier) {
+      resetRequestForm.elements.resetIdentifier.value = typedId;
+    }
+    setResetMode(true, 'request');
+    resetRequestForm.elements.resetIdentifier?.focus();
+  });
+
+  overlay.querySelector('#resetBackToLogin')?.addEventListener('click', () => {
+    setResetMode(false);
+    setMode('login');
+    form.elements.identifier?.focus();
+  });
+
+  overlay.querySelector('#resetHaveCodeBtn')?.addEventListener('click', () => {
+    const typedId = resetRequestForm.elements.resetIdentifier?.value.trim() || '';
+    if (typedId && resetConfirmForm.elements.confirmIdentifier) {
+      resetConfirmForm.elements.confirmIdentifier.value = typedId;
+    }
+    setResetStep('confirm');
+    resetSentBanner.hidden = true;
+    (typedId ? resetConfirmForm.elements.code : resetConfirmForm.elements.confirmIdentifier)?.focus();
+  });
+
+  overlay.querySelector('#resetResendBtn')?.addEventListener('click', () => {
+    const typedId = resetConfirmForm.elements.confirmIdentifier?.value.trim() || '';
+    if (typedId && resetRequestForm.elements.resetIdentifier) {
+      resetRequestForm.elements.resetIdentifier.value = typedId;
+    }
+    setResetStep('request');
+    resetRequestForm.elements.resetIdentifier?.focus();
+  });
+
+  overlay.querySelectorAll('.account-reset-pw-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const input = resetConfirmForm.elements[btn.dataset.target];
+      if (!input) return;
+      const visible = input.type === 'password';
+      input.type = visible ? 'text' : 'password';
+      btn.setAttribute('aria-pressed', String(visible));
+      btn.setAttribute('aria-label', visible ? tr('authHidePassword', 'Şifrəni gizlət') : tr('authShowPassword', 'Şifrəni göstər'));
+    });
+  });
+
+  resetConfirmForm?.elements.code?.addEventListener('input', (event) => {
+    event.target.value = event.target.value.replace(/\D/g, '').slice(0, 6);
+  });
+
+  resetRequestForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    resetRequestMessage.textContent = '';
+    const identifier = resetRequestForm.elements.resetIdentifier?.value.trim() || '';
+    if (!identifier) {
+      resetRequestMessage.textContent = tr('authIdentifierRequired', 'İstifadəçi adı, telefon nömrəsi və ya e-poçtunuzu daxil edin.');
+      resetRequestForm.elements.resetIdentifier?.focus();
+      return;
+    }
+    resetRequestSubmit.disabled = true;
+    try {
+      await request('forgot-password', { identifier });
+      resetConfirmForm.reset();
+      resetConfirmForm.elements.confirmIdentifier.value = identifier;
+      setResetStep('confirm');
+      resetSentBanner.textContent = tr(
+        'resetCodeSentBanner',
+        'Hesab varsa 6 rəqəmli kod göndərildi (Gmail-ə və ya dəstək xəttinə). Gmail-də görünməsə Spam qovluğunu yoxlayın; e-poçt bağlı deyilsə WhatsApp (+994 70 390 10 09) ilə kodu əldə edin.'
+      );
+      resetSentBanner.hidden = false;
+      resetConfirmForm.elements.code?.focus();
+    } catch (error) {
+      resetRequestMessage.textContent = error.message;
+    } finally {
+      resetRequestSubmit.disabled = false;
+    }
+  });
+
+  resetConfirmForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    resetConfirmMessage.textContent = '';
+    const identifier = resetConfirmForm.elements.confirmIdentifier?.value.trim() || '';
+    const code = resetConfirmForm.elements.code?.value.replace(/\D/g, '') || '';
+    const newPassword = resetConfirmForm.elements.newPassword?.value || '';
+    const confirmPassword = resetConfirmForm.elements.confirmPassword?.value || '';
+
+    if (!identifier) {
+      resetConfirmMessage.textContent = tr('authIdentifierRequired', 'İstifadəçi adı, telefon nömrəsi və ya e-poçtunuzu daxil edin.');
+      resetConfirmForm.elements.confirmIdentifier?.focus();
+      return;
+    }
+    if (!/^\d{6}$/.test(code)) {
+      resetConfirmMessage.textContent = tr('resetCodeInvalid', '6 rəqəmli təsdiq kodunu düzgün daxil edin.');
+      resetConfirmForm.elements.code?.focus();
+      return;
+    }
+    if (!newPassword || newPassword.length < 12) {
+      resetConfirmMessage.textContent = tr('authPasswordMin', 'Şifrə ən azı 12 simvoldan ibarət olmalıdır.');
+      resetConfirmForm.elements.newPassword?.focus();
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      resetConfirmMessage.textContent = tr('resetPasswordMismatch', 'Yeni şifrələr uyğun gəlmir.');
+      resetConfirmForm.elements.confirmPassword?.focus();
+      return;
+    }
+
+    resetConfirmSubmit.disabled = true;
+    try {
+      const result = await request('reset-password', { identifier, code, newPassword });
+      user = result.user;
+      announceAuthChange();
+      form.reset();
+      resetRequestForm.reset();
+      resetConfirmForm.reset();
+      updateCountryCode();
+      form.elements.password.type = 'password';
+      setResetMode(false);
+      setMode('login');
+      renderUser();
+      close();
+    } catch (error) {
+      resetConfirmMessage.textContent = error.message;
+    } finally {
+      resetConfirmSubmit.disabled = false;
+    }
+  });
+
   overlay.querySelector('.account-logout').addEventListener('click', async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' }).catch(() => {});
@@ -511,7 +746,12 @@
       overlay.hidden = false;
       document.body.classList.add('account-open');
       document.documentElement.classList.add('account-open');
-      if (options.mode) setMode(options.mode);
+      if (options.mode === 'forgot') {
+        setResetMode(true, 'request');
+      } else {
+        setResetMode(false);
+        if (options.mode) setMode(options.mode);
+      }
       if (options.message) message.textContent = options.message;
       window.BCF_I18N?.translateDom?.(overlay);
       dialog.focus();
@@ -528,6 +768,12 @@
     setMode(mode);
     renderUser();
     updateCountryCode();
+    if (!resetSentBanner.hidden) {
+      resetSentBanner.textContent = tr(
+        'resetCodeSentBanner',
+        'Hesab varsa 6 rəqəmli kod göndərildi (Gmail-ə və ya dəstək xəttinə). Gmail-də görünməsə Spam qovluğunu yoxlayın; e-poçt bağlı deyilsə WhatsApp (+994 70 390 10 09) ilə kodu əldə edin.'
+      );
+    }
     overlay.querySelectorAll('select[name="countryCode"] option').forEach((opt) => {
       if (opt.value === 'other') {
         opt.textContent = dyn('Digər ölkə kodu…');

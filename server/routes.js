@@ -157,6 +157,7 @@ function createRequestHandler({
   adminInitialPassword = '',
   socialProviders = {},
   oidcVerifier,
+  resetNotifier,
 }) {
   const analytics = userAnalytics || createAnalyticsStore({ rootDir });
   const assetsRoot = path.join(rootDir, 'assets');
@@ -197,13 +198,13 @@ function createRequestHandler({
         if (!isTrustedOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
         if (req.method === 'OPTIONS') return json(res, 204);
         if (pathname === '/api/admin/session' && req.method === 'POST' && limitRequest(res, adminLoginLimiter, clientIp)) return;
-        if (['/api/auth/login', '/api/auth/register'].includes(pathname) && req.method === 'POST' && limitRequest(res, accountLimiter, clientIp)) return;
+        if (['/api/auth/login', '/api/auth/register', '/api/auth/forgot-password', '/api/auth/reset-password'].includes(pathname) && req.method === 'POST' && limitRequest(res, accountLimiter, clientIp)) return;
         if (pathname === '/api/orders' && req.method === 'POST' && limitRequest(res, orderLimiter, clientIp)) return;
       }
 
       if (await handleCustomerAuthRequest(req, res, pathname, {
         database: customerDatabase, customerAuth, secureCookies, json, parseJson, allowedOrigins, trustProxy,
-        socialProviders, oidcVerifier,
+        socialProviders, oidcVerifier, resetNotifier,
       })) return;
 
       if (req.method === 'GET' && pathname === '/api/products') return json(res, 200, await store.list());

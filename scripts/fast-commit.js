@@ -5,10 +5,17 @@ const fs = require('fs');
 
 function runPlumbingCommit(message) {
   const filesToUpdate = [
+    '.env.example',
     'i18n.css',
     'i18n.js',
     'cart-utils.js',
+    'server.js',
     'server/routes.js',
+    'server/customer-auth.js',
+    'server/customer-auth-routes.js',
+    'server/password-reset-notifier.js',
+    'server/telegram-notifier.js',
+    'server/migrations/001_customer_auth.sql',
     'script.js',
     'storefront-products.js',
     'coffee-shop.js',
@@ -28,6 +35,9 @@ function runPlumbingCommit(message) {
     'mexfilik.html',
     'tests/i18n.test.js',
     'tests/checkout-whatsapp.test.js',
+    'tests/auth/db.test.js',
+    'tests/auth/customer-auth.test.js',
+    'tests/auth/routes.test.js',
     'tests/auth/account-ui.test.js',
     'scripts/build-i18n-dictionary.js',
     'scripts/add-russian-translations.js',

@@ -41,6 +41,16 @@ test('the shared storefront script loads the accessible account interface withou
   const socialIndex = account.indexOf('<div class="account-social');
   const formIndex = account.indexOf('<form id="accountForm"');
   assert.ok(socialIndex > 0 && formIndex > socialIndex, 'Google sign-in section must render above accountForm so it stays visible in registration mode');
+
+  assert.match(account, /id="accountForgotTrigger"/);
+  assert.match(account, /class="account-reset-view"/);
+  assert.match(account, /id="resetRequestForm"/);
+  assert.match(account, /id="resetConfirmForm"/);
+  assert.match(account, /api\/auth\/|request\('forgot-password'/);
+  assert.match(account, /request\('reset-password'/);
+  assert.doesNotMatch(account, /account-email-contact"[^>]*style="display:none;"/);
+  assert.match(css, /\.account-reset-view\[hidden\]/);
+  assert.match(css, /\.account-forgot-row\[hidden\]/);
 });
 
 test('privacy page explains the account data and contains a contact method', () => {

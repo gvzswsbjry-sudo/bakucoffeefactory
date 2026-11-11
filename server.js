@@ -55,6 +55,8 @@ function createServer({
     apple: { clientId: process.env.APPLE_CLIENT_ID || '' },
   },
   oidcVerifier,
+  resetNotifier,
+  resetCooldownMs,
 } = {}) {
   const database = customerDatabase === undefined ? createDatabase() : customerDatabase;
   const store = createProductStore({
@@ -63,13 +65,14 @@ function createServer({
     database,
   });
   const auth = createAuth({ configPath: path.join(rootDir, 'data', 'admin-config.json') });
-  const customerAuth = database ? createCustomerAuth({ database }) : null;
+  const customerAuth = database ? createCustomerAuth({ database, resetCooldownMs }) : null;
   const socialVerifier = oidcVerifier || createOidcVerifier({ providers: socialProviders });
   const orders = createOrderStore({ filePath: path.join(rootDir, 'data', 'orders.json') });
   const analytics = createAnalyticsStore({ filePath: path.join(rootDir, 'data', 'analytics.json'), rootDir });
   const server = http.createServer(createRequestHandler({
     rootDir, store, auth, orders, analytics, customerDatabase: database, customerAuth, secureCookies,
     allowedOrigins, trustProxy, adminInitialPassword, socialProviders, oidcVerifier: socialVerifier,
+    resetNotifier,
   }));
   server.headersTimeout = 15_000;
   server.requestTimeout = 30_000;
