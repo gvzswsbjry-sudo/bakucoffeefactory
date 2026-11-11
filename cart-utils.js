@@ -280,7 +280,7 @@
       document.head.append(stylesheet);
       const checkoutScript = document.createElement('script');
       checkoutScript.id = 'checkoutScript';
-      checkoutScript.src = 'checkout.js?v=20261109-1';
+      checkoutScript.src = 'checkout.js?v=20261111-1';
       document.body.append(checkoutScript);
     }
     window.addEventListener('storage', (event) => {

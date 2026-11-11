@@ -63,7 +63,7 @@
           <div class="checkout-total"><span data-i18n="total">Cəmi</span><strong id="checkoutTotal">0.00 ₼</strong></div>
           <p class="checkout-error" role="alert" aria-live="polite"></p>
           <button class="checkout-confirm" type="submit" data-i18n="confirmCheckoutBtn">Sifarişi təsdiqlə və WhatsApp-a göndər</button>
-          <p class="checkout-destination-note" data-i18n="checkoutDestinationNote">✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 55 645 22 04) göndərilir</p>
+          <p class="checkout-destination-note" data-i18n="checkoutDestinationNote">✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 70 390 10 09) göndərilir</p>
         </form>
       </div>
       <div class="checkout-success" hidden role="status" aria-live="polite">
@@ -201,7 +201,7 @@
     openCheckout();
   });
 
-  const WHATSAPP_TARGET_NUMBER = '994556452204';
+  const WHATSAPP_TARGET_NUMBER = '994703901009';
 
   function formatWhatsAppOrderMessage({ orderId, phone, note, items, total }) {
     const lines = [

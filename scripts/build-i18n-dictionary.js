@@ -102,9 +102,9 @@ const PHRASE_MAP = {
   'Sifarişi tamamlayın.': { en: 'Complete your order.', ar: 'إتمام الطلب.' },
   'Sifarişlə bağlı əlavə istəyiniz varsa yazın': { en: 'Write any special instructions for your order', ar: 'اكتب أي ملاحظة أو طلب خاص بطلبك هنا' },
   'Sifarişi təsdiqlə və WhatsApp-a göndər': { en: 'Confirm Order & Send via WhatsApp', ar: 'تأكيد الطلب والإرسال عبر واتساب' },
-  '✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 55 645 22 04) göndərilir': {
-    en: '✓ Order is sent to Admin panel, Telegram, and WhatsApp (+994 55 645 22 04)',
-    ar: '✓ يتم إرسال الطلب إلى لوحة التحكم وتيليجرام وواتساب (+994 55 645 22 04)'
+  '✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 70 390 10 09) göndərilir': {
+    en: '✓ Order is sent to Admin panel, Telegram, and WhatsApp (+994 70 390 10 09)',
+    ar: '✓ يتم إرسال الطلب إلى لوحة التحكم وتيليجرام وواتساب (+994 70 390 10 09)'
   },
   'SİFARİŞ QEYDƏ ALINDI': { en: 'ORDER RECEIVED', ar: 'تم تسجيل الطلب' },
   'Sifariş sorğunuz qəbul edildi.': { en: 'Your order request has been accepted.', ar: 'تم استلام طلبك بنجاح.' },

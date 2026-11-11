@@ -26,6 +26,7 @@ function runPlumbingCommit(message) {
     'menyu.html',
     'mexfilik.html',
     'tests/i18n.test.js',
+    'tests/checkout-whatsapp.test.js',
     'scripts/build-i18n-dictionary.js',
     'scripts/add-russian-translations.js',
     'scripts/generate-full-i18n.js',

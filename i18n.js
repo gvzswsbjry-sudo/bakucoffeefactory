@@ -127,7 +127,7 @@
       optional: '(istəyə bağlı)',
       notePlaceholder: 'Sifarişlə bağlı əlavə istəyiniz varsa yazın',
       confirmCheckoutBtn: 'Sifarişi təsdiqlə və WhatsApp-a göndər',
-      checkoutDestinationNote: '✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 55 645 22 04) göndərilir',
+      checkoutDestinationNote: '✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 70 390 10 09) göndərilir',
       orderReceivedEyebrow: 'SİFARİŞ QEYDƏ ALINDI',
       orderReceivedTitle: 'Sifariş sorğunuz qəbul edildi.',
       orderWhatsAppHint: 'Sifarişiniz sistemə qeyd olundu! Sürətli təsdiq üçün birbaşa WhatsApp-a göndərin:',
@@ -348,7 +348,7 @@
       optional: '(optional)',
       notePlaceholder: 'Write any special instructions for your order',
       confirmCheckoutBtn: 'Confirm Order & Send via WhatsApp',
-      checkoutDestinationNote: '✓ Order is sent to Admin panel, Telegram, and WhatsApp (+994 55 645 22 04)',
+      checkoutDestinationNote: '✓ Order is sent to Admin panel, Telegram, and WhatsApp (+994 70 390 10 09)',
       orderReceivedEyebrow: 'ORDER RECEIVED',
       orderReceivedTitle: 'Your order request has been accepted.',
       orderWhatsAppHint: 'Your order is recorded! Send directly to WhatsApp for rapid confirmation:',
@@ -569,7 +569,7 @@
       optional: '(необязательно)',
       notePlaceholder: 'Укажите пожелания или детали к заказу, если есть',
       confirmCheckoutBtn: 'Подтвердить заказ и отправить в WhatsApp',
-      checkoutDestinationNote: '✓ Заказ отправляется в панель управления, Telegram и WhatsApp (+994 55 645 22 04)',
+      checkoutDestinationNote: '✓ Заказ отправляется в панель управления, Telegram и WhatsApp (+994 70 390 10 09)',
       orderReceivedEyebrow: 'ЗАКАЗ ПРИНЯТ',
       orderReceivedTitle: 'Ваш запрос на заказ успешно принят.',
       orderWhatsAppHint: 'Ваш заказ зафиксирован! Для быстрого подтверждения отправьте в WhatsApp:',
@@ -790,7 +790,7 @@
       optional: '(اختياري)',
       notePlaceholder: 'اكتب أي ملاحظة أو طلب خاص بطلبك هنا',
       confirmCheckoutBtn: 'تأكيد الطلب والإرسال عبر واتساب',
-      checkoutDestinationNote: '✓ يتم إرسال الطلب إلى لوحة التحكم وتيليجرام وواتساب (+994 55 645 22 04)',
+      checkoutDestinationNote: '✓ يتم إرسال الطلب إلى لوحة التحكم وتيليجرام وواتساب (+994 70 390 10 09)',
       orderReceivedEyebrow: 'تم تسجيل الطلب',
       orderReceivedTitle: 'تم استلام طلبك بنجاح.',
       orderWhatsAppHint: 'تم تسجيل طلبك! أرسله مباشرة عبر واتساب للتأكيد الفوري:',
@@ -1327,10 +1327,10 @@
     "ar": "تأكيد الطلب والإرسال عبر واتساب",
     "ru": "Подтвердить заказ и отправить в WhatsApp"
   },
-  "✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 55 645 22 04) göndərilir": {
-    "en": "✓ Order is sent to Admin panel, Telegram, and WhatsApp (+994 55 645 22 04)",
-    "ar": "✓ يتم إرسال الطلب إلى لوحة التحكم وتيليجرام وواتساب (+994 55 645 22 04)",
-    "ru": "✓ Заказ отправляется в панель управления, Telegram и WhatsApp (+994 55 645 22 04)"
+  "✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 70 390 10 09) göndərilir": {
+    "en": "✓ Order is sent to Admin panel, Telegram, and WhatsApp (+994 70 390 10 09)",
+    "ar": "✓ يتم إرسال الطلب إلى لوحة التحكم وتيليجرام وواتساب (+994 70 390 10 09)",
+    "ru": "✓ Заказ отправляется в панель управления, Telegram и WhatsApp (+994 70 390 10 09)"
   },
   "SİFARİŞ QEYDƏ ALINDI": {
     "en": "ORDER RECEIVED",

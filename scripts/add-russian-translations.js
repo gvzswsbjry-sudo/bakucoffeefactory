@@ -96,7 +96,7 @@ const RU_MAP = {
   'Sifarişi tamamlayın.': 'Оформление заказа.',
   'Sifarişlə bağlı əlavə istəyiniz varsa yazın': 'Укажите пожелания или детали к вашему заказу',
   'Sifarişi təsdiqlə və WhatsApp-a göndər': 'Подтвердить заказ и отправить в WhatsApp',
-  '✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 55 645 22 04) göndərilir': '✓ Заказ отправляется в панель управления, Telegram и WhatsApp (+994 55 645 22 04)',
+  '✓ Sifariş admin panelə, Telegram-a və WhatsApp-a (+994 70 390 10 09) göndərilir': '✓ Заказ отправляется в панель управления, Telegram и WhatsApp (+994 70 390 10 09)',
   'SİFARİŞ QEYDƏ ALINDI': 'ЗАКАЗ ПРИНЯТ',
   'Sifariş sorğunuz qəbul edildi.': 'Ваша заявка на заказ принята.',
   'Sifarişiniz sistemə qeyd olundu! Sürətli təsdiq üçün birbaşa WhatsApp-a göndərin:': 'Ваш заказ зарегистрирован! Отправьте его напрямую в WhatsApp для быстрого подтверждения:',
