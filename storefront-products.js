@@ -143,7 +143,7 @@
         return;
       }
       const script = documentRef.createElement('script');
-      const url = src.includes('?') ? src : `${src}?v=20261109-1`;
+      const url = src.includes('?') ? src : `${src}?v=20261111-10`;
       script.src = url;
       script.async = false;
       script.onload = () => resolve(src);

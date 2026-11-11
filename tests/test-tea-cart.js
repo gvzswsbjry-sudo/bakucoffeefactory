@@ -22,9 +22,10 @@ const expectedPrices = {
   'mango-kuresi': [2.4, 'piece'],
   'qara-cay': [7, 'g'],
   'jasminli-qara': [7, 'g'],
+  melisa: [9, 'g'],
 };
 
-assert.equal(Object.keys(TEA_PRODUCTS).length, 17, 'all tea cards should have metadata');
+assert.equal(Object.keys(TEA_PRODUCTS).length, 18, 'all tea cards should have metadata');
 for (const [id, [price, unit]] of Object.entries(expectedPrices)) {
   const tea = getTeaProduct(id);
   assert.ok(tea, `${id} should exist`);

@@ -14,7 +14,7 @@ test('migration contains every current coffee, tea, and equipment product', () =
   const products = buildProductsData();
   const byCategory = (category) => products.filter((item) => item.category === category);
   assert.equal(byCategory('coffee').length, 10);
-  assert.equal(byCategory('tea').length, 17);
+  assert.equal(byCategory('tea').length, 18);
   assert.equal(byCategory('equipment').length, EQUIPMENT_PRODUCTS.length);
   assert.equal(products.length, 10 + Object.keys(TEA_PRODUCTS).length + EQUIPMENT_PRODUCTS.length);
 });

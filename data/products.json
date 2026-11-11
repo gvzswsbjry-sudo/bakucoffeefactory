@@ -1168,5 +1168,28 @@
       "pricePending": true
     },
     "variants": []
+  },
+  {
+    "id": "melisa",
+    "category": "tea",
+    "name": "Melisa Çayı",
+    "price": 9,
+    "unit": "g",
+    "image": "assets/tea-packages/melisa.jpg",
+    "description": "Təbii melisa yarpaqlarından ibarət kofeinsiz, zərif bitki çayıdır. İlk qurtumda yüngül sitrus-limon ətri, ardınca təmiz yarpaq təravəti və yumşaq rahatladıcı dad hiss olunur. Xüsusilə axşam saatlarında sakit və balanslı içim üçün uyğundur.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 18,
+    "meta": {
+      "weight": 100,
+      "kind": "Bitki çayı · sakitləşdirici",
+      "tasteNotes": "Melisa yarpağı, yüngül limon, təzə bitki",
+      "brew": "90–95°C · 4–5 dəqiqə",
+      "pricePending": false
+    },
+    "variants": []
   }
 ]

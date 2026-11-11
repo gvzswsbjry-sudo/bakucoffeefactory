@@ -244,16 +244,46 @@ const EXTRA_PHRASES = {
     ar: 'شاي أسود بالياسمين',
     ru: 'Чёрный с жасмином'
   },
+  'Melisa': {
+    en: 'Melissa',
+    ar: 'المليسة',
+    ru: 'Мелисса'
+  },
+  'Melisa Çayı': {
+    en: 'Melissa Tea',
+    ar: 'شاي المليسة',
+    ru: 'Чай с мелиссой'
+  },
+  'Bitki çayı · sakitləşdirici': {
+    en: 'Herbal tea · Soothing',
+    ar: 'شاي أعشاب · مهدئ',
+    ru: 'Травяной чай · успокаивающий'
+  },
+  'Melisa yarpağı, yüngül limon, təzə bitki': {
+    en: 'Melissa leaf, light lemon, fresh herbs',
+    ar: 'أوراق المليسة، ليمون خفيف، أعشاب طازجة',
+    ru: 'Лист мелиссы, легкий лимон, свежие травы'
+  },
+  '90–95°C · 4–5 dəqiqə': {
+    en: '90–95°C · 4–5 min',
+    ar: '90–95°م · 4–5 دقائق',
+    ru: '90–95°C · 4–5 мин'
+  },
+  'Təbii melisa yarpaqlarından ibarət kofeinsiz, zərif bitki çayıdır. İlk qurtumda yüngül sitrus-limon ətri, ardınca təmiz yarpaq təravəti və yumşaq rahatladıcı dad hiss olunur. Xüsusilə axşam saatlarında sakit və balanslı içim üçün uyğundur.': {
+    en: 'A gentle, caffeine-free herbal infusion crafted from natural melissa leaves. The first sip opens with a soft lemony citrus aroma followed by fresh leafy clarity and a soothing finish. Ideal for calm, balanced evening relaxation.',
+    ar: 'شاي أعشاب لطيف خالٍ من الكافيين محضّر من أوراق المليسة الطبيعية. تبرز في الرشفة الأولى نفحات الليمون الخفيفة، يتبعها انتعاش الأوراق النقية وطعم مهدئ ناعم. مثالي لأوقات المساء الهادئة.',
+    ru: 'Нежный травяной настой без кофеина из натуральных листьев мелиссы. В первом глотке раскрывается легкий лимонно-цитрусовый аромат, за ним — свежесть листа и мягкое расслабляющее послевкусие. Прекрасный выбор для спокойного вечернего чаепития.'
+  },
   // Coffee / Tea / Modal / Cart extra strings
   'Mənşə qəhvələri · 100 q': {
     en: 'Single Origin Coffee · 100g',
     ar: 'قهوة أحادية المنشأ · 100 جم',
     ru: 'Моносорта кофе · 100 г'
   },
-  'Yarpaqlı çay kolleksiyası · 17 seçim': {
-    en: 'Loose-leaf tea collection · 17 selections',
-    ar: 'تشكيلة شاي أوراق كاملة · 17 خياراً',
-    ru: 'Коллекция листового чая · 17 позиций'
+  'Yarpaqlı çay kolleksiyası · 18 seçim': {
+    en: 'Loose-leaf tea collection · 18 selections',
+    ar: 'تشكيلة شاي أوراق كاملة · 18 خياراً',
+    ru: 'Коллекция листового чая · 18 позиций'
   },
   'Kolleksiyaya bax ↓': {
     en: 'View collection ↓',
@@ -931,7 +961,7 @@ const fullI18nJs = `(() => {
       teaHeroTitle: 'Zərif yarpaqlardan<br /><em>isti dəmləmə.</em>',
       teaCollectionTitle: 'BCF Çay Kolleksiyası',
       teaCollectionDesc: 'Dünyanın ən yaxşı bağlarından toplanmış təbii və ətirli çaylar.',
-      teaCollectionEyebrow: 'Yarpaqlı çay kolleksiyası · 17 seçim',
+      teaCollectionEyebrow: 'Yarpaqlı çay kolleksiyası · 18 seçim',
       teaCollectionHeadline: 'Hər yarpaqda<br /><em>başqa bir əhval.</em>',
       teaCollectionIntro: 'Çiçəkli, meyvəli və dolğun çayları dad xarakteri ilə tanıyın. Hər seçim üçün ideal su temperaturunu və dəmləmə müddətini də qeyd etdik.',
       teaHeroCta: 'Kolleksiyaya bax <span>↓</span>',
@@ -1185,7 +1215,7 @@ const fullI18nJs = `(() => {
       teaHeroTitle: 'Warm brewing from<br /><em>delicate leaves.</em>',
       teaCollectionTitle: 'BCF Tea Collection',
       teaCollectionDesc: 'Natural and fragrant teas harvested from the world’s finest gardens.',
-      teaCollectionEyebrow: 'Loose-leaf tea collection · 17 selections',
+      teaCollectionEyebrow: 'Loose-leaf tea collection · 18 selections',
       teaCollectionHeadline: 'In every leaf<br /><em>another mood.</em>',
       teaCollectionIntro: 'Explore floral, fruity, and rich teas by flavor profile. We also note the ideal water temperature and steeping time for every selection.',
       teaHeroCta: 'View collection <span>↓</span>',
@@ -1439,7 +1469,7 @@ const fullI18nJs = `(() => {
       teaHeroTitle: 'Теплое заваривание из<br /><em>нежных чайных листьев.</em>',
       teaCollectionTitle: 'Коллекция чая BCF',
       teaCollectionDesc: 'Натуральный и ароматный чай, собранный с лучших плантаций мира.',
-      teaCollectionEyebrow: 'Коллекция листового чая · 17 позиций',
+      teaCollectionEyebrow: 'Коллекция листового чая · 18 позиций',
       teaCollectionHeadline: 'В каждом листе —<br /><em>особое настроение.</em>',
       teaCollectionIntro: 'Познакомьтесь с цветочными, фруктовыми и насыщенными сортами по их вкусовому профилю. Для каждого сорта указаны идеальная температура воды и время заваривания.',
       teaHeroCta: 'Смотреть коллекцию <span>↓</span>',
@@ -1693,7 +1723,7 @@ const fullI18nJs = `(() => {
       teaHeroTitle: 'تخمير دافئ من<br /><em>أوراق الشاي الفاخرة.</em>',
       teaCollectionTitle: 'مجموعة شاي بي سي إف',
       teaCollectionDesc: 'شاي طبيعي وعطري منتقى بعناية من أفضل مزارع الشاي حول العالم.',
-      teaCollectionEyebrow: 'تشكيلة شاي أوراق كاملة · 17 خياراً',
+      teaCollectionEyebrow: 'تشكيلة شاي أوراق كاملة · 18 خياراً',
       teaCollectionHeadline: 'في كل ورقة<br /><em>مزاج مختلف.</em>',
       teaCollectionIntro: 'تعرّف على أنواع الشاي الزهرية والفاكهية والغنية من خلال طابعها المذاقي. كما حددنا حرارة الماء المثالية ومدة التخمير لكل نوع.',
       teaHeroCta: 'تصفح المجموعة <span>↓</span>',

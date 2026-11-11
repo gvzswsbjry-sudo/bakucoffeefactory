@@ -159,7 +159,7 @@ test('i18n PHRASE_MAP translates all coffees, teas, equipment, menu items, and d
     '1001 Gecə Çayı', 'Admiral', 'Geyşa Qara', 'Jasmin Çayı', 'Limon Çayı',
     'Malina Şərbəti', 'Meyvəli Çay', 'Nar Çayı', 'Portağal Çayı', 'Qarpız Çayı',
     'Geyşa Yaşıl', 'Yaşıl Çay', 'Mango Kürəsi', 'Mango Çayı', 'Qara Çay',
-    'Jasminli Qara Çay', 'Hibiskus'
+    'Jasminli Qara Çay', 'Hibiskus', 'Melisa Çayı'
   ];
   for (const t of teaNames) {
     assert.ok(phraseMap[t]?.en, `Tea ${t} has English translation`);

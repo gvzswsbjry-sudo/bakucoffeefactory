@@ -37,7 +37,7 @@ if (!document.querySelector('link[href*="i18n.css"]')) {
 }
 if (!window.BCF_I18N && !window.__BCF_I18N_INITIALIZED__ && !document.querySelector('script[src*="i18n.js"]')) {
   const i18nScript = document.createElement('script');
-  i18nScript.src = 'i18n.js?v=20261111-7';
+  i18nScript.src = 'i18n.js?v=20261111-10';
   i18nScript.async = false;
   document.body.append(i18nScript);
 }

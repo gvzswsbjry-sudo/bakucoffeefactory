@@ -23,6 +23,7 @@
     'qara-cay': { name: 'Qara Çay', image: 'assets/tea-packages/qara-cay.jpg', price: 7, unit: 'g' },
     'jasminli-qara': { name: 'Jasminli Qara Çay', image: 'assets/tea-packages/jasminli-qara-cay.jpg', price: 7, unit: 'g' },
     'hibiskus': { name: 'Hibiskus', image: 'assets/tea-packages/hibiskus.jpg', price: null, unit: 'g' },
+    'melisa': { name: 'Melisa Çayı', image: 'assets/tea-packages/melisa.jpg', price: 9, unit: 'g' },
   };
 
   const managedTea = Array.isArray(globalThis.BCF_PRODUCT_DATA)

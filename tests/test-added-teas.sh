@@ -31,9 +31,10 @@ assert_tea mango-cayi "Mango Çayı" mango-cayi.jpg
 assert_tea qara-cay "Qara Çay" qara-cay.jpg
 assert_tea jasminli-qara "Jasminli Qara Çay" jasminli-qara-cay.jpg
 assert_tea hibiskus "Hibiskus" hibiskus.jpg
+assert_tea melisa "Melisa Çayı" melisa.jpg
 
-rg -Fq 'Yarpaqlı çay kolleksiyası · 17 seçim' "$html" || fail "Kolleksiya sayı 17 deyil"
+rg -Fq 'Yarpaqlı çay kolleksiyası · 18 seçim' "$html" || fail "Kolleksiya sayı 18 deyil"
 card_count="$(rg -c '<article class="tea-product"' "$html")"
-[[ "$card_count" == "17" ]] || fail "17 çay kartı gözlənilirdi, $card_count tapıldı"
+[[ "$card_count" == "18" ]] || fail "18 çay kartı gözlənilirdi, $card_count tapıldı"
 
-printf 'PASS: 7 yeni çay və 17 kartlıq kolleksiya yoxlanıldı.\n'
+printf 'PASS: çay kartları və 18 kartlıq kolleksiya yoxlanıldı.\n'
