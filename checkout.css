@@ -1,6 +1,6 @@
 .checkout-open { display: block; width: 100%; min-height: 52px; margin-top: 16px; border: 0; background: #596750; color: #fff; font: 700 15px var(--sans, sans-serif); cursor: pointer; }
 .checkout-open:hover, .checkout-open:focus-visible, .checkout-confirm:hover, .checkout-done:hover { background: #44523d; }
-.checkout-overlay[hidden], .checkout-form-view[hidden], .checkout-success[hidden] { display: none !important; }
+.checkout-overlay[hidden], .checkout-form-view[hidden], .checkout-success[hidden], .checkout-phone-field[hidden] { display: none !important; }
 .checkout-overlay { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; padding: 18px; background: rgba(25,22,20,.66); overflow: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
 .checkout-active { overflow: hidden; }
 .checkout-dialog { position: relative; width: min(100%, 520px); max-height: calc(100vh - 36px); max-height: calc(100dvh - 36px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 32px; background: #f7f4ee; color: #221d19; box-shadow: 0 24px 75px rgba(0,0,0,.27); outline: none; }
@@ -22,6 +22,7 @@
 .checkout-dialog input:focus-visible, .checkout-dialog select:focus-visible, .checkout-dialog textarea:focus-visible, .checkout-dialog button:focus-visible { outline: 2px solid #a75239; outline-offset: 2px; }
 .checkout-phone-field { min-width: 0; margin: 0; padding: 0; border: 0; }
 .checkout-phone-field legend { margin: 0; padding: 0; font: 700 13px var(--sans,sans-serif); }
+.checkout-phone-hint { margin: 6px 0 6px; padding: 8px 10px; border-inline-start: 3px solid #a75239; background: #f2ece3; color: #5b2e1e; font: 500 12px/1.45 var(--sans,sans-serif); }
 .checkout-phone-row { display: grid; grid-template-columns: minmax(132px,.78fr) minmax(0,1.45fr); gap: 10px; }
 .checkout-phone-row label { min-width: 0; }
 .checkout-country select { white-space: nowrap; text-overflow: ellipsis; }

@@ -199,3 +199,123 @@ test('password reset issues 6-digit OTP by email or phone, validates without bur
 
   await database.close();
 });
+
+test('social authentication requires phone number on registration and supports updating missing phone', async () => {
+  const { database, auth } = await fixture();
+  await auth.register(person); // +447700900123 already taken
+
+  // 1. New Google user with requirePhone: true -> returns needsPhone without creating user/session
+  const step1 = await auth.socialAuth({
+    provider: 'google',
+    subject: 'google-new-1',
+    email: 'NewGoogle@Gmail.com',
+    name: 'New Google',
+    requirePhone: true,
+    ip: '127.0.0.1',
+  });
+  assert.equal(step1.needsPhone, true);
+  assert.equal(step1.isNew, true);
+  assert.deepEqual(step1.profile, { fullName: 'New Google', email: 'newgoogle@gmail.com' });
+  const countAfterStep1 = await database.pool.query('SELECT COUNT(*)::int AS c FROM customer_users');
+  assert.equal(countAfterStep1.rows[0].c, 1);
+
+  // 2. Submitting an already-registered phone number fails with 409 without creating user
+  await assert.rejects(
+    auth.socialAuth({
+      provider: 'google',
+      subject: 'google-new-1',
+      email: 'NewGoogle@Gmail.com',
+      name: 'New Google',
+      phone: '+44 7700 900123',
+      requirePhone: true,
+      ip: '127.0.0.1',
+    }),
+    (err) => err.status === 409 && /başqa hesabda/i.test(err.message)
+  );
+
+  // 3. Invalid phone rejected cleanly
+  await assert.rejects(
+    auth.socialAuth({
+      provider: 'google',
+      subject: 'google-new-1',
+      email: 'NewGoogle@Gmail.com',
+      name: 'New Google',
+      phone: '0501234567',
+      requirePhone: true,
+      ip: '127.0.0.1',
+    }),
+    /ölkə kodu/i
+  );
+
+  // 4. Completing with valid phone creates user with phone_e164 and returns session
+  const step2 = await auth.socialAuth({
+    provider: 'google',
+    subject: 'google-new-1',
+    email: 'NewGoogle@Gmail.com',
+    name: 'New Google',
+    phone: '+994 50 777 88 99',
+    requirePhone: true,
+    ip: '127.0.0.1',
+  });
+  assert.equal(step2.isNew, true);
+  assert.equal(step2.user.phone, '+994507778899');
+  assert.equal(step2.user.email, 'newgoogle@gmail.com');
+  assert.equal((await auth.getSession(step2.token)).phone, '+994507778899');
+
+  // 5. Returning Google user who already has phone logs in immediately without needsPhone
+  const repeat = await auth.socialAuth({
+    provider: 'google',
+    subject: 'google-new-1',
+    email: 'NewGoogle@Gmail.com',
+    name: 'New Google',
+    requirePhone: true,
+    ip: '127.0.0.1',
+  });
+  assert.equal(Boolean(repeat.needsPhone), false);
+  assert.equal(repeat.isNew, false);
+  assert.equal(repeat.user.phone, '+994507778899');
+
+  // 6. Existing phone-less Google user gets prompted when re-signing in, or can update via updatePhone
+  const legacy = await auth.socialAuth({
+    provider: 'google',
+    subject: 'google-legacy-1',
+    email: 'legacy@gmail.com',
+    name: 'Legacy User',
+    requirePhone: false,
+    ip: '127.0.0.1',
+  });
+  assert.equal(legacy.user.phone, null);
+
+  const legacyPrompt = await auth.socialAuth({
+    provider: 'google',
+    subject: 'google-legacy-1',
+    email: 'legacy@gmail.com',
+    name: 'Legacy User',
+    requirePhone: true,
+    ip: '127.0.0.1',
+  });
+  assert.equal(legacyPrompt.needsPhone, true);
+  assert.equal(legacyPrompt.isNew, false);
+
+  const legacyCompleted = await auth.socialAuth({
+    provider: 'google',
+    subject: 'google-legacy-1',
+    email: 'legacy@gmail.com',
+    name: 'Legacy User',
+    phone: '+994 55 333 22 11',
+    requirePhone: true,
+    ip: '127.0.0.1',
+  });
+  assert.equal(legacyCompleted.user.phone, '+994553332211');
+  assert.equal((await auth.getSession(legacyCompleted.token)).phone, '+994553332211');
+
+  // 7. updatePhone rejects duplicate phone and updates valid phone
+  await assert.rejects(
+    auth.updatePhone({ userId: legacyCompleted.user.id, phone: '+994507778899', ip: '127.0.0.1' }),
+    (err) => err.status === 409 && /başqa hesabda/i.test(err.message)
+  );
+  const updated = await auth.updatePhone({ userId: legacyCompleted.user.id, phone: '+994 70 444 55 66', ip: '127.0.0.1' });
+  assert.equal(updated.user.phone, '+994704445566');
+
+  await database.close();
+});

@@ -198,7 +198,7 @@ function createRequestHandler({
         if (!isTrustedOrigin(req, allowedOrigins)) return json(res, 403, { error: 'Bu sorğuya icazə verilmir.' });
         if (req.method === 'OPTIONS') return json(res, 204);
         if (pathname === '/api/admin/session' && req.method === 'POST' && limitRequest(res, adminLoginLimiter, clientIp)) return;
-        if (['/api/auth/login', '/api/auth/register', '/api/auth/forgot-password', '/api/auth/reset-password'].includes(pathname) && req.method === 'POST' && limitRequest(res, accountLimiter, clientIp)) return;
+        if (['/api/auth/login', '/api/auth/register', '/api/auth/forgot-password', '/api/auth/reset-password', '/api/auth/phone'].includes(pathname) && req.method === 'POST' && limitRequest(res, accountLimiter, clientIp)) return;
         if (pathname === '/api/orders' && req.method === 'POST' && limitRequest(res, orderLimiter, clientIp)) return;
       }
 

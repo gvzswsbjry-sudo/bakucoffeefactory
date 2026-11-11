@@ -992,6 +992,7 @@ const fullI18nJs = `(() => {
       teamContactSubnote: 'Komandamız həmçinin göstərdiyiniz telefon nömrəsi ilə əlaqə saxlayacaq.',
       continueShopping: 'Alış-verişə davam et',
       phoneLegend: 'Telefon nömrəsi',
+      checkoutPhoneHint: 'Hesabınızda telefon nömrəsi qeyd olunmayıb. Sifariş vermək üçün nömrənizi daxil edin (hesabınıza da əlavə ediləcək).',
       phoneRemainderLabel: 'Telefon nömrəsinin qalan hissəsi',
       checkoutEmptyBtn: 'Səbətiniz boşdur',
       checkoutSubmittingBtn: 'Sifariş göndərilir…',
@@ -1087,6 +1088,13 @@ const fullI18nJs = `(() => {
       logoutConfirmDesc: 'Çıxış etdikdən sonra sifariş vermək və tarixçəni görmək üçün hesabınıza yenidən daxil olmalı olacaqsınız.',
       logoutConfirmCancel: 'Xeyr, qal',
       logoutConfirmAccept: 'Bəli, çıxış et',
+      googlePhoneTitle: 'Google ilə qeydiyyatı tamamlayın',
+      googlePhoneDesc: 'Sifariş verə bilmək və sifariş təsdiqi üçün mobil telefon nömrənizi daxil edin.',
+      googlePhoneCancel: 'Geri',
+      googlePhoneSubmit: 'Nömrəni təsdiqlə və daxil ol',
+      profilePhoneMissingNote: 'Hesabınızda telefon nömrəsi qeyd olunmayıb. Sifariş vermək üçün mobil nömrənizi əlavə edin.',
+      profilePhoneSaveBtn: 'Nömrəni yadda saxla',
+      profilePhoneSavedMsg: 'Telefon nömrəniz hesabınıza əlavə edildi.',
 
       // Favorites
       favoritesTitle: 'Seçilmişlər',
@@ -1237,6 +1245,7 @@ const fullI18nJs = `(() => {
       teamContactSubnote: 'Our team will also reach out to your provided phone number.',
       continueShopping: 'Continue Shopping',
       phoneLegend: 'Phone number',
+      checkoutPhoneHint: 'No phone number is linked to your account yet. Enter your number to complete your order (it will also be saved to your account).',
       phoneRemainderLabel: 'Remaining phone digits',
       checkoutEmptyBtn: 'Your cart is empty',
       checkoutSubmittingBtn: 'Sending order…',
@@ -1332,6 +1341,13 @@ const fullI18nJs = `(() => {
       logoutConfirmDesc: 'After signing out, you will need to sign in again to place orders and view your order history.',
       logoutConfirmCancel: 'No, stay',
       logoutConfirmAccept: 'Yes, sign out',
+      googlePhoneTitle: 'Complete Google sign-up',
+      googlePhoneDesc: 'Please enter your mobile phone number so you can place orders and receive order confirmations.',
+      googlePhoneCancel: 'Back',
+      googlePhoneSubmit: 'Confirm number & sign in',
+      profilePhoneMissingNote: 'No phone number is saved on your account yet. Add your mobile number to place orders.',
+      profilePhoneSaveBtn: 'Save number',
+      profilePhoneSavedMsg: 'Your phone number has been added to your account.',
 
       // Favorites
       favoritesTitle: 'Favorites',
@@ -1482,6 +1498,7 @@ const fullI18nJs = `(() => {
       teamContactSubnote: 'Наша команда также свяжется с вами по указанному номеру телефона.',
       continueShopping: 'Продолжить покупки',
       phoneLegend: 'Номер телефона',
+      checkoutPhoneHint: 'В вашем аккаунте ещё не указан номер телефона. Введите номер для оформления заказа (он также сохранится в аккаунте).',
       phoneRemainderLabel: 'Оставшаяся часть номера',
       checkoutEmptyBtn: 'Ваша корзина пуста',
       checkoutSubmittingBtn: 'Отправка заказа…',
@@ -1577,6 +1594,13 @@ const fullI18nJs = `(() => {
       logoutConfirmDesc: 'После выхода вам потребуется снова войти в аккаунт, чтобы оформлять заказы и просматривать историю.',
       logoutConfirmCancel: 'Нет, остаться',
       logoutConfirmAccept: 'Да, выйти',
+      googlePhoneTitle: 'Завершите регистрацию через Google',
+      googlePhoneDesc: 'Укажите ваш номер мобильного телефона для оформления заказов и связи по ним.',
+      googlePhoneCancel: 'Назад',
+      googlePhoneSubmit: 'Подтвердить номер и войти',
+      profilePhoneMissingNote: 'В вашем аккаунте ещё не указан номер телефона. Добавьте мобильный номер, чтобы оформлять заказы.',
+      profilePhoneSaveBtn: 'Сохранить номер',
+      profilePhoneSavedMsg: 'Ваш номер телефона добавлен в аккаунт.',
 
       // Favorites
       favoritesTitle: 'Избранное',
@@ -1727,6 +1751,7 @@ const fullI18nJs = `(() => {
       teamContactSubnote: 'سيتواصل فريقنا أيضاً معك عبر رقم الهاتف المسجل.',
       continueShopping: 'متابعة التسوق',
       phoneLegend: 'رقم الهاتف',
+      checkoutPhoneHint: 'لا يوجد رقم هاتف مرتبط بحسابك بعد. أدخل رقمك لإتمام الطلب (وسيتم حفظه في حسابك أيضاً).',
       phoneRemainderLabel: 'باقي رقم الهاتف',
       checkoutEmptyBtn: 'سلتك فارغة',
       checkoutSubmittingBtn: 'جارٍ إرسال الطلب…',
@@ -1822,6 +1847,13 @@ const fullI18nJs = `(() => {
       logoutConfirmDesc: 'بعد تسجيل الخروج، ستحتاج إلى تسجيل الدخول مرة أخرى لتقديم الطلبات وعرض سجل طلباتك.',
       logoutConfirmCancel: 'لا، البقاء',
       logoutConfirmAccept: 'نعم، تسجيل الخروج',
+      googlePhoneTitle: 'أكمل التسجيل عبر Google',
+      googlePhoneDesc: 'يرجى إدخال رقم هاتفك المحمول لتتمكن من تقديم الطلبات واستلام تأكيد الطلب.',
+      googlePhoneCancel: 'رجوع',
+      googlePhoneSubmit: 'تأكيد الرقم والدخول',
+      profilePhoneMissingNote: 'لا يوجد رقم هاتف محفوظ في حسابك بعد. أضف رقمك المحمول لتقديم الطلبات.',
+      profilePhoneSaveBtn: 'حفظ الرقم',
+      profilePhoneSavedMsg: 'تمت إضافة رقم هاتفك إلى حسابك.',
 
       // Favorites
       favoritesTitle: 'المفضلة',
@@ -2546,7 +2578,7 @@ const fullI18nJs = `(() => {
 
     // Translate modals, drawers, swatches, and filter chips on user interaction
     document.addEventListener('click', (e) => {
-      const trigger = e.target.closest('#accountTrigger, .account-trigger, #floatingCartTrigger, .floating-cart-btn, .tea-header-cart, #openCartBtn, #openGearCartBtn, #favoritesTrigger, .favorites-trigger, .coffee-add-button, .tea-add-button, .add-to-cart, .variant-swatch, .gallery-arrow, .filter-chip, .menu-tab, .account-tab, .account-center-tab, .account-forgot-link, .account-reset-back, .account-secondary-link, .menu-toggle, #checkoutOpen, .checkout-open');
+      const trigger = e.target.closest('#accountTrigger, .account-trigger, #floatingCartTrigger, .floating-cart-btn, .tea-header-cart, #openCartBtn, #openGearCartBtn, #favoritesTrigger, .favorites-trigger, .coffee-add-button, .tea-add-button, .add-to-cart, .variant-swatch, .gallery-arrow, .filter-chip, .menu-tab, .account-tab, .account-center-tab, .account-forgot-link, .account-reset-back, .account-secondary-link, .account-social-cancel, .account-social-confirm, #profilePhoneSubmit, .menu-toggle, #checkoutOpen, .checkout-open');
       if (trigger && currentLang !== 'az') {
         requestAnimationFrame(() => translateDom());
       }

@@ -46,7 +46,7 @@ async function handleCustomerAuthRequest(req, res, pathname, {
     json(res, 200, { user: await customerAuth.getSession(customerCookie(req)) });
     return true;
   }
-  if (!['register', 'login', 'logout', 'social', 'forgot-password', 'reset-password'].some((name) => pathname === `/api/auth/${name}`)) {
+  if (!['register', 'login', 'logout', 'social', 'forgot-password', 'reset-password', 'phone'].some((name) => pathname === `/api/auth/${name}`)) {
     json(res, 404, { error: 'Account route not found' });
     return true;
   }
@@ -77,8 +77,32 @@ async function handleCustomerAuthRequest(req, res, pathname, {
         throw Object.assign(new Error('Dəstəklənməyən giriş təminatçısı.'), { status: 400 });
       }
       const identity = await oidcVerifier.verify(provider, body.idToken);
-      const result = await customerAuth.socialAuth({ ...identity, ip: input.ip, userAgent: input.userAgent });
+      const result = await customerAuth.socialAuth({
+        ...identity,
+        phone: body.phone,
+        requirePhone: body.requirePhone === true,
+        ip: input.ip,
+        userAgent: input.userAgent,
+      });
+      if (result.needsPhone) {
+        json(res, 200, { needsPhone: true, isNew: Boolean(result.isNew), profile: result.profile });
+        return true;
+      }
       json(res, result.isNew ? 201 : 200, { user: result.user }, { 'set-cookie': cookieHeader(result.token, secureCookies) });
+      return true;
+    }
+    if (pathname === '/api/auth/phone') {
+      const sessionUser = await customerAuth.getSession(customerCookie(req));
+      if (!sessionUser) {
+        json(res, 401, { error: 'Hesaba daxil olun.' });
+        return true;
+      }
+      const result = await customerAuth.updatePhone({
+        userId: sessionUser.id,
+        phone: body?.phone,
+        ip: input.ip,
+      });
+      json(res, 200, { user: result.user });
       return true;
     }
     if (pathname === '/api/auth/forgot-password') {

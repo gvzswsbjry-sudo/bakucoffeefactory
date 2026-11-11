@@ -184,13 +184,15 @@ function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs 
     await pool.query('DELETE FROM customer_sessions WHERE token_hash = $1', [tokenHash(token)]);
   }
 
-  async function socialAuth({ provider, subject, email, name, ip, userAgent } = {}) {
+  async function socialAuth({ provider, subject, email, name, phone, requirePhone = false, ip, userAgent } = {}) {
     const rawProvider = String(provider ?? '').trim().toLowerCase();
     if (rawProvider !== 'google' && rawProvider !== 'apple') {
       throw authError('Dəstəklənməyən giriş təminatçısı.', 400);
     }
     const subjectNormalized = String(subject ?? '').trim();
     if (!subjectNormalized || subjectNormalized.length > 255) throw authError('Provayder təsdiqi uğursuz oldu.', 401);
+    const hasPhoneInput = phone !== undefined && phone !== null && String(phone).trim() !== '';
+    const phoneE164 = hasPhoneInput ? normalizePhone(phone) : null;
     const key = attemptKey(ip, `${rawProvider}:${subjectNormalized}`);
     await checkAttempts(key);
 
@@ -199,10 +201,52 @@ function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs 
       WHERE i.provider = $1 AND i.subject = $2 AND u.is_active = TRUE`, [rawProvider, subjectNormalized]);
 
     if (identityRows.length > 0) {
-      const user = identityRows[0];
-      const token = await createSession(pool, user.id, userAgent);
-      await pool.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
-      return { user: publicUser(user), token, isNew: false };
+      const existing = identityRows[0];
+      if (!existing.phone_e164) {
+        if (phoneE164) {
+          const client = await pool.connect();
+          try {
+            await client.query('BEGIN');
+            const taken = await client.query('SELECT 1 FROM customer_users WHERE phone_e164 = $1 AND id <> $2', [phoneE164, existing.id]);
+            if (taken.rows.length > 0) {
+              await recordFailure(key);
+              throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+            }
+            const timestamp = current();
+            const { rows: updatedRows } = await client.query(
+              `UPDATE customer_users SET phone_e164 = $2, updated_at = $3, last_login_at = $3
+               WHERE id = $1 RETURNING id, full_name, username, phone_e164, email_normalized`,
+              [existing.id, phoneE164, timestamp]
+            );
+            const token = await createSession(client, existing.id, userAgent);
+            await client.query('COMMIT');
+            await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
+            return { user: publicUser(updatedRows[0]), token, isNew: false };
+          } catch (error) {
+            await client.query('ROLLBACK');
+            if (error.status) throw error;
+            if (error.code === '23505' || /duplicate key|unique constraint/i.test(error.message)) {
+              await recordFailure(key);
+              throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+            }
+            throw error;
+          } finally { client.release(); }
+        }
+        if (requirePhone) {
+          return {
+            needsPhone: true,
+            isNew: false,
+            profile: {
+              fullName: existing.full_name || existing.username,
+              email: existing.email_normalized || null,
+            },
+          };
+        }
+      }
+      const token = await createSession(pool, existing.id, userAgent);
+      await pool.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [existing.id, current()]);
+      await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
+      return { user: publicUser(existing), token, isNew: false };
     }
 
     if (!email) throw authError('Provayder e-poçt ünvanı qaytarmadı.', 401);
@@ -213,18 +257,49 @@ function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs 
       [emailNormalized]);
 
     if (existingRows.length > 0) {
-      const user = existingRows[0];
+      let existing = existingRows[0];
+      if (!existing.phone_e164 && !phoneE164 && requirePhone) {
+        return {
+          needsPhone: true,
+          isNew: false,
+          profile: {
+            fullName: existing.full_name || existing.username,
+            email: existing.email_normalized || null,
+          },
+        };
+      }
       const client = await pool.connect();
       try {
         await client.query('BEGIN');
+        const timestamp = current();
+        if (!existing.phone_e164 && phoneE164) {
+          const taken = await client.query('SELECT 1 FROM customer_users WHERE phone_e164 = $1 AND id <> $2', [phoneE164, existing.id]);
+          if (taken.rows.length > 0) {
+            await recordFailure(key);
+            throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+          }
+          const { rows: updatedRows } = await client.query(
+            `UPDATE customer_users SET phone_e164 = $2, updated_at = $3, last_login_at = $3
+             WHERE id = $1 RETURNING id, full_name, username, phone_e164, email_normalized`,
+            [existing.id, phoneE164, timestamp]
+          );
+          existing = updatedRows[0];
+        } else {
+          await client.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [existing.id, timestamp]);
+        }
         await client.query(`INSERT INTO customer_identities(provider, subject, user_id, email_normalized, created_at)
-          VALUES($1, $2, $3, $4, $5)`, [rawProvider, subjectNormalized, user.id, emailNormalized, current()]);
-        const token = await createSession(client, user.id, userAgent);
-        await client.query('UPDATE customer_users SET last_login_at = $2 WHERE id = $1', [user.id, current()]);
+          VALUES($1, $2, $3, $4, $5)`, [rawProvider, subjectNormalized, existing.id, emailNormalized, timestamp]);
+        const token = await createSession(client, existing.id, userAgent);
         await client.query('COMMIT');
-        return { user: publicUser(user), token, isNew: false };
+        await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
+        return { user: publicUser(existing), token, isNew: false };
       } catch (error) {
         await client.query('ROLLBACK');
+        if (error.status) throw error;
+        if (error.code === '23505' || /duplicate key|unique constraint/i.test(error.message)) {
+          await recordFailure(key);
+          throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+        }
         throw error;
       } finally { client.release(); }
     }
@@ -233,12 +308,27 @@ function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs 
     if (!baseName) {
       baseName = emailNormalized.split('@')[0];
     }
+    if (!phoneE164 && requirePhone) {
+      return {
+        needsPhone: true,
+        isNew: true,
+        profile: { fullName: baseName, email: emailNormalized },
+      };
+    }
+
     let cleanBase = baseName.replace(/[^\p{L}\p{N}._-]/gu, '_').slice(0, 20);
     if (cleanBase.length < 3) cleanBase = `user_${cleanBase}`.slice(0, 20);
 
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      if (phoneE164) {
+        const taken = await client.query('SELECT 1 FROM customer_users WHERE phone_e164 = $1', [phoneE164]);
+        if (taken.rows.length > 0) {
+          await recordFailure(key);
+          throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+        }
+      }
       let candidateUsername = cleanBase;
       let candidateNormalized = candidateUsername.toLocaleLowerCase('und');
       let counter = 1;
@@ -258,8 +348,8 @@ function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs 
 
       const { rows } = await client.query(`INSERT INTO customer_users
         (id, full_name, username, username_normalized, phone_e164, email_normalized, password_salt, password_hash, privacy_consent_at, privacy_policy_version, created_at, updated_at, last_login_at)
-        VALUES ($1, $2, $3, $4, NULL, $5, $6, $7, $8, $9, $8, $8, $8) RETURNING id, full_name, username, phone_e164, email_normalized`,
-      [crypto.randomUUID(), baseName, candidateUsername, candidateNormalized, emailNormalized, salt, hash, current(), POLICY_VERSION]);
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $9, $9, $9) RETURNING id, full_name, username, phone_e164, email_normalized`,
+      [crypto.randomUUID(), baseName, candidateUsername, candidateNormalized, phoneE164, emailNormalized, salt, hash, current(), POLICY_VERSION]);
 
       await client.query(`INSERT INTO customer_identities(provider, subject, user_id, email_normalized, created_at)
         VALUES($1, $2, $3, $4, $5)`, [rawProvider, subjectNormalized, rows[0].id, emailNormalized, current()]);
@@ -270,6 +360,50 @@ function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs 
       return { user: publicUser(rows[0]), token, isNew: true };
     } catch (error) {
       await client.query('ROLLBACK');
+      if (error.status) throw error;
+      if (error.code === '23505' || /duplicate key|unique constraint/i.test(error.message)) {
+        await recordFailure(key);
+        throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+      }
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async function updatePhone({ userId, phone, ip } = {}) {
+    if (!userId) throw authError('Hesaba daxil olun.', 401);
+    const phoneE164 = normalizePhone(phone);
+    const key = attemptKey(ip, `phone:${userId}`);
+    await checkAttempts(key);
+
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const { rows: existingRows } = await client.query(
+        'SELECT id FROM customer_users WHERE id = $1 AND is_active = TRUE',
+        [userId]
+      );
+      if (!existingRows.length) throw authError('Hesab tapılmadı.', 404);
+      const taken = await client.query('SELECT 1 FROM customer_users WHERE phone_e164 = $1 AND id <> $2', [phoneE164, userId]);
+      if (taken.rows.length > 0) {
+        await recordFailure(key);
+        throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+      }
+      const { rows } = await client.query(
+        'UPDATE customer_users SET phone_e164 = $2, updated_at = $3 WHERE id = $1 RETURNING id, full_name, username, phone_e164, email_normalized',
+        [userId, phoneE164, current()]
+      );
+      await client.query('COMMIT');
+      await pool.query('DELETE FROM auth_attempts WHERE attempt_key = $1', [key]);
+      return { user: publicUser(rows[0]) };
+    } catch (error) {
+      await client.query('ROLLBACK');
+      if (error.status) throw error;
+      if (error.code === '23505' || /duplicate key|unique constraint/i.test(error.message)) {
+        await recordFailure(key);
+        throw authError('Bu telefon nömrəsi artıq başqa hesabda qeydiyyatdan keçib.', 409);
+      }
       throw error;
     } finally {
       client.release();
@@ -443,7 +577,7 @@ function createCustomerAuth({ database, now = () => new Date(), resetCooldownMs 
     return { user: publicUser(user), token: sessionToken };
   }
 
-  return { register, login, getSession, logout, socialAuth, requestPasswordReset, resetPassword };
+  return { register, login, getSession, logout, socialAuth, updatePhone, requestPasswordReset, resetPassword };
 }
 
 module.exports = {

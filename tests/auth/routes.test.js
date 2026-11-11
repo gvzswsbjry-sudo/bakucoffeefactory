@@ -157,6 +157,81 @@ test('social authentication requires a provider-verified ID token', async () => 
   } finally { await site.close(); }
 });
 
+test('social signup with requirePhone and /api/auth/phone persist phone on customer accounts', async () => {
+  const identities = {
+    'google-phone-new': { provider: 'google', subject: 'google-phone-sub-1', email: 'newphone@gmail.com', name: 'New Phone' },
+    'google-phone-legacy': { provider: 'google', subject: 'google-phone-sub-2', email: 'legacyphone@gmail.com', name: 'Legacy Phone' },
+  };
+  const site = await fixture(true, {
+    socialProviders: {
+      google: { clientId: 'google-client.apps.exampleusercontent.com' },
+    },
+    oidcVerifier: {
+      verify: async (provider, idToken) => {
+        const identity = identities[idToken];
+        if (!identity || identity.provider !== provider) {
+          const error = new Error('Provayder təsdiqi uğursuz oldu.');
+          error.status = 401;
+          throw error;
+        }
+        return identity;
+      },
+    },
+  });
+  try {
+    // 1. Unauthenticated /api/auth/phone fails with 401
+    assert.equal((await post(site.base, 'phone', { phone: '+994501112233' })).status, 401);
+
+    // 2. First call with requirePhone: true asks for phone without creating a cookie/session
+    const step1 = await post(site.base, 'social', {
+      provider: 'google', idToken: 'google-phone-new', requirePhone: true,
+    });
+    assert.equal(step1.status, 200);
+    const step1Body = await step1.json();
+    assert.equal(step1Body.needsPhone, true);
+    assert.equal(step1Body.isNew, true);
+    assert.equal(step1Body.profile.email, 'newphone@gmail.com');
+    assert.equal(step1.headers.get('set-cookie'), null);
+
+    // 3. Second call with phone completes Google signup and issues session cookie
+    const step2 = await post(site.base, 'social', {
+      provider: 'google', idToken: 'google-phone-new', phone: '+994 50 321 43 54', requirePhone: true,
+    });
+    assert.equal(step2.status, 201);
+    const step2Body = await step2.json();
+    assert.equal(step2Body.user.phone, '+994503214354');
+    const cookie = step2.headers.get('set-cookie');
+    assert.match(cookie, /^bcf_customer=/);
+
+    const meRes = await fetch(`${site.base}/api/auth/me`, { headers: { cookie } });
+    assert.equal((await meRes.json()).user.phone, '+994503214354');
+
+    // 4. Returning user with phone does not get needsPhone
+    const repeat = await post(site.base, 'social', {
+      provider: 'google', idToken: 'google-phone-new', requirePhone: true,
+    });
+    assert.equal(repeat.status, 200);
+    const repeatBody = await repeat.json();
+    assert.equal(repeatBody.needsPhone, undefined);
+    assert.equal(repeatBody.user.phone, '+994503214354');
+
+    // 5. Legacy phone-less social user can update via POST /api/auth/phone
+    const legacy = await post(site.base, 'social', { provider: 'google', idToken: 'google-phone-legacy' });
+    assert.equal(legacy.status, 201);
+    const legacyCookie = legacy.headers.get('set-cookie');
+    assert.equal((await legacy.json()).user.phone, null);
+
+    assert.equal((await post(site.base, 'phone', { phone: '0705554433' }, { cookie: legacyCookie })).status, 400);
+    assert.equal((await post(site.base, 'phone', { phone: '+994 50 321 43 54' }, { cookie: legacyCookie })).status, 409);
+
+    const saved = await post(site.base, 'phone', { phone: '+994 70 555 44 33' }, { cookie: legacyCookie });
+    assert.equal(saved.status, 200);
+    assert.equal((await saved.json()).user.phone, '+994705554433');
+    const legacyMe = await fetch(`${site.base}/api/auth/me`, { headers: { cookie: legacyCookie } });
+    assert.equal((await legacyMe.json()).user.phone, '+994705554433');
+  } finally { await site.close(); }
+});
+
 test('production customer cookie is marked Secure', async () => {
   const { Pool } = newDb().adapters.createPg();
   const database = createDatabase({ connectionString: 'postgres://local/test', PoolClass: Pool });

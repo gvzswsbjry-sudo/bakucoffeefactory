@@ -46,8 +46,9 @@
           </div>
         </div>
         <form id="checkoutForm">
-          <fieldset class="checkout-phone-field" style="display:none;" hidden>
+          <fieldset class="checkout-phone-field" hidden>
             <legend data-i18n="phoneLegend">Telefon nömrəsi</legend>
+            <p class="checkout-phone-hint" data-i18n="checkoutPhoneHint">Hesabınızda telefon nömrəsi qeyd olunmayıb. Sifariş vermək üçün nömrənizi daxil edin (hesabınıza da əlavə ediləcək).</p>
             <div class="checkout-phone-row">
               <label class="checkout-country"><span class="checkout-sr-only" data-i18n="countryCodeLabel">Ölkə kodu</span>
                 <select name="countryCode" aria-label="Ölkə və telefon kodu">${countryOptions.map(([code, name]) => `<option value="${code}">${dyn(`${name} (${code})`)}</option>`).join('')}</select>
@@ -162,6 +163,11 @@
       }
     }
 
+    const phoneField = overlay.querySelector('.checkout-phone-field');
+    if (phoneField) {
+      phoneField.hidden = Boolean(currentUser?.phone);
+    }
+
     if (currentUser?.phone) {
       const savedPhone = splitPhone(currentUser.phone);
       if (form.elements.countryCode) form.elements.countryCode.value = savedPhone.code;
@@ -264,11 +270,18 @@
       return;
     }
 
-    const localDigits = form.elements.phoneLocal ? form.elements.phoneLocal.value.replace(/\D/g, '') : '';
-    const formPhone = form.elements.countryCode && localDigits ? `${form.elements.countryCode.value}${localDigits}` : '';
+    const rawDigits = form.elements.phoneLocal ? form.elements.phoneLocal.value.replace(/\D/g, '') : '';
+    const dialCode = form.elements.countryCode ? form.elements.countryCode.value : '+994';
+    const localDigits = dialCode === '+994' && /^0[1-9]\d{8}$/.test(rawDigits) ? rawDigits.slice(1) : rawDigits;
+    const formPhone = localDigits && /^\d{5,14}$/.test(localDigits) ? `${dialCode}${localDigits}` : '';
     const phone = user.phone || formPhone;
     if (!phone || !/^\+[1-9]\d{6,14}$/.test(phone)) {
-      errorBox.textContent = tr('checkoutNoPhoneError', 'Hesabınızda qeydiyyatdan keçmiş telefon nömrəsi tapılmadı.');
+      const phoneField = overlay.querySelector('.checkout-phone-field');
+      if (phoneField) phoneField.hidden = false;
+      errorBox.textContent = !user.phone
+        ? tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.')
+        : tr('checkoutNoPhoneError', 'Hesabınızda qeydiyyatdan keçmiş telefon nömrəsi tapılmadı.');
+      form.elements.phoneLocal?.focus();
       return;
     }
 
@@ -278,6 +291,22 @@
     confirmButton.disabled = true;
     confirmButton.textContent = tr('checkoutSubmittingBtn', 'Sifariş göndərilir…');
     try {
+      if (!user.phone) {
+        try {
+          const phoneRes = await fetch('/api/auth/phone', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ phone }),
+          });
+          const phoneData = await phoneRes.json().catch(() => ({}));
+          if (phoneRes.ok && phoneData.user) {
+            currentUser = phoneData.user;
+            window.bcfCurrentUser = currentUser;
+            window.dispatchEvent(new CustomEvent('bcf:auth-changed', { detail: { user: currentUser } }));
+          }
+        } catch {}
+      }
       const response = await fetch('/api/orders', {
         method: 'POST', credentials: 'same-origin', headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ phone, note: form.elements.note.value.trim(), items,

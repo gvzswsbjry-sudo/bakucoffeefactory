@@ -35,4 +35,14 @@ test('checkout CSS includes styling for WhatsApp button and destination notice',
   assert.match(checkoutCss, /\.checkout-wa-btn/);
   assert.match(checkoutCss, /#25d366/);
   assert.match(checkoutCss, /\.checkout-destination-note/);
+  assert.match(checkoutCss, /\.checkout-phone-field\[hidden\]/);
+  assert.match(checkoutCss, /\.checkout-phone-hint/);
+});
+
+test('checkout JS reveals phone field for accounts missing phone and saves it via /api/auth/phone', () => {
+  const checkoutJs = read('checkout.js');
+  assert.doesNotMatch(checkoutJs, /checkout-phone-field"[^>]*style="display:none;"/);
+  assert.match(checkoutJs, /phoneField\.hidden\s*=\s*Boolean\(currentUser\?\.phone\)/);
+  assert.match(checkoutJs, /fetch\('\/api\/auth\/phone'/);
+  assert.match(checkoutJs, /data-i18n="checkoutPhoneHint"/);
 });

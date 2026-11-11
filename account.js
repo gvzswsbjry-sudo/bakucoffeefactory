@@ -24,6 +24,7 @@
     ['+91', 'Hindistan'], ['+92', 'Pakistan'], ['+98', 'İran'], ['+966', 'Səudiyyə Ərəbistanı'],
     ['+31', 'Niderland'], ['+41', 'İsveçrə'], ['+48', 'Polşa'], ['+86', 'Çin'],
   ];
+  const buildCountryOptionsHtml = () => `${countryOptions.map(([code, name]) => `<option value="${code}">${dyn(`${name} (${code})`)}</option>`).join('')}<option value="other">${dyn('Digər ölkə kodu…')}</option>`;
   overlay.innerHTML = `
     <section class="account-dialog" role="dialog" aria-modal="true" aria-labelledby="accountTitle" tabindex="-1">
       <button class="account-close" type="button" aria-label="Bağla">×</button>
@@ -63,7 +64,7 @@
           <div class="account-field account-register-only account-phone-contact" hidden>
             <span data-i18n="phoneLabel">Mobil nömrə</span>
             <div class="account-phone-row">
-              <label class="account-code-picker"><span class="account-sr-only" data-i18n="countryCodeLabel">Ölkə kodu</span><span class="account-code-display" aria-hidden="true"><span class="account-code-value">+994</span><span class="account-code-arrows"><svg viewBox="0 0 12 18" width="12" height="18"><path d="m2 7 4-4 4 4M2 11l4 4 4-4" /></svg></span></span><select name="countryCode" aria-label="Ölkə və telefon kodu">${countryOptions.map(([code, name]) => `<option value="${code}">${dyn(`${name} (${code})`)}</option>`).join('')}<option value="other">${dyn('Digər ölkə kodu…')}</option></select></label>
+              <label class="account-code-picker"><span class="account-sr-only" data-i18n="countryCodeLabel">Ölkə kodu</span><span class="account-code-display" aria-hidden="true"><span class="account-code-value">+994</span><span class="account-code-arrows"><svg viewBox="0 0 12 18" width="12" height="18"><path d="m2 7 4-4 4 4M2 11l4 4 4-4" /></svg></span></span><select name="countryCode" aria-label="Ölkə və telefon kodu">${buildCountryOptionsHtml()}</select></label>
               <label><span class="account-sr-only" data-i18n="phoneNumberLabel">Telefon nömrəsi</span><input name="phoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123456789" /></label>
             </div>
             <input class="account-custom-code" name="customCode" type="tel" inputmode="tel" data-i18n-placeholder="customCodePlaceholder" placeholder="Ölkə kodu, məsələn +81" aria-label="Digər ölkə kodu" hidden />
@@ -85,6 +86,29 @@
           <button class="account-submit" type="submit" data-i18n="loginSubmit">Daxil ol</button>
         </form>
         <p class="account-note" data-i18n="accountGuestNote">Hesab açmadan da sayta baxa və səbətə məhsul əlavə edə bilərsiniz.</p>
+        <form id="socialPhoneForm" class="account-social-prompt" hidden novalidate>
+          <div class="account-social-header">
+            <span class="account-social-badge" aria-hidden="true">G</span>
+            <div>
+              <h4 id="socialPromptTitle" data-i18n="googlePhoneTitle">Google ilə qeydiyyatı tamamlayın</h4>
+              <p id="socialPromptIdentity"></p>
+            </div>
+          </div>
+          <p class="account-social-desc" data-i18n="googlePhoneDesc">Sifariş verə bilmək və sifariş təsdiqi üçün mobil telefon nömrənizi daxil edin.</p>
+          <div class="account-field">
+            <span data-i18n="phoneLabel">Mobil nömrə</span>
+            <div class="account-phone-row">
+              <label class="account-code-picker"><span class="account-sr-only" data-i18n="countryCodeLabel">Ölkə kodu</span><span class="account-code-display" aria-hidden="true"><span class="account-code-value" id="socialCodeValue">+994</span><span class="account-code-arrows"><svg viewBox="0 0 12 18" width="12" height="18"><path d="m2 7 4-4 4 4M2 11l4 4 4-4" /></svg></span></span><select name="socialCountryCode" aria-label="Ölkə və telefon kodu">${buildCountryOptionsHtml()}</select></label>
+              <label><span class="account-sr-only" data-i18n="phoneNumberLabel">Telefon nömrəsi</span><input name="socialPhoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123456789" /></label>
+            </div>
+            <input class="account-custom-code" name="socialCustomCode" type="tel" inputmode="tel" data-i18n-placeholder="customCodePlaceholder" placeholder="Ölkə kodu, məsələn +81" aria-label="Digər ölkə kodu" hidden />
+          </div>
+          <p class="account-message" id="socialPhoneMessage" role="status" aria-live="polite"></p>
+          <div class="account-social-actions">
+            <button type="button" class="account-social-cancel" id="socialPhoneCancel" data-i18n="googlePhoneCancel">Geri</button>
+            <button type="submit" class="account-social-confirm" id="socialPhoneConfirm" data-i18n="googlePhoneSubmit">Nömrəni təsdiqlə və daxil ol</button>
+          </div>
+        </form>
         <div class="account-reset-view" hidden>
           <div class="account-reset-head">
             <button type="button" class="account-reset-back" id="resetBackToLogin" data-i18n="resetBackToLogin">← Girişə qayıt</button>
@@ -138,6 +162,20 @@
           <span class="account-profile-avatar" aria-hidden="true"></span>
           <div><p class="account-greeting"></p><p class="account-phone"></p></div>
         </div>
+        <p class="account-reset-sent-banner account-profile-saved-banner" id="profilePhoneSavedBanner" role="status" aria-live="polite" hidden data-i18n="profilePhoneSavedMsg">Telefon nömrəniz hesabınıza əlavə edildi.</p>
+        <form id="profilePhoneForm" class="account-profile-phone-box" hidden novalidate>
+          <p class="account-profile-phone-warn" data-i18n="profilePhoneMissingNote">Hesabınızda telefon nömrəsi qeyd olunmayıb. Sifariş vermək üçün mobil nömrənizi əlavə edin.</p>
+          <div class="account-field">
+            <span data-i18n="phoneLabel">Mobil nömrə</span>
+            <div class="account-phone-row">
+              <label class="account-code-picker"><span class="account-sr-only" data-i18n="countryCodeLabel">Ölkə kodu</span><span class="account-code-display" aria-hidden="true"><span class="account-code-value" id="profileCodeValue">+994</span><span class="account-code-arrows"><svg viewBox="0 0 12 18" width="12" height="18"><path d="m2 7 4-4 4 4M2 11l4 4 4-4" /></svg></span></span><select name="profileCountryCode" aria-label="Ölkə və telefon kodu">${buildCountryOptionsHtml()}</select></label>
+              <label><span class="account-sr-only" data-i18n="phoneNumberLabel">Telefon nömrəsi</span><input name="profilePhoneLocal" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="123456789" /></label>
+            </div>
+            <input class="account-custom-code" name="profileCustomCode" type="tel" inputmode="tel" data-i18n-placeholder="customCodePlaceholder" placeholder="Ölkə kodu, məsələn +81" aria-label="Digər ölkə kodu" hidden />
+          </div>
+          <p class="account-message" id="profilePhoneMessage" role="status" aria-live="polite"></p>
+          <button type="submit" class="account-submit" id="profilePhoneSubmit" data-i18n="profilePhoneSaveBtn">Nömrəni yadda saxla</button>
+        </form>
         <p class="account-security-note" data-i18n="accountSecurityNote">Hesabınız bu cihazda təhlükəsiz sessiya ilə açıqdır.</p>
         <button class="account-logout" type="button" data-i18n="logoutBtn">Hesabdan çıx</button>
        </div>
@@ -185,11 +223,27 @@
   const countryCode = form.elements.countryCode;
   const customCode = form.elements.customCode;
   const codeValue = overlay.querySelector('.account-code-value');
+  const socialPhoneForm = overlay.querySelector('#socialPhoneForm');
+  const socialPromptIdentity = overlay.querySelector('#socialPromptIdentity');
+  const socialCountryCode = socialPhoneForm?.elements.socialCountryCode;
+  const socialCustomCode = socialPhoneForm?.elements.socialCustomCode;
+  const socialCodeValue = overlay.querySelector('#socialCodeValue');
+  const socialPhoneMessage = overlay.querySelector('#socialPhoneMessage');
+  const socialPhoneCancel = overlay.querySelector('#socialPhoneCancel');
+  const socialPhoneConfirm = overlay.querySelector('#socialPhoneConfirm');
+  const profilePhoneForm = overlay.querySelector('#profilePhoneForm');
+  const profilePhoneSavedBanner = overlay.querySelector('#profilePhoneSavedBanner');
+  const profileCountryCode = profilePhoneForm?.elements.profileCountryCode;
+  const profileCustomCode = profilePhoneForm?.elements.profileCustomCode;
+  const profileCodeValue = overlay.querySelector('#profileCodeValue');
+  const profilePhoneMessage = overlay.querySelector('#profilePhoneMessage');
+  const profilePhoneSubmit = overlay.querySelector('#profilePhoneSubmit');
   const passwordToggle = overlay.querySelector('.account-password-toggle');
   let mode = 'login';
   let contactMode = 'phone';
   let resetMode = false;
   let resetStep = 'request';
+  let pendingSocial = null;
   let user = null;
   let previousFocus = null;
   function announceAuthChange() {
@@ -257,12 +311,23 @@
       trigger.innerHTML = '<span class="account-user-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></span>';
       profile.querySelector('.account-greeting').textContent = `${tr('greetingPrefix', 'Salam')}, ${user.fullName || user.username}!`;
       profile.querySelector('.account-phone').textContent = user.phone ? `${tr('phoneShortPrefix', 'Tel')}: ${user.phone}` : (user.email || '');
+      if (profilePhoneForm) {
+        profilePhoneForm.hidden = Boolean(user.phone);
+        if (profilePhoneMessage) profilePhoneMessage.textContent = '';
+      }
+      if (user.phone && profilePhoneSavedBanner) {
+        // Keep banner visibility managed by explicit save action
+      } else if (profilePhoneSavedBanner) {
+        profilePhoneSavedBanner.hidden = true;
+      }
     } else {
       trigger.classList.remove('is-logged-in');
       trigger.removeAttribute('aria-label');
       trigger.removeAttribute('title');
       trigger.dataset.i18n = 'navAccount';
       trigger.textContent = tr('navAccount', 'Hesab');
+      if (profilePhoneForm) profilePhoneForm.hidden = true;
+      if (profilePhoneSavedBanner) profilePhoneSavedBanner.hidden = true;
     }
     if (overlay.querySelector('[data-center="orders"]').classList.contains('active')) renderOrders();
   }
@@ -302,8 +367,64 @@
     window.BCF_I18N?.translateDom?.(overlay);
   }
 
+  function setCenterTab(targetCenter) {
+    const next = targetCenter === 'orders' ? 'orders' : 'details';
+    overlay.querySelectorAll('.account-center-tab').forEach((item) => {
+      const selected = item.dataset.center === next;
+      item.classList.toggle('active', selected);
+      item.setAttribute('aria-selected', String(selected));
+    });
+    overlay.querySelectorAll('.account-center-panel').forEach((panel) => {
+      const selected = panel.dataset.centerPanel === next;
+      panel.hidden = !selected;
+      panel.classList.toggle('active', selected);
+    });
+  }
+
+  function setSocialPhoneMode(active, profileInfo = null) {
+    const show = Boolean(active);
+    if (!show) {
+      pendingSocial = null;
+      if (socialPhoneForm) socialPhoneForm.hidden = true;
+      if (socialPhoneMessage) socialPhoneMessage.textContent = '';
+      if (!resetMode) {
+        accountTabs.hidden = false;
+        socialSection.hidden = false;
+        form.hidden = false;
+        guestNote.hidden = false;
+      }
+      return;
+    }
+    resetMode = false;
+    resetView.hidden = true;
+    accountTabs.hidden = true;
+    socialSection.hidden = true;
+    form.hidden = true;
+    guestNote.hidden = true;
+    if (socialPhoneForm) socialPhoneForm.hidden = false;
+    if (socialPhoneMessage) socialPhoneMessage.textContent = '';
+    socialStatus('');
+    if (socialPromptIdentity) {
+      socialPromptIdentity.textContent = [profileInfo?.fullName, profileInfo?.email].filter(Boolean).join(' · ');
+    }
+    setCenterTab('details');
+    if (overlay.hidden) {
+      previousFocus = previousFocus || document.activeElement;
+      overlay.hidden = false;
+      document.body.classList.add('account-open');
+      document.documentElement.classList.add('account-open');
+    }
+    updateCountryCode();
+    window.BCF_I18N?.translateDom?.(socialPhoneForm || overlay);
+    socialPhoneForm?.elements.socialPhoneLocal?.focus();
+  }
+
   function setResetMode(active, nextStep = 'request') {
     resetMode = Boolean(active);
+    if (resetMode) {
+      pendingSocial = null;
+      if (socialPhoneForm) socialPhoneForm.hidden = true;
+    }
     accountTabs.hidden = resetMode;
     socialSection.hidden = resetMode;
     form.hidden = resetMode;
@@ -372,6 +493,7 @@
 
   function close() {
     closeLogoutConfirm(false);
+    setSocialPhoneMode(false);
     overlay.hidden = true;
     document.body.classList.remove('account-open');
     document.documentElement.classList.remove('account-open');
@@ -381,6 +503,8 @@
   trigger.addEventListener('click', () => {
     previousFocus = document.activeElement;
     closeLogoutConfirm(false);
+    setSocialPhoneMode(false);
+    if (profilePhoneSavedBanner) profilePhoneSavedBanner.hidden = true;
     overlay.hidden = false;
     document.body.classList.add('account-open');
     document.documentElement.classList.add('account-open');
@@ -421,7 +545,7 @@
     }
     if (event.key === 'Escape') close();
     if (event.key !== 'Tab') return;
-    const focusables = [...overlay.querySelectorAll('button:not([hidden]), input:not([hidden]), a')]
+    const focusables = [...overlay.querySelectorAll('button:not([hidden]), input:not([hidden]), select:not([hidden]), a')]
       .filter((element) => !element.closest('[hidden]'));
     const first = focusables[0];
     const last = focusables.at(-1);
@@ -446,12 +570,34 @@
     });
     renderCollections();
   }));
+  function syncPhonePicker(selectEl, customEl, codeEl) {
+    if (!selectEl || !customEl || !codeEl) return;
+    const isCustom = selectEl.value === 'other';
+    customEl.hidden = !isCustom;
+    codeEl.textContent = isCustom ? tr('otherLabel', 'Digər') : selectEl.value;
+  }
+
+  function extractPhoneValue(selectEl, customEl, localEl) {
+    const rawDial = selectEl?.value === 'other' ? customEl?.value.trim() : selectEl?.value;
+    const dialClean = String(rawDial || '').replace(/[\s()-]/g, '');
+    const dialCode = dialClean.startsWith('00') ? `+${dialClean.slice(2)}` : dialClean;
+    const rawDigits = String(localEl?.value || '').replace(/\D/g, '');
+    const localDigits = dialCode === '+994' && /^0[1-9]\d{8}$/.test(rawDigits)
+      ? rawDigits.slice(1)
+      : rawDigits;
+    const phone = `${dialCode}${localDigits}`;
+    const valid = /^\+[1-9]\d{0,3}$/.test(dialCode) && /^\d{5,14}$/.test(localDigits) && /^\+[1-9]\d{6,14}$/.test(phone);
+    return { dialCode, localDigits, phone, valid };
+  }
+
   function updateCountryCode() {
-    const isCustom = countryCode.value === 'other';
-    customCode.hidden = !isCustom;
-    codeValue.textContent = isCustom ? tr('otherLabel', 'Digər') : countryCode.value;
+    syncPhonePicker(countryCode, customCode, codeValue);
+    syncPhonePicker(socialCountryCode, socialCustomCode, socialCodeValue);
+    syncPhonePicker(profileCountryCode, profileCustomCode, profileCodeValue);
   }
   countryCode.addEventListener('change', updateCountryCode);
+  socialCountryCode?.addEventListener('change', updateCountryCode);
+  profileCountryCode?.addEventListener('change', updateCountryCode);
   passwordToggle.addEventListener('click', () => {
     const visible = form.elements.password.type === 'password';
     form.elements.password.type = visible ? 'text' : 'password';
@@ -537,11 +683,19 @@
     socialMessage.classList.toggle('error', isError);
   }
   async function finishSocial(provider, idToken) {
-    const result = await request('social', { provider, idToken });
+    const result = await request('social', { provider, idToken, requirePhone: true });
+    if (result.needsPhone) {
+      pendingSocial = { provider, idToken, profile: result.profile || null };
+      setSocialPhoneMode(true, result.profile || null);
+      return;
+    }
+    pendingSocial = null;
     user = result.user;
     announceAuthChange();
     form.reset();
+    socialPhoneForm?.reset();
     updateCountryCode();
+    setSocialPhoneMode(false);
     renderUser();
     close();
   }
@@ -609,9 +763,11 @@
     event.preventDefault();
     message.textContent = '';
     const password = form.elements.password.value;
-    const dialCode = countryCode.value === 'other' ? customCode.value.trim() : countryCode.value;
-    const localDigits = form.elements.phoneLocal.value.replace(/\D/g, '');
-    const phone = `${dialCode}${localDigits}`;
+    const { dialCode, localDigits, phone, valid: phoneValid } = extractPhoneValue(
+      countryCode,
+      customCode,
+      form.elements.phoneLocal
+    );
     const email = form.elements.email ? form.elements.email.value.trim() : '';
     const fullName = form.elements.fullName ? form.elements.fullName.value.trim() : '';
     const username = form.elements.username ? form.elements.username.value.trim() : '';
@@ -627,7 +783,7 @@
         form.elements.username?.focus();
         return;
       }
-      if (!/^\+[1-9]\d{0,3}$/.test(dialCode) || !/^\d{5,14}$/.test(localDigits)) {
+      if (!phoneValid || !dialCode || !localDigits) {
         message.textContent = tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.');
         form.elements.phoneLocal?.focus();
         return;
@@ -811,6 +967,93 @@
     }
   });
 
+  socialPhoneCancel?.addEventListener('click', () => {
+    setSocialPhoneMode(false);
+    socialStatus('');
+    form.elements.identifier?.focus();
+  });
+
+  socialPhoneForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (socialPhoneMessage) socialPhoneMessage.textContent = '';
+    if (!pendingSocial?.idToken) {
+      setSocialPhoneMode(false);
+      return;
+    }
+    const { phone, valid } = extractPhoneValue(
+      socialCountryCode,
+      socialCustomCode,
+      socialPhoneForm.elements.socialPhoneLocal
+    );
+    if (!valid) {
+      if (socialPhoneMessage) {
+        socialPhoneMessage.textContent = tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.');
+      }
+      socialPhoneForm.elements.socialPhoneLocal?.focus();
+      return;
+    }
+    if (socialPhoneConfirm) socialPhoneConfirm.disabled = true;
+    try {
+      const result = await request('social', {
+        provider: pendingSocial.provider,
+        idToken: pendingSocial.idToken,
+        phone,
+        requirePhone: true,
+      });
+      if (result.needsPhone) {
+        if (socialPhoneMessage) {
+          socialPhoneMessage.textContent = tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.');
+        }
+        return;
+      }
+      pendingSocial = null;
+      user = result.user;
+      announceAuthChange();
+      form.reset();
+      socialPhoneForm.reset();
+      updateCountryCode();
+      setSocialPhoneMode(false);
+      renderUser();
+      close();
+    } catch (error) {
+      if (socialPhoneMessage) socialPhoneMessage.textContent = error.message;
+    } finally {
+      if (socialPhoneConfirm) socialPhoneConfirm.disabled = false;
+    }
+  });
+
+  profilePhoneForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (profilePhoneMessage) profilePhoneMessage.textContent = '';
+    if (!user) return;
+    const { phone, valid } = extractPhoneValue(
+      profileCountryCode,
+      profileCustomCode,
+      profilePhoneForm.elements.profilePhoneLocal
+    );
+    if (!valid) {
+      if (profilePhoneMessage) {
+        profilePhoneMessage.textContent = tr('authPhoneRequired', 'Mobil telefon nömrənizi tam daxil edin.');
+      }
+      profilePhoneForm.elements.profilePhoneLocal?.focus();
+      return;
+    }
+    if (profilePhoneSubmit) profilePhoneSubmit.disabled = true;
+    try {
+      const result = await request('phone', { phone });
+      user = result.user;
+      profilePhoneForm.reset();
+      updateCountryCode();
+      renderUser();
+      if (profilePhoneSavedBanner) profilePhoneSavedBanner.hidden = false;
+      announceAuthChange();
+    } catch (error) {
+      if (profilePhoneMessage) profilePhoneMessage.textContent = error.message;
+    } finally {
+      if (profilePhoneSubmit) profilePhoneSubmit.disabled = false;
+    }
+  });
+
   logoutTriggerBtn?.addEventListener('click', openLogoutConfirm);
   logoutCancelBtn?.addEventListener('click', () => closeLogoutConfirm(true));
   logoutAcceptBtn?.addEventListener('click', performLogout);
@@ -826,6 +1069,8 @@
     open: (options = {}) => {
       previousFocus = document.activeElement;
       closeLogoutConfirm(false);
+      setSocialPhoneMode(false);
+      if (profilePhoneSavedBanner) profilePhoneSavedBanner.hidden = true;
       overlay.hidden = false;
       document.body.classList.add('account-open');
       document.documentElement.classList.add('account-open');
@@ -847,6 +1092,13 @@
   renderCollections();
   window.BCF_I18N?.translateDom?.(overlay);
   window.dispatchEvent(new CustomEvent('bcf:ui-mounted'));
+  window.addEventListener('bcf:auth-changed', (event) => {
+    const nextUser = event.detail?.user || null;
+    if (nextUser && (!user || nextUser.id !== user.id || nextUser.phone !== user.phone)) {
+      user = nextUser;
+      renderUser();
+    }
+  });
   window.addEventListener('bcf:language-changed', () => {
     setMode(mode);
     renderUser();
@@ -857,7 +1109,7 @@
         'Hesab varsa 6 rəqəmli kod göndərildi (Gmail-ə və ya dəstək xəttinə). Gmail-də görünməsə Spam qovluğunu yoxlayın; e-poçt bağlı deyilsə WhatsApp (+994 70 390 10 09) ilə kodu əldə edin.'
       );
     }
-    overlay.querySelectorAll('select[name="countryCode"] option').forEach((opt) => {
+    overlay.querySelectorAll('select[name="countryCode"] option, select[name="socialCountryCode"] option, select[name="profileCountryCode"] option').forEach((opt) => {
       if (opt.value === 'other') {
         opt.textContent = dyn('Digər ölkə kodu…');
       } else {

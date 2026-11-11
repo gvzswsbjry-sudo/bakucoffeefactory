@@ -276,11 +276,11 @@
     if (document.querySelector('.cart-summary') && !document.getElementById('checkoutScript')) {
       const stylesheet = document.createElement('link');
       stylesheet.rel = 'stylesheet';
-      stylesheet.href = 'checkout.css?v=20261109-1';
+      stylesheet.href = 'checkout.css?v=20261111-6';
       document.head.append(stylesheet);
       const checkoutScript = document.createElement('script');
       checkoutScript.id = 'checkoutScript';
-      checkoutScript.src = 'checkout.js?v=20261111-1';
+      checkoutScript.src = 'checkout.js?v=20261111-6';
       document.body.append(checkoutScript);
     }
     window.addEventListener('storage', (event) => {

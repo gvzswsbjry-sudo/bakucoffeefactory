@@ -207,3 +207,67 @@ test('signed-in customers see only their own orders across sessions', async (t) 
   const other = await fetch(`${base}/api/account/orders`, { headers: { cookie: secondCookie } });
   assert.deepEqual(await other.json(), []);
 });
+
+test('Google users completing phone registration can place orders immediately without phone errors', async (t) => {
+  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), 'bcf-google-orders-'));
+  t.after(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    await fs.rm(rootDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 25 });
+  });
+  await fs.mkdir(path.join(rootDir, 'data'));
+  await fs.mkdir(path.join(rootDir, 'assets'));
+  await fs.writeFile(path.join(rootDir, 'data', 'products.json'), JSON.stringify(products.map((product, index) => ({
+    ...product, description: 'Test', sortOrder: index + 1, meta: {},
+  }))));
+  const { Pool } = newDb().adapters.createPg();
+  const customerDatabase = createDatabase({ connectionString: 'postgres://local/test', PoolClass: Pool });
+  t.after(() => customerDatabase.close());
+  const server = createServer({
+    rootDir,
+    port: 0,
+    customerDatabase,
+    socialProviders: { google: { clientId: 'google-client-id' } },
+    oidcVerifier: {
+      verify: async () => ({
+        provider: 'google',
+        subject: 'google-order-user-1',
+        email: 'order.google@gmail.com',
+        name: 'Order Google User',
+      }),
+    },
+  });
+  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+  t.after(() => {
+    server.closeAllConnections?.();
+    return new Promise((resolve) => server.close(resolve));
+  });
+  const base = `http://127.0.0.1:${server.address().port}`;
+
+  const promptRes = await fetch(`${base}/api/auth/social`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ provider: 'google', idToken: 'tok-1', requirePhone: true }),
+  });
+  assert.equal(promptRes.status, 200);
+  assert.equal((await promptRes.json()).needsPhone, true);
+
+  const authRes = await fetch(`${base}/api/auth/social`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ provider: 'google', idToken: 'tok-1', phone: '+994507778899', requirePhone: true }),
+  });
+  assert.equal(authRes.status, 201);
+  const authCookie = authRes.headers.get('set-cookie');
+  const authJson = await authRes.json();
+  assert.equal(authJson.user.phone, '+994507778899');
+
+  const orderRes = await fetch(`${base}/api/orders`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', cookie: authCookie },
+    body: JSON.stringify({ items: [{ id: 'coffee-colombia', quantity: 100 }] }),
+  });
+  assert.equal(orderRes.status, 201);
+  const orderJson = await orderRes.json();
+  assert.match(orderJson.orderId, /^BCF-/);
+  assert.equal(orderJson.total, 15);
+});

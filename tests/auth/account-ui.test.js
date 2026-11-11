@@ -62,6 +62,15 @@ test('the shared storefront script loads the accessible account interface withou
   assert.match(css, /\.account-confirm-dialog/);
   assert.match(css, /\.account-overlay\s*\{[^}]*z-index:\s*10020/);
   assert.match(css, /\.account-confirm-backdrop\s*\{[^}]*z-index:\s*10040/);
+
+  assert.match(account, /id="socialPhoneForm"/);
+  assert.match(account, /requirePhone:\s*true/);
+  assert.match(account, /id="socialPhoneCancel"/);
+  assert.match(account, /id="socialPhoneConfirm"/);
+  assert.match(account, /id="profilePhoneForm"/);
+  assert.match(account, /request\('phone'/);
+  assert.match(css, /\.account-profile-phone-box\[hidden\]/);
+  assert.match(css, /\.account-social-prompt\[hidden\]/);
 });
 
 test('privacy page explains the account data and contains a contact method', () => {
