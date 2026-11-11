@@ -39,6 +39,13 @@
           <button type="button" class="account-tab active" data-mode="login" data-i18n="tabLogin" role="tab" aria-selected="true">Giriş</button>
           <button type="button" class="account-tab" data-mode="register" data-i18n="tabRegister" role="tab" aria-selected="false">Qeydiyyat</button>
         </div>
+        <div class="account-social account-social--top">
+          <div id="googleButtonSlot" style="display:none;width:100%;margin-bottom:8px;justify-content:center;"></div>
+          <button class="account-provider account-provider-google" type="button" data-provider="google"><span aria-hidden="true">G</span><em style="font-style:normal" data-i18n="continueWithGoogle">Google ilə davam et</em></button>
+          <p class="account-social-message" id="accountSocialMessage" role="status" aria-live="polite" hidden></p>
+          <p class="account-provider-note" data-i18n="googleProviderNote">Google ilə bir kliklə sürətli giriş və qeydiyyat.</p>
+          <div class="account-divider"><span data-i18n="socialOr">və ya</span></div>
+        </div>
         <form id="accountForm" novalidate>
           <label class="account-field account-login-only"><span data-i18n="identifierLabel">İstifadəçi adı və ya telefon nömrəsi</span>
             <input name="identifier" autocomplete="username" data-i18n-placeholder="identifierPlaceholder" placeholder="İstifadəçi adı, telefon və ya e-poçt" />
@@ -74,13 +81,6 @@
           <p class="account-message" id="accountMessage" role="status" aria-live="polite"></p>
           <button class="account-submit" type="submit" data-i18n="loginSubmit">Daxil ol</button>
         </form>
-        <div class="account-social">
-          <div class="account-divider"><span data-i18n="socialOr">və ya</span></div>
-          <div id="googleButtonSlot" style="display:none;width:100%;margin-bottom:8px;justify-content:center;"></div>
-          <button class="account-provider account-provider-google" type="button" data-provider="google"><span aria-hidden="true">G</span><em style="font-style:normal" data-i18n="continueWithGoogle">Google ilə davam et</em></button>
-          <p class="account-social-message" id="accountSocialMessage" role="status" aria-live="polite" hidden></p>
-          <p class="account-provider-note" data-i18n="googleProviderNote">Google ilə bir kliklə sürətli giriş və qeydiyyat.</p>
-        </div>
         <p class="account-note" data-i18n="accountGuestNote">Hesab açmadan da sayta baxa və səbətə məhsul əlavə edə bilərsiniz.</p>
        </div>
        <div class="account-profile-view" hidden>
@@ -299,6 +299,7 @@
         cancel_on_tap_outside: true,
       });
 
+      const gsiWidth = Math.min(360, Math.max(240, (window.innerWidth ? window.innerWidth - 76 : 320)));
       googleSlot.style.display = 'flex';
       window.google.accounts.id.renderButton(googleSlot, {
         theme: 'outline',
@@ -307,10 +308,10 @@
         shape: 'rectangular',
         text: 'continue_with',
         logo_alignment: 'left',
-        width: 320,
+        width: gsiWidth,
         locale: window.BCF_I18N?.getLanguage?.() || 'az',
       });
-      if (googleBtn) {
+      if (googleBtn && googleSlot.querySelector('iframe, div[role="button"]')) {
         googleBtn.style.display = 'none';
       }
     } catch (e) {

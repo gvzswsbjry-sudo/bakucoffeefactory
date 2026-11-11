@@ -17,7 +17,7 @@ html.account-open, body.account-open { overflow: hidden !important; touch-action
 .account-center-tab.active { background: #fff; color: #9b4a34; box-shadow: inset 0 -2px #a34e34; }
 .account-center-tab:focus-visible { outline: 2px solid #a34e34; outline-offset: -3px; }
 .account-center-panel[data-center-panel="details"] { max-width: 540px; margin-inline: auto; }
-.account-tabs { display: flex; gap: 0; border-bottom: 1px solid #c7b9a9; margin-bottom: 22px; }
+.account-tabs { display: flex; gap: 0; border-bottom: 1px solid #c7b9a9; margin-bottom: 18px; }
 .account-tab { flex: 1; border: 0; border-bottom: 2px solid transparent; padding: 10px; background: transparent; font: 700 14px var(--sans, sans-serif); cursor: pointer; }
 .account-tab.active { color: #a34e34; border-color: #a34e34; }
 .account-field { display: grid; gap: 7px; margin-bottom: 16px; font: 600 12px var(--sans, sans-serif); }
@@ -63,9 +63,12 @@ html.account-open, body.account-open { overflow: hidden !important; touch-action
 .account-submit, .account-logout { width: 100%; min-height: 48px; border: 0; background: #596750; color: #fff; font: 700 14px var(--sans, sans-serif); cursor: pointer; }
 .account-submit:disabled { opacity: .6; cursor: wait; }
 .account-social { margin-top: 20px; }
+.account-social--top { margin-top: 0; margin-bottom: 16px; }
 .account-divider { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; color: #8b8178; font: 11px var(--sans,sans-serif); }
+.account-social--top .account-divider { margin: 14px 0 0; }
 .account-divider::before,.account-divider::after { content: ''; height: 1px; flex: 1; background: #d7cec3; }
 .account-provider { width: 100%; min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid #c9bdae; margin-top: 9px; background: #fff; color: #211b17; font: 700 13px var(--sans,sans-serif); cursor: pointer; }
+.account-social--top .account-provider { margin-top: 0; }
 .account-provider:hover,.account-provider:focus-visible { border-color: #5a4a3e; background: #f2eee8; }
 .account-provider-google>span { width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: conic-gradient(from -45deg,#4285f4 0 25%,#34a853 0 50%,#fbbc05 0 75%,#ea4335 0); font: 700 11px Arial,sans-serif; }
 .account-provider-apple { background: #171513; color: #fff; border-color: #171513; }

@@ -37,6 +37,10 @@ test('the shared storefront script loads the accessible account interface withou
   assert.match(account, /idToken/);
   assert.doesNotMatch(account, /bcf_customer_user|istifadeci@icloud\.com|activeSocialProvider/);
   assert.doesNotMatch(account, /setItem\([^)]*password|sessionStorage/);
+
+  const socialIndex = account.indexOf('<div class="account-social');
+  const formIndex = account.indexOf('<form id="accountForm"');
+  assert.ok(socialIndex > 0 && formIndex > socialIndex, 'Google sign-in section must render above accountForm so it stays visible in registration mode');
 });
 
 test('privacy page explains the account data and contains a contact method', () => {

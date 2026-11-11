@@ -44,10 +44,10 @@ if (!window.BCF_I18N && !window.__BCF_I18N_INITIALIZED__ && !document.querySelec
 
 const accountStyles = document.createElement('link');
 accountStyles.rel = 'stylesheet';
-accountStyles.href = 'account.css?v=20261103-v3';
+accountStyles.href = 'account.css?v=20261111-1';
 document.head.append(accountStyles);
 const accountScript = document.createElement('script');
-accountScript.src = 'account.js?v=20261109-v4';
+accountScript.src = 'account.js?v=20261111-1';
 accountScript.async = false;
 document.body.append(accountScript);
 
