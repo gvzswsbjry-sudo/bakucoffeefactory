@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="navigation.css" />
   <link rel="stylesheet" href="brand.css" />
-  <link rel="stylesheet" href="menu-background.css" />
   <link rel="stylesheet" href="summer-menu.css" />
   <link rel="stylesheet" href="menu-mobile.css?v=20261025-tab-header1" />
+  <link rel="stylesheet" href="menu-modern.css?v=20261113-2" />
   <link rel="stylesheet" href="i18n.css" />
 </head>
 <body>
@@ -42,11 +42,12 @@
     </button>
   </header>
 
-  <main class="menu-page">
+  <main class="menu-page menu-modern">
     <section class="menu-top">
-      <p class="eyebrow">Baku Coffee Factory</p>
+      <p class="eyebrow" data-i18n="menuTopEyebrow">Baku Coffee Factory</p>
       <h1 id="menuPageHeading" data-i18n="menuHeadingDrink">Bir fincan<br /><em>seçin.</em></h1>
     </section>
+
     <div class="menu-tabs-bar">
       <div class="menu-tabs" role="tablist">
         <button class="menu-tab active" data-menu-target="mainMenu" role="tab" aria-selected="true"><span data-i18n="tabMainMenu">Ana menyu</span> <span>01</span></button>
@@ -59,64 +60,159 @@
     <section class="menu-panel active" id="mainMenu">
       <div class="menu-panel-heading">
         <p class="eyebrow">01 · Ana menyu</p>
-        <p>Qiymətlər AZN ilə göstərilib.</p>
+        <p data-i18n="menuCurrencyNote">Qiymətlər AZN ilə göstərilib.</p>
       </div>
-      <div class="menu-columns">
-        <div>
-          <div class="menu-group">
-            <h2>Espresso</h2>
-            <p><span>Espresso (Single)</span><b>3.80 ₼</b></p>
-            <p><span>Espresso (Double)</span><b>4.70 ₼</b></p>
-            <p><span>Triple Joy</span><b>5.90 ₼</b></p>
+
+      <!-- Daily 50% Discount Spotlight -->
+      <article class="menu-daily-spotlight" id="dailyOfferCard" aria-labelledby="dailyOfferTitle">
+        <figure class="menu-daily-media">
+          <img src="assets/menu/daily-latte.jpg" alt="Günün 50% endirimli qəhvəsi: Latte" width="900" height="900" decoding="async" />
+          <span class="menu-daily-percent">-50%</span>
+        </figure>
+        <div class="menu-daily-body">
+          <div class="menu-daily-meta">
+            <span class="menu-daily-badge" data-i18n="menuDailyBadge">-50% · GÜNÜN TƏKLİFİ</span>
+            <span class="menu-daily-eyebrow" data-i18n="menuDailyEyebrow">HƏR GÜN BİR QƏHVƏ</span>
           </div>
-          <div class="menu-group">
-            <h2>Americano</h2>
-            <p><span>Americano (S / M / L)</span><b>5.90 / 6.30 / 7.20 ₼</b></p>
-          </div>
-          <div class="menu-group">
-            <h2>Südlü qəhvələr</h2>
-            <p><span>Latte (S / M / L)</span><b>6.80 / 7.50 / 8.40 ₼</b></p>
-            <p><span>Espresso Macchiato</span><b>5.50 ₼</b></p>
-            <p><span>Caramel Macchiato (S / M / L)</span><b>6.10 / 7.20 / 8.00 ₼</b></p>
-            <p><span>Cappuccino (S / M / L)</span><b>6.20 / 7.30 / 8.00 ₼</b></p>
-            <p><span>Flat White (S / M)</span><b>6.70 / 7.50 ₼</b></p>
-            <p><span>Mocha (S / M)</span><b>5.90 / 6.70 ₼</b></p>
-            <p><span>Cortado (M)</span><b>5.90 ₼</b></p>
-            <p><span>Raff Coffee (S / M)</span><b>7.00 / 8.00 ₼</b></p>
-            <p><span>Spanish Latte (S / M / L)</span><b>7.00 / 8.00 / 9.00 ₼</b></p>
-            <p><span>Spanish Cortado (M)</span><b>8.00 ₼</b></p>
-          </div>
+          <h2 id="dailyOfferTitle" data-i18n="menuDailyTitleLatte">Günün seçimi: Latte</h2>
+          <p class="menu-daily-note" data-i18n="menuDailyNote">Kofeşopumuzda hər gün bir içkiyə 50% endirim tətbiq olunur. Bu gün günün endirimli qəhvəsi Latte-dir — bütün ölçülərdə yarı qiymətə.</p>
         </div>
-        <div>
-          <div class="menu-group">
-            <h2>Soyuq içkilər</h2>
-            <p><span>Ice Latte (L)</span><b>8.40 ₼</b></p>
-            <p><span>Ice Americano (L)</span><b>7.20 ₼</b></p>
-            <p><span>Cold Brew (M)</span><b>6.90 ₼</b></p>
-          </div>
-          <div class="menu-group">
-            <h2>Alternativlər</h2>
-            <p><span>Türk qəhvəsi</span><b>9.30 ₼</b></p>
-            <p><span>İsti şokolad</span><b>9.40 ₼</b></p>
-            <p><span>İsti şokolad (Marshmello)</span><b>9.90 ₼</b></p>
-            <p><span>Filtr coffee (V60)</span><b>13.00 ₼</b></p>
-            <p><span>Baku Coffee Factory Special</span><b>13.30 ₼</b></p>
-          </div>
-          <div class="menu-group">
-            <h2>Çaylar</h2>
-            <p><span>Chai Tea Latte (S / M)</span><b>6.90 / 7.70 ₼</b></p>
-            <p><span>Çay / Yaşıl çay (600 ml)</span><b>12.00 ₼</b></p>
-            <p><span>Çay / Yaşıl çay (250 ml)</span><b>4.00 ₼</b></p>
-          </div>
-          <div class="menu-group">
-            <h2>Əlavələr</h2>
-            <p><span>Lactose Free Milk</span><b>3.00 ₼</b></p>
-            <p><span>Sirop</span><b>1.70 ₼</b></p>
-            <p><span>Darçın</span><b>1.20 ₼</b></p>
-            <p><span>Şirab</span><b>4.00 ₼</b></p>
-            <p><span>Extra Order</span><b>2.00 ₼</b></p>
-          </div>
+        <div class="daily-size-grid">
+          <span class="daily-size-pill">
+            <span class="daily-size-code">S</span>
+            <del class="daily-size-old">6.80</del>
+            <strong class="daily-size-new">3.40 ₼</strong>
+          </span>
+          <span class="daily-size-pill">
+            <span class="daily-size-code">M</span>
+            <del class="daily-size-old">7.50</del>
+            <strong class="daily-size-new">3.75 ₼</strong>
+          </span>
+          <span class="daily-size-pill">
+            <span class="daily-size-code">L</span>
+            <del class="daily-size-old">8.40</del>
+            <strong class="daily-size-new">4.20 ₼</strong>
+          </span>
         </div>
+      </article>
+
+      <!-- Horizontal Category Filter Chips -->
+      <div class="menu-filter-bar" role="group" aria-label="Menyu kateqoriyaları">
+        <button type="button" class="menu-filter-pill active" data-menu-filter="all" aria-pressed="true" data-i18n="menuCatAll">Hamısı</button>
+        <button type="button" class="menu-filter-pill" data-menu-filter="espresso" aria-pressed="false" data-i18n="menuCatEspresso">Espresso</button>
+        <button type="button" class="menu-filter-pill" data-menu-filter="milk" aria-pressed="false" data-i18n="menuCatMilk">Südlü</button>
+        <button type="button" class="menu-filter-pill" data-menu-filter="cold" aria-pressed="false" data-i18n="menuCatCold">Soyuq</button>
+        <button type="button" class="menu-filter-pill" data-menu-filter="alt" aria-pressed="false" data-i18n="menuCatAlt">Alternativlər</button>
+        <button type="button" class="menu-filter-pill" data-menu-filter="tea" aria-pressed="false" data-i18n="menuCatTea">Çaylar</button>
+        <button type="button" class="menu-filter-pill" data-menu-filter="extras" aria-pressed="false" data-i18n="menuCatExtras">Əlavələr</button>
+      </div>
+
+      <!-- İmza seçimlər -->
+      <section class="menu-signatures" aria-labelledby="menuSignaturesHeading">
+        <div class="menu-section-head">
+          <h2 id="menuSignaturesHeading" data-i18n="menuSignaturesTitle">İmza seçimlər</h2>
+          <span data-i18n="menuSignaturesBadge">BARİSTA TÖVSİYƏSİ</span>
+        </div>
+        <div class="menu-signatures-grid">
+          <article class="signature-card">
+            <figure class="signature-card-figure">
+              <img src="assets/menu/baku-coffee-factory-special.jpg" alt="Baku Coffee Factory Special — hil və fındıq əzməli raff qəhvəsi" width="900" height="900" decoding="async" />
+            </figure>
+            <div class="signature-card-body">
+              <div class="signature-card-copy">
+                <h3>Baku Coffee Factory Special</h3>
+                <p data-i18n="menuSpecialDesc">Raff qəhvə üslubunda qaymaqlı içim · hil, qovrulmuş fındıq əzməsi və şəkərbura dad notları.</p>
+              </div>
+              <div class="signature-price-row">
+                <span class="signature-price-pill">13.30 ₼</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="signature-card">
+            <figure class="signature-card-figure">
+              <img src="assets/menu-background/v60.jpg" alt="Filtr coffee (V60)" width="900" height="900" decoding="async" />
+            </figure>
+            <div class="signature-card-body">
+              <div class="signature-card-copy">
+                <h3>Filtr coffee (V60)</h3>
+                <p data-i18n="menuV60Desc">Təmiz, meyvəli və aromatik əl dəmləməsi.</p>
+              </div>
+              <div class="signature-price-row">
+                <span class="signature-price-pill">13.00 ₼</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Grouped Modern White Cards + S/M/L Price Chips -->
+      <div class="menu-cards-grid">
+        <article class="menu-group menu-card" data-menu-category="espresso">
+          <h2>Espresso</h2>
+          <p class="menu-row"><span>Espresso (Single)</span><span class="price-chips"><span class="price-chip price-chip-single">3.80 ₼</span></span></p>
+          <p class="menu-row"><span>Espresso (Double)</span><span class="price-chips"><span class="price-chip price-chip-single">4.70 ₼</span></span></p>
+          <p class="menu-row"><span>Triple Joy</span><span class="price-chips"><span class="price-chip price-chip-single">5.90 ₼</span></span></p>
+        </article>
+
+        <article class="menu-group menu-card" data-menu-category="espresso">
+          <h2>Americano</h2>
+          <p class="menu-row menu-row-multi"><span>Americano</span><span class="price-chips"><span class="price-chip"><b>S</b> 5.90</span><span class="price-chip"><b>M</b> 6.30</span><span class="price-chip"><b>L</b> 7.20 ₼</span></span></p>
+        </article>
+
+        <article class="menu-group menu-card" data-menu-category="milk">
+          <h2>Südlü qəhvələr</h2>
+          <p class="menu-row menu-row-multi menu-row-discount" data-menu-item="latte">
+            <span>Latte</span>
+            <span class="menu-row-badge" data-i18n="menuTodayTag">-50% BUGÜN</span>
+            <span class="price-chips">
+              <span class="price-chip price-chip-sale"><b>S</b><del>6.80</del><strong>3.40</strong></span>
+              <span class="price-chip price-chip-sale"><b>M</b><del>7.50</del><strong>3.75</strong></span>
+              <span class="price-chip price-chip-sale"><b>L</b><del>8.40</del><strong>4.20 ₼</strong></span>
+            </span>
+          </p>
+          <p class="menu-row"><span>Espresso Macchiato</span><span class="price-chips"><span class="price-chip price-chip-single">5.50 ₼</span></span></p>
+          <p class="menu-row menu-row-multi"><span>Caramel Macchiato</span><span class="price-chips"><span class="price-chip"><b>S</b> 6.10</span><span class="price-chip"><b>M</b> 7.20</span><span class="price-chip"><b>L</b> 8.00 ₼</span></span></p>
+          <p class="menu-row menu-row-multi"><span>Cappuccino</span><span class="price-chips"><span class="price-chip"><b>S</b> 6.20</span><span class="price-chip"><b>M</b> 7.30</span><span class="price-chip"><b>L</b> 8.00 ₼</span></span></p>
+          <p class="menu-row menu-row-multi"><span>Flat White</span><span class="price-chips"><span class="price-chip"><b>S</b> 6.70</span><span class="price-chip"><b>M</b> 7.50 ₼</span></span></p>
+          <p class="menu-row menu-row-multi"><span>Mocha</span><span class="price-chips"><span class="price-chip"><b>S</b> 5.90</span><span class="price-chip"><b>M</b> 6.70 ₼</span></span></p>
+          <p class="menu-row"><span>Cortado</span><span class="price-chips"><span class="price-chip"><b>M</b> 5.90 ₼</span></span></p>
+          <p class="menu-row menu-row-multi"><span>Raff Coffee</span><span class="price-chips"><span class="price-chip"><b>S</b> 7.00</span><span class="price-chip"><b>M</b> 8.00 ₼</span></span></p>
+          <p class="menu-row menu-row-multi"><span>Spanish Latte</span><span class="price-chips"><span class="price-chip"><b>S</b> 7.00</span><span class="price-chip"><b>M</b> 8.00</span><span class="price-chip"><b>L</b> 9.00 ₼</span></span></p>
+          <p class="menu-row"><span>Spanish Cortado</span><span class="price-chips"><span class="price-chip"><b>M</b> 8.00 ₼</span></span></p>
+        </article>
+
+        <article class="menu-group menu-card" data-menu-category="cold">
+          <h2>Soyuq içkilər</h2>
+          <p class="menu-row"><span>Ice Latte</span><span class="price-chips"><span class="price-chip"><b>L</b> 8.40 ₼</span></span></p>
+          <p class="menu-row"><span>Ice Americano</span><span class="price-chips"><span class="price-chip"><b>L</b> 7.20 ₼</span></span></p>
+          <p class="menu-row"><span>Cold Brew</span><span class="price-chips"><span class="price-chip"><b>M</b> 6.90 ₼</span></span></p>
+        </article>
+
+        <article class="menu-group menu-card" data-menu-category="alt">
+          <h2>Alternativlər</h2>
+          <p class="menu-row"><span>Türk qəhvəsi</span><span class="price-chips"><span class="price-chip price-chip-single">9.30 ₼</span></span></p>
+          <p class="menu-row"><span>İsti şokolad</span><span class="price-chips"><span class="price-chip price-chip-single">9.40 ₼</span></span></p>
+          <p class="menu-row"><span>İsti şokolad (Marshmello)</span><span class="price-chips"><span class="price-chip price-chip-single">9.90 ₼</span></span></p>
+          <p class="menu-row"><span>Filtr coffee (V60)</span><span class="price-chips"><span class="price-chip price-chip-single">13.00 ₼</span></span></p>
+          <p class="menu-row"><span>Baku Coffee Factory Special</span><span class="price-chips"><span class="price-chip price-chip-single">13.30 ₼</span></span></p>
+        </article>
+
+        <article class="menu-group menu-card" data-menu-category="tea">
+          <h2>Çaylar</h2>
+          <p class="menu-row menu-row-multi"><span>Chai Tea Latte</span><span class="price-chips"><span class="price-chip"><b>S</b> 6.90</span><span class="price-chip"><b>M</b> 7.70 ₼</span></span></p>
+          <p class="menu-row"><span>Çay / Yaşıl çay (600 ml)</span><span class="price-chips"><span class="price-chip price-chip-single">12.00 ₼</span></span></p>
+          <p class="menu-row"><span>Çay / Yaşıl çay (250 ml)</span><span class="price-chips"><span class="price-chip price-chip-single">4.00 ₼</span></span></p>
+        </article>
+
+        <article class="menu-group menu-card" data-menu-category="extras">
+          <h2>Əlavələr</h2>
+          <p class="menu-row"><span>Lactose Free Milk</span><span class="price-chips"><span class="price-chip price-chip-single">3.00 ₼</span></span></p>
+          <p class="menu-row"><span>Sirop</span><span class="price-chips"><span class="price-chip price-chip-single">1.70 ₼</span></span></p>
+          <p class="menu-row"><span>Darçın</span><span class="price-chips"><span class="price-chip price-chip-single">1.20 ₼</span></span></p>
+          <p class="menu-row"><span>Şirab</span><span class="price-chips"><span class="price-chip price-chip-single">4.00 ₼</span></span></p>
+          <p class="menu-row"><span>Extra Order</span><span class="price-chips"><span class="price-chip price-chip-single">2.00 ₼</span></span></p>
+        </article>
       </div>
     </section>
 
@@ -179,22 +275,60 @@
     <section class="menu-panel" id="dessertMenu">
       <div class="menu-panel-heading">
         <p class="eyebrow">03 · Desert menyusu</p>
-        <p>Təzə bişirilmiş şirniyyatlar · Qiymətlər AZN ilə göstərilib.</p>
+        <p data-i18n="menuDessertSub">Təzə bişirilmiş şirniyyatlar · Qiymətlər AZN ilə göstərilib.</p>
       </div>
-      <div class="menu-columns dessert-columns">
-        <div>
-          <div class="menu-group">
-            <h2>Desertlər</h2>
-            <p><span>San Sebastian</span><b>9.00 ₼</b></p>
-            <p><span>San Sebastian Brownie</span><b>10.00 ₼</b></p>
-            <p><span>Ballı tort</span><b>7.00 ₼</b></p>
-            <p><span>Napoleon</span><b>7.00 ₼</b></p>
-            <p><span>Tiramisu</span><b>9.00 ₼</b></p>
-            <p><span>Carrot cake</span><b>8.00 ₼</b></p>
-            <p><span>Crepe Lotus</span><b>8.00 ₼</b></p>
+
+      <div class="menu-section-head">
+        <h2 data-i18n="menuDesertFeaturedTitle">Seçilmiş desertlər</h2>
+      </div>
+      <div class="dessert-featured-grid">
+        <article class="dessert-visual-card">
+          <figure><img src="assets/dessert-background/cheesecake.jpg" alt="San Sebastian" loading="lazy" decoding="async" /></figure>
+          <div>
+            <h3>San Sebastian</h3>
+            <span class="signature-price-pill">9.00 ₼</span>
           </div>
-        </div>
+        </article>
+        <article class="dessert-visual-card">
+          <figure><img src="assets/dessert-background/brownie.jpg" alt="San Sebastian Brownie" loading="lazy" decoding="async" /></figure>
+          <div>
+            <h3>San Sebastian Brownie</h3>
+            <span class="signature-price-pill">10.00 ₼</span>
+          </div>
+        </article>
+        <article class="dessert-visual-card">
+          <figure><img src="assets/dessert-background/tiramisu.jpg" alt="Tiramisu" loading="lazy" decoding="async" /></figure>
+          <div>
+            <h3>Tiramisu</h3>
+            <span class="signature-price-pill">9.00 ₼</span>
+          </div>
+        </article>
+        <article class="dessert-visual-card">
+          <figure><img src="assets/dessert-background/cake.jpg" alt="Ballı tort" loading="lazy" decoding="async" /></figure>
+          <div>
+            <h3>Ballı tort</h3>
+            <span class="signature-price-pill">7.00 ₼</span>
+          </div>
+        </article>
+        <article class="dessert-visual-card">
+          <figure><img src="assets/dessert-background/crepe.jpg" alt="Crepe Lotus" loading="lazy" decoding="async" /></figure>
+          <div>
+            <h3>Crepe Lotus</h3>
+            <span class="signature-price-pill">8.00 ₼</span>
+          </div>
+        </article>
       </div>
+
+      <article class="menu-group menu-card dessert-list-card">
+        <h2>Desertlər</h2>
+        <p class="menu-row"><span>San Sebastian</span><span class="price-chips"><span class="price-chip price-chip-single">9.00 ₼</span></span></p>
+        <p class="menu-row"><span>San Sebastian Brownie</span><span class="price-chips"><span class="price-chip price-chip-single">10.00 ₼</span></span></p>
+        <p class="menu-row"><span>Ballı tort</span><span class="price-chips"><span class="price-chip price-chip-single">7.00 ₼</span></span></p>
+        <p class="menu-row"><span>Napoleon</span><span class="price-chips"><span class="price-chip price-chip-single">7.00 ₼</span></span></p>
+        <p class="menu-row"><span>Tiramisu</span><span class="price-chips"><span class="price-chip price-chip-single">9.00 ₼</span></span></p>
+        <p class="menu-row"><span>Carrot cake</span><span class="price-chips"><span class="price-chip price-chip-single">8.00 ₼</span></span></p>
+        <p class="menu-row"><span>Crepe Lotus</span><span class="price-chips"><span class="price-chip price-chip-single">8.00 ₼</span></span></p>
+      </article>
     </section>
   </main>
 
@@ -206,7 +340,8 @@
     <p data-i18n="footerCopyright">© 2026 · Bakı, Azərbaycan</p>
   </footer>
 
-  <script src="i18n.js?v=20261111-10"></script>
-  <script src="script.js?v=20261111-10"></script>
+  <script src="i18n.js?v=20261113-1"></script>
+  <script src="script.js?v=20261113-1"></script>
+  <script src="menu-modern.js?v=20261113-1"></script>
 </body>
 </html>

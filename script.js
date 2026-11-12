@@ -106,15 +106,16 @@ if (!document.querySelector('link[href^="catalog.css"]')) {
 
 const mainMenuPanel = document.getElementById('mainMenu');
 const dessertMenuPanel = document.getElementById('dessertMenu');
+const isModernMenuPage = Boolean(document.querySelector('.menu-modern'));
 
-if (mainMenuPanel || dessertMenuPanel) {
+if ((mainMenuPanel || dessertMenuPanel) && !isModernMenuPage) {
   const menuBackgroundStyles = document.createElement('link');
   menuBackgroundStyles.rel = 'stylesheet';
   menuBackgroundStyles.href = 'menu-background.css';
   document.head.append(menuBackgroundStyles);
 }
 
-if (mainMenuPanel && !mainMenuPanel.querySelector('.menu-atmosphere')) {
+if (mainMenuPanel && !isModernMenuPage && !mainMenuPanel.querySelector('.menu-atmosphere')) {
   const atmosphere = document.createElement('div');
   atmosphere.className = 'menu-atmosphere';
   atmosphere.setAttribute('aria-hidden', 'true');
@@ -127,7 +128,7 @@ if (mainMenuPanel && !mainMenuPanel.querySelector('.menu-atmosphere')) {
   mainMenuPanel.prepend(atmosphere);
 }
 
-if (dessertMenuPanel && !dessertMenuPanel.querySelector('.menu-atmosphere')) {
+if (dessertMenuPanel && !isModernMenuPage && !dessertMenuPanel.querySelector('.menu-atmosphere')) {
   const dessertAtmosphere = document.createElement('div');
   dessertAtmosphere.className = 'menu-atmosphere';
   dessertAtmosphere.setAttribute('aria-hidden', 'true');

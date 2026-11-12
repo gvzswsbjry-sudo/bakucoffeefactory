@@ -328,6 +328,25 @@
       finderScaleBalHigh: '5 · Harmonik',
       finderScaleMid: '3 · Orta',
       finderScaleBodyHigh: '5 · Dolğun',
+      menuDailyEyebrow: 'HƏR GÜN BİR QƏHVƏ',
+      menuDailyBadge: '-50% · GÜNÜN TƏKLİFİ',
+      menuDailyTitleLatte: 'Günün seçimi: Latte',
+      menuDailyNote: 'Kofeşopumuzda hər gün bir içkiyə 50% endirim tətbiq olunur. Bu gün günün endirimli qəhvəsi Latte-dir — bütün ölçülərdə yarı qiymətə.',
+      menuTodayTag: '-50% BUGÜN',
+      menuCatAll: 'Hamısı',
+      menuCatEspresso: 'Espresso',
+      menuCatMilk: 'Südlü',
+      menuCatCold: 'Soyuq',
+      menuCatAlt: 'Alternativlər',
+      menuCatTea: 'Çaylar',
+      menuCatExtras: 'Əlavələr',
+      menuSignaturesTitle: 'İmza seçimlər',
+      menuSignaturesBadge: 'BARİSTA TÖVSİYƏSİ',
+      menuSpecialDesc: 'Raff qəhvə üslubunda qaymaqlı içim · hil, qovrulmuş fındıq əzməsi və şəkərbura dad notları.',
+      menuV60Desc: 'Təmiz, meyvəli və aromatik əl dəmləməsi.',
+      menuDesertFeaturedTitle: 'Seçilmiş desertlər',
+      menuDessertSub: 'Təzə bişirilmiş şirniyyatlar · Qiymətlər AZN ilə göstərilib.',
+      menuCurrencyNote: 'Qiymətlər AZN ilə göstərilib.',
     },
 
     en: {
@@ -643,6 +662,25 @@
       finderScaleBalHigh: '5 · Harmonic',
       finderScaleMid: '3 · Medium',
       finderScaleBodyHigh: '5 · Full',
+      menuDailyEyebrow: 'ONE COFFEE EVERY DAY',
+      menuDailyBadge: '-50% · DAILY OFFER',
+      menuDailyTitleLatte: 'Today’s pick: Latte',
+      menuDailyNote: 'Every day one handcrafted drink in our coffeeshop is 50% off. Today’s half-price pick is Latte — available across all sizes.',
+      menuTodayTag: '-50% TODAY',
+      menuCatAll: 'All',
+      menuCatEspresso: 'Espresso',
+      menuCatMilk: 'Milk Coffee',
+      menuCatCold: 'Cold',
+      menuCatAlt: 'Alternatives',
+      menuCatTea: 'Tea',
+      menuCatExtras: 'Extras',
+      menuSignaturesTitle: 'Signature Picks',
+      menuSignaturesBadge: 'BARISTA FAVORITES',
+      menuSpecialDesc: 'Velvety Raf-style creamy coffee infused with cardamom and roasted hazelnut paste — reminiscent of Azerbaijani shekerbura.',
+      menuV60Desc: 'Clean, aromatic hand-poured filter brew highlighting bright origin clarity.',
+      menuDesertFeaturedTitle: 'Featured Desserts',
+      menuDessertSub: 'Freshly baked pastries & cakes · Prices are shown in AZN.',
+      menuCurrencyNote: 'Prices are shown in AZN.',
     },
 
     ru: {
@@ -958,6 +996,25 @@
       finderScaleBalHigh: '5 · Гармония',
       finderScaleMid: '3 · Среднее',
       finderScaleBodyHigh: '5 · Плотное',
+      menuDailyEyebrow: 'КАЖДЫЙ ДЕНЬ НОВЫЙ КОФЕ',
+      menuDailyBadge: '-50% · КОФЕ ДНЯ',
+      menuDailyTitleLatte: 'Выбор дня: Латте',
+      menuDailyNote: 'Каждый день в нашей кофейне действует скидка 50% на один напиток. Сегодня напиток дня — Латте, за полцены во всех размерах.',
+      menuTodayTag: '-50% СЕГОДНЯ',
+      menuCatAll: 'Все',
+      menuCatEspresso: 'Эспрессо',
+      menuCatMilk: 'С молоком',
+      menuCatCold: 'Холодные',
+      menuCatAlt: 'Альтернатива',
+      menuCatTea: 'Чай',
+      menuCatExtras: 'Добавки',
+      menuSignaturesTitle: 'Фирменный выбор',
+      menuSignaturesBadge: 'ВЫБОР БАРИСТА',
+      menuSpecialDesc: 'Нежный раф на сливках с кардамоном и пастой из жареного фундука — с тёплым оттенком азербайджанской шекербуры.',
+      menuV60Desc: 'Чистое и ароматное ручное заваривание, раскрывающее яркие ноты зерна.',
+      menuDesertFeaturedTitle: 'Избранные десерты',
+      menuDessertSub: 'Свежая выпечка и десерты · Цены указаны в AZN.',
+      menuCurrencyNote: 'Цены указаны в AZN.',
     },
 
     ar: {
@@ -1273,6 +1330,25 @@
       finderScaleBalHigh: '5 · متناغم',
       finderScaleMid: '3 · متوسط',
       finderScaleBodyHigh: '5 · كثيف',
+      menuDailyEyebrow: 'قهوة واحدة كل يوم',
+      menuDailyBadge: '-50% · عرض اليوم',
+      menuDailyTitleLatte: 'اختيار اليوم: لاتيه',
+      menuDailyNote: 'في مقهانا، يحظى مشروب واحد يومياً بخصم 50%. اختيار اليوم هو لاتيه بنصف السعر في جميع الأحجام.',
+      menuTodayTag: '-50% اليوم',
+      menuCatAll: 'الكل',
+      menuCatEspresso: 'إسبريسو',
+      menuCatMilk: 'بالحليب',
+      menuCatCold: 'بارد',
+      menuCatAlt: 'طرق بديلة',
+      menuCatTea: 'الشاي',
+      menuCatExtras: 'إضافات',
+      menuSignaturesTitle: 'اختياراتنا المميزة',
+      menuSignaturesBadge: 'توصية الباريستا',
+      menuSpecialDesc: 'قهوة كريمية على طريقة الراف بنفحات الهيل ومعجون البندق المحمص بلمسة حلوى الشكربورا.',
+      menuV60Desc: 'تقطير يدوي نقي وعطري يبرز صفاء المحصول.',
+      menuDesertFeaturedTitle: 'حلويات مختارة',
+      menuDessertSub: 'حلويات مخبوزة طازجة · الأسعار معروضة بالمانات (AZN).',
+      menuCurrencyNote: 'الأسعار معروضة بالمانات (AZN).',
     },
   };
 
@@ -3030,7 +3106,7 @@
   },
   "Filtr coffee (V60)": {
     "en": "Filter Coffee (V60)",
-    "ar": "قهوة فلتر (V60)",
+    "ar": "قهوة مقطرة (V60)",
     "ru": "Фильтр-кофе (V60)"
   },
   "Baku Coffee Factory Special": {
@@ -3887,6 +3963,71 @@
     "en": "Orders placed while logged into your account will appear here.",
     "ar": "ستظهر الطلبات المقدمة أثناء تسجيل الدخول هنا.",
     "ru": "Заказы, оформленные после входа в аккаунт, появятся здесь."
+  },
+  "Latte": {
+    "en": "Latte",
+    "ru": "Латте",
+    "ar": "لاتيه"
+  },
+  "Caramel Macchiato": {
+    "en": "Caramel Macchiato",
+    "ru": "Карамельный макиато",
+    "ar": "كراميل ماكياتو"
+  },
+  "Cappuccino": {
+    "en": "Cappuccino",
+    "ru": "Капучино",
+    "ar": "كابتشينو"
+  },
+  "Flat White": {
+    "en": "Flat White",
+    "ru": "Флэт уайт",
+    "ar": "فلات وايت"
+  },
+  "Mocha": {
+    "en": "Mocha",
+    "ru": "Мокко",
+    "ar": "موكا"
+  },
+  "Cortado": {
+    "en": "Cortado",
+    "ru": "Кортадо",
+    "ar": "كورتادو"
+  },
+  "Raff Coffee": {
+    "en": "Raff Coffee",
+    "ru": "Раф кофе",
+    "ar": "راف كوفي"
+  },
+  "Spanish Latte": {
+    "en": "Spanish Latte",
+    "ru": "Испанский латте",
+    "ar": "سبانيش لاتيه"
+  },
+  "Spanish Cortado": {
+    "en": "Spanish Cortado",
+    "ru": "Испанский кортадо",
+    "ar": "سبانيش كورتادو"
+  },
+  "Ice Latte": {
+    "en": "Ice Latte",
+    "ru": "Айс латте",
+    "ar": "آيس لاتيه"
+  },
+  "Ice Americano": {
+    "en": "Ice Americano",
+    "ru": "Айс американо",
+    "ar": "آيس أمريكانو"
+  },
+  "Cold Brew": {
+    "en": "Cold Brew",
+    "ru": "Колд брю",
+    "ar": "كولد برو"
+  },
+  "Chai Tea Latte": {
+    "en": "Chai Tea Latte",
+    "ru": "Чай-латте",
+    "ar": "تشاي تي لاتيه"
   }
 };
 
@@ -4308,6 +4449,8 @@
         .menu-panel-heading p,
         .menu-group h2,
         .menu-group p > span:first-child,
+        .signature-card h3,
+        .dessert-visual-card h3,
         .summer-overline,
         .summer-intro,
         .summer-collection-heading h3,
