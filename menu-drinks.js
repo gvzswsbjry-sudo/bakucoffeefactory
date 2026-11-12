@@ -13,7 +13,7 @@
       name: 'Espresso (Single)',
       category: 'Espresso',
       filterGroup: 'espresso',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/espresso-single.jpg',
       prices: [{ size: '', price: 3.8 }],
     },
     {
@@ -21,7 +21,7 @@
       name: 'Espresso (Double)',
       category: 'Espresso',
       filterGroup: 'espresso',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/espresso-double.jpg',
       prices: [{ size: '', price: 4.7 }],
     },
     {
@@ -29,7 +29,7 @@
       name: 'Triple Joy',
       category: 'Espresso',
       filterGroup: 'espresso',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/triple-joy.jpg',
       prices: [{ size: '', price: 5.9 }],
     },
     {
@@ -37,7 +37,7 @@
       name: 'Americano',
       category: 'Espresso',
       filterGroup: 'espresso',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/americano.jpg',
       prices: [
         { size: 'S', price: 5.9 },
         { size: 'M', price: 6.3 },
@@ -61,7 +61,7 @@
       name: 'Espresso Macchiato',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/espresso-macchiato.jpg',
       prices: [{ size: '', price: 5.5 }],
     },
     {
@@ -69,7 +69,7 @@
       name: 'Caramel Macchiato',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/caramel-macchiato.jpg',
       prices: [
         { size: 'S', price: 6.1 },
         { size: 'M', price: 7.2 },
@@ -81,7 +81,7 @@
       name: 'Cappuccino',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/cappuccino.jpg',
       prices: [
         { size: 'S', price: 6.2 },
         { size: 'M', price: 7.3 },
@@ -93,7 +93,7 @@
       name: 'Flat White',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/flat-white.jpg',
       prices: [
         { size: 'S', price: 6.7 },
         { size: 'M', price: 7.5 },
@@ -104,7 +104,7 @@
       name: 'Mocha',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/mocha.jpg',
       prices: [
         { size: 'S', price: 5.9 },
         { size: 'M', price: 6.7 },
@@ -115,7 +115,7 @@
       name: 'Cortado',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/cortado.jpg',
       prices: [{ size: 'M', price: 5.9 }],
     },
     {
@@ -123,7 +123,7 @@
       name: 'Raff Coffee',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/baku-coffee-factory-special.jpg',
+      defaultImage: 'assets/menu/raff-coffee.jpg',
       prices: [
         { size: 'S', price: 7.0 },
         { size: 'M', price: 8.0 },
@@ -134,7 +134,7 @@
       name: 'Spanish Latte',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/spanish-cortado.jpg',
       prices: [
         { size: 'S', price: 7.0 },
         { size: 'M', price: 8.0 },
@@ -146,7 +146,7 @@
       name: 'Spanish Cortado',
       category: 'Südlü qəhvələr',
       filterGroup: 'milk',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/spanish-cortado.jpg',
       prices: [{ size: 'M', price: 8.0 }],
     },
     {
@@ -162,7 +162,7 @@
       name: 'Ice Americano',
       category: 'Soyuq içkilər',
       filterGroup: 'cold',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/brewing/extraction.jpg',
       prices: [{ size: 'L', price: 7.2 }],
     },
     {
@@ -178,7 +178,7 @@
       name: 'Bumble Coffee',
       category: 'Coffee Creations',
       filterGroup: 'cold',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/bumble-coffee.jpg',
       prices: [{ size: '', price: 8.5 }],
     },
     {
@@ -186,7 +186,7 @@
       name: 'Espresso Tropical',
       category: 'Coffee Creations',
       filterGroup: 'cold',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/espresso-tropical.jpg',
       prices: [{ size: '', price: 7.0 }],
     },
     {
@@ -194,7 +194,7 @@
       name: 'Espresso Flower',
       category: 'Coffee Creations',
       filterGroup: 'cold',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/espresso-flower.jpg',
       prices: [{ size: '', price: 7.0 }],
     },
     {
@@ -202,7 +202,7 @@
       name: 'Orange Chocolate',
       category: 'Coffee Creations',
       filterGroup: 'cold',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/orange-chocolate.jpg',
       prices: [{ size: '', price: 8.8 }],
     },
     {
@@ -210,7 +210,7 @@
       name: 'Mojito',
       category: 'Refreshing Lemonades',
       filterGroup: 'lemonades',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/mojito.jpg',
       prices: [{ size: '', price: 7.0 }],
     },
     {
@@ -218,7 +218,7 @@
       name: 'Strawberry Lemonade',
       category: 'Refreshing Lemonades',
       filterGroup: 'lemonades',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/strawberry-lemonade.jpg',
       prices: [{ size: '', price: 6.0 }],
     },
     {
@@ -226,7 +226,7 @@
       name: 'Mango Maracuya',
       category: 'Refreshing Lemonades',
       filterGroup: 'lemonades',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/mango-maracuya.jpg',
       prices: [{ size: '', price: 6.0 }],
     },
     {
@@ -234,7 +234,7 @@
       name: 'Blu Curaçao',
       category: 'Refreshing Lemonades',
       filterGroup: 'lemonades',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/blu-curacao.jpg',
       prices: [{ size: '', price: 6.0 }],
     },
     {
@@ -242,7 +242,7 @@
       name: 'Türk qəhvəsi',
       category: 'Alternativlər',
       filterGroup: 'alt',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/equipment/brass-cezve-classic.jpg',
       prices: [{ size: '', price: 9.3 }],
     },
     {
@@ -250,7 +250,7 @@
       name: 'İsti şokolad',
       category: 'Alternativlər',
       filterGroup: 'alt',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/mocha.jpg',
       prices: [{ size: '', price: 9.4 }],
     },
     {
@@ -258,7 +258,7 @@
       name: 'İsti şokolad (Marshmello)',
       category: 'Alternativlər',
       filterGroup: 'alt',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/mocha.jpg',
       prices: [{ size: '', price: 9.9 }],
     },
     {
@@ -282,7 +282,7 @@
       name: 'Chai Tea Latte',
       category: 'Çaylar',
       filterGroup: 'tea',
-      defaultImage: 'assets/menu/daily-latte.jpg',
+      defaultImage: 'assets/menu/raff-coffee.jpg',
       prices: [
         { size: 'S', price: 6.9 },
         { size: 'M', price: 7.7 },

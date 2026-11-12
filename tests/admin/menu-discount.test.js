@@ -46,6 +46,29 @@ test('menu-drinks catalog exposes all coffeeshop drinks and exact discount prici
   assert.equal(resolved.prices[0].discounted, 9.98);
 });
 
+test('every menu drink has an existing dedicated preset image and admin auto-switches photos', () => {
+  const uniqueImages = new Set();
+  for (const drink of MENU_DRINKS) {
+    assert.ok(typeof drink.defaultImage === 'string' && drink.defaultImage.startsWith('assets/'), `${drink.key} has assets/ defaultImage`);
+    assert.ok(fs.existsSync(path.join(ROOT, drink.defaultImage)), `${drink.key} image exists: ${drink.defaultImage}`);
+    uniqueImages.add(drink.defaultImage);
+  }
+  assert.ok(uniqueImages.size >= 25, `expected rich per-drink photo variety, got ${uniqueImages.size}`);
+
+  assert.equal(MENU_DRINKS.find((d) => d.key === 'espresso-single')?.defaultImage, 'assets/menu/espresso-single.jpg');
+  assert.equal(MENU_DRINKS.find((d) => d.key === 'americano')?.defaultImage, 'assets/menu/americano.jpg');
+  assert.equal(MENU_DRINKS.find((d) => d.key === 'cappuccino')?.defaultImage, 'assets/menu/cappuccino.jpg');
+  assert.equal(MENU_DRINKS.find((d) => d.key === 'turk-qehvesi')?.defaultImage, 'assets/equipment/brass-cezve-classic.jpg');
+  assert.equal(MENU_DRINKS.find((d) => d.key === 'mojito')?.defaultImage, 'assets/menu/mojito.jpg');
+  assert.equal(MENU_DRINKS.find((d) => d.key === 'cold-brew')?.defaultImage, 'assets/menu/cold-brew-tower.jpg');
+
+  const adminJs = fs.readFileSync(path.join(ROOT, 'admin/admin.js'), 'utf8');
+  assert.match(adminJs, /function selectDailyDrink\(drinkKey\)/);
+  assert.match(adminJs, /daily-drink-chip-thumb/);
+  assert.match(adminJs, /selectDailyDrink\(card\.dataset\.drinkPick\)/);
+  assert.doesNotMatch(adminJs, /prevDrink\?\.defaultImage/);
+});
+
 test('menu-discount-store persists settings atomically and rejects invalid input', async (t) => {
   const dir = await tempDir(t);
   const store = createMenuDiscountStore({ filePath: path.join(dir, 'menu-settings.json') });

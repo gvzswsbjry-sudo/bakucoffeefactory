@@ -208,11 +208,26 @@
     grid.innerHTML = filtered.map((drink) => {
       const priceText = drink.prices.map((p) => (p.size ? `${p.size} ${Number(p.price).toFixed(2)}` : `${Number(p.price).toFixed(2)}`)).join(' · ') + ' ₼';
       const isSelected = drink.key === activeKey;
+      const thumbSrc = drink.defaultImage || menuDrinksApi.DEFAULT_DAILY_DISCOUNT_SETTINGS.image;
       return `<button type="button" class="daily-drink-chip ${isSelected ? 'active' : ''}" data-drink-pick="${escapeHtml(drink.key)}" role="option" aria-selected="${isSelected}">
-        <strong>${escapeHtml(drink.name)}</strong>
-        <small>${escapeHtml(drink.category)} · ${escapeHtml(priceText)}</small>
+        <img class="daily-drink-chip-thumb" src="../${escapeHtml(thumbSrc)}" alt="" loading="lazy" />
+        <span class="daily-drink-chip-text">
+          <strong>${escapeHtml(drink.name)}</strong>
+          <small>${escapeHtml(drink.category)} · ${escapeHtml(priceText)}</small>
+        </span>
       </button>`;
     }).join('');
+  }
+
+  function selectDailyDrink(drinkKey) {
+    const drink = menuDrinksApi.getMenuDrinkByKey(drinkKey);
+    if (!drink) return;
+    if ($('dailyDrinkSelect')) $('dailyDrinkSelect').value = drink.key;
+    const presetImage = drink.defaultImage || menuDrinksApi.DEFAULT_DAILY_DISCOUNT_SETTINGS.image;
+    if ($('dailyImageInput')) $('dailyImageInput').value = presetImage;
+    setDailyImagePreview(presetImage);
+    renderDailyDrinkGrid();
+    updateDailyPreview();
   }
 
   function readDailyDraftFromForm() {
@@ -1224,28 +1239,12 @@
     $('dailyDrinkGrid').addEventListener('click', (event) => {
       const card = event.target.closest('[data-drink-pick]');
       if (!card) return;
-      const drinkKey = card.dataset.drinkPick;
-      const drink = menuDrinksApi.getMenuDrinkByKey(drinkKey);
-      if (!drink) return;
-      const prevDrink = menuDrinksApi.getMenuDrinkByKey($('dailyDrinkSelect').value);
-      $('dailyDrinkSelect').value = drinkKey;
-      if (!$('dailyImageInput').value.trim() || $('dailyImageInput').value.trim() === prevDrink?.defaultImage) {
-        $('dailyImageInput').value = drink.defaultImage;
-        setDailyImagePreview(drink.defaultImage);
-      }
-      renderDailyDrinkGrid();
-      updateDailyPreview();
+      selectDailyDrink(card.dataset.drinkPick);
     });
   }
   if ($('dailyDrinkSelect')) {
     $('dailyDrinkSelect').addEventListener('change', () => {
-      const drink = menuDrinksApi.getMenuDrinkByKey($('dailyDrinkSelect').value);
-      if (drink) {
-        $('dailyImageInput').value = drink.defaultImage;
-        setDailyImagePreview(drink.defaultImage);
-      }
-      renderDailyDrinkGrid();
-      updateDailyPreview();
+      selectDailyDrink($('dailyDrinkSelect').value);
     });
   }
   if ($('dailyDiscountEnabled')) {

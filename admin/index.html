@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="admin.css" />
+  <link rel="stylesheet" href="admin.css?v=20261113-3" />
 </head>
 <body>
   <!-- Giriş və Quraşdırma Ekranı -->
@@ -249,7 +249,10 @@
             </div>
 
             <div class="daily-field-block">
-              <label for="dailyImageInput">3. Günün təklif şəkli</label>
+              <div class="daily-field-head">
+                <label for="dailyImageInput">3. Günün təklif şəkli (avtomatik seçilir)</label>
+              </div>
+              <p class="daily-auto-image-hint">İçki dəyişdikdə həmin içkinin hazır şəkli avtomatik təyin olunur. İstəsəniz kitabxanadan və ya kompüterdən fərqli şəkil də yükləyə bilərsiniz.</p>
               <div class="image-field">
                 <div class="image-preview" id="dailyImagePreview">Şəkil seçilməyib</div>
                 <div class="image-controls">
@@ -596,7 +599,7 @@
     </div>
   </dialog>
 
-  <script src="../menu-drinks.js"></script>
-  <script src="product-values.js"></script><script src="admin-api.js"></script><script src="admin.js"></script>
+  <script src="../menu-drinks.js?v=20261113-3"></script>
+  <script src="product-values.js"></script><script src="admin-api.js"></script><script src="admin.js?v=20261113-3"></script>
 </body>
 </html>
