@@ -170,7 +170,7 @@
       name: 'Cold Brew',
       category: 'Soyuq içkilər',
       filterGroup: 'cold',
-      defaultImage: 'assets/menu-background/cold-brew.jpg',
+      defaultImage: 'assets/menu/cold-brew-tower.jpg',
       prices: [{ size: 'M', price: 6.9 }],
     },
     {

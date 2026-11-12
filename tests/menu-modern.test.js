@@ -112,15 +112,21 @@ test('daily 50% discount spotlight highlights Latte at exact half price across S
   }
 });
 
-test('signature section showcases Baku Coffee Factory Special (Raf/hil/hazelnut/shekerbura) and Filtr coffee (V60)', () => {
+test('signature section showcases Cold Brew (slow-drip tower apparatus) and Filtr coffee (V60) instead of Special', () => {
   const html = read('menyu.html');
-  assert.ok(html.includes('Baku Coffee Factory Special'), 'special signature drink present');
-  assert.ok(html.includes('assets/menu/baku-coffee-factory-special.jpg'), 'special signature uses generated Raf/hil/hazelnut image');
-  assert.match(html, /raff.*hil.*fındıq əzməsi.*şəkərbura/i, 'special description mentions Raf style, cardamom, hazelnut paste, and shekerbura flavor');
-  assert.ok(html.includes('Filtr coffee (V60)'), 'V60 signature drink present');
-  assert.ok(html.includes('assets/menu-background/v60.jpg'), 'V60 signature uses crisp V60 bloom image');
+  const sigMatch = html.match(/<section class="menu-signatures"[\s\S]*?<\/section>/);
+  assert.ok(sigMatch, 'menu-signatures section exists');
+  const sigHtml = sigMatch[0];
+  assert.ok(!sigHtml.includes('Baku Coffee Factory Special'), 'Special is removed from signature picks');
+  assert.ok(html.includes('Baku Coffee Factory Special'), 'Special remains listed inside Alternativlər menu card');
+  assert.ok(sigHtml.includes('Cold Brew') && sigHtml.includes('data-signature-item="cold-brew"'), 'Cold Brew signature card present');
+  assert.ok(sigHtml.includes('assets/menu/cold-brew-tower.jpg'), 'Cold Brew signature uses Kyoto slow-drip apparatus image');
+  assert.ok(sigHtml.includes('6.90 ₼'), 'Cold Brew signature displays 6.90 ₼ price');
+  assert.ok(sigHtml.includes('Filtr coffee (V60)'), 'V60 signature drink present');
+  assert.ok(sigHtml.includes('assets/menu-background/v60.jpg'), 'V60 signature uses crisp V60 bloom image');
 
   for (const imgPath of [
+    'assets/menu/cold-brew-tower.jpg',
     'assets/menu/baku-coffee-factory-special.jpg',
     'assets/menu/daily-latte.jpg',
     'assets/menu-background/v60.jpg',
@@ -175,6 +181,9 @@ test('applyMenuFilter and syncDailyDiscountDom toggle category cards and update 
     assert.equal(cardsGrid.classList.contains('is-filtered'), true);
 
     applyMenuFilter('alt');
+    assert.equal(signatures.classList.contains('is-hidden'), false);
+
+    applyMenuFilter('cold');
     assert.equal(signatures.classList.contains('is-hidden'), false);
 
     applyMenuFilter('all');

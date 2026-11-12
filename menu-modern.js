@@ -129,7 +129,7 @@
     });
 
     if (signaturesSection) {
-      const showSignatures = target === 'all' || target === 'alt';
+      const showSignatures = target === 'all' || target === 'alt' || target === 'cold';
       signaturesSection.classList.toggle('is-hidden', !showSignatures);
     }
 
