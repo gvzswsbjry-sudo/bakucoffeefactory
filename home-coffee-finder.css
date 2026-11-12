@@ -1,0 +1,254 @@
+/* Mobile-first Multi-Parameter Personal Coffee Finder for index.html */
+.coffee-finder {
+  background: #efeae0;
+  color: var(--ink, #1e1e1e);
+  padding: 36px max(12px, env(safe-area-inset-left, 0px)) 42px max(12px, env(safe-area-inset-right, 0px));
+  border-top: 1px solid rgba(74, 53, 37, .12);
+  overflow-x: clip;
+}
+
+.coffee-finder-inner {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.coffee-finder-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.coffee-finder-head .eyebrow {
+  margin: 0;
+  color: var(--text-muted, #7a6a5e);
+}
+
+.coffee-finder-head h2 {
+  margin: 0;
+  font: 500 clamp(30px, 8vw, 48px)/.95 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -.055em;
+  color: var(--ink, #1e1e1e);
+}
+
+.coffee-finder-head h2 em {
+  font-style: italic;
+  color: var(--accent-terracotta, #c86d51);
+}
+
+.coffee-finder-sub {
+  margin: 0;
+  max-width: 60ch;
+  font: 400 13px/1.55 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #7a6a5e);
+}
+
+/* Multi-parameter interactive panel */
+.coffee-finder-panel {
+  background: #faf7f1;
+  border: 1px solid rgba(74, 53, 37, .13);
+  border-radius: 14px;
+  padding: 13px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(34, 25, 18, .04);
+}
+
+.coffee-finder-groups {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 11px;
+}
+
+.finder-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.finder-group-label {
+  margin: 0;
+  font: 700 8.5px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--text-muted, #7a6a5e);
+}
+
+.finder-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.finder-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  border: 1px solid rgba(74, 53, 37, .2);
+  background: #fffdf9;
+  color: var(--ink, #1e1e1e);
+  font: 600 11.5px/1.1 var(--sans, "Manrope", sans-serif);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .14s ease;
+}
+
+.finder-chip:hover {
+  border-color: var(--primary-wood, #4a3525);
+}
+
+.finder-chip:active {
+  transform: scale(.97);
+}
+
+.finder-chip.active,
+.finder-chip[aria-pressed="true"] {
+  background: #4a5043;
+  border-color: #4a5043;
+  color: #fcf9f4;
+}
+
+.coffee-finder-bar {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(74, 53, 37, .12);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.finder-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.finder-decaf-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 31px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1px dashed rgba(74, 53, 37, .3);
+  background: transparent;
+  color: var(--primary-wood, #4a3525);
+  font: 600 11px/1 var(--sans, "Manrope", sans-serif);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.finder-decaf-toggle[aria-pressed="true"] {
+  border-style: solid;
+  border-color: var(--accent-terracotta, #c86d51);
+  background: var(--accent-terracotta, #c86d51);
+  color: #fffaf4;
+}
+
+.finder-reset-btn {
+  min-height: 31px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted, #7a6a5e);
+  font: 600 11px/1 var(--sans, "Manrope", sans-serif);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.finder-reset-btn:hover {
+  color: var(--accent-terracotta, #c86d51);
+}
+
+.finder-summary-note {
+  margin: 0;
+  font: 600 11px/1.3 var(--mono, "DM Mono", monospace);
+  letter-spacing: .04em;
+  color: var(--primary-wood, #4a3525);
+}
+
+/* Recommended coffee cards (extends .home-featured-grid & .home-featured-card) */
+.finder-match-badge--top {
+  background: var(--accent-terracotta, #c86d51);
+  color: #fffdf9;
+}
+
+.finder-match-badge--alt {
+  background: rgba(30, 30, 30, .78);
+  color: #fffdf9;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.finder-card-specs {
+  margin: 0 0 5px;
+  font: 600 9px/1.25 var(--mono, "DM Mono", monospace);
+  letter-spacing: .04em;
+  color: #6b7b5c;
+}
+
+.coffee-finder-footbar {
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Tablet & larger mobile */
+@media (min-width: 640px) {
+  .coffee-finder {
+    padding: 50px 24px 56px;
+  }
+
+  .coffee-finder-panel {
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
+
+  .coffee-finder-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 20px;
+  }
+
+  .finder-chip {
+    min-height: 36px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+  }
+
+  .finder-card-specs {
+    font-size: 10px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1080px) {
+  .coffee-finder {
+    padding: 68px 48px 74px;
+  }
+
+  .coffee-finder-head {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 24px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .coffee-finder {
+  direction: rtl;
+}
