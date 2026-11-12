@@ -60,6 +60,9 @@
 
 .home-featured-filter {
   flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 38px;
   padding: 0 16px;
   border: 1px solid rgba(74, 53, 37, .24);
@@ -67,6 +70,7 @@
   background: transparent;
   color: var(--text-muted, #7A6A5E);
   font: 600 12px/1 var(--sans, "Manrope", sans-serif);
+  text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   touch-action: manipulation;

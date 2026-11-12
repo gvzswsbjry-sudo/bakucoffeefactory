@@ -177,7 +177,7 @@
   const gridEl = document.getElementById('homeFeaturedGrid');
   if (!gridEl) return;
 
-  const filterButtons = [...document.querySelectorAll('.home-featured-filter')];
+  const filterButtons = [...document.querySelectorAll('button.home-featured-filter[data-featured-filter]')];
   const allLinkEl = document.getElementById('homeFeaturedAllLink');
   const cartItemsEl = document.getElementById('cartItems');
   const toastEl = document.getElementById('homeCartToast');

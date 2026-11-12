@@ -11,10 +11,11 @@ test('index.html wires mobile-first Featured Products section, cart drawer, and 
   assert.ok(html.includes('href="home-featured.css'), 'links home-featured.css');
   assert.ok(html.includes('id="secilmis"'), 'renders #secilmis featured section');
   assert.ok(html.includes('id="homeFeaturedGrid"'), 'renders #homeFeaturedGrid');
-  assert.ok(html.includes('data-featured-filter="all"'), 'renders All filter');
-  assert.ok(html.includes('data-featured-filter="coffee"'), 'renders Coffee filter');
-  assert.ok(html.includes('data-featured-filter="tea"'), 'renders Tea filter');
-  assert.ok(html.includes('data-featured-filter="equipment"'), 'renders Equipment filter');
+  assert.ok(!html.includes('data-i18n="homeFeaturedTabAll"'), 'removes Hamısı filter pill');
+  assert.ok(!html.includes('data-featured-filter="all"'), 'removes All filter trigger');
+  assert.ok(html.includes('href="qehveler.html" data-i18n="homeFeaturedTabCoffee"'), 'links Qəhvə pill directly to qehveler.html');
+  assert.ok(html.includes('href="caylar.html" data-i18n="homeFeaturedTabTea"'), 'links Çay pill directly to caylar.html');
+  assert.ok(html.includes('href="avadanliqlar.html" data-i18n="homeFeaturedTabEquipment"'), 'links Avadanlıq pill directly to avadanliqlar.html');
   assert.ok(html.includes('id="homeCartToast"'), 'includes toast element');
   assert.ok(html.includes('id="cartDrawer"'), 'includes unified cart drawer');
   assert.ok(html.includes('id="floatingCartTrigger"'), 'includes floating cart button');
@@ -50,29 +51,12 @@ test('server/routes.js and favorites modules support home-featured storefront as
   assert.ok(favCss.includes('.home-featured-card'), 'favorites.css sets relative positioning on .home-featured-card');
 });
 
-test('home-featured.js renders curated cards, switches category filters, adds items to unified cart, and translates on language switch', () => {
+test('home-featured.js renders curated cards, adds items to unified cart, and translates on language switch', () => {
   const featuredJs = fs.readFileSync('home-featured.js', 'utf8');
   const i18nJs = fs.readFileSync('i18n.js', 'utf8');
   const cartUtils = require('../cart-utils.js');
 
   const listeners = {};
-  const filterBtns = ['all', 'coffee', 'tea', 'equipment'].map((filter) => {
-    const cls = new Set(filter === 'all' ? ['home-featured-filter', 'active'] : ['home-featured-filter']);
-    const attrs = { 'aria-pressed': String(filter === 'all') };
-    const btnListeners = {};
-    return {
-      dataset: { featuredFilter: filter },
-      classList: {
-        toggle: (name, force) => (force ? cls.add(name) : cls.delete(name)),
-        contains: (name) => cls.has(name),
-      },
-      setAttribute: (k, v) => { attrs[k] = String(v); },
-      getAttribute: (k) => attrs[k],
-      addEventListener: (t, fn) => { (btnListeners[t] ||= []).push(fn); },
-      click: () => (btnListeners.click || []).forEach((fn) => fn()),
-    };
-  });
-
   const labelEl = {
     attrs: { 'data-i18n': 'homeFeaturedAll' },
     textContent: 'Bütün məhsullara bax',
@@ -116,7 +100,7 @@ test('home-featured.js renders curated cards, switches category filters, adds it
         cartItems: null,
       }[id] || null),
       querySelector: () => null,
-      querySelectorAll: (sel) => (sel === '.home-featured-filter' ? filterBtns : []),
+      querySelectorAll: () => [],
       addEventListener: () => {},
     },
     localStorage: {
@@ -140,21 +124,13 @@ test('home-featured.js renders curated cards, switches category filters, adds it
   global.window = sandbox.window;
   vm.runInContext(featuredJs, sandbox);
 
-  // Default "all" view renders 4 curated items including Colombia & Melisa
+  // Curated view renders 4 items including Colombia & Melisa
   assert.ok(gridEl.innerHTML.includes('data-product-id="colombia"'), 'renders Colombia');
   assert.ok(gridEl.innerHTML.includes('data-product-id="melisa"'), 'renders Melisa Çayı');
   assert.ok(gridEl.innerHTML.includes('data-product-id="wheel-grinder"'), 'renders wheel-grinder');
   assert.ok(gridEl.innerHTML.includes('data-product-id="millifincan"'), 'renders millifincan');
 
-  // Switching to tea updates grid & footer link
-  filterBtns[2].click();
-  assert.equal(allLinkEl.attrs.href, 'caylar.html');
-  assert.equal(labelEl.attrs['data-i18n'], 'homeFeaturedAllTea');
-  assert.ok(gridEl.innerHTML.includes('Melisa Çayı'));
-  assert.ok(!gridEl.innerHTML.includes('data-product-id="colombia"'));
-
   // Clicking "add" for Melisa adds 100g to unified cart
-  filterBtns[0].click();
   const addBtn = {
     disabled: false,
     isConnected: true,
