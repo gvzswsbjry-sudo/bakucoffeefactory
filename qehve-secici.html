@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description" content="Baku Coffee Factory — Şəxsi qəhvə seçicisi: gövdə, turşuluq və balans səviyyəsini seçərək sizə uyğun qəhvəni tapın." />
+  <title>Sənə Uyğun Qəhvəni Seç — Yeni Baku Coffee Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=DM+Mono&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="navigation.css" />
+  <link rel="stylesheet" href="brand.css" />
+  <link rel="stylesheet" href="cart.css?v=20261112-1" />
+  <link rel="stylesheet" href="home-featured.css?v=20261112-4" />
+  <link rel="stylesheet" href="home-coffee-finder.css?v=20261112-3" />
+  <link rel="stylesheet" href="i18n.css" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Yeni Baku Coffee Factory — Ana səhifə">
+      <span>Yeni</span><strong>Baku Coffee<br />Factory</strong>
+    </a>
+    <nav class="main-nav" id="mainNav" aria-label="Əsas naviqasiya">
+      <a href="index.html" data-i18n="navHome">Ana səhifə</a>
+      <a class="active" href="qehveler.html" data-i18n="navCoffee">Qəhvələr</a>
+      <a href="caylar.html" data-i18n="navTea">Çaylar</a>
+      <a href="avadanliqlar.html" data-i18n="navEquipment">Avadanlıqlar</a>
+      <a href="menyu.html" data-i18n="navMenu">Menyu</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menyunu aç" aria-expanded="false"><span></span><span></span></button>
+  </header>
+
+  <main class="finder-page">
+    <section class="finder-page-hero" aria-labelledby="coffeeFinderHeading">
+      <div class="finder-page-hero-inner">
+        <p class="eyebrow" data-i18n="finderEyebrow">ŞƏXSİ QƏHVƏ SEÇİCİSİ</p>
+        <h1 id="coffeeFinderHeading" data-i18n="finderPageHeading">Sənə uyğun qəhvəni<br /><em>sürüşdürərək tap.</em></h1>
+        <p class="finder-page-hero-sub" data-i18n="finderPageSubtitle">Gövdə, turşuluq və balans səviyyəsini əl ilə sürüşdür, dəmləmə üsulunu seç — sənə ən uyğun 1 və ya 2 qəhvəni təklif edək.</p>
+      </div>
+    </section>
+
+    <section class="coffee-finder" id="qehve-sec" aria-label="Qəhvə parametrləri və tövsiyələr">
+      <div class="coffee-finder-inner">
+        <div class="coffee-finder-panel">
+          <div class="finder-sliders">
+            <div class="finder-slider-item">
+              <div class="finder-slider-top">
+                <label class="finder-slider-label" for="finderBodyRange" data-i18n="finderStepBody">01 · GÖVDƏ (İNTENSİVLİK)</label>
+                <span class="finder-slider-value" id="finderBodyVal">4.0 / 5</span>
+              </div>
+              <input class="finder-range-input" id="finderBodyRange" type="range" min="1" max="5" step="0.5" value="4" />
+              <div class="finder-slider-scale" aria-hidden="true">
+                <span data-i18n="finderScaleBodyLow">1 · Yüngül</span>
+                <span data-i18n="finderScaleMid">3 · Orta</span>
+                <span data-i18n="finderScaleBodyHigh">5 · Dolğun</span>
+              </div>
+            </div>
+
+            <div class="finder-slider-item">
+              <div class="finder-slider-top">
+                <label class="finder-slider-label" for="finderAcidityRange" data-i18n="finderStepAcidity">02 · TURŞULUQ</label>
+                <span class="finder-slider-value" id="finderAcidityVal">2.0 / 5</span>
+              </div>
+              <input class="finder-range-input" id="finderAcidityRange" type="range" min="1" max="5" step="0.5" value="2" />
+              <div class="finder-slider-scale" aria-hidden="true">
+                <span data-i18n="finderScaleAcidLow">1 · Yumşaq</span>
+                <span data-i18n="finderScaleMid">3 · Orta</span>
+                <span data-i18n="finderScaleAcidHigh">5 · Parlaq</span>
+              </div>
+            </div>
+
+            <div class="finder-slider-item">
+              <div class="finder-slider-top">
+                <label class="finder-slider-label" for="finderBalanceRange" data-i18n="finderStepBalance">03 · BALANS</label>
+                <span class="finder-slider-value" id="finderBalanceVal">4.5 / 5</span>
+              </div>
+              <input class="finder-range-input" id="finderBalanceRange" type="range" min="1" max="5" step="0.5" value="4.5" />
+              <div class="finder-slider-scale" aria-hidden="true">
+                <span data-i18n="finderScaleBalLow">1 · Kəskin</span>
+                <span data-i18n="finderScaleMid">3 · Orta</span>
+                <span data-i18n="finderScaleBalHigh">5 · Harmonik</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="coffee-finder-groups">
+            <div class="finder-group" role="group" aria-label="Dəmləmə üsulu">
+              <p class="finder-group-label" data-i18n="finderStepBrewSelect">04 · DƏMLƏMƏ ÜSULU</p>
+              <div class="finder-options">
+                <button class="finder-chip active" type="button" data-finder-group="brew" data-finder-value="any" aria-pressed="true" data-i18n="finderOptionAny">Fərq etmir</button>
+                <button class="finder-chip" type="button" data-finder-group="brew" data-finder-value="espresso" aria-pressed="false" data-i18n="finderBrewEspresso">Espresso &amp; Südlü</button>
+                <button class="finder-chip" type="button" data-finder-group="brew" data-finder-value="filter" aria-pressed="false" data-i18n="finderBrewFilter">V60 &amp; Filter</button>
+                <button class="finder-chip" type="button" data-finder-group="brew" data-finder-value="turkish" aria-pressed="false" data-i18n="finderBrewTurkish">Türk qəhvəsi</button>
+                <button class="finder-chip" type="button" data-finder-group="brew" data-finder-value="french" aria-pressed="false" data-i18n="finderBrewFrench">French Press</button>
+              </div>
+            </div>
+
+            <div class="finder-group" role="group" aria-label="Dad istiqaməti">
+              <p class="finder-group-label" data-i18n="finderStepFlavorSelect">05 · DAD İSTİQAMƏTİ</p>
+              <div class="finder-options">
+                <button class="finder-chip active" type="button" data-finder-group="flavor" data-finder-value="any" aria-pressed="true" data-i18n="finderOptionAny">Fərq etmir</button>
+                <button class="finder-chip" type="button" data-finder-group="flavor" data-finder-value="nutty" aria-pressed="false" data-i18n="finderFlavorNutty">Şokolad &amp; Fındıq</button>
+                <button class="finder-chip" type="button" data-finder-group="flavor" data-finder-value="fruity" aria-pressed="false" data-i18n="finderFlavorFruity">Meyvəli &amp; Çiçəkli</button>
+                <button class="finder-chip" type="button" data-finder-group="flavor" data-finder-value="intense" aria-pressed="false" data-i18n="finderFlavorIntense">Tünd &amp; Ədviyyatlı</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="coffee-finder-bar">
+            <p class="finder-summary-note" id="finderSummaryText" data-i18n="finderSummaryPair">Parametrlərinizə ən uyğun 2 qəhvə</p>
+            <div class="finder-bar-actions">
+              <button class="finder-decaf-toggle" id="finderDecafToggle" type="button" aria-pressed="false" data-i18n="finderDecafToggle">Kofeinsiz (Decaf)</button>
+              <button class="finder-reset-btn" id="finderResetBtn" type="button" data-i18n="finderReset">Sıfırla</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-featured-grid" id="homeCoffeeFinderGrid" aria-live="polite"></div>
+
+        <div class="coffee-finder-footbar">
+          <a class="home-featured-all" href="qehveler.html">
+            <span class="home-featured-all-label" data-i18n="finderAllCoffees">Bütün qəhvələrə bax</span>
+            <span class="home-featured-all-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="tea-cart-toast" id="homeCartToast" role="status" aria-live="polite" hidden></div>
+  <div class="cart-overlay" id="cartOverlay" hidden></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-labelledby="cartTitle" aria-hidden="true">
+    <div class="cart-header">
+      <div><p class="eyebrow" data-i18n="cartYourChoice">Sizin seçiminiz</p><h2 id="cartTitle" data-i18n="cartTitle">Səbət</h2></div>
+      <button class="cart-close" id="cartClose" type="button" aria-label="Səbəti bağla">×</button>
+    </div>
+    <div class="cart-items" id="cartItems"><p class="cart-empty" data-i18n="cartEmpty">Səbətiniz hələ boşdur.</p></div>
+    <div class="cart-summary">
+      <div><span data-i18n="total">Cəmi</span><strong id="cartTotal">0.00 ₼</strong></div>
+      <small data-i18n="cartUnifiedNote">Qəhvə, çay və avadanlıqlar vahid səbətdə hesablanır.</small>
+    </div>
+  </aside>
+
+  <button class="floating-cart-btn" id="floatingCartTrigger" type="button" aria-label="Səbəti aç" aria-haspopup="dialog" aria-controls="cartDrawer">
+    <span class="floating-cart-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2.5 9h19l-2.2 11.5a2 2 0 0 1-2 1.5H6.7a2 2 0 0 1-2-1.5L2.5 9z"></path>
+        <path d="M7 9V5a5 5 0 0 1 10 0v4"></path>
+        <line x1="4" y1="9" x2="20" y2="9"></line>
+        <line x1="9" y1="13" x2="9" y2="17"></line>
+        <line x1="15" y1="13" x2="15" y2="17"></line>
+      </svg>
+    </span>
+    <span class="floating-cart-badge" id="floatingCartBadge" data-count="0" aria-label="Səbətdəki məhsul sayı">0</span>
+  </button>
+
+  <footer>
+    <a class="brand" href="index.html"><span>Yeni</span><strong>Baku Coffee<br />Factory</strong></a>
+    <p data-i18n="footerCopyright">© 2026 · Bakı, Azərbaycan</p>
+  </footer>
+
+  <script src="i18n.js?v=20261112-3"></script>
+  <script src="script.js?v=20261112-1"></script>
+  <script src="storefront-products.js?v=20261112-1"></script>
+  <script src="cart-utils.js?v=20261112-1"></script>
+  <script src="home-coffee-finder.js?v=20261112-3"></script>
+</body>
+</html>

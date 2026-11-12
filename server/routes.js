@@ -35,7 +35,7 @@ const MIME_TYPES = {
 };
 const PUBLIC_FILES = new Set([
   '/index.html', '/menyu.html', '/qehveler.html', '/caylar.html', '/avadanliqlar.html',
-  '/mehsul.html', '/mexfilik.html', '/admin/index.html',
+  '/qehve-secici.html', '/mehsul.html', '/mexfilik.html', '/admin/index.html',
   '/style.css', '/navigation.css', '/home-contact.css', '/home-featured.css', '/home-coffee-finder.css', '/menu-background.css',
   '/menu-mobile.css', '/summer-menu.css', '/tea-mobile.css', '/gear.css',
   '/catalog.css', '/cart.css', '/account.css', '/favorites.css', '/brand.css', '/admin/admin.css',

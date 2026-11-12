@@ -1,9 +1,10 @@
 (function () {
   const DEFAULT_CRITERIA = {
-    brew: 'espresso',
-    flavor: 'nutty',
-    body: 'full',
-    acidity: 'low',
+    body: 4.0,
+    acidity: 2.0,
+    balance: 4.5,
+    brew: 'any',
+    flavor: 'any',
     decafOnly: false,
   };
 
@@ -141,22 +142,25 @@
     },
   ];
 
-  // Calibrated origin affinity profiles supplementing numeric body/acidity metrics
+  // Calibrated origin affinity profiles supplementing numeric body/acidity/balance sliders
   const ORIGIN_AFFINITY = {
-    brasil: { brews: { espresso: 26, turkish: 22, french: 16, filter: 8 }, flavors: { nutty: 28, intense: 14, fruity: 6 } },
-    guatemala: { brews: { espresso: 23, turkish: 22, french: 24, filter: 14 }, flavors: { nutty: 25, intense: 20, fruity: 12 } },
-    colombia: { brews: { french: 26, espresso: 19, filter: 20, turkish: 18 }, flavors: { nutty: 22, fruity: 20, intense: 10 } },
-    honduras: { brews: { filter: 22, french: 22, espresso: 16, turkish: 12 }, flavors: { fruity: 22, nutty: 20, intense: 8 } },
-    efiopiya: { brews: { filter: 28, french: 18, espresso: 10, turkish: 8 }, flavors: { fruity: 28, nutty: 6, intense: 4 } },
-    'costa-rica': { brews: { filter: 26, french: 20, espresso: 14, turkish: 10 }, flavors: { fruity: 26, nutty: 12, intense: 6 } },
-    keniya: { brews: { filter: 26, french: 16, espresso: 10, turkish: 8 }, flavors: { fruity: 27, nutty: 6, intense: 8 } },
-    uqanda: { brews: { turkish: 26, espresso: 24, french: 20, filter: 10 }, flavors: { intense: 26, nutty: 22, fruity: 8 } },
-    robusta: { brews: { espresso: 24, turkish: 25, french: 15, filter: 4 }, flavors: { intense: 28, nutty: 16, fruity: 2 } },
-    decaf: { brews: { espresso: 22, french: 22, turkish: 18, filter: 16 }, flavors: { nutty: 24, intense: 12, fruity: 12 }, isDecaf: true },
+    brasil: { brews: { espresso: 16, turkish: 14, french: 10, filter: 5 }, flavors: { nutty: 16, intense: 8, fruity: 3 } },
+    guatemala: { brews: { espresso: 14, turkish: 14, french: 15, filter: 9 }, flavors: { nutty: 15, intense: 12, fruity: 7 } },
+    colombia: { brews: { french: 16, espresso: 12, filter: 13, turkish: 11 }, flavors: { nutty: 13, fruity: 13, intense: 6 } },
+    honduras: { brews: { filter: 14, french: 14, espresso: 10, turkish: 8 }, flavors: { fruity: 14, nutty: 13, intense: 5 } },
+    efiopiya: { brews: { filter: 17, french: 11, espresso: 6, turkish: 4 }, flavors: { fruity: 17, nutty: 4, intense: 3 } },
+    'costa-rica': { brews: { filter: 16, french: 12, espresso: 9, turkish: 6 }, flavors: { fruity: 16, nutty: 8, intense: 4 } },
+    keniya: { brews: { filter: 16, french: 10, espresso: 6, turkish: 4 }, flavors: { fruity: 16, nutty: 4, intense: 5 } },
+    uqanda: { brews: { turkish: 16, espresso: 15, french: 12, filter: 6 }, flavors: { intense: 16, nutty: 13, fruity: 5 } },
+    robusta: { brews: { espresso: 15, turkish: 16, french: 9, filter: 2 }, flavors: { intense: 17, nutty: 10, fruity: 1 } },
+    decaf: { brews: { espresso: 14, french: 14, turkish: 11, filter: 10 }, flavors: { nutty: 15, intense: 8, fruity: 8 }, isDecaf: true },
   };
 
-  const BODY_TARGET = { light: 2.5, medium: 3.25, full: 4.35 };
-  const ACIDITY_TARGET = { low: 2.0, balanced: 3.25, bright: 4.35 };
+  const clampLevel = (value, fallback) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.min(5, Math.max(1, Math.round(n * 2) / 2));
+  };
 
   const isSoldOut = (item) => {
     const stock = item?.stock;
@@ -164,6 +168,7 @@
   };
 
   const inferFlavorScore = (item, flavor) => {
+    if (!flavor || flavor === 'any') return 14;
     const text = `${item.meta?.tasteNotes || ''} ${item.description || ''}`.toLowerCase();
     const keywords = {
       nutty: ['şokolad', 'kakao', 'fındıq', 'badam', 'karamel', 'şəkər'],
@@ -171,45 +176,53 @@
       intense: ['tünd', 'qoz', 'odunsu', 'ədviyy', 'gavalı', 'güclü', 'intensiv'],
     }[flavor] || [];
     const hits = keywords.filter((kw) => text.includes(kw)).length;
-    return Math.min(26, 6 + hits * 6);
+    return Math.min(16, 4 + hits * 4);
   };
 
   const inferBrewScore = (item, brew) => {
+    if (!brew || brew === 'any') return 14;
     const body = Number(item.meta?.body) || 3;
     const acidity = Number(item.meta?.acidity) || 3;
     const balance = Number(item.meta?.balance) || 3.5;
-    if (brew === 'espresso') return Math.max(6, Math.round(24 - Math.abs(body - 4) * 5 - Math.abs(acidity - 2.3) * 3));
-    if (brew === 'filter') return Math.max(6, Math.round(24 - Math.abs(acidity - 4.2) * 5 - Math.abs(body - 2.8) * 4));
-    if (brew === 'turkish') return Math.max(6, Math.round(24 - Math.abs(body - 4.2) * 5 - Math.max(0, acidity - 3.2) * 5));
-    return Math.max(6, Math.round(22 - Math.abs(body - 3.3) * 4 + (balance - 3) * 3));
+    if (brew === 'espresso') return Math.max(4, Math.round(15 - Math.abs(body - 4) * 3 - Math.abs(acidity - 2.3) * 2));
+    if (brew === 'filter') return Math.max(4, Math.round(15 - Math.abs(acidity - 4.2) * 3 - Math.abs(body - 2.8) * 2.5));
+    if (brew === 'turkish') return Math.max(4, Math.round(15 - Math.abs(body - 4.2) * 3 - Math.max(0, acidity - 3.2) * 3));
+    return Math.max(4, Math.round(14 - Math.abs(body - 3.3) * 2.5 + (balance - 3) * 2));
   };
 
   const scoreCoffee = (item, criteria = DEFAULT_CRITERIA) => {
     const affinity = ORIGIN_AFFINITY[item.id];
     const bodyVal = Number(item.meta?.body) || 3;
     const acidityVal = Number(item.meta?.acidity) || 3;
+    const balanceVal = Number(item.meta?.balance) || 4;
 
-    const brewScore = affinity?.brews?.[criteria.brew] ?? inferBrewScore(item, criteria.brew);
-    const flavorScore = affinity?.flavors?.[criteria.flavor] ?? inferFlavorScore(item, criteria.flavor);
+    const targetBody = clampLevel(criteria.body, DEFAULT_CRITERIA.body);
+    const targetAcidity = clampLevel(criteria.acidity, DEFAULT_CRITERIA.acidity);
+    const targetBalance = clampLevel(criteria.balance, DEFAULT_CRITERIA.balance);
 
-    const targetBody = BODY_TARGET[criteria.body] ?? 3.25;
-    const bodyDiff = Math.abs(bodyVal - targetBody);
-    const bodyScore = Math.max(0, Math.round(24 - bodyDiff * 9.5));
+    // 70 points driven directly by the 3 interactive sliders (Body 25, Acidity 25, Balance 20)
+    const bodyScore = Math.max(0, 25 - Math.abs(bodyVal - targetBody) * 9.5);
+    const acidScore = Math.max(0, 25 - Math.abs(acidityVal - targetAcidity) * 9.5);
+    const balanceScore = Math.max(0, 20 - Math.abs(balanceVal - targetBalance) * 8.5);
 
-    const targetAcid = ACIDITY_TARGET[criteria.acidity] ?? 3.25;
-    const acidDiff = Math.abs(acidityVal - targetAcid);
-    const acidScore = Math.max(0, Math.round(22 - acidDiff * 8.5));
+    // 29 points from brew + flavor (neutral 14+15=29 when 'any' is selected)
+    const brewScore = !criteria.brew || criteria.brew === 'any'
+      ? 15
+      : (affinity?.brews?.[criteria.brew] ?? inferBrewScore(item, criteria.brew));
+    const flavorScore = !criteria.flavor || criteria.flavor === 'any'
+      ? 14
+      : (affinity?.flavors?.[criteria.flavor] ?? inferFlavorScore(item, criteria.flavor));
 
     const isDecaf = Boolean(affinity?.isDecaf || item.id === 'decaf');
     let decafBonus = 0;
     if (criteria.decafOnly) {
-      decafBonus = isDecaf ? 42 : -10;
+      decafBonus = isDecaf ? 45 : -12;
     } else if (isDecaf) {
-      decafBonus = -12;
+      decafBonus = -14;
     }
 
-    const raw = brewScore + flavorScore + bodyScore + acidScore + decafBonus;
-    const matchPercent = Math.max(64, Math.min(99, raw));
+    const raw = Math.round(bodyScore + acidScore + balanceScore + brewScore + flavorScore + decafBonus);
+    const matchPercent = Math.max(55, Math.min(99, raw));
     const soldOutPenalty = isSoldOut(item) ? -1000 : 0;
 
     return {
@@ -218,6 +231,7 @@
       rankScore: raw + soldOutPenalty,
       bodyVal,
       acidityVal,
+      balanceVal,
     };
   };
 
@@ -240,7 +254,7 @@
     if (ranked.length === 1) return [ranked[0]];
     const first = ranked[0];
     const second = ranked[1];
-    if (isSoldOut(second.item) || (first.matchPercent - second.matchPercent >= 14) || second.matchPercent < 76) {
+    if (isSoldOut(second.item) || (first.matchPercent - second.matchPercent >= 10) || second.matchPercent < 78) {
       return [first];
     }
     return [first, second];
@@ -259,6 +273,14 @@
   const decafBtn = document.getElementById('finderDecafToggle');
   const resetBtn = document.getElementById('finderResetBtn');
   const summaryEl = document.getElementById('finderSummaryText');
+  const cartItemsEl = document.getElementById('cartItems');
+
+  const bodyRange = document.getElementById('finderBodyRange');
+  const acidityRange = document.getElementById('finderAcidityRange');
+  const balanceRange = document.getElementById('finderBalanceRange');
+  const bodyValEl = document.getElementById('finderBodyVal');
+  const acidityValEl = document.getElementById('finderAcidityVal');
+  const balanceValEl = document.getElementById('finderBalanceVal');
   const paramButtons = [...sectionEl.querySelectorAll('[data-finder-group][data-finder-value]')];
 
   let criteria = { ...DEFAULT_CRITERIA };
@@ -279,7 +301,8 @@
     return 'assets/coffee/cart-coffee-beans.png';
   };
 
-  const formatScoreStat = (val) => (Number.isInteger(val) ? String(val) : String(val));
+  const formatScoreStat = (val) => (Number.isInteger(val) ? String(val) : Number(val).toFixed(1));
+  const formatSliderVal = (val) => `${Number(val).toFixed(1)} / 5`;
 
   const showToast = (message) => {
     if (!toastEl) return;
@@ -289,7 +312,19 @@
     toastTimer = setTimeout(() => { toastEl.hidden = true; }, 2400);
   };
 
+  const syncSliderVisual = (inputEl, valueEl, val) => {
+    if (!inputEl) return;
+    inputEl.value = String(val);
+    const pct = `${((val - 1) / 4) * 100}%`;
+    inputEl.style?.setProperty?.('--pct', pct);
+    if (valueEl) valueEl.textContent = formatSliderVal(val);
+  };
+
   const syncControlStates = () => {
+    syncSliderVisual(bodyRange, bodyValEl, criteria.body);
+    syncSliderVisual(acidityRange, acidityValEl, criteria.acidity);
+    syncSliderVisual(balanceRange, balanceValEl, criteria.balance);
+
     paramButtons.forEach((btn) => {
       const group = btn.dataset.finderGroup;
       const val = btn.dataset.finderValue;
@@ -313,14 +348,16 @@
       summaryEl._bcfOrigHtml = summaryFallback;
       summaryEl.textContent = tr(summaryKey, summaryFallback);
     }
+
     const bestLabel = tr('finderBestPick', 'Ən uyğun');
     const matchWord = tr('finderMatchWord', 'uyğun');
     const bodyWord = tr('finderBodyStat', 'Gövdə');
     const acidWord = tr('finderAcidStat', 'Turşuluq');
+    const balWord = tr('finderBalanceStat', 'Balans');
     const kindText = dyn('Qəhvə · Orta qovurma');
     const unitText = dyn('/ 100 q');
 
-    gridEl.innerHTML = ranked.map(({ item, matchPercent, bodyVal, acidityVal }, idx) => {
+    gridEl.innerHTML = ranked.map(({ item, matchPercent, bodyVal, acidityVal, balanceVal }, idx) => {
       const url = `qehveler.html#coffee-${encodeURIComponent(item.id)}`;
       const soldOut = isSoldOut(item);
       const displayName = dyn(item.name);
@@ -354,7 +391,7 @@
           <div class="home-featured-body">
             <p class="home-featured-kind">${esc(kindText)}</p>
             <h3><a class="home-featured-name-link" href="${esc(url)}">${esc(displayName)}</a></h3>
-            <p class="finder-card-specs">${esc(`${bodyWord} ${formatScoreStat(bodyVal)}/5 · ${acidWord} ${formatScoreStat(acidityVal)}/5`)}</p>
+            <p class="finder-card-specs">${esc(`${bodyWord} ${formatScoreStat(bodyVal)} · ${acidWord} ${formatScoreStat(acidityVal)} · ${balWord} ${formatScoreStat(balanceVal)}`)}</p>
             <p class="home-featured-notes">${esc(notes)}</p>
             <div class="home-featured-foot">
               <div class="home-featured-price-wrap">${priceHtml}</div>
@@ -410,6 +447,22 @@
     }
   };
 
+  const bindRange = (inputEl, key) => {
+    if (!inputEl) return;
+    const handleSlide = () => {
+      const nextVal = clampLevel(inputEl.value, criteria[key]);
+      criteria = { ...criteria, [key]: nextVal };
+      syncControlStates();
+      renderRecommendations();
+    };
+    inputEl.addEventListener('input', handleSlide);
+    inputEl.addEventListener('change', handleSlide);
+  };
+
+  bindRange(bodyRange, 'body');
+  bindRange(acidityRange, 'acidity');
+  bindRange(balanceRange, 'balance');
+
   paramButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const group = btn.dataset.finderGroup;
@@ -439,12 +492,22 @@
     addRecommendedCoffee(btn.dataset.finderAdd, btn);
   });
 
+  cartItemsEl?.addEventListener('click', (event) => {
+    const actionBtn = event.target.closest('[data-cart-action]');
+    if (!actionBtn || typeof window.applyCartAction !== 'function') return;
+    const next = window.applyCartAction(window.loadSharedCart(), actionBtn.dataset.productId, actionBtn.dataset.cartAction);
+    window.saveSharedCart(next);
+  });
+
   window.addEventListener('bcf:language-changed', () => {
     renderRecommendations();
   });
 
   syncControlStates();
   renderRecommendations();
+  if (typeof window.syncUnifiedCartDom === 'function') {
+    window.syncUnifiedCartDom();
+  }
 
   if (typeof window.loadAllStorefrontProducts === 'function') {
     window.loadAllStorefrontProducts()
@@ -458,7 +521,7 @@
         }
       })
       .catch(() => {
-        // Retain fallback coffee list smoothly when offline
+        // Keep seamless fallback coffee list offline
       });
   }
 
@@ -468,7 +531,13 @@
     pickBestMatches,
     getCriteria: () => ({ ...criteria }),
     setCriteria: (next) => {
-      criteria = { ...DEFAULT_CRITERIA, ...next };
+      criteria = {
+        ...DEFAULT_CRITERIA,
+        ...next,
+        body: clampLevel(next?.body ?? DEFAULT_CRITERIA.body, DEFAULT_CRITERIA.body),
+        acidity: clampLevel(next?.acidity ?? DEFAULT_CRITERIA.acidity, DEFAULT_CRITERIA.acidity),
+        balance: clampLevel(next?.balance ?? DEFAULT_CRITERIA.balance, DEFAULT_CRITERIA.balance),
+      };
       syncControlStates();
       renderRecommendations();
     },

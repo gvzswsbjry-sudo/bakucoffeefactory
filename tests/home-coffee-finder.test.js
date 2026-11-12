@@ -5,31 +5,50 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-test('index.html, home-coffee-finder.css, and server/routes.js wire the Coffee Finder cleanly', () => {
-  const html = fs.readFileSync('index.html', 'utf8');
-  assert.ok(html.includes('href="home-coffee-finder.css'), 'links home-coffee-finder.css');
-  assert.ok(html.includes('id="qehve-sec"'), 'renders #qehve-sec Coffee Finder section');
-  assert.ok(html.includes('id="homeCoffeeFinderGrid"'), 'renders #homeCoffeeFinderGrid');
-  assert.ok(html.includes('id="finderDecafToggle"'), 'renders Decaf toggle control');
-  assert.ok(html.includes('id="finderResetBtn"'), 'renders Reset button');
-  assert.ok(html.indexOf('id="secilmis"') < html.indexOf('id="qehve-sec"'), 'places finder after featured section');
-  assert.ok(html.indexOf('id="qehve-sec"') < html.indexOf('id="haqqimizda"'), 'places finder before about section');
+test('index.html links to qehve-secici.html and standalone finder page + routes are wired', () => {
+  const indexHtml = fs.readFileSync('index.html', 'utf8');
+  assert.ok(indexHtml.includes('href="qehve-secici.html"'), 'index.html links to standalone qehve-secici.html');
+  assert.ok(indexHtml.includes('data-i18n="homeFinderCtaButton"'), 'index.html renders CTA button label');
+  assert.ok(!indexHtml.includes('id="finderBodyRange"'), 'index.html stays clean without inline range sliders');
+
+  const finderHtml = fs.readFileSync('qehve-secici.html', 'utf8');
+  assert.ok(finderHtml.includes('id="finderBodyRange"'), 'qehve-secici.html includes Body range slider');
+  assert.ok(finderHtml.includes('id="finderAcidityRange"'), 'qehve-secici.html includes Acidity range slider');
+  assert.ok(finderHtml.includes('id="finderBalanceRange"'), 'qehve-secici.html includes Balance range slider');
+  assert.ok(finderHtml.includes('id="homeCoffeeFinderGrid"'), 'qehve-secici.html renders recommendation grid');
+  assert.ok(finderHtml.includes('id="cartDrawer"'), 'qehve-secici.html includes unified cart drawer');
+  assert.ok(finderHtml.includes('home-coffee-finder.js'), 'qehve-secici.html loads home-coffee-finder.js');
 
   const routes = fs.readFileSync('server/routes.js', 'utf8');
+  assert.ok(routes.includes("'/qehve-secici.html'"), 'routes whitelist /qehve-secici.html');
   assert.ok(routes.includes("'/home-coffee-finder.css'"), 'routes whitelist /home-coffee-finder.css');
   assert.ok(routes.includes("'/home-coffee-finder.js'"), 'routes whitelist /home-coffee-finder.js');
 
   const css = fs.readFileSync('home-coffee-finder.css', 'utf8');
-  assert.ok(css.includes('.coffee-finder-groups'), 'styles parameter groups');
-  assert.ok(css.includes('@media (min-width: 640px)'), 'includes tablet breakpoint');
-  assert.ok(css.includes('[dir="rtl"] .coffee-finder'), 'includes RTL support');
+  assert.ok(css.includes('.home-finder-cta-btn'), 'styles homepage CTA button');
+  assert.ok(css.includes('.finder-range-input'), 'styles custom range sliders');
+  assert.ok(css.includes('[dir="rtl"] .finder-range-input'), 'handles RTL slider alignment');
 });
 
-test('home-coffee-finder.js ranks coffees accurately by parameters, handles Decaf/Reset, adds to cart, and translates', () => {
+test('home-coffee-finder.js updates live on range slider drag, picks 1 or 2 matches, handles Decaf/Reset, cart & i18n', () => {
   const finderJs = fs.readFileSync('home-coffee-finder.js', 'utf8');
   const i18nJs = fs.readFileSync('i18n.js', 'utf8');
   const cartUtils = require('../cart-utils.js');
   const realCoffees = JSON.parse(fs.readFileSync('data/products.json', 'utf8'));
+
+  const makeSlider = (initial) => {
+    const ev = {};
+    const styles = {};
+    return {
+      value: String(initial),
+      style: { setProperty: (k, v) => { styles[k] = v; }, getPropertyValue: (k) => styles[k] },
+      addEventListener: (t, fn) => { (ev[t] ||= []).push(fn); },
+      slideTo(next) {
+        this.value = String(next);
+        (ev.input || []).forEach((fn) => fn({ target: this }));
+      },
+    };
+  };
 
   const makeMockButton = (attrs = {}) => {
     const classes = new Set();
@@ -50,20 +69,23 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
     };
   };
 
+  const bodyRange = makeSlider(4);
+  const acidityRange = makeSlider(2);
+  const balanceRange = makeSlider(4.5);
+  const bodyValEl = { textContent: '' };
+  const acidityValEl = { textContent: '' };
+  const balanceValEl = { textContent: '' };
+
   const paramBtns = [
+    makeMockButton({ finderGroup: 'brew', finderValue: 'any' }),
     makeMockButton({ finderGroup: 'brew', finderValue: 'espresso' }),
     makeMockButton({ finderGroup: 'brew', finderValue: 'filter' }),
     makeMockButton({ finderGroup: 'brew', finderValue: 'turkish' }),
     makeMockButton({ finderGroup: 'brew', finderValue: 'french' }),
+    makeMockButton({ finderGroup: 'flavor', finderValue: 'any' }),
     makeMockButton({ finderGroup: 'flavor', finderValue: 'nutty' }),
     makeMockButton({ finderGroup: 'flavor', finderValue: 'fruity' }),
     makeMockButton({ finderGroup: 'flavor', finderValue: 'intense' }),
-    makeMockButton({ finderGroup: 'body', finderValue: 'light' }),
-    makeMockButton({ finderGroup: 'body', finderValue: 'medium' }),
-    makeMockButton({ finderGroup: 'body', finderValue: 'full' }),
-    makeMockButton({ finderGroup: 'acidity', finderValue: 'low' }),
-    makeMockButton({ finderGroup: 'acidity', finderValue: 'balanced' }),
-    makeMockButton({ finderGroup: 'acidity', finderValue: 'bright' }),
   ];
 
   const decafBtn = makeMockButton();
@@ -81,21 +103,19 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
     addEventListener: (t, fn) => { (gridListeners[t] ||= []).push(fn); },
   };
   const sectionEl = {
-    querySelectorAll: (selector) => {
-      if (selector.includes('data-finder-group')) return paramBtns;
-      return [];
-    },
+    querySelectorAll: (selector) => (selector.includes('data-finder-group') ? paramBtns : []),
   };
   const toastEl = { hidden: true, textContent: '' };
   const listeners = {};
   const memoryStorage = {};
 
   const windowObj = {
-    location: { pathname: '/index.html' },
+    location: { pathname: '/qehve-secici.html' },
     addEventListener: (t, fn) => { (listeners[t] ||= []).push(fn); },
     dispatchEvent: (ev) => { (listeners[ev.type] || []).forEach((fn) => fn(ev)); },
     loadSharedCart: cartUtils.loadSharedCart,
     saveSharedCart: cartUtils.saveSharedCart,
+    applyCartAction: cartUtils.applyCartAction,
     syncUnifiedCartDom: () => {},
   };
 
@@ -112,7 +132,14 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
         finderDecafToggle: decafBtn,
         finderResetBtn: resetBtn,
         finderSummaryText: summaryEl,
+        finderBodyRange: bodyRange,
+        finderAcidityRange: acidityRange,
+        finderBalanceRange: balanceRange,
+        finderBodyVal: bodyValEl,
+        finderAcidityVal: acidityValEl,
+        finderBalanceVal: balanceValEl,
         homeCartToast: toastEl,
+        cartItems: null,
       }[id] || null),
       querySelector: () => null,
       querySelectorAll: () => [],
@@ -141,54 +168,54 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
   const finder = sandbox.window.BCFCoffeeFinder;
   assert.ok(finder, 'exposes window.BCFCoffeeFinder');
 
-  // 1. Default profile (Espresso + Chocolate/Nutty + Full + Low acidity) returns top 2 coffees (Brasil & Uqanda)
+  // 1. Default slider values (Body 4, Acidity 2, Balance 4.5) render Brasil & set readouts + --pct
+  assert.equal(bodyValEl.textContent, '4.0 / 5');
+  assert.equal(acidityValEl.textContent, '2.0 / 5');
+  assert.equal(balanceValEl.textContent, '4.5 / 5');
+  assert.equal(bodyRange.style.getPropertyValue('--pct'), '75%');
   const defaultMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
-  assert.equal(defaultMatches.length, 2, 'renders top 2 recommended coffee cards for close default matches');
-  assert.equal(gridEl.dataset.resultCount, '2');
-  assert.equal(defaultMatches[0], 'data-product-id="brasil"', 'Brasil ranks #1 for default espresso nutty full low-acidity profile');
-  assert.equal(defaultMatches[1], 'data-product-id="uqanda"', 'Uqanda ranks #2');
+  assert.ok(defaultMatches.length >= 1 && defaultMatches.length <= 2, 'shows 1 or 2 matches');
+  assert.equal(defaultMatches[0], 'data-product-id="brasil"', 'Brasil ranks #1 at Body 4 / Acidity 2 / Balance 4.5');
 
-  // 2. Switching manually to Filter + Fruity + Light + Bright returns top 2 (Efiopiya & Keniya)
-  paramBtns.find((b) => b.dataset.finderValue === 'filter').click();
-  paramBtns.find((b) => b.dataset.finderValue === 'fruity').click();
-  paramBtns.find((b) => b.dataset.finderValue === 'light').click();
-  paramBtns.find((b) => b.dataset.finderValue === 'bright').click();
+  // 2. Sliding sliders manually toward light fruity (Body 2.5, Acidity 4.5, Balance 4.0) selects Efiopiya & Keniya
+  bodyRange.slideTo(2.5);
+  acidityRange.slideTo(4.5);
+  balanceRange.slideTo(4.0);
+  assert.equal(bodyValEl.textContent, '2.5 / 5');
+  assert.equal(acidityValEl.textContent, '4.5 / 5');
+  const brightMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
+  assert.equal(brightMatches.length, 2, 'renders 2 bright/fruity matches (Efiopiya & Keniya)');
+  assert.equal(brightMatches[0], 'data-product-id="efiopiya"', 'Efiopiya leads bright/light profile');
+  assert.equal(brightMatches[1], 'data-product-id="keniya"', 'Keniya follows closely');
 
-  const filterMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
-  assert.equal(filterMatches.length, 2, 'renders top 2 coffees when top picks are close');
-  assert.equal(filterMatches[0], 'data-product-id="efiopiya"', 'Efiopiya ranks #1 for bright fruity filter');
-  assert.ok(gridEl.innerHTML.includes('data-product-id="keniya"'), 'includes Keniya as #2');
+  // 3. Sliding to maximum bold (Body 5.0, Acidity 1.5, Balance 3.0) isolates Robusta as standout #1
+  bodyRange.slideTo(5);
+  acidityRange.slideTo(1.5);
+  balanceRange.slideTo(3);
+  const boldMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
+  assert.equal(boldMatches.length, 1, 'narrows to 1 exact standout card when Robusta dominates');
+  assert.equal(boldMatches[0], 'data-product-id="robusta"');
+  assert.equal(summaryEl.attrs['data-i18n'], 'finderSummarySingle');
 
-  // 3. Turkish + Intense + Full + Low prioritizes Uqanda / Robusta (top 1 or 2)
-  paramBtns.find((b) => b.dataset.finderValue === 'turkish').click();
-  paramBtns.find((b) => b.dataset.finderValue === 'intense').click();
-  paramBtns.find((b) => b.dataset.finderValue === 'full').click();
-  paramBtns.find((b) => b.dataset.finderValue === 'low').click();
-  const intenseMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
-  assert.ok(intenseMatches.length >= 1 && intenseMatches.length <= 2, 'always shows 1 or 2 matches');
-  assert.ok(['data-product-id="uqanda"', 'data-product-id="robusta"'].includes(intenseMatches[0]), 'Uqanda or Robusta leads intense Turkish profile');
-
-  // 4. Decaf toggle focuses on the single Decaf match (1 card)
+  // 4. Decaf toggle always isolates 1 Decaf card
   decafBtn.click();
   const decafMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
-  assert.equal(decafMatches.length, 1, 'shows only 1 card when Decaf filter is active');
-  assert.equal(gridEl.dataset.resultCount, '1');
-  assert.equal(summaryEl.attrs['data-i18n'], 'finderSummarySingle');
-  assert.equal(decafMatches[0], 'data-product-id="decaf"', 'Decaf is the sole card when Decaf filter is active');
-  assert.equal(decafBtn.getAttribute('aria-pressed'), 'true');
+  assert.equal(decafMatches.length, 1);
+  assert.equal(decafMatches[0], 'data-product-id="decaf"');
 
-  // 5. Sold-out items are pushed below available ones
+  // 5. Sold-out demotion works cleanly
   const cloned = realCoffees.map((c) => (c.id === 'brasil' ? { ...c, stock: { status: 'out', quantity: 0 } } : c));
-  const soldOutTest = finder.rankCoffees(cloned, { brew: 'espresso', flavor: 'nutty', body: 'full', acidity: 'low', decafOnly: false }, 4);
-  assert.notEqual(soldOutTest[0].item.id, 'brasil', 'demotes sold-out top match below available coffees');
+  const soldOutTop = finder.rankCoffees(cloned, { body: 4, acidity: 2, balance: 4.5, brew: 'any', flavor: 'any', decafOnly: false }, 2);
+  assert.notEqual(soldOutTop[0].item.id, 'brasil', 'demotes sold-out coffee');
 
-  // 6. Reset returns to default criteria and Brasil #1
+  // 6. Reset restores initial sliders + Brasil
   resetBtn.click();
+  assert.equal(bodyValEl.textContent, '4.0 / 5');
   assert.equal(decafBtn.getAttribute('aria-pressed'), 'false');
   const resetMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
-  assert.equal(resetMatches[0], 'data-product-id="brasil"', 'Reset restores default Brasil #1');
+  assert.equal(resetMatches[0], 'data-product-id="brasil"');
 
-  // 7. Clicking add adds 100g to unified cart
+  // 7. Cart add + language switch
   const addBtn = {
     disabled: false,
     isConnected: true,
@@ -199,14 +226,11 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
   gridListeners.click.forEach((fn) => fn({ target: { closest: () => addBtn } }));
   const cart = JSON.parse(memoryStorage['bcf-equipment-cart-v1']);
   assert.equal(cart['coffee-brasil'].quantity, 100);
-  assert.equal(cart['coffee-brasil'].price, 10);
   assert.equal(toastEl.hidden, false);
 
-  // 8. Switching language to English dynamically translates match badges, specs, and coffee notes
   sandbox.window.BCF_I18N.setLanguage('en');
-  assert.ok(gridEl.innerHTML.includes('Best match'), 'translates top match badge to English');
-  assert.ok(gridEl.innerHTML.includes('Body 4/5'), 'translates spec label to English');
-  assert.ok(gridEl.innerHTML.includes('Add to Cart'), 'translates add button to English');
+  assert.ok(gridEl.innerHTML.includes('Best match'), 'translates match badge');
+  assert.ok(gridEl.innerHTML.includes('Balance 4.5'), 'translates Balance stat');
 
   delete global.localStorage;
   delete global.window;

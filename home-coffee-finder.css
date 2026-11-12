@@ -1,9 +1,171 @@
-/* Mobile-first Multi-Parameter Personal Coffee Finder for index.html */
-.coffee-finder {
+/* Homepage editorial entry banner -> qehve-secici.html */
+.home-finder-cta {
   background: #efeae0;
   color: var(--ink, #1e1e1e);
-  padding: 36px max(12px, env(safe-area-inset-left, 0px)) 42px max(12px, env(safe-area-inset-right, 0px));
+  padding: 36px max(16px, env(safe-area-inset-left, 0px)) 40px max(16px, env(safe-area-inset-right, 0px));
   border-top: 1px solid rgba(74, 53, 37, .12);
+}
+
+.home-finder-cta-card {
+  max-width: 1180px;
+  margin: 0 auto;
+  background: #faf7f1;
+  border: 1px solid rgba(74, 53, 37, .14);
+  border-radius: 16px;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 8px 26px rgba(34, 25, 18, .05);
+}
+
+.home-finder-cta-copy .eyebrow {
+  margin: 0 0 10px;
+  color: var(--text-muted, #7a6a5e);
+}
+
+.home-finder-cta-copy h2 {
+  margin: 0 0 10px;
+  font: 500 clamp(30px, 8vw, 48px)/.95 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -.055em;
+  color: var(--ink, #1e1e1e);
+}
+
+.home-finder-cta-copy h2 em {
+  font-style: italic;
+  color: var(--accent-terracotta, #c86d51);
+}
+
+.home-finder-cta-copy p:last-child {
+  margin: 0;
+  max-width: 56ch;
+  font: 400 13.5px/1.6 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #7a6a5e);
+}
+
+.home-finder-cta-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.home-finder-cta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.home-finder-cta-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #f1ebe1;
+  border: 1px solid rgba(74, 53, 37, .14);
+  font: 600 10px/1.1 var(--mono, "DM Mono", monospace);
+  letter-spacing: .04em;
+  color: var(--primary-wood, #4a3525);
+}
+
+.home-finder-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: #4a5043;
+  color: #fcf9f4;
+  font: 600 13px/1 var(--sans, "Manrope", sans-serif);
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(74, 80, 67, .2);
+  transition: background-color .18s ease, transform .15s ease;
+}
+
+.home-finder-cta-btn:hover {
+  background: var(--accent-terracotta, #c86d51);
+}
+
+.home-finder-cta-btn:active {
+  transform: scale(.98);
+}
+
+@media (min-width: 760px) {
+  .home-finder-cta {
+    padding: 50px 24px 56px;
+  }
+
+  .home-finder-cta-card {
+    padding: 34px 36px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .home-finder-cta-actions {
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+}
+
+@media (min-width: 1080px) {
+  .home-finder-cta {
+    padding: 64px 48px 70px;
+  }
+
+  .home-finder-cta-card {
+    padding: 40px 44px;
+  }
+}
+
+/* Standalone Coffee Finder page (qehve-secici.html) */
+.finder-page {
+  background: #f7f5f0;
+  color: var(--ink, #1e1e1e);
+  min-height: calc(100vh - 140px);
+}
+
+.finder-page-hero {
+  background: #efeae0;
+  border-bottom: 1px solid rgba(74, 53, 37, .12);
+  padding: 108px max(16px, env(safe-area-inset-left, 0px)) 28px max(16px, env(safe-area-inset-right, 0px));
+}
+
+.finder-page-hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.finder-page-hero .eyebrow {
+  margin: 0 0 10px;
+  color: var(--text-muted, #7a6a5e);
+}
+
+.finder-page-hero h1 {
+  margin: 0 0 12px;
+  font: 500 clamp(34px, 9vw, 60px)/.94 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -.055em;
+  color: var(--ink, #1e1e1e);
+}
+
+.finder-page-hero h1 em {
+  font-style: italic;
+  color: var(--accent-terracotta, #c86d51);
+}
+
+.finder-page-hero-sub {
+  margin: 0;
+  max-width: 60ch;
+  font: 400 13.5px/1.6 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #7a6a5e);
+}
+
+.coffee-finder {
+  background: #f7f5f0;
+  color: var(--ink, #1e1e1e);
+  padding: 26px max(12px, env(safe-area-inset-left, 0px)) 64px max(12px, env(safe-area-inset-right, 0px));
   overflow-x: clip;
 }
 
@@ -13,51 +175,111 @@
   margin: 0 auto;
 }
 
-.coffee-finder-head {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.coffee-finder-head .eyebrow {
-  margin: 0;
-  color: var(--text-muted, #7a6a5e);
-}
-
-.coffee-finder-head h2 {
-  margin: 0;
-  font: 500 clamp(30px, 8vw, 48px)/.95 var(--serif, "Playfair Display", Georgia, serif);
-  letter-spacing: -.055em;
-  color: var(--ink, #1e1e1e);
-}
-
-.coffee-finder-head h2 em {
-  font-style: italic;
-  color: var(--accent-terracotta, #c86d51);
-}
-
-.coffee-finder-sub {
-  margin: 0;
-  max-width: 60ch;
-  font: 400 13px/1.55 var(--sans, "Manrope", sans-serif);
-  color: var(--text-muted, #7a6a5e);
-}
-
-/* Multi-parameter interactive panel */
+/* Slider & interactive panel */
 .coffee-finder-panel {
   background: #faf7f1;
   border: 1px solid rgba(74, 53, 37, .13);
-  border-radius: 14px;
-  padding: 13px;
-  margin-bottom: 16px;
-  box-shadow: 0 6px 20px rgba(34, 25, 18, .04);
+  border-radius: 16px;
+  padding: 16px 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 22px rgba(34, 25, 18, .04);
+}
+
+.finder-sliders {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.finder-slider-item {
+  background: #fffdf9;
+  border: 1px solid rgba(74, 53, 37, .1);
+  border-radius: 12px;
+  padding: 12px 13px;
+}
+
+.finder-slider-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.finder-slider-label {
+  font: 700 9px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--primary-wood, #4a3525);
+}
+
+.finder-slider-value {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(200, 109, 81, .12);
+  color: var(--accent-terracotta, #c86d51);
+  font: 700 11.5px/1.1 var(--mono, "DM Mono", monospace);
+}
+
+.finder-range-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #4a5043 var(--pct, 50%), rgba(74, 53, 37, .16) var(--pct, 50%));
+  outline: none;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.finder-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #c86d51;
+  border: 3px solid #fffdf9;
+  box-shadow: 0 2px 8px rgba(34, 25, 18, .28);
+  cursor: grab;
+  transition: transform .14s ease, background-color .14s ease;
+}
+
+.finder-range-input::-webkit-slider-thumb:active {
+  transform: scale(1.12);
+  cursor: grabbing;
+  background: #b5593c;
+}
+
+.finder-range-input::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #c86d51;
+  border: 3px solid #fffdf9;
+  box-shadow: 0 2px 8px rgba(34, 25, 18, .28);
+  cursor: grab;
+}
+
+.finder-slider-scale {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font: 500 9.5px/1.1 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #7a6a5e);
 }
 
 .coffee-finder-groups {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 11px;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(74, 53, 37, .1);
 }
 
 .finder-group {
@@ -113,8 +335,8 @@
 }
 
 .coffee-finder-bar {
-  margin-top: 12px;
-  padding-top: 11px;
+  margin-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid rgba(74, 53, 37, .12);
   display: flex;
   flex-wrap: wrap;
@@ -134,8 +356,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 31px;
-  padding: 0 11px;
+  min-height: 32px;
+  padding: 0 12px;
   border-radius: 999px;
   border: 1px dashed rgba(74, 53, 37, .3);
   background: transparent;
@@ -154,7 +376,7 @@
 }
 
 .finder-reset-btn {
-  min-height: 31px;
+  min-height: 32px;
   padding: 0 10px;
   border: 0;
   border-radius: 6px;
@@ -172,7 +394,7 @@
 
 .finder-summary-note {
   margin: 0;
-  font: 600 11px/1.3 var(--mono, "DM Mono", monospace);
+  font: 600 11.5px/1.3 var(--mono, "DM Mono", monospace);
   letter-spacing: .04em;
   color: var(--primary-wood, #4a3525);
 }
@@ -185,12 +407,12 @@
 .coffee-finder .home-featured-grid[data-result-count="1"] .home-featured-card {
   display: grid;
   grid-template-columns: 124px minmax(0, 1fr);
-  max-width: 560px;
+  max-width: 600px;
 }
 
 .coffee-finder .home-featured-grid[data-result-count="1"] .home-featured-media {
   height: 100%;
-  min-height: 148px;
+  min-height: 158px;
 }
 
 .finder-match-badge--top {
@@ -206,14 +428,14 @@
 }
 
 .finder-card-specs {
-  margin: 0 0 5px;
-  font: 600 9px/1.25 var(--mono, "DM Mono", monospace);
-  letter-spacing: .04em;
+  margin: 0 0 6px;
+  font: 600 9px/1.3 var(--mono, "DM Mono", monospace);
+  letter-spacing: .03em;
   color: #6b7b5c;
 }
 
 .coffee-finder-footbar {
-  margin-top: 22px;
+  margin-top: 24px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -221,15 +443,23 @@
   gap: 12px;
 }
 
-/* Tablet & larger mobile */
 @media (min-width: 640px) {
+  .finder-page-hero {
+    padding: 126px 24px 36px;
+  }
+
   .coffee-finder {
-    padding: 50px 24px 56px;
+    padding: 32px 24px 72px;
   }
 
   .coffee-finder-panel {
-    padding: 18px 20px;
-    margin-bottom: 22px;
+    padding: 20px 22px;
+    margin-bottom: 24px;
+  }
+
+  .finder-sliders {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
   }
 
   .coffee-finder-groups {
@@ -238,45 +468,45 @@
   }
 
   .coffee-finder .home-featured-grid[data-result-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, 340px));
+    grid-template-columns: repeat(2, minmax(0, 360px));
   }
 
   .coffee-finder .home-featured-grid[data-result-count="1"] .home-featured-card {
-    grid-template-columns: 180px minmax(0, 1fr);
-    max-width: 620px;
+    grid-template-columns: 185px minmax(0, 1fr);
+    max-width: 640px;
   }
 
   .finder-chip {
-    min-height: 36px;
+    min-height: 35px;
     padding: 7px 14px;
-    font-size: 12.5px;
+    font-size: 12px;
   }
 
   .finder-card-specs {
-    font-size: 10px;
+    font-size: 9.5px;
   }
 }
 
-/* Desktop */
 @media (min-width: 1080px) {
+  .finder-page-hero {
+    padding: 136px 48px 42px;
+  }
+
   .coffee-finder {
-    padding: 68px 48px 74px;
+    padding: 36px 48px 84px;
   }
 
   .coffee-finder .home-featured-grid[data-result-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, 350px));
-  }
-
-  .coffee-finder-head {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 28px;
-    margin-bottom: 24px;
+    grid-template-columns: repeat(2, minmax(0, 380px));
   }
 }
 
 /* RTL Support */
-[dir="rtl"] .coffee-finder {
+[dir="rtl"] .home-finder-cta,
+[dir="rtl"] .finder-page {
   direction: rtl;
+}
+
+[dir="rtl"] .finder-range-input {
+  direction: ltr;
 }
