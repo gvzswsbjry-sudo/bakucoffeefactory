@@ -234,11 +234,23 @@
       .slice(0, limit);
   };
 
+  const pickBestMatches = (ranked, criteria = DEFAULT_CRITERIA) => {
+    if (!ranked.length) return [];
+    if (criteria.decafOnly) return [ranked[0]];
+    if (ranked.length === 1) return [ranked[0]];
+    const first = ranked[0];
+    const second = ranked[1];
+    if (isSoldOut(second.item) || (first.matchPercent - second.matchPercent >= 14) || second.matchPercent < 76) {
+      return [first];
+    }
+    return [first, second];
+  };
+
   const sectionEl = document.getElementById('qehve-sec');
   const gridEl = document.getElementById('homeCoffeeFinderGrid');
   if (!sectionEl || !gridEl) {
     if (typeof window !== 'undefined') {
-      window.BCFCoffeeFinder = { scoreCoffee, rankCoffees, DEFAULT_CRITERIA };
+      window.BCFCoffeeFinder = { scoreCoffee, rankCoffees, pickBestMatches, DEFAULT_CRITERIA };
     }
     return;
   }
@@ -246,6 +258,7 @@
   const toastEl = document.getElementById('homeCartToast');
   const decafBtn = document.getElementById('finderDecafToggle');
   const resetBtn = document.getElementById('finderResetBtn');
+  const summaryEl = document.getElementById('finderSummaryText');
   const paramButtons = [...sectionEl.querySelectorAll('[data-finder-group][data-finder-value]')];
 
   let criteria = { ...DEFAULT_CRITERIA };
@@ -291,7 +304,15 @@
   };
 
   const renderRecommendations = () => {
-    const ranked = rankCoffees(catalogCoffees, criteria, 4);
+    const ranked = pickBestMatches(rankCoffees(catalogCoffees, criteria, 4), criteria);
+    gridEl.dataset.resultCount = String(ranked.length);
+    if (summaryEl) {
+      const summaryKey = ranked.length === 1 ? 'finderSummarySingle' : 'finderSummaryPair';
+      const summaryFallback = ranked.length === 1 ? 'Sizin üçün ən uyğun 1 qəhvə' : 'Parametrlərinizə ən uyğun 2 qəhvə';
+      summaryEl.setAttribute('data-i18n', summaryKey);
+      summaryEl._bcfOrigHtml = summaryFallback;
+      summaryEl.textContent = tr(summaryKey, summaryFallback);
+    }
     const bestLabel = tr('finderBestPick', 'Ən uyğun');
     const matchWord = tr('finderMatchWord', 'uyğun');
     const bodyWord = tr('finderBodyStat', 'Gövdə');
@@ -444,6 +465,7 @@
   window.BCFCoffeeFinder = {
     scoreCoffee,
     rankCoffees,
+    pickBestMatches,
     getCriteria: () => ({ ...criteria }),
     setCriteria: (next) => {
       criteria = { ...DEFAULT_CRITERIA, ...next };

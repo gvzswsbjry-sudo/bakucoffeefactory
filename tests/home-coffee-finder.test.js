@@ -68,9 +68,15 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
 
   const decafBtn = makeMockButton();
   const resetBtn = makeMockButton();
+  const summaryEl = {
+    attrs: { 'data-i18n': 'finderSummaryPair' },
+    textContent: 'Parametrlərinizə ən uyğun 2 qəhvə',
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+  };
   const gridListeners = {};
   const gridEl = {
     innerHTML: '',
+    dataset: {},
     querySelectorAll: () => [],
     addEventListener: (t, fn) => { (gridListeners[t] ||= []).push(fn); },
   };
@@ -105,6 +111,7 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
         homeCoffeeFinderGrid: gridEl,
         finderDecafToggle: decafBtn,
         finderResetBtn: resetBtn,
+        finderSummaryText: summaryEl,
         homeCartToast: toastEl,
       }[id] || null),
       querySelector: () => null,
@@ -134,34 +141,40 @@ test('home-coffee-finder.js ranks coffees accurately by parameters, handles Deca
   const finder = sandbox.window.BCFCoffeeFinder;
   assert.ok(finder, 'exposes window.BCFCoffeeFinder');
 
-  // 1. Default profile (Espresso + Chocolate/Nutty + Full + Low acidity) picks Brasil first among top 4
+  // 1. Default profile (Espresso + Chocolate/Nutty + Full + Low acidity) returns top 2 coffees (Brasil & Uqanda)
   const defaultMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
-  assert.equal(defaultMatches.length, 4, 'renders 4 recommended coffee cards');
+  assert.equal(defaultMatches.length, 2, 'renders top 2 recommended coffee cards for close default matches');
+  assert.equal(gridEl.dataset.resultCount, '2');
   assert.equal(defaultMatches[0], 'data-product-id="brasil"', 'Brasil ranks #1 for default espresso nutty full low-acidity profile');
+  assert.equal(defaultMatches[1], 'data-product-id="uqanda"', 'Uqanda ranks #2');
 
-  // 2. Switching manually to Filter + Fruity + Light + Bright ranks Efiopiya #1 and includes Costa Rica / Keniya
+  // 2. Switching manually to Filter + Fruity + Light + Bright returns top 2 (Efiopiya & Keniya)
   paramBtns.find((b) => b.dataset.finderValue === 'filter').click();
   paramBtns.find((b) => b.dataset.finderValue === 'fruity').click();
   paramBtns.find((b) => b.dataset.finderValue === 'light').click();
   paramBtns.find((b) => b.dataset.finderValue === 'bright').click();
 
   const filterMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
+  assert.equal(filterMatches.length, 2, 'renders top 2 coffees when top picks are close');
   assert.equal(filterMatches[0], 'data-product-id="efiopiya"', 'Efiopiya ranks #1 for bright fruity filter');
-  assert.ok(gridEl.innerHTML.includes('data-product-id="costa-rica"'), 'includes Costa Rica');
-  assert.ok(gridEl.innerHTML.includes('data-product-id="keniya"'), 'includes Keniya');
+  assert.ok(gridEl.innerHTML.includes('data-product-id="keniya"'), 'includes Keniya as #2');
 
-  // 3. Turkish + Intense + Full + Low prioritizes Uqanda / Robusta
+  // 3. Turkish + Intense + Full + Low prioritizes Uqanda / Robusta (top 1 or 2)
   paramBtns.find((b) => b.dataset.finderValue === 'turkish').click();
   paramBtns.find((b) => b.dataset.finderValue === 'intense').click();
   paramBtns.find((b) => b.dataset.finderValue === 'full').click();
   paramBtns.find((b) => b.dataset.finderValue === 'low').click();
   const intenseMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
+  assert.ok(intenseMatches.length >= 1 && intenseMatches.length <= 2, 'always shows 1 or 2 matches');
   assert.ok(['data-product-id="uqanda"', 'data-product-id="robusta"'].includes(intenseMatches[0]), 'Uqanda or Robusta leads intense Turkish profile');
 
-  // 4. Decaf toggle ranks Decaf strictly #1
+  // 4. Decaf toggle focuses on the single Decaf match (1 card)
   decafBtn.click();
   const decafMatches = gridEl.innerHTML.match(/data-product-id="([^"]+)"/g) || [];
-  assert.equal(decafMatches[0], 'data-product-id="decaf"', 'Decaf ranks #1 when Decaf filter is active');
+  assert.equal(decafMatches.length, 1, 'shows only 1 card when Decaf filter is active');
+  assert.equal(gridEl.dataset.resultCount, '1');
+  assert.equal(summaryEl.attrs['data-i18n'], 'finderSummarySingle');
+  assert.equal(decafMatches[0], 'data-product-id="decaf"', 'Decaf is the sole card when Decaf filter is active');
   assert.equal(decafBtn.getAttribute('aria-pressed'), 'true');
 
   // 5. Sold-out items are pushed below available ones
