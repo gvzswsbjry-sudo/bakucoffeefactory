@@ -37,6 +37,15 @@ test('menyu.html and script.js adopt Version 1 modern theme without dark atmosph
   assert.ok(html.includes('href="menu-modern.css'), 'menyu.html links menu-modern.css');
   assert.ok(html.includes('src="menu-modern.js'), 'menyu.html loads menu-modern.js');
   assert.ok(!html.includes('href="menu-background.css"'), 'menyu.html omits legacy dark menu-background.css');
+  assert.ok(!html.includes('href="summer-menu.css"'), 'menyu.html removes standalone summer-menu.css');
+  assert.ok(!html.includes('id="summerMenu"'), 'menyu.html removes separate summerMenu tab panel');
+  for (const drink of [
+    'Coffee Creations', 'Bumble Coffee', 'Espresso Tropical', 'Espresso Flower', 'Orange Chocolate',
+    'Refreshing Lemonades', 'Mojito', 'Strawberry Lemonade', 'Mango Maracuya', 'Blu Curaçao',
+  ]) {
+    assert.ok(html.includes(drink), `Ana menyu includes summer item without separate tab: ${drink}`);
+  }
+  assert.ok(!html.includes('assets/summer-escape/'), 'no summer-escape photos rendered per request');
 
   const script = read('script.js');
   assert.ok(
@@ -52,6 +61,10 @@ test('menyu.html and script.js adopt Version 1 modern theme without dark atmosph
   assert.ok(
     modernCss.includes('.menu-modern .menu-top h1 br'),
     'menu-modern.css keeps line break spacing in mobile menu heading'
+  );
+  assert.ok(
+    modernCss.includes('.menu-modern .menu-group.menu-card p.menu-row span') && modernCss.includes('max-width: none;'),
+    'menu-modern.css overrides style.css 65% span cap on menu rows so price chips never clip'
   );
 });
 

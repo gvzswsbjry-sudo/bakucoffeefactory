@@ -337,6 +337,7 @@
       menuCatEspresso: 'Espresso',
       menuCatMilk: 'Südlü',
       menuCatCold: 'Soyuq',
+      menuCatLemonades: 'Limonadlar',
       menuCatAlt: 'Alternativlər',
       menuCatTea: 'Çaylar',
       menuCatExtras: 'Əlavələr',
@@ -671,6 +672,7 @@
       menuCatEspresso: 'Espresso',
       menuCatMilk: 'Milk Coffee',
       menuCatCold: 'Cold',
+      menuCatLemonades: 'Lemonades',
       menuCatAlt: 'Alternatives',
       menuCatTea: 'Tea',
       menuCatExtras: 'Extras',
@@ -1005,6 +1007,7 @@
       menuCatEspresso: 'Эспрессо',
       menuCatMilk: 'С молоком',
       menuCatCold: 'Холодные',
+      menuCatLemonades: 'Лимонады',
       menuCatAlt: 'Альтернатива',
       menuCatTea: 'Чай',
       menuCatExtras: 'Добавки',
@@ -1339,6 +1342,7 @@
       menuCatEspresso: 'إسبريسو',
       menuCatMilk: 'بالحليب',
       menuCatCold: 'بارد',
+      menuCatLemonades: 'ليموناضة',
       menuCatAlt: 'طرق بديلة',
       menuCatTea: 'الشاي',
       menuCatExtras: 'إضافات',
@@ -3156,12 +3160,12 @@
   },
   "Bumble Coffee": {
     "en": "Bumble Coffee",
-    "ar": "بمبل كوفي",
+    "ar": "بامبل كوفي",
     "ru": "Бамбл кофе"
   },
   "Espresso Tropical": {
     "en": "Espresso Tropical",
-    "ar": "إسبريسو استوائي",
+    "ar": "إسبريسو تروبيكال",
     "ru": "Эспрессо Тропикал"
   },
   "Espresso Flower": {
@@ -3181,16 +3185,16 @@
   },
   "Strawberry Lemonade": {
     "en": "Strawberry Lemonade",
-    "ar": "ليموناضة الفراولة",
+    "ar": "ليموناضة بالفراولة",
     "ru": "Клубничный лимонад"
   },
   "Mango Maracuya": {
-    "en": "Mango Passionfruit",
-    "ar": "مانجو ماراكوجا",
+    "en": "Mango Maracuya",
+    "ar": "مانجو وباشن فروت",
     "ru": "Манго-маракуйя"
   },
   "Blu Curaçao": {
-    "en": "Blue Curaçao",
+    "en": "Blu Curaçao",
     "ar": "بلو كوراساو",
     "ru": "Блю Кюрасао"
   },
@@ -4028,6 +4032,11 @@
     "en": "Chai Tea Latte",
     "ru": "Чай-латте",
     "ar": "تشاي تي لاتيه"
+  },
+  "02 · Desert menyusu": {
+    "en": "02 · Dessert Menu",
+    "ru": "02 · Десертное меню",
+    "ar": "02 · قائمة الحلويات"
   }
 };
 

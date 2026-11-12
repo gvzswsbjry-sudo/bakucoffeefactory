@@ -894,7 +894,16 @@ const EXTRA_PHRASES = {
   'Cold Brew': { en: 'Cold Brew', ru: 'Колд брю', ar: 'كولد برو' },
   'Chai Tea Latte': { en: 'Chai Tea Latte', ru: 'Чай-латте', ar: 'تشاي تي لاتيه' },
   'Baku Coffee Factory Special': { en: 'Baku Coffee Factory Special', ru: 'Baku Coffee Factory Special', ar: 'باكو كوفي فاكتوري سبيشال' },
-  'Filtr coffee (V60)': { en: 'Filter Coffee (V60)', ru: 'Фильтр-кофе (V60)', ar: 'قهوة مقطرة (V60)' }
+  'Filtr coffee (V60)': { en: 'Filter Coffee (V60)', ru: 'Фильтр-кофе (V60)', ar: 'قهوة مقطرة (V60)' },
+  '02 · Desert menyusu': { en: '02 · Dessert Menu', ru: '02 · Десертное меню', ar: '02 · قائمة الحلويات' },
+  'Bumble Coffee': { en: 'Bumble Coffee', ru: 'Бамбл кофе', ar: 'بامبل كوفي' },
+  'Espresso Tropical': { en: 'Espresso Tropical', ru: 'Эспрессо Тропик', ar: 'إسبريسو تروبيكال' },
+  'Espresso Flower': { en: 'Espresso Flower', ru: 'Эспрессо Флауэр', ar: 'إسبريسو فلاور' },
+  'Orange Chocolate': { en: 'Orange Chocolate', ru: 'Апельсин и шоколад', ar: 'شوكولاتة بالبرتقال' },
+  'Mojito': { en: 'Mojito', ru: 'Мохито', ar: 'موهيتو' },
+  'Strawberry Lemonade': { en: 'Strawberry Lemonade', ru: 'Клубничный лимонад', ar: 'ليموناضة بالفراولة' },
+  'Mango Maracuya': { en: 'Mango Maracuya', ru: 'Манго Маракуйя', ar: 'مانجو وباشن فروت' },
+  'Blu Curaçao': { en: 'Blu Curaçao', ru: 'Блю Кюрасао', ar: 'بلو كوراساو' }
 };
 
 for (const [k, v] of Object.entries(EXTRA_PHRASES)) {
@@ -1245,6 +1254,7 @@ const fullI18nJs = `(() => {
       menuCatEspresso: 'Espresso',
       menuCatMilk: 'Südlü',
       menuCatCold: 'Soyuq',
+      menuCatLemonades: 'Limonadlar',
       menuCatAlt: 'Alternativlər',
       menuCatTea: 'Çaylar',
       menuCatExtras: 'Əlavələr',
@@ -1579,6 +1589,7 @@ const fullI18nJs = `(() => {
       menuCatEspresso: 'Espresso',
       menuCatMilk: 'Milk Coffee',
       menuCatCold: 'Cold',
+      menuCatLemonades: 'Lemonades',
       menuCatAlt: 'Alternatives',
       menuCatTea: 'Tea',
       menuCatExtras: 'Extras',
@@ -1913,6 +1924,7 @@ const fullI18nJs = `(() => {
       menuCatEspresso: 'Эспрессо',
       menuCatMilk: 'С молоком',
       menuCatCold: 'Холодные',
+      menuCatLemonades: 'Лимонады',
       menuCatAlt: 'Альтернатива',
       menuCatTea: 'Чай',
       menuCatExtras: 'Добавки',
@@ -2247,6 +2259,7 @@ const fullI18nJs = `(() => {
       menuCatEspresso: 'إسبريسو',
       menuCatMilk: 'بالحليب',
       menuCatCold: 'بارد',
+      menuCatLemonades: 'ليموناضة',
       menuCatAlt: 'طرق بديلة',
       menuCatTea: 'الشاي',
       menuCatExtras: 'إضافات',

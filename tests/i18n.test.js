@@ -115,7 +115,6 @@ test('menyu.html has data-i18n on page heading and menu tabs', () => {
   const menuHtml = fs.readFileSync('menyu.html', 'utf8');
   assert.ok(menuHtml.includes('data-i18n="menuHeadingDrink"'), 'menyu.html has data-i18n="menuHeadingDrink" on h1');
   assert.ok(menuHtml.includes('data-i18n="tabMainMenu"'), 'menyu.html has data-i18n="tabMainMenu"');
-  assert.ok(menuHtml.includes('data-i18n="tabSummerMenu"'), 'menyu.html has data-i18n="tabSummerMenu"');
   assert.ok(menuHtml.includes('data-i18n="tabDessertMenu"'), 'menyu.html has data-i18n="tabDessertMenu"');
 });
 

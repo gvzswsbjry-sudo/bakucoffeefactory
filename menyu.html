@@ -10,9 +10,8 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="navigation.css" />
   <link rel="stylesheet" href="brand.css" />
-  <link rel="stylesheet" href="summer-menu.css" />
   <link rel="stylesheet" href="menu-mobile.css?v=20261025-tab-header1" />
-  <link rel="stylesheet" href="menu-modern.css?v=20261113-2" />
+  <link rel="stylesheet" href="menu-modern.css?v=20261113-4" />
   <link rel="stylesheet" href="i18n.css" />
 </head>
 <body>
@@ -33,8 +32,7 @@
     <div class="menu-tabs-bar menu-tabs-bar-mobile" aria-label="Menyu bölmələri">
       <div class="menu-tabs" role="tablist">
         <button class="menu-tab active" data-menu-target="mainMenu" role="tab" aria-selected="true"><span data-i18n="tabMainMenu">Ana menyu</span> <span>01</span></button>
-        <button class="menu-tab" data-menu-target="summerMenu" role="tab" aria-selected="false"><span data-i18n="tabSummerMenu">Summer menu</span> <span>02</span></button>
-        <button class="menu-tab" data-menu-target="dessertMenu" role="tab" aria-selected="false"><span data-i18n="tabDessertMenu">Desert</span> <span>03</span></button>
+        <button class="menu-tab" data-menu-target="dessertMenu" role="tab" aria-selected="false"><span data-i18n="tabDessertMenu">Desert</span> <span>02</span></button>
       </div>
     </div>
     <button class="menu-toggle" id="menuToggle" aria-label="Menyunu aç" aria-expanded="false">
@@ -51,8 +49,7 @@
     <div class="menu-tabs-bar">
       <div class="menu-tabs" role="tablist">
         <button class="menu-tab active" data-menu-target="mainMenu" role="tab" aria-selected="true"><span data-i18n="tabMainMenu">Ana menyu</span> <span>01</span></button>
-        <button class="menu-tab" data-menu-target="summerMenu" role="tab" aria-selected="false"><span data-i18n="tabSummerMenu">Summer menu</span> <span>02</span></button>
-        <button class="menu-tab" data-menu-target="dessertMenu" role="tab" aria-selected="false"><span data-i18n="tabDessertMenu">Desert</span> <span>03</span></button>
+        <button class="menu-tab" data-menu-target="dessertMenu" role="tab" aria-selected="false"><span data-i18n="tabDessertMenu">Desert</span> <span>02</span></button>
       </div>
     </div>
 
@@ -102,6 +99,7 @@
         <button type="button" class="menu-filter-pill" data-menu-filter="espresso" aria-pressed="false" data-i18n="menuCatEspresso">Espresso</button>
         <button type="button" class="menu-filter-pill" data-menu-filter="milk" aria-pressed="false" data-i18n="menuCatMilk">Südlü</button>
         <button type="button" class="menu-filter-pill" data-menu-filter="cold" aria-pressed="false" data-i18n="menuCatCold">Soyuq</button>
+        <button type="button" class="menu-filter-pill" data-menu-filter="lemonades" aria-pressed="false" data-i18n="menuCatLemonades">Limonadlar</button>
         <button type="button" class="menu-filter-pill" data-menu-filter="alt" aria-pressed="false" data-i18n="menuCatAlt">Alternativlər</button>
         <button type="button" class="menu-filter-pill" data-menu-filter="tea" aria-pressed="false" data-i18n="menuCatTea">Çaylar</button>
         <button type="button" class="menu-filter-pill" data-menu-filter="extras" aria-pressed="false" data-i18n="menuCatExtras">Əlavələr</button>
@@ -189,6 +187,22 @@
           <p class="menu-row"><span>Cold Brew</span><span class="price-chips"><span class="price-chip"><b>M</b> 6.90 ₼</span></span></p>
         </article>
 
+        <article class="menu-group menu-card" data-menu-category="cold">
+          <h2>Coffee Creations</h2>
+          <p class="menu-row"><span>Bumble Coffee</span><span class="price-chips"><span class="price-chip price-chip-single">8.50 ₼</span></span></p>
+          <p class="menu-row"><span>Espresso Tropical</span><span class="price-chips"><span class="price-chip price-chip-single">7.00 ₼</span></span></p>
+          <p class="menu-row"><span>Espresso Flower</span><span class="price-chips"><span class="price-chip price-chip-single">7.00 ₼</span></span></p>
+          <p class="menu-row"><span>Orange Chocolate</span><span class="price-chips"><span class="price-chip price-chip-single">8.80 ₼</span></span></p>
+        </article>
+
+        <article class="menu-group menu-card" data-menu-category="lemonades cold">
+          <h2>Refreshing Lemonades</h2>
+          <p class="menu-row"><span>Mojito</span><span class="price-chips"><span class="price-chip price-chip-single">7.00 ₼</span></span></p>
+          <p class="menu-row"><span>Strawberry Lemonade</span><span class="price-chips"><span class="price-chip price-chip-single">6.00 ₼</span></span></p>
+          <p class="menu-row"><span>Mango Maracuya</span><span class="price-chips"><span class="price-chip price-chip-single">6.00 ₼</span></span></p>
+          <p class="menu-row"><span>Blu Curaçao</span><span class="price-chips"><span class="price-chip price-chip-single">6.00 ₼</span></span></p>
+        </article>
+
         <article class="menu-group menu-card" data-menu-category="alt">
           <h2>Alternativlər</h2>
           <p class="menu-row"><span>Türk qəhvəsi</span><span class="price-chips"><span class="price-chip price-chip-single">9.30 ₼</span></span></p>
@@ -216,65 +230,10 @@
       </div>
     </section>
 
-    <!-- 02 · Summer escape -->
-    <section class="menu-panel summer-panel summer-escape" id="summerMenu">
-      <header class="summer-escape-hero">
-        <p class="summer-overline">02 · Mövsümi kolleksiya</p>
-        <h2><em>Summer</em> Escape</h2>
-        <p class="summer-intro">Soyuq qəhvə yaradımları və təravətli limonadlar.</p>
-        <span class="summer-leaf summer-leaf-left" aria-hidden="true"></span>
-        <span class="summer-leaf summer-leaf-right" aria-hidden="true"></span>
-      </header>
-
-      <section class="summer-collection" aria-labelledby="coffee-creations-title">
-        <div class="summer-collection-heading"><h3 id="coffee-creations-title">Coffee Creations</h3><span>01—04</span></div>
-        <div class="summer-drinks">
-          <article class="summer-drink">
-            <figure><img src="assets/summer-escape/bumble.jpg" alt="Bumble Coffee" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Bumble Coffee</h4><b>8.50 ₼</b></div>
-          </article>
-          <article class="summer-drink">
-            <figure><img src="assets/summer-escape/espresso-tropical.jpg" alt="Espresso Tropical" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Espresso Tropical</h4><b>7.00 ₼</b></div>
-          </article>
-          <article class="summer-drink summer-drink-flower">
-            <figure><img src="assets/summer-escape/espresso-flower.jpg" alt="Espresso Flower" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Espresso Flower</h4><b>7.00 ₼</b></div>
-          </article>
-          <article class="summer-drink summer-drink-orange">
-            <figure><img src="assets/summer-escape/orange-chocolate.jpg" alt="Orange Chocolate" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Orange Chocolate</h4><b>8.80 ₼</b></div>
-          </article>
-        </div>
-      </section>
-
-      <section class="summer-collection" aria-labelledby="lemonades-title">
-        <div class="summer-collection-heading"><h3 id="lemonades-title">Refreshing Lemonades</h3><span>05—08</span></div>
-        <div class="summer-drinks">
-          <article class="summer-drink summer-drink-mojito">
-            <figure><img src="assets/summer-escape/mojito.jpg" alt="Mojito" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Mojito</h4><b>7.00 ₼</b></div>
-          </article>
-          <article class="summer-drink">
-            <figure><img src="assets/summer-escape/strawberry-lemonade.jpg" alt="Strawberry Lemonade" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Strawberry Lemonade</h4><b>6.00 ₼</b></div>
-          </article>
-          <article class="summer-drink summer-drink-mango">
-            <figure><img src="assets/summer-escape/mango-maracuya.jpg" alt="Mango Maracuya" width="1045" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Mango Maracuya</h4><b>6.00 ₼</b></div>
-          </article>
-          <article class="summer-drink summer-drink-blue">
-            <figure><img src="assets/summer-escape/blu-curacao.jpg" alt="Blu Curaçao" width="933" height="1400" loading="lazy" decoding="async" /></figure>
-            <div><h4>Blu Curaçao</h4><b>6.00 ₼</b></div>
-          </article>
-        </div>
-      </section>
-    </section>
-
-    <!-- 03 · Desert -->
+    <!-- 02 · Desert -->
     <section class="menu-panel" id="dessertMenu">
       <div class="menu-panel-heading">
-        <p class="eyebrow">03 · Desert menyusu</p>
+        <p class="eyebrow">02 · Desert menyusu</p>
         <p data-i18n="menuDessertSub">Təzə bişirilmiş şirniyyatlar · Qiymətlər AZN ilə göstərilib.</p>
       </div>
 
