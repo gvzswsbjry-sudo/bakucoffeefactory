@@ -183,7 +183,7 @@
   }
 
   .site-header:not(:has(.tea-header-cart)) .lang-selector {
-    right: 128px !important;
+    right: 130px !important;
     left: auto !important;
   }
 }
@@ -194,7 +194,7 @@
     left: auto !important;
   }
   .site-header:not(:has(.tea-header-cart)) .lang-selector {
-    right: 110px !important;
+    right: 128px !important;
     left: auto !important;
   }
   .site-header .lang-chevron {

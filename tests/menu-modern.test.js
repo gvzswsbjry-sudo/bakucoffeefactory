@@ -66,6 +66,14 @@ test('menyu.html and script.js adopt Version 1 modern theme without dark atmosph
     modernCss.includes('.menu-modern .menu-group.menu-card p.menu-row span') && modernCss.includes('max-width: none;'),
     'menu-modern.css overrides style.css 65% span cap on menu rows so price chips never clip'
   );
+  assert.ok(
+    modernCss.includes('@media (min-width: 721px)') && modernCss.includes('@media (min-width: 981px)'),
+    'menu-modern.css uses mobile-first progressive min-width breakpoints'
+  );
+  assert.ok(
+    modernCss.includes(':root {') && modernCss.includes('background: #4a5043;') && modernCss.includes('color: #ffffff;'),
+    'mobile tab active pill defines root variables and explicit fallback contrast colors outside .menu-modern'
+  );
 });
 
 test('server/routes.js whitelists /menu-modern.css and /menu-modern.js', () => {
