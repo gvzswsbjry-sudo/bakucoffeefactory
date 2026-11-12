@@ -465,12 +465,12 @@ body:has(.menu-modern) .site-header .main-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 7px 10px;
+  flex-wrap: nowrap;
+  gap: 8px 10px;
   margin: 0;
   padding: 10px 0;
   border-bottom: 1px solid rgba(30, 25, 22, 0.07);
-  font: 500 13px/1.35 var(--sans);
+  font: 500 12.5px/1.3 var(--sans);
   color: var(--m-ink);
 }
 
@@ -484,7 +484,7 @@ body:has(.menu-modern) .site-header .main-nav {
 }
 
 .menu-modern .menu-group.menu-card p.menu-row > span:first-child {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
   font-weight: 500;
 }
@@ -492,47 +492,41 @@ body:has(.menu-modern) .site-header .main-nav {
 .menu-row-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 8px;
+  padding: 2.5px 6px;
   border-radius: 999px;
   background: var(--m-clay);
   color: #fff;
-  font: 700 9px/1.1 var(--mono);
-  letter-spacing: 0.06em;
+  font: 700 8.5px/1.1 var(--mono);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .price-chips {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
-  gap: 5px;
+  gap: 4px;
   align-items: center;
   margin-inline-start: auto;
   flex: 0 0 auto;
 }
 
-/* Multi-size drink rows wrap price chips onto clean 2nd line on phones */
-.menu-modern .menu-group.menu-card p.menu-row.menu-row-multi .price-chips {
-  flex: 1 0 100%;
-  margin-inline-start: 0;
-  justify-content: flex-start;
-}
-
 .price-chip {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 9px;
+  gap: 3px;
+  padding: 3.5px 6.5px;
   border-radius: 999px;
   border: 1px solid var(--m-chip-border);
   background: #fffcf9;
   color: var(--m-ink);
-  font: 500 11px/1.1 var(--mono);
+  font: 500 10px/1.1 var(--mono);
   white-space: nowrap;
 }
 
 .price-chip b {
-  font: 700 10px/1 var(--mono);
+  font: 700 9.5px/1 var(--mono);
   color: var(--m-clay-deep);
 }
 
@@ -540,55 +534,74 @@ body:has(.menu-modern) .site-header .main-nav {
   border-color: rgba(30, 25, 22, 0.14);
   background: #faf7f1;
   font-weight: 600;
+  padding: 4px 9px;
+  font-size: 11px;
 }
 
 .price-chip-sale {
   border-color: rgba(200, 109, 81, 0.55);
   background: #fdf0ea;
   color: var(--m-clay-deep);
-  gap: 4px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  border-radius: 10px;
+  min-width: 48px;
+}
+
+.price-chip-sale b,
+.price-chip-sale del {
+  font-size: 8.5px;
+  line-height: 1;
 }
 
 .price-chip-sale del {
   color: #8f8479;
   font-weight: 400;
-  font-size: 10px;
 }
 
 .price-chip-sale strong {
   color: var(--m-clay-deep);
   font-weight: 700;
+  font-size: 10px;
+  line-height: 1.05;
 }
 
-/* Discounted Row (clean inset box inside white card, never clipping edges) */
+/* Discounted Row (grid keeps Latte + badge on left, S/M/L strictly opposite on right) */
 .menu-modern .menu-group.menu-card p.menu-row.menu-row-discount {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  justify-items: start;
+  gap: 5px 10px;
   background: rgba(200, 109, 81, 0.07);
   border: 1px solid rgba(200, 109, 81, 0.24);
   margin: 6px 0 8px;
-  padding: 11px 12px;
+  padding: 10px 10px;
   border-radius: 14px;
-  justify-content: flex-start;
 }
 
 .menu-modern .menu-group.menu-card p.menu-row.menu-row-discount > span:first-child {
-  flex: 0 1 auto;
+  grid-column: 1;
+  grid-row: 1;
   font-weight: 600;
 }
 
-/* Balanced 3-column grid for discounted Latte chips on narrow phones */
-.menu-modern .menu-group.menu-card p.menu-row.menu-row-discount .price-chips {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 5px;
-  width: 100%;
-  flex: 1 0 100%;
-  margin-inline-start: 0;
+.menu-modern .menu-group.menu-card p.menu-row.menu-row-discount .menu-row-badge {
+  grid-column: 1;
+  grid-row: 2;
 }
 
-.menu-modern .menu-group.menu-card p.menu-row.menu-row-discount .price-chip-sale {
-  justify-content: center;
-  padding: 5px 6px;
-  font-size: 10.5px;
+.menu-modern .menu-group.menu-card p.menu-row.menu-row-discount .price-chips {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  justify-self: end;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  gap: 4px;
 }
 
 /* Dessert Panel Visual Cards (Mobile First: 2-column grid + full-width 5th card) */
@@ -834,20 +847,50 @@ body:has(.menu-modern) .site-header .main-nav {
     margin-bottom: 14px;
   }
 
-  .menu-modern .menu-group.menu-card p.menu-row.menu-row-multi .price-chips {
-    flex: 0 0 auto;
-    margin-inline-start: auto;
-    justify-content: flex-end;
+  .menu-modern .menu-group.menu-card p.menu-row {
+    font-size: 13px;
+    padding: 11px 0;
+  }
+
+  .price-chip {
+    padding: 4px 9px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .price-chip b {
+    font-size: 10px;
+  }
+
+  .price-chip-sale {
+    flex-direction: row;
+    border-radius: 999px;
+    padding: 4px 9px;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .price-chip-sale b,
+  .price-chip-sale del {
+    font-size: 10px;
+  }
+
+  .price-chip-sale strong {
+    font-size: 11px;
   }
 
   .menu-modern .menu-group.menu-card p.menu-row.menu-row-discount {
+    display: flex;
+    flex-wrap: nowrap;
     padding: 12px 14px;
+    gap: 8px 10px;
+  }
+
+  .menu-modern .menu-group.menu-card p.menu-row.menu-row-discount > span:first-child {
+    flex: 0 1 auto;
   }
 
   .menu-modern .menu-group.menu-card p.menu-row.menu-row-discount .price-chips {
-    display: inline-flex;
-    width: auto;
-    flex: 0 0 auto;
     margin-inline-start: auto;
   }
 

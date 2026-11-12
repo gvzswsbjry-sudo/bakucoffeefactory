@@ -74,6 +74,10 @@ test('menyu.html and script.js adopt Version 1 modern theme without dark atmosph
     modernCss.includes(':root {') && modernCss.includes('background: #4a5043;') && modernCss.includes('color: #ffffff;'),
     'mobile tab active pill defines root variables and explicit fallback contrast colors outside .menu-modern'
   );
+  assert.ok(
+    modernCss.includes('flex-wrap: nowrap;') && !modernCss.includes('.menu-row-multi .price-chips {\n  flex: 1 0 100%'),
+    'every coffee row places prices cleanly opposite the name rather than wrapping underneath'
+  );
 });
 
 test('server/routes.js whitelists /menu-modern.css and /menu-modern.js', () => {
