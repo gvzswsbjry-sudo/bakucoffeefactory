@@ -35,6 +35,7 @@ const { createCustomerAuth } = require('./server/customer-auth');
 const { createOrderStore } = require('./server/order-store');
 const { createOidcVerifier } = require('./server/oidc-verifier');
 const { createAnalyticsStore } = require('./server/analytics-store');
+const { createMenuDiscountStore } = require('./server/menu-discount-store');
 const { startOrderWatcher } = require('./server/telegram-notifier');
 
 function parseAllowedOrigins(value) {
@@ -69,8 +70,12 @@ function createServer({
   const socialVerifier = oidcVerifier || createOidcVerifier({ providers: socialProviders });
   const orders = createOrderStore({ filePath: path.join(rootDir, 'data', 'orders.json') });
   const analytics = createAnalyticsStore({ filePath: path.join(rootDir, 'data', 'analytics.json'), rootDir });
+  const menuDiscountStore = createMenuDiscountStore({
+    filePath: path.join(rootDir, 'data', 'menu-settings.json'),
+    database,
+  });
   const server = http.createServer(createRequestHandler({
-    rootDir, store, auth, orders, analytics, customerDatabase: database, customerAuth, secureCookies,
+    rootDir, store, auth, orders, analytics, menuDiscountStore, customerDatabase: database, customerAuth, secureCookies,
     allowedOrigins, trustProxy, adminInitialPassword, socialProviders, oidcVerifier: socialVerifier,
     resetNotifier,
   }));
@@ -83,6 +88,7 @@ function createServer({
   server.adminPort = port;
   server.orders = orders;
   server.store = store;
+  server.menuDiscountStore = menuDiscountStore;
   return server;
 }
 

@@ -32,6 +32,9 @@
       listAssets: () => request('/api/admin/assets'),
       uploadAsset: (file) => request('/api/admin/assets', { method: 'POST', body: file }),
       getAnalytics: () => request('/api/admin/analytics'),
+      listOrders: () => request('/api/admin/orders'),
+      getMenuDiscount: () => request('/api/admin/menu-discount'),
+      updateMenuDiscount: (settings) => request('/api/admin/menu-discount', { method: 'PUT', body: settings }),
     };
   }
   return { createAdminApi };

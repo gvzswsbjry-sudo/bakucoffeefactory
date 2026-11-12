@@ -34,6 +34,8 @@ data/admin-config.json
 data/admin-sessions.json
 data/*.tmp
 data/orders.json
+data/menu-settings.json
+data/menu-settings.json.bak
 data/products.json.bak
 data/products.local.json
 

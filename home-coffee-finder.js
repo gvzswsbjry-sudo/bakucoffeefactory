@@ -206,14 +206,17 @@
     const balanceScore = Math.max(0, 20 - Math.abs(balanceVal - targetBalance) * 8.5);
 
     // 29 points from brew + flavor (neutral 14+15=29 when 'any' is selected)
+    const customBrews = Array.isArray(item.meta?.brews) ? item.meta.brews : null;
     const brewScore = !criteria.brew || criteria.brew === 'any'
       ? 15
-      : (affinity?.brews?.[criteria.brew] ?? inferBrewScore(item, criteria.brew));
+      : customBrews
+        ? (customBrews.includes(criteria.brew) ? 16 : 6)
+        : (affinity?.brews?.[criteria.brew] ?? inferBrewScore(item, criteria.brew));
     const flavorScore = !criteria.flavor || criteria.flavor === 'any'
       ? 14
       : (affinity?.flavors?.[criteria.flavor] ?? inferFlavorScore(item, criteria.flavor));
 
-    const isDecaf = Boolean(affinity?.isDecaf || item.id === 'decaf');
+    const isDecaf = Boolean(item.meta?.isDecaf || affinity?.isDecaf || item.id === 'decaf');
     let decafBonus = 0;
     if (criteria.decafOnly) {
       decafBonus = isDecaf ? 45 : -12;

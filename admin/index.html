@@ -67,9 +67,14 @@
           <span>⚙️ Avadanlıq və Fincan</span><strong id="countEquipment">0</strong>
         </button>
 
+        <div class="nav-section-title" style="margin-top: 14px;">Kofeşop Menyusu</div>
+        <button class="category-button" type="button" data-view="daily-discount" id="dailyDiscountNavBtn">
+          <span>🏷️ Günün endirimi</span><strong id="dailyDiscountNavBadge">-50%</strong>
+        </button>
+
         <div class="nav-section-title" style="margin-top: 14px;">Bölmələr</div>
         <a class="category-button" href="orders.html">
-          <span>🛍️ Sifarişlər</span><strong>↗</strong>
+          <span>🛍️ Sifarişlər</span><strong id="pendingOrdersNavCount">↗</strong>
         </a>
         <a class="category-button" href="analytics.html">
           <span>📊 İstatistiklər</span><strong>↗</strong>
@@ -80,7 +85,7 @@
         <a href="../index.html" target="_blank" rel="noreferrer">
           <span>🌐 Sayta baxış</span><span>↗</span>
         </a>
-        <button id="changePasswordBtn" type="button" style="margin-top: 4px; border: 1px solid #cfc3b5; background: #fffdf8; color: #493224; cursor: pointer; padding: 9px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+        <button id="changePasswordBtn" type="button" style="margin-top: 4px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.07); color: #f7f1e8; cursor: pointer; padding: 9px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: space-between; width: 100%;">
           <span>🔑 Şifrəni dəyiş</span><span>⚙️</span>
         </button>
         <button id="logoutButton" type="button">
@@ -91,6 +96,7 @@
 
     <!-- Əsas Məzmun -->
     <main class="admin-main">
+      <section id="catalogView">
       <header class="admin-topbar">
         <div>
           <p class="eyebrow">MƏHSULLAR</p>
@@ -100,6 +106,30 @@
           <span>＋</span> Yeni məhsul əlavə et
         </button>
       </header>
+
+      <!-- Sürətli Panel Xülasəsi -->
+      <section class="admin-quick-strip" aria-label="Sürətli idarəetmə xülasəsi">
+        <button class="quick-stat-card quick-stat-highlight" id="quickDailyCardBtn" type="button">
+          <span class="quick-stat-label">GÜNÜN ENDİRİMİ</span>
+          <strong id="quickDailyTitle">Latte · -50%</strong>
+          <small id="quickDailySub">Menyu təklifini dəyiş →</small>
+        </button>
+        <a class="quick-stat-card" href="orders.html">
+          <span class="quick-stat-label">GÖZLƏYƏN SİFARİŞ</span>
+          <strong id="quickOrdersCount">0</strong>
+          <small>Sifarişlərə keçid ↗</small>
+        </a>
+        <a class="quick-stat-card" href="analytics.html">
+          <span class="quick-stat-label">CANLI ZİYARƏTÇİ</span>
+          <strong id="quickLiveVisitors">0</strong>
+          <small id="quickTodayViews">Bugün: 0 baxış ↗</small>
+        </a>
+        <a class="quick-stat-card" href="../qehve-secici.html" target="_blank" rel="noreferrer">
+          <span class="quick-stat-label">QƏHVƏ SEÇİCİSİ</span>
+          <strong id="quickCoffeeProfilesCount">10 qəhvə</strong>
+          <small>Dad profillərini test et ↗</small>
+        </a>
+      </section>
 
       <!-- Axtarış və Filtrlər -->
       <section class="catalog-toolbar" aria-label="Kataloq filtrləri">
@@ -147,6 +177,132 @@
           <span>Axtarış sözünü dəyişin və ya yeni məhsul əlavə edin.</span>
         </div>
       </section>
+      </section>
+
+      <!-- Günün Endirimi / Menyu Tənzimləməsi Bölməsi -->
+      <section id="dailyDiscountView" class="daily-discount-view" hidden>
+        <header class="admin-topbar">
+          <div>
+            <p class="eyebrow">KOFESOP MENYUSU · GÜNLÜK TƏKLİF</p>
+            <h1>Günün endirimli içkisi</h1>
+          </div>
+          <div class="daily-topbar-actions">
+            <button class="secondary-action" id="backToCatalogBtn" type="button">← Kataloqa qayıt</button>
+            <a class="primary-action daily-view-menu-link" href="../menyu.html" target="_blank" rel="noreferrer">↗ Menyuda bax</a>
+          </div>
+        </header>
+
+        <div class="daily-discount-workspace">
+          <form id="dailyDiscountForm" class="daily-config-card">
+            <div class="daily-toggle-row">
+              <label class="daily-switch-label" for="dailyDiscountEnabled">
+                <input id="dailyDiscountEnabled" type="checkbox" checked />
+                <span>
+                  <strong>Günün endirimi saytda aktiv olsun</strong>
+                  <small>Bağlasanız, menyu səhifəsində gündəlik endirim banneri gizlədiləcək.</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="daily-field-block">
+              <div class="daily-field-head">
+                <label for="dailyDrinkSelect">1. Endirim ediləcək içkini seçin</label>
+                <span class="daily-count-hint" id="dailyDrinkCountHint">31 içki</span>
+              </div>
+
+              <div class="daily-category-pills" id="dailyCategoryPills" role="group" aria-label="Menyu içki kateqoriyaları">
+                <button type="button" class="daily-cat-pill active" data-daily-cat="all">Hamısı</button>
+                <button type="button" class="daily-cat-pill" data-daily-cat="milk">Südlü</button>
+                <button type="button" class="daily-cat-pill" data-daily-cat="espresso">Espresso</button>
+                <button type="button" class="daily-cat-pill" data-daily-cat="cold">Soyuq</button>
+                <button type="button" class="daily-cat-pill" data-daily-cat="alt">Alternativlər</button>
+                <button type="button" class="daily-cat-pill" data-daily-cat="lemonades">Limonadlar</button>
+                <button type="button" class="daily-cat-pill" data-daily-cat="tea">Çaylar</button>
+              </div>
+
+              <div class="daily-drink-grid" id="dailyDrinkGrid" role="listbox" aria-label="Sürətli içki seçimi"></div>
+
+              <label class="daily-select-fallback" for="dailyDrinkSelect">
+                <span>Seçilmiş içki</span>
+                <select id="dailyDrinkSelect"></select>
+              </label>
+            </div>
+
+            <div class="daily-field-block">
+              <div class="daily-field-head">
+                <label for="dailyDiscountPercent">2. Endirim faizi (%)</label>
+                <strong class="daily-percent-pill" id="dailyDiscountPercentBadge">-50%</strong>
+              </div>
+              <div class="daily-preset-row" id="dailyPresetRow">
+                <button type="button" class="discount-preset-btn" data-discount-preset="20">20%</button>
+                <button type="button" class="discount-preset-btn" data-discount-preset="25">25%</button>
+                <button type="button" class="discount-preset-btn" data-discount-preset="30">30%</button>
+                <button type="button" class="discount-preset-btn" data-discount-preset="40">40%</button>
+                <button type="button" class="discount-preset-btn active" data-discount-preset="50">50%</button>
+                <button type="button" class="discount-preset-btn" data-discount-preset="60">60%</button>
+                <button type="button" class="discount-preset-btn" data-discount-preset="70">70%</button>
+              </div>
+              <div class="daily-percent-controls">
+                <input id="dailyDiscountRange" type="range" min="5" max="90" step="5" value="50" />
+                <input id="dailyDiscountPercent" type="number" min="5" max="90" step="1" value="50" required />
+              </div>
+            </div>
+
+            <div class="daily-field-block">
+              <label for="dailyImageInput">3. Günün təklif şəkli</label>
+              <div class="image-field">
+                <div class="image-preview" id="dailyImagePreview">Şəkil seçilməyib</div>
+                <div class="image-controls">
+                  <div class="image-button-group">
+                    <label class="direct-upload-btn" for="dailyDirectUpload">
+                      <span>📤 Kompüterdən yüklə</span>
+                      <input id="dailyDirectUpload" type="file" accept="image/jpeg,image/png,image/webp" style="display:none;" />
+                    </label>
+                    <button id="dailyOpenAssetPicker" type="button" class="library-pick-btn">🖼️ Kitabxanadan seç</button>
+                    <button id="dailyResetImageBtn" type="button" class="library-pick-btn">↺ Standart şəkil</button>
+                  </div>
+                  <input id="dailyImageInput" readonly style="opacity:.65;font-size:11px;background:#f8f6f0;" title="Şəkil yolu" />
+                </div>
+              </div>
+            </div>
+
+            <div class="daily-field-block">
+              <label for="dailyCustomNote">4. Təklif açıqlaması (İstəyə görə)</label>
+              <textarea id="dailyCustomNote" rows="2" maxlength="240" placeholder="Boş buraxsanız, seçilmiş içki və endirim faizinə uyğun qeyd avtomatik yazılacaq."></textarea>
+            </div>
+
+            <div class="daily-form-actions">
+              <button type="button" class="secondary-action" id="resetDailyDiscountBtn">↺ Standarta qaytar (Latte 50%)</button>
+              <button type="submit" class="primary-action" id="saveDailyDiscountBtn">Yadda saxla</button>
+            </div>
+            <p class="daily-save-status" id="dailyDiscountStatus" role="status" aria-live="polite"></p>
+          </form>
+
+          <aside class="daily-preview-card" aria-label="Menyuda canlı önizləmə">
+            <p class="eyebrow">MENYUDA CANLI ÖNİZLƏMƏ</p>
+            <article class="daily-preview-spotlight" id="dailyPreviewSpotlight">
+              <figure class="daily-preview-media">
+                <img id="previewDailyImg" src="../assets/menu/daily-latte.jpg" alt="" />
+                <span class="daily-preview-badge" id="previewDailyPercent">-50%</span>
+              </figure>
+              <div class="daily-preview-body">
+                <div class="daily-preview-meta">
+                  <span class="daily-preview-tag" id="previewDailyTag">-50% · GÜNÜN TƏKLİFİ</span>
+                  <span class="daily-preview-cat" id="previewDailyCategory">Südlü qəhvələr</span>
+                </div>
+                <h2 id="previewDailyTitle">Günün seçimi: Latte</h2>
+                <p id="previewDailyNote"></p>
+                <div class="daily-preview-prices" id="previewDailyPrices"></div>
+              </div>
+            </article>
+            <div class="daily-preview-row-box">
+              <span class="daily-preview-row-caption">Menyu cədvəlində görünüşü:</span>
+              <div class="daily-preview-row" id="previewDailyMenuRow"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
       <p class="app-message" id="appMessage" role="status" aria-live="polite"></p>
     </main>
   </div>
@@ -277,6 +433,77 @@
         <div id="variantRows" class="variant-rows"></div>
       </fieldset>
 
+      <!-- Qəhvə Seçicisi & Kateqoriya Dad Parametrləri -->
+      <fieldset class="editor-section profile-meta-section" id="coffeeProfileSection">
+        <legend>Qəhvə Dad Profili (Qəhvə Seçicisi üçün)</legend>
+        <div class="form-grid">
+          <label for="coffeeBodyRange">
+            <span class="meta-range-head">Gövdə (Body) <strong id="coffeeBodyVal">3.0 / 5</strong></span>
+            <input id="coffeeBodyRange" type="range" min="1" max="5" step="0.5" value="3" />
+          </label>
+          <label for="coffeeAcidityRange">
+            <span class="meta-range-head">Turşuluq (Acidity) <strong id="coffeeAcidityVal">3.0 / 5</strong></span>
+            <input id="coffeeAcidityRange" type="range" min="1" max="5" step="0.5" value="3" />
+          </label>
+          <label for="coffeeBalanceRange">
+            <span class="meta-range-head">Balans (Balance) <strong id="coffeeBalanceVal">4.0 / 5</strong></span>
+            <input id="coffeeBalanceRange" type="range" min="1" max="5" step="0.5" value="4" />
+          </label>
+          <label for="coffeeWeight">
+            Qram vahidi
+            <input id="coffeeWeight" type="number" min="1" step="1" placeholder="100" />
+          </label>
+          <label class="span-2" for="coffeeTasteNotes">
+            Dad notları (Qəhvə Seçicisində və kartlarda görünür)
+            <input id="coffeeTasteNotes" type="text" placeholder="Məs: Qırmızı alma, karamel, süd şokoladı" />
+          </label>
+          <label class="check-field span-2" for="coffeeIsDecaf">
+            <input id="coffeeIsDecaf" type="checkbox" />
+            <span>Kofeinsiz (Decaf) seçim kimi işarələ</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="editor-section profile-meta-section" id="teaProfileSection" hidden>
+        <legend>Çay Profili</legend>
+        <div class="form-grid">
+          <label for="teaKind">
+            Çay növü / Xarakter
+            <input id="teaKind" type="text" placeholder="Məs: Aromatik qarışıq · çiçəkli" />
+          </label>
+          <label for="teaBrew">
+            Dəmləmə qaydası
+            <input id="teaBrew" type="text" placeholder="Məs: 90°C · 3–4 dəqiqə" />
+          </label>
+          <label class="span-2" for="teaTasteNotes">
+            Dad notları
+            <input id="teaTasteNotes" type="text" placeholder="Məs: Çiçək, sitrus, quru meyvə" />
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="editor-section profile-meta-section" id="equipmentProfileSection" hidden>
+        <legend>Avadanlıq Kateqoriya Məlumatı</legend>
+        <div class="form-grid">
+          <label for="equipmentCategory">
+            Avadanlıq tipi
+            <select id="equipmentCategory">
+              <option value="accessory">Aksesuar</option>
+              <option value="grinder">Dəyirman</option>
+              <option value="brewer">Dəmləmə (V60 / Chemex)</option>
+              <option value="kettle">Çaydan (Kettle)</option>
+              <option value="scale">Tərəzi</option>
+              <option value="tamper">Tamper</option>
+              <option value="cup">Fincan</option>
+            </select>
+          </label>
+          <label for="equipmentCategoryLabel">
+            Görünən kateqoriya etiketi
+            <input id="equipmentCategoryLabel" type="text" placeholder="Məs: Tamper, Fincan, Dəyirman" />
+          </label>
+        </div>
+      </fieldset>
+
       <!-- Gizli Əlavə Parametrlər (Sadə istifadəçiyə mane olmur) -->
       <details class="advanced-settings" style="opacity:.75;">
         <summary>Texniki parametrlər <small>JSON (İstəyə görə)</small></summary>
@@ -369,6 +596,7 @@
     </div>
   </dialog>
 
+  <script src="../menu-drinks.js"></script>
   <script src="product-values.js"></script><script src="admin-api.js"></script><script src="admin.js"></script>
 </body>
 </html>

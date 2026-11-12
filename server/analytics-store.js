@@ -72,6 +72,7 @@ function createAnalyticsStore({ filePath, rootDir } = {}) {
   function getPageTitle(p) {
     const clean = normalizePath(p);
     if (clean === '/') return 'Ana səhifə';
+    if (clean.includes('qehve-secici')) return 'Qəhvə seçicisi';
     if (clean.includes('qehveler')) return 'Qəhvələr';
     if (clean.includes('caylar')) return 'Çaylar';
     if (clean.includes('avadanliqlar')) return 'Avadanlıqlar';

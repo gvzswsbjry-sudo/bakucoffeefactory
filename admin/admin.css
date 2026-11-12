@@ -1584,3 +1584,492 @@ dialog::backdrop {
   .confirm-dialog > div { display: grid; grid-template-columns: 1fr 1fr; }
   .confirm-dialog button { min-height: 44px; }
 }
+
+/* ==========================================================================
+   YENİ ÖZƏLLİKLƏR: SÜRƏTLİ XÜLASƏ, GÜNÜN ENDİRİMİ & DAD PROFİLİ REDAKTORU
+   ========================================================================== */
+.admin-quick-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.quick-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+  text-align: left;
+  box-shadow: 0 3px 10px rgba(45, 31, 20, .03);
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+}
+.quick-stat-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--brown);
+  box-shadow: 0 6px 18px rgba(45, 31, 20, .07);
+}
+.quick-stat-highlight {
+  background: linear-gradient(135deg, #fffdf9 0%, #f5efe3 100%);
+  border-color: #d8c7af;
+}
+.quick-stat-label {
+  font: 600 10px/1.2 "DM Mono", monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.quick-stat-card strong {
+  font: 700 18px/1.2 "Playfair Display", Georgia, serif;
+  color: var(--brown);
+}
+.quick-stat-card small {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.secondary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--brown);
+  font-weight: 700;
+  font-size: 13.5px;
+  transition: background .15s, border-color .15s;
+}
+.secondary-action:hover {
+  background: #faf5ed;
+  border-color: var(--brown);
+}
+
+.daily-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.daily-view-menu-link {
+  text-decoration: none;
+}
+
+.daily-discount-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.95fr);
+  gap: 20px;
+  align-items: start;
+}
+.daily-config-card,
+.daily-preview-card {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  box-shadow: 0 8px 24px rgba(45, 31, 20, .04);
+}
+.daily-config-card {
+  display: grid;
+  gap: 20px;
+}
+
+.daily-toggle-row {
+  padding: 14px 16px;
+  border: 1px solid #dfd3c2;
+  border-radius: 8px;
+  background: #faf7f1;
+}
+.daily-switch-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+.daily-switch-label input {
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+  accent-color: var(--green);
+  flex-shrink: 0;
+}
+.daily-switch-label strong {
+  display: block;
+  font-size: 14px;
+  color: var(--brown);
+}
+.daily-switch-label small {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.daily-field-block {
+  display: grid;
+  gap: 10px;
+}
+.daily-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.daily-field-block > label,
+.daily-field-head label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brown);
+}
+.daily-count-hint {
+  font: 600 11px "DM Mono", monospace;
+  color: var(--muted);
+}
+.daily-percent-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--orange);
+  color: #fff;
+  font: 700 12px "DM Mono", monospace;
+}
+
+.daily-category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.daily-cat-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #faf7f2;
+  color: var(--brown);
+  font-size: 12px;
+  font-weight: 600;
+  transition: all .15s;
+}
+.daily-cat-pill.active {
+  background: var(--brown);
+  border-color: var(--brown);
+  color: #fff;
+}
+
+.daily-drink-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+  gap: 8px;
+  max-height: 248px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+.daily-drink-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+  transition: all .15s;
+}
+.daily-drink-chip:hover {
+  border-color: var(--brown);
+  background: #fcfaf6;
+}
+.daily-drink-chip.active {
+  border-color: var(--green);
+  background: var(--green-light);
+  box-shadow: 0 0 0 2px rgba(72, 99, 65, .14);
+}
+.daily-drink-chip strong {
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.daily-drink-chip small {
+  font: 500 10.5px "DM Mono", monospace;
+  color: var(--muted);
+}
+
+.daily-select-fallback {
+  display: grid;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.daily-select-fallback select,
+.daily-field-block textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 13.5px;
+  outline: none;
+}
+.daily-select-fallback select:focus,
+.daily-field-block textarea:focus,
+.daily-percent-controls input[type="number"]:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(72, 99, 65, .12);
+}
+
+.daily-preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.discount-preset-btn {
+  min-width: 52px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #faf7f2;
+  color: var(--brown);
+  font: 700 12.5px "DM Mono", monospace;
+  transition: all .15s;
+}
+.discount-preset-btn.active {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: #fff;
+}
+.daily-percent-controls {
+  display: grid;
+  grid-template-columns: 1fr 92px;
+  gap: 12px;
+  align-items: center;
+}
+.daily-percent-controls input[type="range"] {
+  width: 100%;
+  accent-color: var(--green);
+}
+.daily-percent-controls input[type="number"] {
+  padding: 9px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  text-align: center;
+  font: 700 14px "DM Mono", monospace;
+  background: #fff;
+}
+
+.daily-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid var(--line-subtle);
+}
+.daily-save-status {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+}
+.daily-save-status.error {
+  color: var(--danger);
+}
+.daily-save-status:empty {
+  display: none;
+}
+
+/* Canlı Önizləmə Kartı */
+.daily-preview-card {
+  position: sticky;
+  top: 20px;
+}
+.daily-preview-spotlight {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fbf8f2;
+}
+.daily-preview-spotlight.is-disabled {
+  opacity: .52;
+  filter: grayscale(.45);
+}
+.daily-preview-media {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 10;
+  background: #e9dfd1;
+}
+.daily-preview-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.daily-preview-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: #2f3b2c;
+  color: #fff;
+  font: 700 12px "DM Mono", monospace;
+}
+.daily-preview-body {
+  padding: 16px;
+}
+.daily-preview-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.daily-preview-tag {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--orange-light);
+  color: var(--orange);
+  font: 700 10.5px "DM Mono", monospace;
+}
+.daily-preview-cat {
+  font: 600 10.5px "DM Mono", monospace;
+  color: var(--muted);
+}
+.daily-preview-body h2 {
+  margin: 0 0 6px;
+  font: 600 22px/1.2 "Playfair Display", Georgia, serif;
+  color: var(--brown);
+}
+.daily-preview-body p {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.daily-preview-prices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.daily-preview-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 12px;
+}
+.daily-preview-chip del {
+  color: var(--muted);
+  font-size: 11px;
+}
+.daily-preview-chip strong {
+  color: var(--green);
+}
+.daily-preview-row-box {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #faf6ef;
+  border: 1px dashed var(--line);
+}
+.daily-preview-row-caption {
+  display: block;
+  margin-bottom: 8px;
+  font: 600 10.5px "DM Mono", monospace;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.daily-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid var(--line);
+  font-size: 13px;
+}
+.daily-preview-row-badge {
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--orange-light);
+  color: var(--orange);
+  font: 700 10.5px "DM Mono", monospace;
+}
+
+.profile-meta-section .meta-range-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.profile-meta-section .meta-range-head strong {
+  font: 700 12px "DM Mono", monospace;
+  color: var(--green);
+}
+.profile-meta-section input[type="range"] {
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  accent-color: var(--green);
+}
+
+@media (max-width: 1100px) {
+  .admin-quick-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .daily-discount-workspace {
+    grid-template-columns: 1fr;
+  }
+  .daily-preview-card {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-quick-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .quick-stat-card {
+    padding: 11px 12px;
+  }
+  .quick-stat-card strong {
+    font-size: 15px;
+  }
+  .daily-config-card,
+  .daily-preview-card {
+    padding: 14px;
+  }
+  .daily-drink-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: 220px;
+  }
+  .daily-form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .daily-form-actions button {
+    min-height: 44px;
+    width: 100%;
+  }
+}

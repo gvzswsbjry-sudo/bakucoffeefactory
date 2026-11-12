@@ -6,7 +6,25 @@
   const assetDialog = $('assetDialog');
   const deleteDialog = $('deleteDialog');
   const imageColorDialog = $('imageColorDialog');
-  const state = { products: [], assets: [], category: 'all', editingId: null, dirty: false, assetTarget: null, idManuallyEdited: false };
+  const menuDrinksApi = window.BCF_MENU_DRINKS || {
+    MENU_DRINKS: [],
+    DEFAULT_DAILY_DISCOUNT_SETTINGS: { enabled: true, itemKey: 'latte', discountPercent: 50, image: 'assets/menu/daily-latte.jpg', customNote: '' },
+    getMenuDrinkByKey: () => null,
+    computeDailyDiscountPrices: () => [],
+    resolveDailyDiscountConfig: (v) => v,
+  };
+  const state = {
+    products: [],
+    assets: [],
+    category: 'all',
+    view: 'catalog',
+    editingId: null,
+    dirty: false,
+    assetTarget: null,
+    idManuallyEdited: false,
+    dailyFilter: 'all',
+    dailyDiscount: menuDrinksApi.resolveDailyDiscountConfig(menuDrinksApi.DEFAULT_DAILY_DISCOUNT_SETTINGS),
+  };
   const categoryNames = { coffee: 'Qəhvə', tea: 'Çay', equipment: 'Avadanlıq / Fincan' };
   const catalogTitles = { all: 'Bütün məhsullar', coffee: 'Qəhvələr', tea: 'Çaylar', equipment: 'Avadanlıq və Fincanlar' };
 
@@ -37,7 +55,12 @@
       if (!session.authenticated) return showAuth(session.configured);
       $('authView').hidden = true;
       $('adminApp').hidden = false;
+      populateDailyDrinkSelect();
       await loadCatalog();
+      await loadDashboardSummary();
+      if (window.location.hash === '#daily-discount') {
+        switchAdminView('daily-discount');
+      }
     } catch (error) {
       showAuth(true, 'Serverə qoşulmaq mümkün olmadı. Lokal serverin və ya şəbəkə bağlantısının işlədiyini yoxlayın.');
     }
@@ -58,9 +81,263 @@
     try {
       [state.products, state.assets] = await Promise.all([api.listProducts(), api.listAssets()]);
       renderCatalog();
+      updateQuickCatalogStats();
     } catch (error) {
       if (error.status === 401) return showAuth(true, 'Sessiya bitib. Yenidən daxil olun.');
       $('appMessage').textContent = 'Şəbəkə və ya server xətası: ' + error.message;
+    }
+  }
+
+  function updateQuickCatalogStats() {
+    const coffeeCount = state.products.filter((item) => item.category === 'coffee' && item.active !== false).length;
+    if ($('quickCoffeeProfilesCount')) {
+      $('quickCoffeeProfilesCount').textContent = `${coffeeCount} aktiv qəhvə`;
+    }
+  }
+
+  async function loadDashboardSummary() {
+    const [discountRes, ordersRes, analyticsRes] = await Promise.allSettled([
+      api.getMenuDiscount(),
+      api.listOrders(),
+      api.getAnalytics(),
+    ]);
+
+    if (discountRes.status === 'fulfilled' && discountRes.value) {
+      state.dailyDiscount = menuDrinksApi.resolveDailyDiscountConfig(discountRes.value);
+      syncDailyDiscountNavAndSummary();
+      syncDailyDiscountFormFromState();
+    }
+
+    if (ordersRes.status === 'fulfilled' && Array.isArray(ordersRes.value)) {
+      const pendingCount = ordersRes.value.filter((o) => o.status !== 'shipped').length;
+      if ($('pendingOrdersNavCount')) $('pendingOrdersNavCount').textContent = String(pendingCount);
+      if ($('quickOrdersCount')) $('quickOrdersCount').textContent = String(pendingCount);
+    }
+
+    if (analyticsRes.status === 'fulfilled' && analyticsRes.value) {
+      const stats = analyticsRes.value;
+      if ($('quickLiveVisitors')) $('quickLiveVisitors').textContent = String(stats.activeUsers || 0);
+      if ($('quickTodayViews')) $('quickTodayViews').textContent = `Bugün: ${Number(stats.today?.pageviews || 0)} baxış ↗`;
+    }
+  }
+
+  function switchAdminView(viewName) {
+    state.view = viewName === 'daily-discount' ? 'daily-discount' : 'catalog';
+    const isDaily = state.view === 'daily-discount';
+    if ($('catalogView')) $('catalogView').hidden = isDaily;
+    if ($('dailyDiscountView')) $('dailyDiscountView').hidden = !isDaily;
+
+    document.querySelectorAll('#categoryNav .category-button').forEach((btn) => {
+      if (btn.dataset.view) {
+        btn.classList.toggle('active', isDaily && btn.dataset.view === 'daily-discount');
+      } else if (btn.dataset.category) {
+        btn.classList.toggle('active', !isDaily && btn.dataset.category === state.category);
+      }
+    });
+
+    if (isDaily) {
+      if (window.location.hash !== '#daily-discount') {
+        history.replaceState?.(null, '', '#daily-discount');
+      }
+      renderDailyDrinkGrid();
+      updateDailyPreview();
+    } else if (window.location.hash === '#daily-discount') {
+      history.replaceState?.(null, '', './');
+    }
+  }
+
+  function syncDailyDiscountNavAndSummary() {
+    const cfg = menuDrinksApi.resolveDailyDiscountConfig(state.dailyDiscount);
+    const navBadge = $('dailyDiscountNavBadge');
+    if (navBadge) {
+      navBadge.textContent = cfg.enabled ? `-${cfg.discountPercent}%` : 'Söndürüldü';
+    }
+    const quickTitle = $('quickDailyTitle');
+    if (quickTitle) {
+      quickTitle.textContent = cfg.enabled ? `${cfg.itemName} · -${cfg.discountPercent}%` : 'Söndürülüb';
+    }
+    const quickSub = $('quickDailySub');
+    if (quickSub) {
+      if (!cfg.enabled) {
+        quickSub.textContent = 'Menyu təklifini aktiv et →';
+      } else if (cfg.prices?.length) {
+        const first = Number(cfg.prices[0].discounted).toFixed(2);
+        const last = Number(cfg.prices[cfg.prices.length - 1].discounted).toFixed(2);
+        quickSub.textContent = first === last ? `${first} ₼ · Dəyiş →` : `${first} – ${last} ₼ · Dəyiş →`;
+      }
+    }
+  }
+
+  function setDailyImagePreview(src) {
+    const preview = $('dailyImagePreview');
+    if (!preview) return;
+    preview.innerHTML = src
+      ? `<img src="../${escapeHtml(src)}" alt="Günün endirimli içki şəkli" />`
+      : '<div class="no-img">📷 Şəkil seçilməyib</div>';
+  }
+
+  function populateDailyDrinkSelect() {
+    const select = $('dailyDrinkSelect');
+    if (!select) return;
+    const grouped = new Map();
+    menuDrinksApi.MENU_DRINKS.forEach((drink) => {
+      if (!grouped.has(drink.category)) grouped.set(drink.category, []);
+      grouped.get(drink.category).push(drink);
+    });
+    select.innerHTML = [...grouped.entries()].map(([cat, drinks]) => `
+      <optgroup label="${escapeHtml(cat)}">
+        ${drinks.map((d) => {
+          const priceSummary = d.prices.map((p) => (p.size ? `${p.size} ${Number(p.price).toFixed(2)}` : Number(p.price).toFixed(2))).join(' / ');
+          return `<option value="${escapeHtml(d.key)}">${escapeHtml(d.name)} (${priceSummary} ₼)</option>`;
+        }).join('')}
+      </optgroup>
+    `).join('');
+  }
+
+  function renderDailyDrinkGrid() {
+    const grid = $('dailyDrinkGrid');
+    const select = $('dailyDrinkSelect');
+    if (!grid || !select) return;
+    const activeKey = select.value || state.dailyDiscount.itemKey || 'latte';
+    const filtered = menuDrinksApi.MENU_DRINKS.filter((drink) =>
+      state.dailyFilter === 'all' || drink.filterGroup === state.dailyFilter
+    );
+    if ($('dailyDrinkCountHint')) {
+      $('dailyDrinkCountHint').textContent = `${filtered.length} içki`;
+    }
+    grid.innerHTML = filtered.map((drink) => {
+      const priceText = drink.prices.map((p) => (p.size ? `${p.size} ${Number(p.price).toFixed(2)}` : `${Number(p.price).toFixed(2)}`)).join(' · ') + ' ₼';
+      const isSelected = drink.key === activeKey;
+      return `<button type="button" class="daily-drink-chip ${isSelected ? 'active' : ''}" data-drink-pick="${escapeHtml(drink.key)}" role="option" aria-selected="${isSelected}">
+        <strong>${escapeHtml(drink.name)}</strong>
+        <small>${escapeHtml(drink.category)} · ${escapeHtml(priceText)}</small>
+      </button>`;
+    }).join('');
+  }
+
+  function readDailyDraftFromForm() {
+    const select = $('dailyDrinkSelect');
+    const enabledEl = $('dailyDiscountEnabled');
+    const pctEl = $('dailyDiscountPercent');
+    const imgEl = $('dailyImageInput');
+    const noteEl = $('dailyCustomNote');
+
+    return menuDrinksApi.resolveDailyDiscountConfig({
+      enabled: enabledEl ? enabledEl.checked : true,
+      itemKey: select?.value || 'latte',
+      discountPercent: Number(pctEl?.value) || 50,
+      image: imgEl?.value.trim() || '',
+      customNote: noteEl?.value.trim() || '',
+    });
+  }
+
+  function syncDailyDiscountFormFromState() {
+    const cfg = menuDrinksApi.resolveDailyDiscountConfig(state.dailyDiscount);
+    if ($('dailyDiscountEnabled')) $('dailyDiscountEnabled').checked = cfg.enabled;
+    if ($('dailyDrinkSelect')) $('dailyDrinkSelect').value = cfg.itemKey;
+    if ($('dailyDiscountPercent')) $('dailyDiscountPercent').value = String(cfg.discountPercent);
+    if ($('dailyDiscountRange')) $('dailyDiscountRange').value = String(cfg.discountPercent);
+    if ($('dailyDiscountPercentBadge')) $('dailyDiscountPercentBadge').textContent = `-${cfg.discountPercent}%`;
+    if ($('dailyImageInput')) $('dailyImageInput').value = cfg.image;
+    if ($('dailyCustomNote')) $('dailyCustomNote').value = cfg.customNote || '';
+    setDailyImagePreview(cfg.image);
+    renderDailyDrinkGrid();
+    syncPresetButtons(cfg.discountPercent);
+    updateDailyPreview();
+  }
+
+  function syncPresetButtons(pct) {
+    document.querySelectorAll('.discount-preset-btn').forEach((btn) => {
+      btn.classList.toggle('active', Number(btn.dataset.discountPreset) === Number(pct));
+    });
+  }
+
+  function updateDailyPreview() {
+    const cfg = readDailyDraftFromForm();
+    if ($('dailyDiscountPercentBadge')) $('dailyDiscountPercentBadge').textContent = `-${cfg.discountPercent}%`;
+    syncPresetButtons(cfg.discountPercent);
+
+    const card = $('dailyPreviewSpotlight');
+    if (card) card.classList.toggle('is-disabled', !cfg.enabled);
+    if ($('previewDailyImg')) {
+      $('previewDailyImg').src = `../${cfg.image}`;
+      $('previewDailyImg').alt = cfg.itemName;
+    }
+    if ($('previewDailyPercent')) $('previewDailyPercent').textContent = cfg.enabled ? `-${cfg.discountPercent}%` : 'GİZLİ';
+    if ($('previewDailyTag')) $('previewDailyTag').textContent = cfg.enabled ? `-${cfg.discountPercent}% · GÜNÜN TƏKLİFİ` : 'TƏKLİF DEAKTİVDİR';
+    if ($('previewDailyCategory')) $('previewDailyCategory').textContent = cfg.category;
+    if ($('previewDailyTitle')) $('previewDailyTitle').textContent = `Günün seçimi: ${cfg.itemName}`;
+    if ($('previewDailyNote')) {
+      $('previewDailyNote').textContent = cfg.customNote
+        || `Kofeşopumuzda hər gün bir içkiyə ${cfg.discountPercent}% endirim tətbiq olunur. Bu gün günün endirimli seçimi ${cfg.itemName}-dir.`;
+    }
+    if ($('previewDailyPrices')) {
+      $('previewDailyPrices').innerHTML = cfg.prices.map((entry) => `
+        <span class="daily-preview-chip">
+          <b>${escapeHtml(entry.size || 'Standart')}</b>
+          <del>${Number(entry.original).toFixed(2)}</del>
+          <strong>${Number(entry.discounted).toFixed(2)} ₼</strong>
+        </span>
+      `).join('');
+    }
+    if ($('previewDailyMenuRow')) {
+      const badge = cfg.enabled ? `<span class="daily-preview-row-badge">-${cfg.discountPercent}% BUGÜN</span>` : '';
+      const chips = cfg.prices.map((entry) => {
+        const size = entry.size ? `<b>${escapeHtml(entry.size)}</b> ` : '';
+        return cfg.enabled
+          ? `<span class="daily-preview-chip">${size}<del>${Number(entry.original).toFixed(2)}</del> <strong>${Number(entry.discounted).toFixed(2)} ₼</strong></span>`
+          : `<span class="daily-preview-chip">${size}<strong>${Number(entry.original).toFixed(2)} ₼</strong></span>`;
+      }).join(' ');
+      $('previewDailyMenuRow').innerHTML = `<strong>${escapeHtml(cfg.itemName)}</strong> ${badge} <span>${chips}</span>`;
+    }
+  }
+
+  async function persistDailyDiscount(payload) {
+    const saveBtn = $('saveDailyDiscountBtn');
+    const statusEl = $('dailyDiscountStatus');
+    if (saveBtn) {
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Yadda saxlanılır…';
+    }
+    if (statusEl) {
+      statusEl.classList.remove('error');
+      statusEl.textContent = '';
+    }
+    try {
+      const saved = await api.updateMenuDiscount(payload);
+      state.dailyDiscount = menuDrinksApi.resolveDailyDiscountConfig(saved);
+      syncDailyDiscountNavAndSummary();
+      syncDailyDiscountFormFromState();
+      const label = state.dailyDiscount.enabled
+        ? `✅ Günün endirimi yeniləndi: ${state.dailyDiscount.itemName} (-${state.dailyDiscount.discountPercent}%).`
+        : '✅ Günün endirim banneri müvəqqəti gizlədildi.';
+      if (statusEl) statusEl.textContent = label;
+      $('appMessage').textContent = label;
+    } catch (error) {
+      if (error.status === 401 || /authentication required/i.test(error.message)) {
+        const pass = window.prompt('⚠️ Sessiyanızın vaxtı bitib. Dəyişikliyi saxlamaq üçün admin şifrəsini daxil edin:');
+        if (pass) {
+          try {
+            await api.login(pass);
+            return await persistDailyDiscount(payload);
+          } catch (loginErr) {
+            if (statusEl) {
+              statusEl.classList.add('error');
+              statusEl.textContent = 'Giriş uğursuz oldu: ' + (loginErr.message || 'Şifrə yanlışdır');
+            }
+            return;
+          }
+        }
+      }
+      if (statusEl) {
+        statusEl.classList.add('error');
+        statusEl.textContent = 'Xəta: ' + error.message;
+      }
+    } finally {
+      if (saveBtn) {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Yadda saxla';
+      }
     }
   }
 
@@ -447,6 +724,7 @@
     $('stockQuantity').value = product?.stock?.quantity ?? 0;
     $('sortOrder').value = product?.sortOrder ?? state.products.filter((item) => item.category === (product?.category || 'coffee')).length + 1;
     $('productMeta').value = JSON.stringify(product?.meta || {}, null, 2);
+    syncMetaProfileSections($('productCategory').value, product?.meta || {}, product?.id);
     $('variantRows').innerHTML = '';
     (product?.variants || []).forEach(variantRow);
     updateVariantInterface();
@@ -457,6 +735,72 @@
     $('productEditor').hidden = false;
     $('productEditor').setAttribute('aria-hidden', 'false');
     setTimeout(() => $('productName').focus(), 50);
+  }
+
+  function syncMetaProfileSections(category, meta = null, productId = '') {
+    if ($('coffeeProfileSection')) $('coffeeProfileSection').hidden = category !== 'coffee';
+    if ($('teaProfileSection')) $('teaProfileSection').hidden = category !== 'tea';
+    if ($('equipmentProfileSection')) $('equipmentProfileSection').hidden = category !== 'equipment';
+    if (!meta) return;
+
+    if (category === 'coffee') {
+      const body = Number(meta.body) || 3;
+      const acidity = Number(meta.acidity) || 3;
+      const balance = Number(meta.balance) || 4;
+      if ($('coffeeBodyRange')) $('coffeeBodyRange').value = String(body);
+      if ($('coffeeBodyVal')) $('coffeeBodyVal').textContent = `${body.toFixed(1)} / 5`;
+      if ($('coffeeAcidityRange')) $('coffeeAcidityRange').value = String(acidity);
+      if ($('coffeeAcidityVal')) $('coffeeAcidityVal').textContent = `${acidity.toFixed(1)} / 5`;
+      if ($('coffeeBalanceRange')) $('coffeeBalanceRange').value = String(balance);
+      if ($('coffeeBalanceVal')) $('coffeeBalanceVal').textContent = `${balance.toFixed(1)} / 5`;
+      if ($('coffeeWeight')) $('coffeeWeight').value = String(meta.weight || 100);
+      if ($('coffeeTasteNotes')) $('coffeeTasteNotes').value = meta.tasteNotes || '';
+      if ($('coffeeIsDecaf')) $('coffeeIsDecaf').checked = Boolean(meta.isDecaf || productId === 'decaf');
+    } else if (category === 'tea') {
+      if ($('teaKind')) $('teaKind').value = meta.kind || '';
+      if ($('teaBrew')) $('teaBrew').value = meta.brew || '';
+      if ($('teaTasteNotes')) $('teaTasteNotes').value = meta.tasteNotes || '';
+    } else if (category === 'equipment') {
+      if ($('equipmentCategory')) $('equipmentCategory').value = meta.equipmentCategory || 'accessory';
+      if ($('equipmentCategoryLabel')) $('equipmentCategoryLabel').value = meta.categoryLabel || '';
+    }
+  }
+
+  function mergeProfileFieldsIntoMetaJson() {
+    let meta = {};
+    try {
+      meta = JSON.parse($('productMeta').value || '{}');
+    } catch {
+      meta = {};
+    }
+    const category = $('productCategory').value;
+    if (category === 'coffee') {
+      meta.body = Number($('coffeeBodyRange')?.value || 3);
+      meta.acidity = Number($('coffeeAcidityRange')?.value || 3);
+      meta.balance = Number($('coffeeBalanceRange')?.value || 4);
+      meta.weight = Math.max(1, Math.round(Number($('coffeeWeight')?.value) || 100));
+      const notes = $('coffeeTasteNotes')?.value.trim();
+      if (notes) meta.tasteNotes = notes;
+      else delete meta.tasteNotes;
+      if ($('coffeeIsDecaf')?.checked) meta.isDecaf = true;
+      else delete meta.isDecaf;
+    } else if (category === 'tea') {
+      const kind = $('teaKind')?.value.trim();
+      const brew = $('teaBrew')?.value.trim();
+      const notes = $('teaTasteNotes')?.value.trim();
+      if (kind) meta.kind = kind;
+      if (brew) meta.brew = brew;
+      if (notes) meta.tasteNotes = notes;
+      meta.weight = meta.weight || 100;
+    } else if (category === 'equipment') {
+      const eqCat = $('equipmentCategory')?.value || 'accessory';
+      const eqLabel = $('equipmentCategoryLabel')?.value.trim();
+      meta.equipmentCategory = eqCat;
+      if (eqLabel) meta.categoryLabel = eqLabel;
+      meta.imageFit = meta.imageFit || 'cover';
+    }
+    $('productMeta').value = JSON.stringify(meta, null, 2);
+    return meta;
   }
 
   function markDirty() { state.dirty = true; }
@@ -470,12 +814,7 @@
   }
 
   function collectProduct() {
-    let meta = {};
-    try {
-      meta = JSON.parse($('productMeta').value || '{}');
-    } catch {
-      meta = {};
-    }
+    const meta = mergeProfileFieldsIntoMetaJson();
 
     // Auto-generate ID if empty
     let id = $('productId').value.trim();
@@ -659,6 +998,10 @@
     const target = state.assetTarget || $('productImage');
     if (target) target.value = asset;
     if (target === $('productImage')) setImagePreview(asset);
+    if (target === $('dailyImageInput')) {
+      setDailyImagePreview(asset);
+      updateDailyPreview();
+    }
     const row = target?.closest?.('.variant-row');
     if (row) {
       const container = row.querySelector('.extracted-color-swatches');
@@ -699,10 +1042,13 @@
     return ({ jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' })[extension] || '';
   }
 
-  async function uploadAsset(file) {
+  async function uploadAsset(file, explicitTarget = null) {
     const message = $('assetUploadMessage');
     const statusMsg = $('imageStatusMessage');
     const type = inferUploadType(file);
+    if (explicitTarget) {
+      state.assetTarget = explicitTarget;
+    }
 
     if (message) {
       message.classList.remove('error');
@@ -758,10 +1104,15 @@
   $('logoutButton').addEventListener('click', async () => { await api.logout(); showAuth(true); });
 
   $('categoryNav').addEventListener('click', (event) => {
+    const viewBtn = event.target.closest('[data-view]');
+    if (viewBtn) {
+      switchAdminView(viewBtn.dataset.view);
+      return;
+    }
     const button = event.target.closest('[data-category]');
     if (!button) return;
     state.category = button.dataset.category;
-    document.querySelectorAll('.category-button').forEach((item) => item.classList.toggle('active', item === button));
+    switchAdminView('catalog');
     renderCatalog();
   });
 
@@ -807,7 +1158,7 @@
     markDirty();
   });
 
-  // Category switch can auto-select sensible units
+  // Category switch can auto-select sensible units and profile fields
   $('productCategory').addEventListener('change', () => {
     markDirty();
     const cat = $('productCategory').value;
@@ -816,7 +1167,162 @@
     } else {
       $('productUnit').value = 'g';
     }
+    let parsedMeta = {};
+    try { parsedMeta = JSON.parse($('productMeta').value || '{}'); } catch {}
+    syncMetaProfileSections(cat, parsedMeta, $('productId').value.trim());
   });
+
+  [
+    ['coffeeBodyRange', 'coffeeBodyVal'],
+    ['coffeeAcidityRange', 'coffeeAcidityVal'],
+    ['coffeeBalanceRange', 'coffeeBalanceVal'],
+  ].forEach(([rangeId, valId]) => {
+    const rangeEl = $(rangeId);
+    if (rangeEl) {
+      rangeEl.addEventListener('input', () => {
+        if ($(valId)) $(valId).textContent = `${Number(rangeEl.value).toFixed(1)} / 5`;
+        mergeProfileFieldsIntoMetaJson();
+        markDirty();
+      });
+    }
+  });
+
+  ['coffeeWeight', 'coffeeTasteNotes', 'coffeeIsDecaf', 'teaKind', 'teaBrew', 'teaTasteNotes', 'equipmentCategory', 'equipmentCategoryLabel'].forEach((id) => {
+    const el = $(id);
+    if (el) {
+      el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', () => {
+        mergeProfileFieldsIntoMetaJson();
+        markDirty();
+      });
+    }
+  });
+
+  $('productMeta').addEventListener('change', () => {
+    try {
+      const parsed = JSON.parse($('productMeta').value || '{}');
+      syncMetaProfileSections($('productCategory').value, parsed, $('productId').value.trim());
+    } catch {}
+  });
+
+  // Daily Discount Controls
+  if ($('quickDailyCardBtn')) {
+    $('quickDailyCardBtn').addEventListener('click', () => switchAdminView('daily-discount'));
+  }
+  if ($('backToCatalogBtn')) {
+    $('backToCatalogBtn').addEventListener('click', () => switchAdminView('catalog'));
+  }
+  if ($('dailyCategoryPills')) {
+    $('dailyCategoryPills').addEventListener('click', (event) => {
+      const pill = event.target.closest('[data-daily-cat]');
+      if (!pill) return;
+      state.dailyFilter = pill.dataset.dailyCat || 'all';
+      document.querySelectorAll('.daily-cat-pill').forEach((btn) => btn.classList.toggle('active', btn === pill));
+      renderDailyDrinkGrid();
+    });
+  }
+  if ($('dailyDrinkGrid')) {
+    $('dailyDrinkGrid').addEventListener('click', (event) => {
+      const card = event.target.closest('[data-drink-pick]');
+      if (!card) return;
+      const drinkKey = card.dataset.drinkPick;
+      const drink = menuDrinksApi.getMenuDrinkByKey(drinkKey);
+      if (!drink) return;
+      const prevDrink = menuDrinksApi.getMenuDrinkByKey($('dailyDrinkSelect').value);
+      $('dailyDrinkSelect').value = drinkKey;
+      if (!$('dailyImageInput').value.trim() || $('dailyImageInput').value.trim() === prevDrink?.defaultImage) {
+        $('dailyImageInput').value = drink.defaultImage;
+        setDailyImagePreview(drink.defaultImage);
+      }
+      renderDailyDrinkGrid();
+      updateDailyPreview();
+    });
+  }
+  if ($('dailyDrinkSelect')) {
+    $('dailyDrinkSelect').addEventListener('change', () => {
+      const drink = menuDrinksApi.getMenuDrinkByKey($('dailyDrinkSelect').value);
+      if (drink) {
+        $('dailyImageInput').value = drink.defaultImage;
+        setDailyImagePreview(drink.defaultImage);
+      }
+      renderDailyDrinkGrid();
+      updateDailyPreview();
+    });
+  }
+  if ($('dailyDiscountEnabled')) {
+    $('dailyDiscountEnabled').addEventListener('change', updateDailyPreview);
+  }
+  if ($('dailyCustomNote')) {
+    $('dailyCustomNote').addEventListener('input', updateDailyPreview);
+  }
+  if ($('dailyPresetRow')) {
+    $('dailyPresetRow').addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-discount-preset]');
+      if (!btn) return;
+      const val = Number(btn.dataset.discountPreset) || 50;
+      $('dailyDiscountRange').value = String(val);
+      $('dailyDiscountPercent').value = String(val);
+      updateDailyPreview();
+    });
+  }
+  if ($('dailyDiscountRange')) {
+    $('dailyDiscountRange').addEventListener('input', () => {
+      $('dailyDiscountPercent').value = $('dailyDiscountRange').value;
+      updateDailyPreview();
+    });
+  }
+  if ($('dailyDiscountPercent')) {
+    $('dailyDiscountPercent').addEventListener('input', () => {
+      const clamped = Math.max(5, Math.min(90, Math.round(Number($('dailyDiscountPercent').value) || 50)));
+      $('dailyDiscountRange').value = String(clamped);
+      updateDailyPreview();
+    });
+  }
+  if ($('dailyOpenAssetPicker')) {
+    $('dailyOpenAssetPicker').addEventListener('click', () => openAssetLibrary($('dailyImageInput')));
+  }
+  if ($('dailyResetImageBtn')) {
+    $('dailyResetImageBtn').addEventListener('click', () => {
+      const drink = menuDrinksApi.getMenuDrinkByKey($('dailyDrinkSelect').value);
+      const fallback = drink?.defaultImage || 'assets/menu/daily-latte.jpg';
+      $('dailyImageInput').value = fallback;
+      setDailyImagePreview(fallback);
+      updateDailyPreview();
+    });
+  }
+  if ($('dailyDirectUpload')) {
+    $('dailyDirectUpload').addEventListener('change', (event) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        uploadAsset(file, $('dailyImageInput'));
+        event.target.value = '';
+      }
+    });
+  }
+  if ($('dailyDiscountForm')) {
+    $('dailyDiscountForm').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const draft = readDailyDraftFromForm();
+      persistDailyDiscount({
+        enabled: draft.enabled,
+        itemKey: draft.itemKey,
+        discountPercent: draft.discountPercent,
+        image: draft.image,
+        customNote: draft.customNote,
+      });
+    });
+  }
+  if ($('resetDailyDiscountBtn')) {
+    $('resetDailyDiscountBtn').addEventListener('click', () => {
+      const def = menuDrinksApi.DEFAULT_DAILY_DISCOUNT_SETTINGS;
+      persistDailyDiscount({
+        enabled: true,
+        itemKey: def.itemKey,
+        discountPercent: def.discountPercent,
+        image: def.image,
+        customNote: '',
+      });
+    });
+  }
 
   $('cancelEditButton').addEventListener('click', () => closeEditor());
   $('discardProductButton').addEventListener('click', () => closeEditor());
@@ -837,7 +1343,7 @@
     directUploadInput.addEventListener('change', (event) => {
       const file = event.target.files?.[0];
       if (file) {
-        uploadAsset(file);
+        uploadAsset(file, $('productImage'));
         event.target.value = '';
       }
     });
@@ -1012,6 +1518,12 @@
     if (!state.dirty) return;
     event.preventDefault();
     event.returnValue = '';
+  });
+
+  window.addEventListener('hashchange', () => {
+    if ($('adminApp') && !$('adminApp').hidden) {
+      switchAdminView(window.location.hash === '#daily-discount' ? 'daily-discount' : 'catalog');
+    }
   });
 
   boot();

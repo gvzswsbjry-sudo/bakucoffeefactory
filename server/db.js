@@ -18,6 +18,8 @@ function createDatabase({ connectionString = process.env.DATABASE_URL, PoolClass
         await pool.query(authSql);
         const catalogSql = await fs.readFile(path.join(__dirname, 'migrations', '002_catalog_products.sql'), 'utf8');
         await pool.query(catalogSql);
+        const settingsSql = await fs.readFile(path.join(__dirname, 'migrations', '003_storefront_settings.sql'), 'utf8');
+        await pool.query(settingsSql);
         migrated = true;
       })().finally(() => { migrationPromise = null; });
     }

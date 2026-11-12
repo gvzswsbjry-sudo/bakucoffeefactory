@@ -6,6 +6,7 @@ const crypto = require('node:crypto');
 const { handleCustomerAuthRequest, customerCookie, sameOrigin } = require('./customer-auth-routes');
 const { prepareOrder } = require('./order-store');
 const { createAnalyticsStore } = require('./analytics-store');
+const { createMenuDiscountStore } = require('./menu-discount-store');
 const {
   sendTelegramNotification,
   sendTestMessage,
@@ -40,7 +41,7 @@ const PUBLIC_FILES = new Set([
   '/menu-mobile.css', '/menu-modern.css', '/summer-menu.css', '/tea-mobile.css', '/gear.css',
   '/catalog.css', '/cart.css', '/account.css', '/favorites.css', '/brand.css', '/admin/admin.css',
   '/checkout.css', '/admin/orders.html', '/admin/orders.js', '/admin/analytics.html', '/admin/analytics.js',
-  '/script.js', '/menu-modern.js', '/home-featured.js', '/home-coffee-finder.js', '/storefront-products.js', '/storefront-bootstrap.js', '/cart-utils.js', '/coffee-shop.js',
+  '/script.js', '/menu-drinks.js', '/menu-modern.js', '/home-featured.js', '/home-coffee-finder.js', '/storefront-products.js', '/storefront-bootstrap.js', '/cart-utils.js', '/coffee-shop.js',
   '/tea-shop.js', '/tea-data.js', '/gear-shop.js', '/equipment-data.js',
   '/product-detail.js', '/account.js', '/favorites.js', '/admin/admin.js', '/admin/admin-api.js',
   '/checkout.js', '/analytics.js',
@@ -149,6 +150,7 @@ function createRequestHandler({
   auth,
   orders,
   analytics: userAnalytics,
+  menuDiscountStore: userMenuDiscountStore,
   customerDatabase,
   customerAuth,
   secureCookies = false,
@@ -160,6 +162,10 @@ function createRequestHandler({
   resetNotifier,
 }) {
   const analytics = userAnalytics || createAnalyticsStore({ rootDir });
+  const menuDiscountStore = userMenuDiscountStore || createMenuDiscountStore({
+    filePath: path.join(rootDir, 'data', 'menu-settings.json'),
+    database: customerDatabase,
+  });
   const assetsRoot = path.join(rootDir, 'assets');
   const apiLimiter = createRateLimiter({ limit: 240, windowMs: 60 * 1000 });
   const adminLoginLimiter = createRateLimiter({ limit: 5, windowMs: 15 * 60 * 1000 });
@@ -208,6 +214,7 @@ function createRequestHandler({
       })) return;
 
       if (req.method === 'GET' && pathname === '/api/products') return json(res, 200, await store.list());
+      if (req.method === 'GET' && pathname === '/api/menu-discount') return json(res, 200, await menuDiscountStore.get());
       if (req.method === 'GET' && pathname === '/api/catalog.js') {
         const serialized = JSON.stringify(await store.list()).replace(/</g, '\\u003c');
         res.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-store' });
@@ -387,6 +394,19 @@ function createRequestHandler({
 
         if (req.method === 'GET' && pathname === '/api/admin/orders') return json(res, 200, await orders.list());
         if (req.method === 'GET' && pathname === '/api/admin/analytics') return json(res, 200, await analytics.getStats());
+        if (pathname === '/api/admin/menu-discount') {
+          if (req.method === 'GET') return json(res, 200, await menuDiscountStore.get());
+          if (req.method === 'PUT' || req.method === 'PATCH') {
+            if (!requireJson(req, res)) return;
+            try {
+              const saved = await menuDiscountStore.update(await parseJson(req, 32 * 1024));
+              return json(res, 200, saved);
+            } catch (error) {
+              return json(res, error.status || 400, { error: error.message });
+            }
+          }
+          return json(res, 405, { error: 'Method not allowed' });
+        }
         if (req.method === 'GET' && pathname === '/api/admin/telegram/status') {
           return json(res, 200, getTelegramStatus());
         }
