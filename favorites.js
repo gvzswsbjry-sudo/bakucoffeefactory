@@ -5,7 +5,7 @@
   if (root?.document) api.init();
 })(typeof window !== 'undefined' ? window : globalThis, function (root) {
   const STORAGE_KEY = 'bcf-favorites-v1';
-  const CARD_SELECTOR = '.coffee-profile, .tea-product, .shop-product';
+  const CARD_SELECTOR = '.coffee-profile, .tea-product, .shop-product, .home-featured-card';
   const tr = (key, fallback) => root.BCF_I18N?.t?.(key, fallback) ?? fallback;
   const dyn = (text) => root.BCF_I18N?.translateDynamicText?.(text) ?? text;
   let drawer;
@@ -136,6 +136,21 @@
   }
 
   function describe(card) {
+    if (card.matches('.home-featured-card')) {
+      const cat = card.dataset.featuredCategory || 'equipment';
+      const id = card.dataset.productId || slug(card.querySelector('h3')?.textContent);
+      const catLabel = { coffee: 'Qəhvə', tea: 'Çay', equipment: 'Avadanlıq' }[cat] || 'Məhsul';
+      const priceText = card.querySelector('.home-featured-price')?.textContent.trim() || '';
+      return {
+        key: `${cat}:${id}`, id, category: catLabel,
+        name: card.dataset.productName || card.querySelector('h3')?.textContent.trim() || 'Məhsul',
+        image: card.querySelector('img')?.getAttribute('src') || '',
+        price: priceText,
+        url: card.dataset.productUrl || (cat === 'equipment' ? `mehsul.html?id=${encodeURIComponent(id)}`
+          : cat === 'tea' ? `caylar.html#${encodeURIComponent(id)}`
+            : `qehveler.html#coffee-${encodeURIComponent(id)}`),
+      };
+    }
     if (card.matches('.shop-product')) {
       const id = card.dataset.productId || slug(card.querySelector('h3')?.textContent);
       return {

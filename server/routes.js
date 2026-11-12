@@ -36,11 +36,11 @@ const MIME_TYPES = {
 const PUBLIC_FILES = new Set([
   '/index.html', '/menyu.html', '/qehveler.html', '/caylar.html', '/avadanliqlar.html',
   '/mehsul.html', '/mexfilik.html', '/admin/index.html',
-  '/style.css', '/navigation.css', '/home-contact.css', '/menu-background.css',
+  '/style.css', '/navigation.css', '/home-contact.css', '/home-featured.css', '/menu-background.css',
   '/menu-mobile.css', '/summer-menu.css', '/tea-mobile.css', '/gear.css',
   '/catalog.css', '/cart.css', '/account.css', '/favorites.css', '/brand.css', '/admin/admin.css',
   '/checkout.css', '/admin/orders.html', '/admin/orders.js', '/admin/analytics.html', '/admin/analytics.js',
-  '/script.js', '/storefront-products.js', '/storefront-bootstrap.js', '/cart-utils.js', '/coffee-shop.js',
+  '/script.js', '/home-featured.js', '/storefront-products.js', '/storefront-bootstrap.js', '/cart-utils.js', '/coffee-shop.js',
   '/tea-shop.js', '/tea-data.js', '/gear-shop.js', '/equipment-data.js',
   '/product-detail.js', '/account.js', '/favorites.js', '/admin/admin.js', '/admin/admin-api.js',
   '/checkout.js', '/analytics.js',

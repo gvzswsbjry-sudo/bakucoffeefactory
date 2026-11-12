@@ -37,7 +37,7 @@ if (!document.querySelector('link[href*="i18n.css"]')) {
 }
 if (!window.BCF_I18N && !window.__BCF_I18N_INITIALIZED__ && !document.querySelector('script[src*="i18n.js"]')) {
   const i18nScript = document.createElement('script');
-  i18nScript.src = 'i18n.js?v=20261111-10';
+  i18nScript.src = 'i18n.js?v=20261112-1';
   i18nScript.async = false;
   document.body.append(i18nScript);
 }
@@ -53,10 +53,10 @@ document.body.append(accountScript);
 
 const favoritesStyles = document.createElement('link');
 favoritesStyles.rel = 'stylesheet';
-favoritesStyles.href = 'favorites.css?v=20261109-v4';
+favoritesStyles.href = 'favorites.css?v=20261112-1';
 document.head.append(favoritesStyles);
 const favoritesScript = document.createElement('script');
-favoritesScript.src = 'favorites.js?v=20261109-v4';
+favoritesScript.src = 'favorites.js?v=20261112-1';
 favoritesScript.async = false;
 document.body.append(favoritesScript);
 
