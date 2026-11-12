@@ -30,6 +30,7 @@ test('index.html wires mobile-first Featured Products section, cart drawer, and 
 
 test('home-featured.css uses mobile-first breakpoints and RTL overrides', () => {
   const css = fs.readFileSync('home-featured.css', 'utf8');
+  assert.ok(css.includes('object-fit: contain;'), 'shows uncropped scaled-down original images');
   assert.ok(css.includes('grid-template-columns: 1fr;'), 'base grid is 1-column mobile-first');
   assert.ok(css.includes('@media (min-width: 640px)'), 'scales to 2-col at 640px');
   assert.ok(css.includes('grid-template-columns: repeat(2, minmax(0, 1fr))'), 'sets 2 columns at tablet width');
