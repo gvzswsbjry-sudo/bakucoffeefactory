@@ -1,5 +1,5 @@
 (function () {
-  const FEATURED_DEFAULT_IDS = ['colombia', 'melisa', 'wheel-grinder', 'millifincan'];
+  const FEATURED_DEFAULT_IDS = ['efiopiya', 'melisa', 'wheel-grinder', 'millifincan'];
   const TEA_PRIORITY_IDS = ['melisa', '1001-gece', 'admiral', 'hibiskus'];
   const EQUIPMENT_PRIORITY_IDS = ['wheel-grinder', 'millifincan', 'french-press', 'azerbaijan-coffee-set'];
 
@@ -252,7 +252,7 @@
 
   const getBadge = (item) => {
     if (item.id === 'melisa') return { key: 'homeBadgeNew', text: 'YENİ', cls: 'home-featured-badge home-featured-badge--new' };
-    if (item.id === 'colombia') return { key: 'homeBadgePopular', text: 'POPULYAR', cls: 'home-featured-badge' };
+    if (item.id === 'efiopiya') return { key: 'homeBadgePopular', text: 'POPULYAR', cls: 'home-featured-badge' };
     return null;
   };
 

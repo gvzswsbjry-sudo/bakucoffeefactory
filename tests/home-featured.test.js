@@ -124,8 +124,10 @@ test('home-featured.js renders curated cards, adds items to unified cart, and tr
   global.window = sandbox.window;
   vm.runInContext(featuredJs, sandbox);
 
-  // Curated view renders 4 items including Colombia & Melisa
-  assert.ok(gridEl.innerHTML.includes('data-product-id="colombia"'), 'renders Colombia');
+  // Curated view renders 4 items including Efiopiya (POPULYAR) & Melisa
+  assert.ok(gridEl.innerHTML.includes('data-product-id="efiopiya"'), 'renders Efiopiya');
+  assert.ok(!gridEl.innerHTML.includes('data-product-id="colombia"'), 'replaces Colombia with Efiopiya');
+  assert.ok(gridEl.innerHTML.includes('POPULYAR'), 'marks Efiopiya with POPULYAR badge');
   assert.ok(gridEl.innerHTML.includes('data-product-id="melisa"'), 'renders Melisa Çayı');
   assert.ok(gridEl.innerHTML.includes('data-product-id="wheel-grinder"'), 'renders wheel-grinder');
   assert.ok(gridEl.innerHTML.includes('data-product-id="millifincan"'), 'renders millifincan');
