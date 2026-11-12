@@ -1,0 +1,276 @@
+/* Home Page Daily Discount Banner (Mobile-First, matches Baku Coffee Factory editorial system) */
+.home-daily-offer {
+  background: var(--paper, #F7F5F0);
+  color: var(--ink, #1E1E1E);
+  padding: 24px max(12px, env(safe-area-inset-left, 0px)) 8px max(12px, env(safe-area-inset-right, 0px));
+  overflow-x: clip;
+}
+
+.home-daily-offer[hidden] {
+  display: none !important;
+}
+
+.home-daily-inner {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.home-daily-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  grid-template-areas:
+    "media head"
+    "sizes sizes";
+  gap: 14px 12px;
+  align-items: start;
+  padding: 14px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #fffdf9 0%, #fceddf 100%);
+  border: 1.5px solid rgba(200, 109, 81, 0.42);
+  box-shadow: 0 12px 30px rgba(176, 86, 56, 0.08);
+  overflow: hidden;
+}
+
+.home-daily-card::after {
+  content: attr(data-discount-watermark);
+  position: absolute;
+  inset-inline-end: 18px;
+  top: -8px;
+  font: 600 clamp(44px, 7vw, 76px)/1 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.04em;
+  color: rgba(200, 109, 81, 0.11);
+  pointer-events: none;
+  display: none;
+}
+
+.home-daily-media {
+  grid-area: media;
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #ede5d8;
+  box-shadow: 0 6px 16px rgba(34, 24, 16, 0.08);
+}
+
+.home-daily-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.home-daily-percent {
+  position: absolute;
+  top: 7px;
+  inset-inline-start: 7px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--accent-terracotta, #C86D51);
+  color: #fff;
+  font: 700 10px/1 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 10px rgba(169, 79, 52, 0.35);
+}
+
+.home-daily-body {
+  grid-area: head;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.home-daily-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 8px;
+  margin-bottom: 6px;
+}
+
+.home-daily-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--accent-terracotta, #C86D51);
+  color: #fff;
+  font: 700 9.5px/1.1 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.home-daily-eyebrow {
+  font: 600 9.5px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #8f4730;
+}
+
+.home-daily-title {
+  margin: 0 0 6px;
+  font: 500 clamp(22px, 5.4vw, 34px)/1.06 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.03em;
+  color: var(--ink, #1E1E1E);
+}
+
+.home-daily-note {
+  margin: 0;
+  font: 400 12px/1.5 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #695a4e);
+  max-width: 58ch;
+}
+
+.home-daily-footer {
+  grid-area: sizes;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(200, 109, 81, 0.18);
+}
+
+.home-daily-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.home-daily-size-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(200, 109, 81, 0.25);
+  box-shadow: 0 2px 8px rgba(176, 86, 56, 0.05);
+}
+
+.home-daily-size-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #f5e6dc;
+  color: #8f4730;
+  font: 700 10px/1 var(--mono, "DM Mono", monospace);
+}
+
+.home-daily-size-old {
+  font: 400 11.5px/1 var(--mono, "DM Mono", monospace);
+  color: #9e8f82;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+.home-daily-size-new {
+  font: 700 13.5px/1 var(--mono, "DM Mono", monospace);
+  color: #9d3e24;
+}
+
+.home-daily-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #4a5043;
+  color: #fcf9f4;
+  font: 600 12.5px/1 var(--sans, "Manrope", sans-serif);
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(74, 80, 67, 0.2);
+  transition: background-color 0.18s ease, transform 0.15s ease;
+}
+
+.home-daily-cta:hover {
+  background: var(--accent-terracotta, #C86D51);
+}
+
+.home-daily-cta:active {
+  transform: scale(0.98);
+}
+
+.home-daily-cta:focus-visible {
+  outline: 2px solid var(--accent-terracotta, #C86D51);
+  outline-offset: 2px;
+}
+
+[dir="rtl"] .home-daily-cta-arrow {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+@media (min-width: 640px) {
+  .home-daily-offer {
+    padding: 36px 7vw 6px;
+  }
+
+  .home-daily-card {
+    grid-template-columns: 148px minmax(0, 1fr);
+    grid-template-areas:
+      "media head"
+      "media sizes";
+    gap: 12px 22px;
+    padding: 20px 22px;
+    border-radius: 24px;
+  }
+
+  .home-daily-card::after {
+    display: block;
+  }
+
+  .home-daily-note {
+    font-size: 13px;
+  }
+
+  .home-daily-footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    border-top: 0;
+    padding-top: 2px;
+  }
+}
+
+@media (min-width: 1080px) {
+  .home-daily-offer {
+    padding: 44px clamp(40px, 7.6vw, 110px) 8px;
+  }
+
+  .home-daily-card {
+    grid-template-columns: 184px minmax(0, 1fr);
+    gap: 14px 28px;
+    padding: 24px 28px;
+  }
+
+  .home-daily-percent {
+    top: 10px;
+    inset-inline-start: 10px;
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .home-daily-size-pill {
+    padding: 7px 12px;
+  }
+
+  .home-daily-size-new {
+    font-size: 14.5px;
+  }
+}

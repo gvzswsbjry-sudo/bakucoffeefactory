@@ -19,6 +19,7 @@ const { createMenuDiscountStore } = require('../../server/menu-discount-store');
 const { createAnalyticsStore } = require('../../server/analytics-store');
 const { createServer } = require('../../server');
 const { syncDailyDiscountDom } = require('../../menu-modern');
+const { syncHomeDailyDiscountDom } = require('../../home-daily-discount');
 
 async function tempDir(t) {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'bcf-menu-discount-'));
@@ -239,8 +240,19 @@ test('admin UI, routes, and analytics support daily discount settings and coffee
 
   const routes = fs.readFileSync(path.join(ROOT, 'server/routes.js'), 'utf8');
   assert.ok(routes.includes("'/menu-drinks.js'"));
+  assert.ok(routes.includes("'/home-daily-discount.css'"));
+  assert.ok(routes.includes("'/home-daily-discount.js'"));
   assert.ok(routes.includes('/api/menu-discount'));
   assert.ok(routes.includes('/api/admin/menu-discount'));
+
+  const indexHtml = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  for (const id of [
+    'homeDailyDiscountSection', 'homeDailyCard', 'homeDailyImg',
+    'homeDailyPercent', 'homeDailyBadge', 'homeDailyTitle',
+    'homeDailyNote', 'homeDailySizes', 'homeDailyMenuBtn',
+  ]) {
+    assert.ok(indexHtml.includes(`id="${id}"`), `index.html contains #${id}`);
+  }
 
   const analyticsDir = await tempDir(t);
   const analytics = createAnalyticsStore({ filePath: path.join(analyticsDir, 'analytics.json') });
@@ -249,4 +261,47 @@ test('admin UI, routes, and analytics support daily discount settings and coffee
   const finderPage = stats.pages.find((p) => p.path === '/qehve-secici.html');
   assert.ok(finderPage);
   assert.equal(finderPage.title, 'Qəhvə seçicisi');
+});
+
+test('syncHomeDailyDiscountDom updates index.html daily banner and hides it when disabled', () => {
+  const section = { hidden: false };
+  const card = { setAttribute(name, val) { card.attrs[name] = val; }, attrs: {} };
+  const img = { src: '', alt: '' };
+  const percent = { textContent: '' };
+  const badge = { textContent: '', removeAttribute() {} };
+  const eyebrow = { textContent: '', removeAttribute() {} };
+  const title = { textContent: '', removeAttribute() {} };
+  const note = { textContent: '', removeAttribute() {} };
+  const sizes = { innerHTML: '' };
+  const ctaSpan = { textContent: '' };
+
+  global.document = {
+    getElementById: (id) => ({
+      homeDailyDiscountSection: section,
+      homeDailyCard: card,
+      homeDailyImg: img,
+      homeDailyPercent: percent,
+      homeDailyBadge: badge,
+      homeDailyEyebrow: eyebrow,
+      homeDailyTitle: title,
+      homeDailyNote: note,
+      homeDailySizes: sizes,
+    }[id] || null),
+    querySelector: (sel) => (sel === '#homeDailyMenuBtn [data-i18n]' ? ctaSpan : null),
+  };
+
+  try {
+    syncHomeDailyDiscountDom({ enabled: true, itemKey: 'cappuccino', discountPercent: 40 });
+    assert.equal(section.hidden, false);
+    assert.equal(card.attrs['data-discount-watermark'], '-40%');
+    assert.equal(img.src, 'assets/menu/cappuccino.jpg');
+    assert.equal(percent.textContent, '-40%');
+    assert.equal(title.textContent, 'Günün seçimi: Cappuccino');
+    assert.ok(sizes.innerHTML.includes('3.72 ₼'));
+
+    syncHomeDailyDiscountDom({ enabled: false, itemKey: 'cappuccino', discountPercent: 40 });
+    assert.equal(section.hidden, true);
+  } finally {
+    delete global.document;
+  }
 });
