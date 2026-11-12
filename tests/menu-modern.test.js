@@ -78,6 +78,17 @@ test('menyu.html and script.js adopt Version 1 modern theme without dark atmosph
     modernCss.includes('flex-wrap: nowrap;') && !modernCss.includes('.menu-row-multi .price-chips {\n  flex: 1 0 100%'),
     'every coffee row places prices cleanly opposite the name rather than wrapping underneath'
   );
+  assert.ok(
+    modernCss.includes('.site-header .menu-tabs-bar-mobile {\n  position: static;\n  z-index: 1;'),
+    'mobile menu tab bar stays at z-index: 1 inside site-header so header dropdowns stay on top'
+  );
+
+  const i18nCss = read('i18n.css');
+  assert.ok(
+    i18nCss.includes('.lang-selector {\n  position: relative;\n  z-index: 10050;') &&
+    i18nCss.includes('.site-header .lang-selector {\n    position: absolute !important;\n    z-index: 10050;'),
+    'lang-selector keeps high stacking order across desktop and mobile header bars'
+  );
 });
 
 test('server/routes.js whitelists /menu-modern.css and /menu-modern.js', () => {

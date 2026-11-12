@@ -3,6 +3,7 @@
 
 .lang-selector {
   position: relative;
+  z-index: 10050;
   display: inline-flex;
   align-items: center;
   flex: none;
@@ -164,7 +165,7 @@
 @media (max-width: 720px) {
   .site-header .lang-selector {
     position: absolute !important;
-    z-index: 8;
+    z-index: 10050;
     top: max(16px, calc(12px + env(safe-area-inset-top))) !important;
     right: 175px !important;
     left: auto !important;

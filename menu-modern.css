@@ -28,6 +28,8 @@ body:has(.menu-modern) .site-header .main-nav {
 }
 
 .site-header .menu-tabs-bar-mobile {
+  position: static;
+  z-index: 1;
   margin-top: -1px;
   padding: 7px 14px 9px;
   background: #f7f5f0;
