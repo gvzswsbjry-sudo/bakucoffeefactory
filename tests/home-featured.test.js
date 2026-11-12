@@ -130,7 +130,8 @@ test('home-featured.js renders curated cards, adds items to unified cart, and tr
   assert.ok(gridEl.innerHTML.includes('POPULYAR'), 'marks Efiopiya with POPULYAR badge');
   assert.ok(gridEl.innerHTML.includes('data-product-id="melisa"'), 'renders Melisa Çayı');
   assert.ok(gridEl.innerHTML.includes('data-product-id="wheel-grinder"'), 'renders wheel-grinder');
-  assert.ok(gridEl.innerHTML.includes('data-product-id="millifincan"'), 'renders millifincan');
+  assert.ok(gridEl.innerHTML.includes('data-product-id="espresso-tamper"'), 'renders espresso-tamper');
+  assert.ok(!gridEl.innerHTML.includes('data-product-id="millifincan"'), 'replaces millifincan with espresso-tamper');
 
   // Clicking "add" for Melisa adds 100g to unified cart
   const addBtn = {
@@ -145,6 +146,20 @@ test('home-featured.js renders curated cards, adds items to unified cart, and tr
   assert.equal(cart['tea-melisa'].quantity, 100);
   assert.equal(cart['tea-melisa'].price, 9);
   assert.equal(toastEl.hidden, false);
+
+  // Clicking "add" for espresso-tamper stores the first variant cart key & combined equipment name
+  const tamperBtn = {
+    disabled: false,
+    isConnected: true,
+    dataset: { featuredAdd: 'espresso-tamper' },
+    textContent: 'Səbətə əlavə et',
+    classList: { add: () => {}, remove: () => {} },
+  };
+  gridListeners.click.forEach((fn) => fn({ target: { closest: () => tamperBtn } }));
+  const cartAfterTamper = JSON.parse(memoryStorage['bcf-equipment-cart-v1']);
+  assert.equal(cartAfterTamper['tamper-wood'].quantity, 1);
+  assert.equal(cartAfterTamper['tamper-wood'].price, 58);
+  assert.equal(cartAfterTamper['tamper-wood'].name, 'Espresso tamper · Taxta');
 
   // Switching language to English translates dynamically
   sandbox.window.BCF_I18N.setLanguage('en');

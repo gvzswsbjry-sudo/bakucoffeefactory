@@ -1,7 +1,7 @@
 (function () {
-  const FEATURED_DEFAULT_IDS = ['efiopiya', 'melisa', 'wheel-grinder', 'millifincan'];
+  const FEATURED_DEFAULT_IDS = ['efiopiya', 'melisa', 'wheel-grinder', 'espresso-tamper'];
   const TEA_PRIORITY_IDS = ['melisa', '1001-gece', 'admiral', 'hibiskus'];
-  const EQUIPMENT_PRIORITY_IDS = ['wheel-grinder', 'millifincan', 'french-press', 'azerbaijan-coffee-set'];
+  const EQUIPMENT_PRIORITY_IDS = ['wheel-grinder', 'espresso-tamper', 'french-press', 'azerbaijan-coffee-set'];
 
   const FALLBACK_PRODUCTS = [
     {
@@ -131,18 +131,22 @@
       variants: [{ id: 'wheel-grinder', name: 'Çarxlı əl dəyirmanı', price: 95, image: 'assets/equipment/wheel-grinder.jpg' }],
     },
     {
-      id: 'millifincan',
+      id: 'espresso-tamper',
       category: 'equipment',
-      name: 'Milli Fincan (qaşıqlı)',
-      price: 18,
+      name: 'Espresso tamper',
+      price: 58,
       unit: 'piece',
-      image: 'assets/catalog/milli-fincan.jpg',
-      description: 'Xüsusi naxışlı milli qəhvə fincanı və qaşıq dəsti.',
+      image: 'assets/equipment/espresso-tamper-wood.jpg',
+      description: 'Qəhvəni portafilterdə bərabər sıxmaq üçün möhkəm və rahat tamper.',
       active: true,
       stock: { status: 'available', quantity: null },
-      sortOrder: 17,
-      meta: { categoryLabel: 'Aksesuar' },
-      variants: [{ id: 'millifincan', name: 'Milli Fincan (qaşıqlı)', price: 18, image: 'assets/catalog/milli-fincan.jpg' }],
+      sortOrder: 12,
+      meta: { imageFit: 'contain', categoryLabel: 'Aksesuar', equipmentCategory: 'accessory' },
+      variants: [
+        { id: 'tamper-wood', name: 'Taxta', color: '#7a563d', price: 58, image: 'assets/equipment/espresso-tamper-wood.jpg' },
+        { id: 'tamper-silver', name: 'Gümüşü', color: '#c6c5c0', price: 55, image: 'assets/equipment/espresso-tamper-silver.jpg' },
+        { id: 'tamper-black', name: 'Qara', color: '#242321', price: 55, image: 'assets/equipment/espresso-tamper-black.jpg' },
+      ],
     },
     {
       id: 'french-press',
@@ -388,7 +392,12 @@
     const nextQty = Math.min(maxQty, currentQty + stepQty);
 
     const firstVariant = Array.isArray(item.variants) && item.variants.length ? item.variants[0] : null;
-    const itemName = item.category === 'equipment' && firstVariant?.name ? firstVariant.name : item.name;
+    const variantDesc = firstVariant && item.variants.length > 1 && firstVariant.name && firstVariant.name !== item.name
+      ? firstVariant.name
+      : '';
+    const itemName = item.category === 'equipment' && variantDesc
+      ? `${item.name} · ${variantDesc}`
+      : item.name;
     const cartImage = item.category === 'coffee' ? 'assets/coffee/cart-coffee-beans.png' : info.image;
 
     cart[info.cartKey] = {
