@@ -272,7 +272,7 @@
     return;
   }
 
-  const toastEl = document.getElementById('homeCartToast');
+  const toastEl = document.getElementById('homeCartToast') || document.getElementById('coffeeCartToast');
   const decafBtn = document.getElementById('finderDecafToggle');
   const resetBtn = document.getElementById('finderResetBtn');
   const summaryEl = document.getElementById('finderSummaryText');
@@ -361,7 +361,10 @@
     const unitText = dyn('/ 100 q');
 
     gridEl.innerHTML = ranked.map(({ item, matchPercent, bodyVal, acidityVal, balanceVal }, idx) => {
-      const url = `qehveler.html#coffee-${encodeURIComponent(item.id)}`;
+      const isCoffeePage = typeof window !== 'undefined' && /qehveler\.html$/i.test(window.location?.pathname || '');
+      const url = isCoffeePage
+        ? `#coffee-${encodeURIComponent(item.id)}`
+        : `qehveler.html#coffee-${encodeURIComponent(item.id)}`;
       const soldOut = isSoldOut(item);
       const displayName = dyn(item.name);
       const notesRaw = item.meta?.tasteNotes || item.description || '';
@@ -510,6 +513,20 @@
   renderRecommendations();
   if (typeof window.syncUnifiedCartDom === 'function') {
     window.syncUnifiedCartDom();
+  }
+
+  if (typeof window !== 'undefined' && window.location?.hash === '#qehve-sec') {
+    const ensureFinderInView = () => {
+      if (window.location.hash !== '#qehve-sec') return;
+      sectionEl.scrollIntoView?.({ behavior: 'auto', block: 'start' });
+    };
+    if (window.BCF_CATALOG_READY && typeof window.BCF_CATALOG_READY.finally === 'function') {
+      window.BCF_CATALOG_READY.finally(() => {
+        setTimeout(ensureFinderInView, 60);
+      });
+    } else {
+      setTimeout(ensureFinderInView, 120);
+    }
   }
 
   if (typeof window.loadAllStorefrontProducts === 'function') {

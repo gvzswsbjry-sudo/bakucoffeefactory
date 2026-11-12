@@ -14,7 +14,7 @@
 .coffee-page-intro aside strong { white-space: nowrap; font: 10px var(--mono); letter-spacing: .04em; text-transform: uppercase; }
 .coffee-page-intro aside span { color: #d9cec2; }
 .coffee-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); background: #f4efe6; }
-.coffee-profile { min-width: 0; border-bottom: 1px solid var(--line); }
+.coffee-profile { min-width: 0; border-bottom: 1px solid var(--line); scroll-margin-top: 94px; }
 .coffee-profile:nth-child(odd) { border-right: 1px solid var(--line); background: #ded1bf; }
 .coffee-profile:nth-child(even) { background: #f4efe6; }
 .coffee-photo { position: relative; aspect-ratio: 462 / 555; overflow: hidden; background-image: url("assets/coffee/coffee-origins-grid.png"); background-size: 300% 200%; background-repeat: no-repeat; }

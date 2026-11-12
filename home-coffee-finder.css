@@ -167,6 +167,42 @@
   color: var(--ink, #1e1e1e);
   padding: 26px max(12px, env(safe-area-inset-left, 0px)) 64px max(12px, env(safe-area-inset-right, 0px));
   overflow-x: clip;
+  scroll-margin-top: 84px;
+}
+
+.coffee-finder--embedded {
+  background: #efeae0;
+  border-top: 1px solid rgba(74, 53, 37, .14);
+  padding-top: 38px;
+  padding-bottom: 56px;
+}
+
+.coffee-finder-embedded-head {
+  margin-bottom: 20px;
+}
+
+.coffee-finder-embedded-head .eyebrow {
+  margin: 0 0 10px;
+  color: var(--text-muted, #7a6a5e);
+}
+
+.coffee-finder-embedded-head h2 {
+  margin: 0 0 10px;
+  font: 500 clamp(30px, 8vw, 48px)/.95 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -.055em;
+  color: var(--ink, #1e1e1e);
+}
+
+.coffee-finder-embedded-head h2 em {
+  font-style: italic;
+  color: var(--accent-terracotta, #c86d51);
+}
+
+.coffee-finder-embedded-sub {
+  margin: 0;
+  max-width: 58ch;
+  font: 400 13.5px/1.6 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #7a6a5e);
 }
 
 .coffee-finder-inner {
@@ -503,7 +539,8 @@
 
 /* RTL Support */
 [dir="rtl"] .home-finder-cta,
-[dir="rtl"] .finder-page {
+[dir="rtl"] .finder-page,
+[dir="rtl"] .coffee-finder {
   direction: rtl;
 }
 

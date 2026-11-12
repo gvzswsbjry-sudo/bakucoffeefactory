@@ -102,7 +102,7 @@
     root.innerHTML = coffee.map((item) => {
       const availability = getProductAvailability(item);
       const meta = item.meta || {};
-      return `<article class="coffee-profile ${esc(item.id)}" data-managed-id="${esc(item.id)}" data-purchasable="${availability.purchasable}">
+      return `<article id="coffee-${esc(item.id)}" class="coffee-profile ${esc(item.id)}" data-managed-id="${esc(item.id)}" data-purchasable="${availability.purchasable}">
         <div class="coffee-photo"><img src="${esc(item.image)}" alt="${esc(item.name)} qəhvə dənələri" /></div>
         <div class="coffee-copy"><p class="coffee-origin">${esc(item.name)} · ${esc(meta.weight || 100)} q</p>
           <div class="coffee-title"><h2>${esc(item.name)}</h2><p>${Number(item.price).toFixed(2)} ₼</p></div>

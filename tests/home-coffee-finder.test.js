@@ -5,11 +5,23 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-test('index.html links to qehve-secici.html and standalone finder page + routes are wired', () => {
+test('index.html links to qehveler.html#qehve-sec and qehveler.html + qehve-secici.html embed interactive coffee finder', () => {
   const indexHtml = fs.readFileSync('index.html', 'utf8');
-  assert.ok(indexHtml.includes('href="qehve-secici.html"'), 'index.html links to standalone qehve-secici.html');
+  assert.ok(indexHtml.includes('href="qehveler.html#qehve-sec"'), 'index.html directs CTA straight to #qehve-sec on qehveler.html');
   assert.ok(indexHtml.includes('data-i18n="homeFinderCtaButton"'), 'index.html renders CTA button label');
   assert.ok(!indexHtml.includes('id="finderBodyRange"'), 'index.html stays clean without inline range sliders');
+
+  const coffeeHtml = fs.readFileSync('qehveler.html', 'utf8');
+  assert.ok(coffeeHtml.includes('id="qehve-sec"'), 'qehveler.html includes #qehve-sec anchor at bottom');
+  assert.ok(coffeeHtml.includes('id="finderBodyRange"'), 'qehveler.html includes Body range slider');
+  assert.ok(coffeeHtml.includes('id="finderAcidityRange"'), 'qehveler.html includes Acidity range slider');
+  assert.ok(coffeeHtml.includes('id="finderBalanceRange"'), 'qehveler.html includes Balance range slider');
+  assert.ok(coffeeHtml.includes('id="homeCoffeeFinderGrid"'), 'qehveler.html renders recommendation grid');
+  assert.ok(coffeeHtml.includes('home-coffee-finder.css'), 'qehveler.html loads home-coffee-finder.css');
+  assert.ok(coffeeHtml.includes('home-coffee-finder.js'), 'qehveler.html loads home-coffee-finder.js');
+
+  const storefrontJs = fs.readFileSync('storefront-products.js', 'utf8');
+  assert.ok(storefrontJs.includes('id="coffee-${esc(item.id)}"'), 'storefront-products.js sets coffee anchor IDs');
 
   const finderHtml = fs.readFileSync('qehve-secici.html', 'utf8');
   assert.ok(finderHtml.includes('id="finderBodyRange"'), 'qehve-secici.html includes Body range slider');
