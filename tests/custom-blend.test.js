@@ -71,6 +71,8 @@ test('order-store resolves and prepares coffee-custom-blend orders correctly', (
   const mockProducts = [
     { id: 'colombia', category: 'coffee', name: 'Colombia', price: 15, active: true },
     { id: 'efiopiya', category: 'coffee', name: 'Efiopiya', price: 13, active: true },
+    { id: 'robusta', category: 'coffee', name: 'Robusta', price: 8, active: true },
+    { id: 'brasil', category: 'coffee', name: 'Brasil', price: 10, active: true },
   ];
 
   const resolution = resolveOrderSelection('coffee-custom-blend', mockProducts);
@@ -100,4 +102,50 @@ test('order-store resolves and prepares coffee-custom-blend orders correctly', (
   assert.equal(item.quantity, 350);
   assert.ok(item.total > 0, 'Item total is computed');
   assert.ok(item.name.includes('Fərdi Blend'), 'Blend name is preserved');
+});
+
+test('order-store resolves multiple distinct custom blends with precise recipe prices', () => {
+  const mockProducts = [
+    { id: 'efiopiya', category: 'coffee', name: 'Efiopiya', price: 13, active: true },
+    { id: 'robusta', category: 'coffee', name: 'Robusta', price: 8, active: true },
+    { id: 'colombia', category: 'coffee', name: 'Colombia', price: 15, active: true },
+    { id: 'brasil', category: 'coffee', name: 'Brasil', price: 10, active: true },
+  ];
+
+  // Blend 1: 70% Efiopiya (13) + 30% Robusta (8) => 0.7*13 + 0.3*8 = 11.50
+  const blend1Id = 'coffee-custom-blend-efiopiya-70pct-robusta-30pct-dene';
+  const res1 = resolveOrderSelection(blend1Id, mockProducts);
+  assert.equal(res1.product.price, 11.5);
+  assert.equal(res1.canonicalId, blend1Id);
+
+  // Blend 2: 50% Colombia (15) + 50% Brasil (10) => 0.5*15 + 0.5*10 = 12.50
+  const blend2Id = 'coffee-custom-blend-colombia-50pct-brasil-50pct-v60';
+  const res2 = resolveOrderSelection(blend2Id, mockProducts);
+  assert.equal(res2.product.price, 12.5);
+  assert.equal(res2.canonicalId, blend2Id);
+
+  const payload = {
+    phone: '+994501234567',
+    expectedTotal: 28.75 + 37.50, // 250g @ 11.50 = 28.75; 300g @ 12.50 = 37.50
+    items: [
+      {
+        id: blend1Id,
+        name: 'Fərdi Blend (70% Efiopiya + 30% Robusta) · Dənə (Bütöv)',
+        quantity: 250,
+      },
+      {
+        id: blend2Id,
+        name: 'Fərdi Blend (50% Colombia + 50% Brasil) · V60 / Filtr',
+        quantity: 300,
+      },
+    ],
+  };
+
+  const prepared = prepareOrder(payload, mockProducts);
+  assert.equal(prepared.items.length, 2, 'Both custom blends are retained');
+  assert.equal(prepared.items[0].id, blend1Id);
+  assert.equal(prepared.items[0].total, 28.75);
+  assert.equal(prepared.items[1].id, blend2Id);
+  assert.equal(prepared.items[1].total, 37.50);
+  assert.equal(prepared.total, 66.25);
 });

@@ -22,13 +22,26 @@ function resolveOrderSelection(rawId, products) {
   if (!id) return {};
 
   if (id === 'custom-blend' || id.startsWith('coffee-custom-blend') || id.startsWith('custom-blend')) {
-    const baseCoffee = products.find((entry) => entry.category === 'coffee' && entry.active) || { price: 14 };
+    let customPrice = 14;
+    const match = id.match(/^coffee-custom-blend-([a-z-]+)-(\d{1,2})pct-([a-z-]+)-(\d{1,2})pct(?:-(.+))?$/);
+    if (match) {
+      const baseCoffee = products.find((entry) => entry.category === 'coffee' && entry.id === match[1]);
+      const accentCoffee = products.find((entry) => entry.category === 'coffee' && entry.id === match[3]);
+      const baseRatio = Number(match[2]);
+      const accentRatio = Number(match[4]);
+      if (baseCoffee && accentCoffee && (baseRatio + accentRatio === 100)) {
+        customPrice = Math.round(((Number(baseCoffee.price) * baseRatio) + (Number(accentCoffee.price) * accentRatio))) / 100;
+      }
+    } else {
+      const baseCoffee = products.find((entry) => entry.category === 'coffee' && entry.active) || { price: 14 };
+      customPrice = Number(baseCoffee.price) || 14;
+    }
     return {
       product: {
         id: 'custom-blend',
         category: 'coffee',
         name: 'Fərdi Qəhvə Blendi',
-        price: Number(baseCoffee.price) || 14,
+        price: customPrice,
         unit: 'g',
         active: true,
         image: 'assets/coffee/cart-coffee-beans.png',

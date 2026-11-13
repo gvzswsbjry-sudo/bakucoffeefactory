@@ -299,22 +299,30 @@
         cart = {};
       }
 
-      const itemId = 'coffee-custom-blend';
+      const grindSlug = (state.selectedGrind || 'dene')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '') || 'dene';
+      const itemId = `coffee-custom-blend-${state.baseCoffee.id}-${state.baseRatio}pct-${state.accentCoffee.id}-${state.accentRatio}pct-${grindSlug}`;
       const formula = `${state.baseRatio}% ${state.baseCoffee.name} + ${state.accentRatio}% ${state.accentCoffee.name}`;
+
+      const existingItem = cart[itemId];
+      const existingQty = Number(existingItem?.quantity) || 0;
+      const nextQuantity = Math.min(2000, existingQty + state.selectedWeight);
 
       const cartItem = {
         id: itemId,
         name: `Fərdi Blend (${formula}) · ${state.selectedGrind}`,
         price: Math.round(state.avgPricePer100g * 100) / 100,
         unit: 'g',
-        quantity: state.selectedWeight,
+        quantity: nextQuantity,
         category: 'coffee',
         image: 'assets/coffee/cart-coffee-beans.png',
         maxQuantity: 2000,
         meta: {
           formula,
           grind: state.selectedGrind,
-          weight: `${state.selectedWeight} q`,
+          weight: `${nextQuantity} q`,
         },
       };
 
@@ -338,7 +346,9 @@
       // Toast feedback
       const toast = document.getElementById('coffeeCartToast');
       if (toast) {
-        toast.textContent = `Fərdi blend (${state.selectedWeight} q) səbətə əlavə edildi!`;
+        toast.textContent = existingQty > 0
+          ? `Fərdi blend səbətdə yeniləndi (${nextQuantity} q)!`
+          : `Fərdi blend (${state.selectedWeight} q) səbətə əlavə edildi!`;
         toast.hidden = false;
         setTimeout(() => { toast.hidden = true; }, 3000);
       }
