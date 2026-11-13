@@ -73,6 +73,9 @@ const closeCoffeeModal = () => {
   coffeeReturnFocus?.focus();
 };
 
+window.openCoffeeModal = openCoffeeModal;
+window.closeCoffeeModal = closeCoffeeModal;
+
 const openCoffeeCart = () => {
   closeCoffeeModal();
   renderCoffeeCart();

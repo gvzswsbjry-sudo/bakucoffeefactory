@@ -419,8 +419,7 @@
     window.BCF_I18N?.translateDom?.(sectionEl);
   };
 
-  const addRecommendedCoffee = (productId, triggerBtn) => {
-    const item = catalogCoffees.find((candidate) => candidate.id === productId);
+  const fallbackDirectAdd = (item, triggerBtn) => {
     if (!item || isSoldOut(item) || typeof window.loadSharedCart !== 'function' || typeof window.saveSharedCart !== 'function') return;
 
     const cartKey = `coffee-${item.id}`;
@@ -434,7 +433,7 @@
       price: Number(item.price),
       unit: 'g',
       maxQuantity: 2000,
-      image: 'assets/coffee/cart-coffee-beans.png',
+      image: item.image || 'assets/coffee/cart-coffee-beans.png',
       category: 'coffee',
       quantity: nextQty,
     };
@@ -451,6 +450,134 @@
         triggerBtn.textContent = tr('addToCart', 'Səbətə əlavə et');
       }, 1300);
     }
+  };
+
+  let finderModalInitialized = false;
+  const initFinderModalOnce = (modal, overlay) => {
+    if (finderModalInitialized || typeof window.openCoffeeModal === 'function') return;
+
+    const modalTitle = document.getElementById('coffeeOrderTitle');
+    const modalUnit = document.getElementById('coffeeOrderUnit');
+    const qtyInput = document.getElementById('coffeeQuantity');
+    const qtyDec = document.getElementById('coffeeQuantityDecrease');
+    const qtyInc = document.getElementById('coffeeQuantityIncrease');
+    const totalEl = document.getElementById('coffeeOrderTotal');
+    const confirmBtn = document.getElementById('coffeeConfirmAdd');
+    const closeBtn = document.getElementById('coffeeModalClose');
+
+    let currentSelected = null;
+    let returnFocus = null;
+
+    const normalizeQty = (val) => {
+      const num = parseInt(String(val || '').replace(/\D/g, ''), 10);
+      if (Number.isNaN(num) || num < 50) return 100;
+      return Math.min(2000, Math.round(num / 50) * 50);
+    };
+
+    const updateTotal = () => {
+      if (!currentSelected || !totalEl || !qtyInput) return;
+      const q = normalizeQty(qtyInput.value);
+      const tot = (Number(currentSelected.price) * q) / 100;
+      totalEl.textContent = `${tot.toFixed(2)} ₼`;
+    };
+
+    const setQty = (val) => {
+      if (!qtyInput) return;
+      qtyInput.value = String(normalizeQty(val));
+      updateTotal();
+    };
+
+    const closeModal = () => {
+      modal.hidden = true;
+      overlay.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('tea-modal-open');
+      returnFocus?.focus?.();
+    };
+
+    window.openCoffeeModal = (coffee, trigger) => {
+      currentSelected = { ...coffee, image: coffee.image || 'assets/coffee/cart-coffee-beans.png', category: 'coffee', maxQuantity: 2000 };
+      returnFocus = trigger;
+      if (modalTitle) modalTitle.textContent = dyn(coffee.name);
+      if (modalUnit) modalUnit.textContent = dyn(`${Number(coffee.price).toFixed(2)} ₼ / 100 q`);
+      if (qtyInput) qtyInput.value = '100';
+      updateTotal();
+      modal.hidden = false;
+      overlay.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('tea-modal-open');
+      window.BCF_I18N?.translateDom?.(modal);
+    };
+
+    window.closeCoffeeModal = closeModal;
+
+    qtyDec?.addEventListener('click', () => setQty(Number(qtyInput.value) - 50));
+    qtyInc?.addEventListener('click', () => setQty(Number(qtyInput.value) + 50));
+    qtyInput?.addEventListener('input', () => { qtyInput.value = qtyInput.value.replace(/\D/g, ''); updateTotal(); });
+    qtyInput?.addEventListener('change', () => setQty(qtyInput.value));
+    closeBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', closeModal);
+
+    confirmBtn?.addEventListener('click', () => {
+      if (!currentSelected) return;
+      const cartKey = `coffee-${currentSelected.id}`;
+      const cart = typeof window.loadSharedCart === 'function' ? window.loadSharedCart() : {};
+      const addGrams = normalizeQty(qtyInput?.value || 100);
+      const nextQty = Math.min(2000, Number(cart[cartKey]?.quantity || 0) + addGrams);
+
+      cart[cartKey] = {
+        id: currentSelected.id,
+        name: currentSelected.name,
+        price: Number(currentSelected.price),
+        unit: 'g',
+        maxQuantity: 2000,
+        image: currentSelected.image || 'assets/coffee/cart-coffee-beans.png',
+        category: 'coffee',
+        quantity: nextQty,
+      };
+
+      if (typeof window.saveSharedCart === 'function') {
+        window.saveSharedCart(cart);
+      }
+      if (typeof window.syncUnifiedCartDom === 'function') {
+        window.syncUnifiedCartDom(cart);
+      }
+      closeModal();
+      showToast(tr('cartAddedToast', 'Səbətə uğurla əlavə edildi'));
+    });
+
+    finderModalInitialized = true;
+  };
+
+  const addRecommendedCoffee = (productId, triggerBtn) => {
+    const item = catalogCoffees.find((candidate) => candidate.id === productId);
+    if (!item || isSoldOut(item)) return;
+
+    const modalCoffee = {
+      id: item.id,
+      name: item.name,
+      price: Number(item.price),
+      unit: 'g',
+      maxQuantity: 2000,
+      image: item.image || 'assets/coffee/cart-coffee-beans.png',
+    };
+
+    if (typeof window.openCoffeeModal === 'function') {
+      window.openCoffeeModal(modalCoffee, triggerBtn);
+      return;
+    }
+
+    const modal = document.getElementById('coffeeOrderModal');
+    const overlay = document.getElementById('coffeeModalOverlay');
+    if (modal && overlay) {
+      initFinderModalOnce(modal, overlay);
+      if (typeof window.openCoffeeModal === 'function') {
+        window.openCoffeeModal(modalCoffee, triggerBtn);
+        return;
+      }
+    }
+
+    fallbackDirectAdd(item, triggerBtn);
   };
 
   const bindRange = (inputEl, key) => {

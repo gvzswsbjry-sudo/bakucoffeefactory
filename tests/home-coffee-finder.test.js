@@ -247,3 +247,73 @@ test('home-coffee-finder.js updates live on range slider drag, picks 1 or 2 matc
   delete global.localStorage;
   delete global.window;
 });
+
+test('clicking add-to-cart on recommended coffee triggers openCoffeeModal for weight selection', () => {
+  const finderJs = fs.readFileSync('home-coffee-finder.js', 'utf8');
+  const i18nJs = fs.readFileSync('i18n.js', 'utf8');
+
+  let modalOpenedWith = null;
+  const mockGridListeners = {};
+  const mockGridEl = {
+    innerHTML: '',
+    dataset: {},
+    querySelectorAll: () => [],
+    addEventListener: (t, fn) => { (mockGridListeners[t] ||= []).push(fn); },
+  };
+
+  const windowObj = {
+    location: { pathname: '/qehveler.html' },
+    addEventListener: () => {},
+    dispatchEvent: () => {},
+    openCoffeeModal: (coffee, trigger) => {
+      modalOpenedWith = { coffee, trigger };
+    },
+  };
+
+  const sandbox = {
+    window: windowObj,
+    globalThis: windowObj,
+    document: {
+      readyState: 'complete',
+      documentElement: { lang: 'az', dir: 'ltr' },
+      body: { classList: { add: () => {}, remove: () => {} } },
+      getElementById: (id) => ({
+        'qehve-sec': { querySelectorAll: () => [] },
+        homeCoffeeFinderGrid: mockGridEl,
+      }[id] || null),
+      querySelector: () => null,
+      querySelectorAll: () => [],
+      addEventListener: () => {},
+    },
+    localStorage: { getItem: () => null, setItem: () => {} },
+    CustomEvent: class {},
+    setTimeout,
+    clearTimeout,
+  };
+
+  vm.createContext(sandbox);
+  vm.runInContext(i18nJs, sandbox);
+  global.localStorage = sandbox.localStorage;
+  global.window = sandbox.window;
+  vm.runInContext(finderJs, sandbox);
+
+  const addBtn = {
+    disabled: false,
+    isConnected: true,
+    dataset: { finderAdd: 'colombia' },
+    textContent: 'Səbətə əlavə et',
+  };
+
+  mockGridListeners.click.forEach((fn) => fn({ target: { closest: () => addBtn } }));
+
+  assert.ok(modalOpenedWith, 'openCoffeeModal was called');
+  assert.equal(modalOpenedWith.coffee.id, 'colombia');
+  assert.equal(modalOpenedWith.coffee.name, 'Colombia');
+  assert.equal(modalOpenedWith.coffee.unit, 'g');
+  assert.equal(modalOpenedWith.coffee.maxQuantity, 2000);
+  assert.equal(modalOpenedWith.trigger, addBtn);
+
+  delete global.localStorage;
+  delete global.window;
+});
+
