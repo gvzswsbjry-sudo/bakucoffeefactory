@@ -21,6 +21,23 @@ function resolveOrderSelection(rawId, products) {
   const id = String(rawId || '').trim();
   if (!id) return {};
 
+  if (id === 'custom-blend' || id.startsWith('coffee-custom-blend') || id.startsWith('custom-blend')) {
+    const baseCoffee = products.find((entry) => entry.category === 'coffee' && entry.active) || { price: 14 };
+    return {
+      product: {
+        id: 'custom-blend',
+        category: 'coffee',
+        name: 'Fərdi Qəhvə Blendi',
+        price: Number(baseCoffee.price) || 14,
+        unit: 'g',
+        active: true,
+        image: 'assets/coffee/cart-coffee-beans.png',
+        stock: { status: 'available', quantity: null },
+      },
+      canonicalId: id,
+    };
+  }
+
   for (const category of ['coffee', 'tea']) {
     const hasPrefix = id.startsWith(`${category}-`);
     const candidateId = stripCategoryPrefix(id, category);
@@ -60,7 +77,10 @@ function prepareOrder(payload, products) {
     const quoteRequired = product.category === 'tea' && product.meta?.pricePending === true && !(price > 0);
     if (!quoteRequired && (!Number.isFinite(price) || price <= 0)) bad('Məhsul qiyməti düzgün deyil.');
     const total = quoteRequired ? null : Math.round((unit === 'g' ? price * quantity / 100 : price * quantity) * 100) / 100;
-    return { id: canonicalId, productId: product.id, name: variant ? `${product.name} · ${variant.name}` : product.name,
+    const itemName = variant
+      ? `${product.name} · ${variant.name}`
+      : (product.id === 'custom-blend' && selection?.name ? String(selection.name).slice(0, 120) : product.name);
+    return { id: canonicalId, productId: product.id, name: itemName,
       category: product.category, image: variant?.image || product.image, unit, quantity,
       price: quoteRequired ? null : price, total, quoteRequired };
   });

@@ -1,0 +1,590 @@
+/* Baku Coffee Factory — Custom Blend Studio (Fərdi Qəhvə Blendini Yarat) */
+.blend-studio-section {
+  position: relative;
+  background: var(--paper, #f7f5f0);
+  color: var(--ink, #1e1916);
+  padding: 60px max(16px, env(safe-area-inset-left, 0px)) 70px max(16px, env(safe-area-inset-right, 0px));
+  border-top: 1px solid rgba(30, 25, 22, 0.1);
+  overflow-x: clip;
+}
+
+.blend-studio-container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* Studio Header */
+.blend-studio-head {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 36px;
+}
+
+.blend-studio-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 11px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-terracotta, #c86d51);
+  margin-bottom: 10px;
+}
+
+.blend-studio-head h2 {
+  font: 500 clamp(28px, 4.8vw, 44px)/1.08 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.03em;
+  margin: 0 0 12px;
+  color: var(--ink, #1e1916);
+}
+
+.blend-studio-head h2 em {
+  font-style: italic;
+  font-weight: 400;
+  color: #72402f;
+}
+
+.blend-studio-desc {
+  font: 400 clamp(13px, 2vw, 15px)/1.55 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #695a4e);
+  margin: 0 auto;
+}
+
+/* Studio Grid Layout */
+.blend-studio-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .blend-studio-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.95fr);
+    gap: 32px;
+  }
+}
+
+/* Left Column: Interactive Controls Card */
+.blend-controls-card {
+  background: #ffffff;
+  border: 1px solid rgba(30, 25, 22, 0.1);
+  border-radius: 24px;
+  padding: 22px 18px 24px;
+  box-shadow: 0 10px 28px rgba(30, 25, 22, 0.04);
+}
+
+@media (min-width: 600px) {
+  .blend-controls-card {
+    padding: 28px 28px 30px;
+  }
+}
+
+.blend-step {
+  margin-bottom: 26px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(30, 25, 22, 0.08);
+}
+
+.blend-step:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.blend-step-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.blend-step-title h3 {
+  font: 700 13px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e1916;
+  margin: 0;
+}
+
+.blend-step-hint {
+  font: 500 11.5px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #8c7e73;
+}
+
+/* Bean Selectors Pair */
+.blend-beans-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.blend-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.blend-select-label {
+  font: 600 11px/1.2 var(--mono, "DM Mono", monospace);
+  color: #83523f;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.blend-select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(30, 25, 22, 0.16);
+  background: #faf7f1;
+  color: #1e1916;
+  font: 600 13px/1.3 var(--sans, "Manrope", sans-serif);
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.blend-select:focus {
+  border-color: var(--accent-terracotta, #c86d51);
+  box-shadow: 0 0 0 3px rgba(200, 109, 81, 0.15);
+}
+
+/* Ratio Slider Area */
+.blend-ratio-slider-wrap {
+  margin-top: 10px;
+}
+
+.blend-ratio-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.blend-ratio-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font: 700 12.5px/1 var(--mono, "DM Mono", monospace);
+}
+
+.blend-ratio-pill.pill-base {
+  background: #fbeee7;
+  color: #9d3e24;
+  border: 1px solid rgba(200, 109, 81, 0.3);
+}
+
+.blend-ratio-pill.pill-accent {
+  background: #eef2ec;
+  color: #3b5037;
+  border: 1px solid rgba(74, 80, 67, 0.25);
+}
+
+.blend-range-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(to right, #c86d51 var(--slider-ratio, 70%), #4a5043 var(--slider-ratio, 70%));
+  outline: none;
+  cursor: pointer;
+  margin: 10px 0 6px;
+}
+
+.blend-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #c86d51;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.blend-range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+}
+
+.blend-range-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #c86d51;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+/* Live Taste Profile Bars */
+.blend-taste-profile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: #faf7f1;
+  border-radius: 14px;
+  border: 1px solid rgba(30, 25, 22, 0.08);
+}
+
+.taste-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.taste-metric-label {
+  display: flex;
+  justify-content: space-between;
+  font: 600 11px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #5a5048;
+}
+
+.taste-metric-label strong {
+  font: 700 11px/1.2 var(--mono, "DM Mono", monospace);
+  color: #1e1916;
+}
+
+.taste-metric-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(30, 25, 22, 0.08);
+  overflow: hidden;
+}
+
+.taste-metric-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c86d51, #e0886c);
+  transition: width 0.25s ease;
+}
+
+/* Grind Option Chips */
+.blend-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.blend-option-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(30, 25, 22, 0.16);
+  background: #faf7f1;
+  color: #2b2420;
+  font: 600 12.5px/1.2 var(--sans, "Manrope", sans-serif);
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.blend-option-btn:hover {
+  background: #f2ede4;
+  border-color: rgba(30, 25, 22, 0.3);
+}
+
+.blend-option-btn.active {
+  background: #1e1916;
+  border-color: #1e1916;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(30, 25, 22, 0.18);
+}
+
+/* Weight Size Option Cards */
+.blend-sizes-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.blend-size-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 6px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(30, 25, 22, 0.14);
+  background: #faf7f1;
+  color: #1e1916;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.blend-size-card strong {
+  font: 700 13px/1.2 var(--mono, "DM Mono", monospace);
+}
+
+.blend-size-card small {
+  font: 500 10.5px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #7a6e64;
+  margin-top: 3px;
+}
+
+.blend-size-card.active {
+  background: #fbf0ea;
+  border-color: #c86d51;
+  color: #9d3e24;
+}
+
+.blend-size-card.active small {
+  color: #9d3e24;
+}
+
+/* Text Inputs for Custom Label */
+.blend-inputs-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blend-input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.blend-input-field label {
+  font: 600 11.5px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #554a42;
+}
+
+.blend-input-field input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(30, 25, 22, 0.16);
+  background: #faf7f1;
+  font: 600 13px/1.3 var(--sans, "Manrope", sans-serif);
+  color: #1e1916;
+  outline: none;
+  transition: border-color 0.16s ease;
+}
+
+.blend-input-field input:focus {
+  border-color: var(--accent-terracotta, #c86d51);
+  box-shadow: 0 0 0 3px rgba(200, 109, 81, 0.15);
+}
+
+/* Right Column: Live Craft Bag Mockup & Action Bar */
+.blend-preview-wrap {
+  position: sticky;
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Realistic Craft Coffee Pouch Mockup */
+.craft-coffee-bag {
+  position: relative;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #e7decb 0%, #d8caa9 100%);
+  border: 1.5px solid rgba(135, 114, 88, 0.35);
+  box-shadow: 0 16px 36px rgba(46, 32, 21, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  padding: 26px 22px 28px;
+  overflow: hidden;
+  color: #2b221a;
+}
+
+.craft-bag-seal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: repeating-linear-gradient(90deg, #bda885, #bda885 8px, #ab946e 8px, #ab946e 16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.craft-bag-valve {
+  position: absolute;
+  top: 24px;
+  right: 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(110, 89, 65, 0.4);
+  background: radial-gradient(circle, #ab9573 20%, transparent 25%);
+  background-size: 6px 6px;
+}
+
+.craft-bag-label {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px 18px 20px;
+  border: 1px solid rgba(30, 25, 22, 0.12);
+  box-shadow: 0 8px 20px rgba(43, 34, 26, 0.08);
+  margin-top: 12px;
+}
+
+.craft-bag-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1.5px solid rgba(30, 25, 22, 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.craft-bag-crest {
+  font: 700 9px/1 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c86d51;
+  margin-bottom: 4px;
+}
+
+.craft-bag-brand {
+  font: 700 13px/1.1 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.01em;
+  color: #1e1916;
+}
+
+.craft-bag-title-box {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.craft-bag-blend-name {
+  font: 600 clamp(18px, 2.5vw, 24px)/1.15 var(--serif, "Playfair Display", Georgia, serif);
+  color: #1e1916;
+  margin: 0 0 6px;
+  word-break: break-word;
+}
+
+.craft-bag-dedication {
+  font: italic 400 12.5px/1.4 var(--serif, "Playfair Display", Georgia, serif);
+  color: #794a38;
+  margin: 0;
+  min-height: 18px;
+}
+
+.craft-bag-formula {
+  background: #faf7f1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  text-align: center;
+  border: 1px dashed rgba(200, 109, 81, 0.35);
+}
+
+.craft-bag-formula-text {
+  font: 700 12px/1.3 var(--mono, "DM Mono", monospace);
+  color: #8c4228;
+}
+
+.craft-bag-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font: 500 11px/1.2 var(--mono, "DM Mono", monospace);
+  color: #55493f;
+  border-top: 1px solid rgba(30, 25, 22, 0.08);
+  padding-top: 12px;
+}
+
+.craft-bag-detail-item strong {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8d7e72;
+  margin-bottom: 2px;
+}
+
+/* Studio Checkout & Action Panel */
+.blend-action-card {
+  background: #ffffff;
+  border: 1px solid rgba(30, 25, 22, 0.1);
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 24px rgba(30, 25, 22, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.blend-price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.blend-price-label {
+  font: 600 12px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #6a5e54;
+}
+
+.blend-price-total {
+  font: 800 24px/1 var(--mono, "DM Mono", monospace);
+  color: #1e1916;
+}
+
+.blend-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 999px;
+  border: none;
+  background: #4a5043;
+  color: #ffffff;
+  font: 700 14px/1 var(--sans, "Manrope", sans-serif);
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(74, 80, 67, 0.25);
+  transition: background-color 0.16s ease, transform 0.14s ease;
+}
+
+.blend-add-btn:hover {
+  background: #c86d51;
+  transform: translateY(-1px);
+}
+
+.blend-add-btn:active {
+  transform: scale(0.98);
+}
+
+.blend-perks-note {
+  font: 500 11px/1.4 var(--sans, "Manrope", sans-serif);
+  color: #796e64;
+  text-align: center;
+  margin: 0;
+}
+
+/* Quick Jump Hero Pill in Intro */
+.blend-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: #1e1916;
+  color: #ffffff;
+  font: 600 12.5px/1 var(--sans, "Manrope", sans-serif);
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(30, 25, 22, 0.15);
+  transition: background 0.16s ease, transform 0.14s ease;
+}
+
+.blend-hero-pill:hover {
+  background: #c86d51;
+  transform: translateY(-1px);
+}
