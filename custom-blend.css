@@ -1,10 +1,11 @@
 /* Baku Coffee Factory — Custom Blend Studio (Fərdi Qəhvə Blendini Yarat) */
+
 .blend-studio-section {
   position: relative;
   background: var(--paper, #f7f5f0);
   color: var(--ink, #1e1916);
-  padding: 60px max(16px, env(safe-area-inset-left, 0px)) 70px max(16px, env(safe-area-inset-right, 0px));
-  border-top: 1px solid rgba(30, 25, 22, 0.1);
+  padding: 56px max(16px, env(safe-area-inset-left, 0px)) 68px max(16px, env(safe-area-inset-right, 0px));
+  border-top: 1px solid rgba(74, 53, 37, 0.12);
   overflow-x: clip;
 }
 
@@ -21,20 +22,14 @@
   margin: 0 auto 36px;
 }
 
-.blend-studio-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font: 700 11px/1.2 var(--mono, "DM Mono", monospace);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent-terracotta, #c86d51);
-  margin-bottom: 10px;
+.blend-studio-head .eyebrow {
+  margin: 0 0 10px;
+  color: var(--text-muted, #7a6a5e);
 }
 
 .blend-studio-head h2 {
-  font: 500 clamp(28px, 4.8vw, 44px)/1.08 var(--serif, "Playfair Display", Georgia, serif);
-  letter-spacing: -0.03em;
+  font: 500 clamp(30px, 6vw, 46px)/0.96 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.045em;
   margin: 0 0 12px;
   color: var(--ink, #1e1916);
 }
@@ -42,13 +37,14 @@
 .blend-studio-head h2 em {
   font-style: italic;
   font-weight: 400;
-  color: #72402f;
+  color: var(--accent-terracotta, #c86d51);
 }
 
 .blend-studio-desc {
-  font: 400 clamp(13px, 2vw, 15px)/1.55 var(--sans, "Manrope", sans-serif);
-  color: var(--text-muted, #695a4e);
+  max-width: 58ch;
   margin: 0 auto;
+  font: 400 13.5px/1.6 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #7a6a5e);
 }
 
 /* Studio Grid Layout */
@@ -59,24 +55,26 @@
   align-items: start;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 960px) {
   .blend-studio-grid {
-    grid-template-columns: minmax(0, 1.25fr) minmax(360px, 0.95fr);
+    grid-template-columns: minmax(0, 1.32fr) minmax(360px, 0.92fr);
     gap: 32px;
   }
 }
 
-/* Left Column: Interactive Controls Card */
-.blend-controls-card {
-  background: #ffffff;
-  border: 1px solid rgba(30, 25, 22, 0.1);
-  border-radius: 24px;
+/* Left Column: Master Blender Studio Controls (Workbench) */
+.blend-workbench {
+  min-width: 0;
+  max-width: 100%;
+  background: #faf7f1;
+  border: 1px solid rgba(74, 53, 37, 0.13);
+  border-radius: 16px;
   padding: 22px 18px 24px;
-  box-shadow: 0 10px 28px rgba(30, 25, 22, 0.04);
+  box-shadow: 0 6px 20px rgba(34, 25, 18, 0.04);
 }
 
-@media (min-width: 600px) {
-  .blend-controls-card {
+@media (min-width: 640px) {
+  .blend-workbench {
     padding: 28px 28px 30px;
   }
 }
@@ -84,7 +82,7 @@
 .blend-step {
   margin-bottom: 26px;
   padding-bottom: 24px;
-  border-bottom: 1px solid rgba(30, 25, 22, 0.08);
+  border-bottom: 1px solid rgba(74, 53, 37, 0.09);
 }
 
 .blend-step:last-child {
@@ -93,32 +91,50 @@
   border-bottom: none;
 }
 
-.blend-step-title {
+.blend-step-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
-.blend-step-title h3 {
-  font: 700 13px/1.2 var(--mono, "DM Mono", monospace);
-  letter-spacing: 0.08em;
+.blend-step-num {
+  font: 700 11px/1 var(--mono, "DM Mono", monospace);
+  color: var(--accent-terracotta, #c86d51);
+  background: #efe4d8;
+  border: 1px solid rgba(200, 109, 81, 0.28);
+  border-radius: 6px;
+  padding: 4px 7px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.blend-step-title-wrap h3 {
+  font: 700 12.5px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #1e1916;
+  margin: 0 0 3px;
+}
+
+.blend-step-title-wrap p {
+  font: 400 12px/1.35 var(--sans, "Manrope", sans-serif);
+  color: var(--text-muted, #7a6a5e);
   margin: 0;
 }
 
-.blend-step-hint {
-  font: 500 11.5px/1.2 var(--sans, "Manrope", sans-serif);
-  color: #8c7e73;
-}
-
-/* Bean Selectors Pair */
+/* Step 1: Bean Selectors */
 .blend-beans-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+}
+
+@media (min-width: 520px) {
+  .blend-beans-row {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .blend-select-group {
@@ -128,84 +144,124 @@
 }
 
 .blend-select-label {
-  font: 600 11px/1.2 var(--mono, "DM Mono", monospace);
-  color: #83523f;
+  font: 600 10.5px/1.2 var(--mono, "DM Mono", monospace);
+  color: #634d3f;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
+.blend-select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .blend-select {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(30, 25, 22, 0.16);
-  background: #faf7f1;
+  height: 42px;
+  padding: 0 32px 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 53, 37, 0.18);
+  background: #ffffff;
   color: #1e1916;
   font: 600 13px/1.3 var(--sans, "Manrope", sans-serif);
   cursor: pointer;
   outline: none;
+  appearance: none;
+  -webkit-appearance: none;
   transition: border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .blend-select:focus {
   border-color: var(--accent-terracotta, #c86d51);
-  box-shadow: 0 0 0 3px rgba(200, 109, 81, 0.15);
+  box-shadow: 0 0 0 3px rgba(200, 109, 81, 0.12);
 }
 
-/* Ratio Slider Area */
-.blend-ratio-slider-wrap {
-  margin-top: 10px;
+.blend-select-arrow {
+  position: absolute;
+  right: 12px;
+  font-size: 11px;
+  color: #8c7e73;
+  pointer-events: none;
 }
 
-.blend-ratio-badge-row {
+/* Ratio Control Box */
+.blend-ratio-box {
+  background: #ffffff;
+  border: 1px solid rgba(74, 53, 37, 0.1);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-top: 14px;
+}
+
+.blend-ratio-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
-.blend-ratio-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font: 700 12.5px/1 var(--mono, "DM Mono", monospace);
+.ratio-side {
+  display: flex;
+  flex-direction: column;
 }
 
-.blend-ratio-pill.pill-base {
-  background: #fbeee7;
-  color: #9d3e24;
-  border: 1px solid rgba(200, 109, 81, 0.3);
+.ratio-side-accent {
+  text-align: right;
+  align-items: flex-end;
 }
 
-.blend-ratio-pill.pill-accent {
-  background: #eef2ec;
-  color: #3b5037;
-  border: 1px solid rgba(74, 80, 67, 0.25);
+.ratio-role {
+  font: 700 9.5px/1 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted, #7a6a5e);
+  margin-bottom: 2px;
+}
+
+.ratio-name {
+  font: 700 13px/1.2 var(--mono, "DM Mono", monospace);
+}
+
+.ratio-side-base .ratio-name {
+  color: #a4482b;
+}
+
+.ratio-side-accent .ratio-name {
+  color: #3f5539;
+}
+
+.ratio-divider-icon {
+  font: 700 14px/1 var(--mono, "DM Mono", monospace);
+  color: rgba(74, 53, 37, 0.28);
+}
+
+.blend-slider-wrap {
+  margin: 6px 0 8px;
 }
 
 .blend-range-slider {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 8px;
+  height: 6px;
   border-radius: 999px;
   background: linear-gradient(to right, #c86d51 var(--slider-ratio, 70%), #4a5043 var(--slider-ratio, 70%));
   outline: none;
   cursor: pointer;
-  margin: 10px 0 6px;
+  margin: 0;
 }
 
 .blend-range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: #ffffff;
-  border: 3px solid #c86d51;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  border: 2.5px solid #1e1916;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: transform 0.1s ease;
 }
@@ -215,125 +271,171 @@
 }
 
 .blend-range-slider::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: #ffffff;
-  border: 3px solid #c86d51;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+  border: 2.5px solid #1e1916;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
 
-/* Live Taste Profile Bars */
+.blend-ratio-markers {
+  display: flex;
+  justify-content: space-between;
+  font: 500 10px/1 var(--mono, "DM Mono", monospace);
+  color: #8c7e73;
+  letter-spacing: 0.04em;
+}
+
+/* Cupping Taste Metrics (Artisan Cupping Sheet Style) */
 .blend-taste-profile {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 16px;
-  margin-top: 18px;
-  padding: 14px 16px;
-  background: #faf7f1;
-  border-radius: 14px;
-  border: 1px solid rgba(30, 25, 22, 0.08);
+  gap: 12px 18px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid rgba(74, 53, 37, 0.08);
 }
 
 .taste-metric {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .taste-metric-label {
   display: flex;
   justify-content: space-between;
-  font: 600 11px/1.2 var(--sans, "Manrope", sans-serif);
-  color: #5a5048;
+  align-items: center;
+  font: 500 11px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #5a4b40;
 }
 
 .taste-metric-label strong {
-  font: 700 11px/1.2 var(--mono, "DM Mono", monospace);
+  font: 700 10.5px/1 var(--mono, "DM Mono", monospace);
   color: #1e1916;
 }
 
 .taste-metric-track {
   width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(30, 25, 22, 0.08);
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(74, 53, 37, 0.08);
   overflow: hidden;
+  margin-top: 5px;
 }
 
 .taste-metric-fill {
   height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #c86d51, #e0886c);
-  transition: width 0.25s ease;
+  border-radius: 2px;
+  background: var(--accent-terracotta, #c86d51);
+  transition: width 0.2s ease;
 }
 
-/* Grind Option Chips */
-.blend-chip-grid {
-  display: flex;
-  flex-wrap: wrap;
+/* Step 2: Grind Size Selector (Structured Option Tiles) */
+.blend-grind-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 
+@media (min-width: 600px) {
+  .blend-grind-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .blend-grind-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
 .blend-option-btn {
-  display: inline-flex;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(30, 25, 22, 0.16);
-  background: #faf7f1;
-  color: #2b2420;
-  font: 600 12.5px/1.2 var(--sans, "Manrope", sans-serif);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 53, 37, 0.16);
+  background: #ffffff;
   cursor: pointer;
-  transition: all 0.16s ease;
+  transition: all 0.15s ease;
+  text-align: left;
+  user-select: none;
 }
 
 .blend-option-btn:hover {
-  background: #f2ede4;
-  border-color: rgba(30, 25, 22, 0.3);
+  background: #fffdf9;
+  border-color: rgba(74, 53, 37, 0.35);
 }
 
 .blend-option-btn.active {
   background: #1e1916;
   border-color: #1e1916;
+  box-shadow: 0 4px 12px rgba(30, 25, 22, 0.15);
+}
+
+.blend-option-btn .grind-title {
+  font: 700 12px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #1e1916;
+  margin-bottom: 2px;
+  transition: color 0.15s ease;
+}
+
+.blend-option-btn.active .grind-title {
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(30, 25, 22, 0.18);
 }
 
-/* Weight Size Custom Input & Presets */
-.blend-weight-input-box {
+.blend-option-btn .grind-hint {
+  font: 500 9.5px/1.1 var(--mono, "DM Mono", monospace);
+  color: #8c7e73;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: color 0.15s ease;
+}
+
+.blend-option-btn.active .grind-hint {
+  color: #d4c8bd;
+}
+
+/* Step 3: Weight Selector Box */
+.blend-weight-box {
+  background: #ffffff;
+  border: 1px solid rgba(74, 53, 37, 0.1);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.blend-weight-inputs {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.blend-weight-input-label {
-  font: 600 12px/1.2 var(--sans, "Manrope", sans-serif);
-  color: #554a42;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
 .blend-weight-control {
   display: flex;
   align-items: center;
-  gap: 10px;
-  max-width: 320px;
+  gap: 6px;
 }
 
 .blend-weight-step-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(30, 25, 22, 0.18);
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  border: 1px solid rgba(74, 53, 37, 0.18);
   background: #faf7f1;
   color: #1e1916;
-  font: 700 20px/1 var(--sans, "Manrope", sans-serif);
+  font: 700 18px/1 var(--sans, "Manrope", sans-serif);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.14s ease;
   user-select: none;
 }
 
@@ -345,19 +447,19 @@
 
 .blend-weight-field-wrap {
   position: relative;
-  flex: 1;
+  width: 104px;
   display: flex;
   align-items: center;
 }
 
 .blend-weight-field-wrap input {
   width: 100%;
-  height: 42px;
-  padding: 0 32px 0 16px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(30, 25, 22, 0.18);
+  height: 38px;
+  padding: 0 24px 0 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(74, 53, 37, 0.18);
   background: #ffffff;
-  font: 700 16px/1 var(--mono, "DM Mono", monospace);
+  font: 700 15px/1 var(--mono, "DM Mono", monospace);
   color: #1e1916;
   text-align: center;
   outline: none;
@@ -366,13 +468,13 @@
 
 .blend-weight-field-wrap input:focus {
   border-color: var(--accent-terracotta, #c86d51);
-  box-shadow: 0 0 0 3px rgba(200, 109, 81, 0.15);
+  box-shadow: 0 0 0 3px rgba(200, 109, 81, 0.12);
 }
 
 .blend-weight-unit {
   position: absolute;
-  right: 14px;
-  font: 700 13px/1 var(--mono, "DM Mono", monospace);
+  right: 10px;
+  font: 700 12px/1 var(--mono, "DM Mono", monospace);
   color: #8c7e73;
   pointer-events: none;
 }
@@ -380,184 +482,165 @@
 .blend-weight-presets {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .blend-weight-preset-btn {
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(30, 25, 22, 0.14);
+  padding: 7px 11px;
+  border-radius: 6px;
+  border: 1px solid rgba(74, 53, 37, 0.14);
   background: #faf7f1;
-  color: #2b2420;
-  font: 600 12px/1 var(--mono, "DM Mono", monospace);
+  color: #3a2e26;
+  font: 700 11px/1 var(--mono, "DM Mono", monospace);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.14s ease;
+  user-select: none;
 }
 
 .blend-weight-preset-btn:hover {
-  background: #f0ebe2;
-  border-color: rgba(30, 25, 22, 0.3);
+  background: #f0e9df;
+  border-color: rgba(74, 53, 37, 0.3);
 }
 
 .blend-weight-preset-btn.active {
-  background: #1e1916;
-  border-color: #1e1916;
+  background: #4a3525;
+  border-color: #4a3525;
   color: #ffffff;
+  box-shadow: 0 2px 6px rgba(74, 53, 37, 0.18);
 }
 
-/* Right Column: Live Craft Bag Mockup & Action Bar */
-.blend-preview-wrap {
-  position: sticky;
-  top: 90px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.blend-weight-note {
+  margin: 10px 0 0;
+  font: 400 11.5px/1.4 var(--sans, "Manrope", sans-serif);
+  color: #8c7e73;
 }
 
-/* Realistic Craft Coffee Pouch Mockup */
-.craft-coffee-bag {
-  position: relative;
-  border-radius: 24px;
-  background: linear-gradient(145deg, #e7decb 0%, #d8caa9 100%);
-  border: 1.5px solid rgba(135, 114, 88, 0.35);
-  box-shadow: 0 16px 36px rgba(46, 32, 21, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.6);
-  padding: 26px 22px 28px;
-  overflow: hidden;
-  color: #2b221a;
-}
-
-.craft-bag-seal {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 12px;
-  background: repeating-linear-gradient(90deg, #bda885, #bda885 8px, #ab946e 8px, #ab946e 16px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.craft-bag-valve {
-  position: absolute;
-  top: 24px;
-  right: 22px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(110, 89, 65, 0.4);
-  background: radial-gradient(circle, #ab9573 20%, transparent 25%);
-  background-size: 6px 6px;
-}
-
-.craft-bag-label {
-  position: relative;
+/* Right Column: Roastery Blend Specification Card (Passport) */
+.blend-passport-card {
+  min-width: 0;
+  max-width: 100%;
   background: #ffffff;
+  border: 1px solid rgba(74, 53, 37, 0.14);
   border-radius: 16px;
-  padding: 22px 18px 20px;
-  border: 1px solid rgba(30, 25, 22, 0.12);
-  box-shadow: 0 8px 20px rgba(43, 34, 26, 0.08);
-  margin-top: 12px;
-}
-
-.craft-bag-header {
+  padding: 24px 22px;
+  box-shadow: 0 8px 24px rgba(34, 25, 18, 0.05);
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 960px) {
+  .blend-passport-card {
+    position: sticky;
+    top: 100px;
+  }
+}
+
+.passport-header {
+  display: flex;
   align-items: center;
-  text-align: center;
-  border-bottom: 1.5px solid rgba(30, 25, 22, 0.1);
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(74, 53, 37, 0.09);
   padding-bottom: 12px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
-.craft-bag-crest {
-  font: 700 9px/1 var(--mono, "DM Mono", monospace);
-  letter-spacing: 0.14em;
+.passport-kicker {
+  font: 700 9.5px/1 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #c86d51;
-  margin-bottom: 4px;
+  color: var(--accent-terracotta, #c86d51);
 }
 
-.craft-bag-brand {
-  font: 700 13px/1.1 var(--serif, "Playfair Display", Georgia, serif);
-  letter-spacing: -0.01em;
+.passport-brand {
+  font: 700 12px/1 var(--serif, "Playfair Display", Georgia, serif);
   color: #1e1916;
+  letter-spacing: -0.01em;
 }
 
-.craft-bag-title-box {
-  text-align: center;
-  margin-bottom: 14px;
+.passport-title-wrap {
+  margin-bottom: 16px;
 }
 
-.craft-bag-blend-name {
-  font: 600 clamp(18px, 2.5vw, 24px)/1.15 var(--serif, "Playfair Display", Georgia, serif);
+.passport-title {
+  font: 600 clamp(20px, 2.5vw, 24px)/1.15 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.02em;
   color: #1e1916;
   margin: 0 0 4px;
-  word-break: break-word;
 }
 
-.craft-bag-subline {
-  font: italic 400 12px/1.4 var(--serif, "Playfair Display", Georgia, serif);
-  color: #794a38;
+.passport-tagline {
+  font: italic 400 12px/1.3 var(--serif, "Playfair Display", Georgia, serif);
+  color: var(--text-muted, #7a6a5e);
   margin: 0;
 }
 
-.craft-bag-formula {
+.passport-table {
   background: #faf7f1;
+  border: 1px solid rgba(74, 53, 37, 0.08);
   border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 14px;
-  text-align: center;
-  border: 1px dashed rgba(200, 109, 81, 0.35);
+  padding: 12px 14px;
+  margin-bottom: 18px;
 }
 
-.craft-bag-formula-text {
-  font: 700 12px/1.3 var(--mono, "DM Mono", monospace);
-  color: #8c4228;
-}
-
-.craft-bag-details-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  font: 500 11px/1.2 var(--mono, "DM Mono", monospace);
-  color: #55493f;
-  border-top: 1px solid rgba(30, 25, 22, 0.08);
-  padding-top: 12px;
-}
-
-.craft-bag-detail-item strong {
-  display: block;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #8d7e72;
-  margin-bottom: 2px;
-}
-
-/* Studio Checkout & Action Panel */
-.blend-action-card {
-  background: #ffffff;
-  border: 1px solid rgba(30, 25, 22, 0.1);
-  border-radius: 20px;
-  padding: 18px 20px;
-  box-shadow: 0 8px 24px rgba(30, 25, 22, 0.05);
+.passport-row {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(74, 53, 37, 0.06);
 }
 
-.blend-price-row {
+.passport-row:first-child {
+  padding-top: 0;
+}
+
+.passport-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.passport-label {
+  font: 500 11px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #6a5a4e;
+  flex-shrink: 0;
+}
+
+.passport-val {
+  font: 700 12px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #1e1916;
+  text-align: right;
+  word-break: break-word;
+}
+
+.passport-val.mono {
+  font: 600 11px/1.2 var(--mono, "DM Mono", monospace);
+  color: #4a3525;
+}
+
+/* Passport Pricing & Add to Cart */
+.passport-price-box {
+  border-top: 1px solid rgba(74, 53, 37, 0.1);
+  padding-top: 16px;
+}
+
+.passport-price-top {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
 }
 
-.blend-price-label {
+.passport-price-label {
   font: 600 12px/1.2 var(--sans, "Manrope", sans-serif);
-  color: #6a5e54;
+  color: #4a3525;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.blend-price-total {
-  font: 800 24px/1 var(--mono, "DM Mono", monospace);
+.passport-price-number {
+  font: 800 26px/1 var(--mono, "DM Mono", monospace);
   color: #1e1916;
 }
 
@@ -568,30 +651,32 @@
   gap: 8px;
   width: 100%;
   min-height: 48px;
-  border-radius: 999px;
+  border-radius: 8px;
   border: none;
-  background: #4a5043;
+  background: #1e1916;
   color: #ffffff;
-  font: 700 14px/1 var(--sans, "Manrope", sans-serif);
+  font: 700 13.5px/1 var(--sans, "Manrope", sans-serif);
+  letter-spacing: 0.02em;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(74, 80, 67, 0.25);
-  transition: background-color 0.16s ease, transform 0.14s ease;
+  box-shadow: 0 4px 14px rgba(30, 25, 22, 0.14);
+  transition: all 0.16s ease;
 }
 
 .blend-add-btn:hover {
-  background: #c86d51;
+  background: var(--accent-terracotta, #c86d51);
   transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(200, 109, 81, 0.25);
 }
 
 .blend-add-btn:active {
-  transform: scale(0.98);
+  transform: scale(0.99);
 }
 
-.blend-perks-note {
-  font: 500 11px/1.4 var(--sans, "Manrope", sans-serif);
-  color: #796e64;
+.passport-footer-note {
+  margin: 14px 0 0;
+  font: 400 11px/1.45 var(--sans, "Manrope", sans-serif);
+  color: #8c7e73;
   text-align: center;
-  margin: 0;
 }
 
 /* Quick Jump Hero Pill in Intro */
@@ -611,6 +696,6 @@
 }
 
 .blend-hero-pill:hover {
-  background: #c86d51;
+  background: var(--accent-terracotta, #c86d51);
   transform: translateY(-1px);
 }

@@ -37,7 +37,7 @@ const MIME_TYPES = {
 };
 const PUBLIC_FILES = new Set([
   '/index.html', '/menyu.html', '/qehveler.html', '/caylar.html', '/avadanliqlar.html',
-  '/qehve-secici.html', '/mehsul.html', '/mexfilik.html', '/admin/index.html',
+  '/qehve-secici.html', '/mehsul.html', '/mexfilik.html', '/admin/index.html', '/blend-design-options.html',
   '/style.css', '/navigation.css', '/home-contact.css', '/home-featured.css', '/home-daily-discount.css', '/home-coffee-finder.css', '/menu-background.css',
   '/custom-blend.css',
   '/menu-mobile.css', '/menu-modern.css', '/summer-menu.css', '/tea-mobile.css', '/gear.css',
@@ -506,21 +506,25 @@ function createRequestHandler({
       if (relative.startsWith('..') || path.isAbsolute(relative)) return json(res, 400, { error: 'Invalid URL path' });
       try {
         const extension = path.extname(absolute).toLowerCase();
+        const stat = await fs.stat(absolute);
         let cached = staticCache.get(absolute);
-        if (!cached) {
+        if (!cached || cached.mtimeMs !== stat.mtimeMs) {
           const body = await fs.readFile(absolute);
           const etag = `"${crypto.createHash('md5').update(body).digest('hex').slice(0, 16)}"`;
           const isCompressible = ['.html', '.css', '.js', '.json', '.svg'].includes(extension);
           const gzipBody = isCompressible && body.length > 256 ? zlib.gzipSync(body) : null;
-          cached = { body, gzipBody, etag, extension };
+          cached = { body, gzipBody, etag, extension, mtimeMs: stat.mtimeMs };
           staticCache.set(absolute, cached);
         }
+
+        const isRevalidatable = ['.html', '.css', '.js'].includes(extension);
+        const cacheControl = isRevalidatable ? 'no-cache' : 'public, max-age=86400, stale-while-revalidate=604800';
 
         const ifNoneMatch = req.headers['if-none-match'];
         if (ifNoneMatch && ifNoneMatch === cached.etag) {
           res.writeHead(304, {
             'etag': cached.etag,
-            'cache-control': ['.html'].includes(extension) ? 'no-cache' : 'public, max-age=86400, stale-while-revalidate=604800',
+            'cache-control': cacheControl,
           });
           return res.end();
         }
@@ -531,7 +535,7 @@ function createRequestHandler({
         const headers = {
           'content-type': MIME_TYPES[extension] || 'application/octet-stream',
           'etag': cached.etag,
-          'cache-control': ['.html'].includes(extension) ? 'no-cache' : 'public, max-age=86400, stale-while-revalidate=604800',
+          'cache-control': cacheControl,
         };
         if (sendGzip) headers['content-encoding'] = 'gzip';
         if (isPublicAsset) headers['access-control-allow-origin'] = '*';

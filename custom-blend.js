@@ -132,11 +132,12 @@
     const weightPlus = root.querySelector('#blendWeightPlus');
     const presetButtons = root.querySelectorAll('.blend-weight-preset-btn');
 
-    // Craft bag mockup elements
+    // Passport summary elements
     const bagFormula = root.querySelector('#craftBagFormulaText');
     const bagGrind = root.querySelector('#craftBagGrindText');
     const bagWeight = root.querySelector('#craftBagWeightText');
     const bagDate = root.querySelector('#craftBagDateText');
+    const gramsText = root.querySelector('#passportGramsText');
 
     const priceDisplay = root.querySelector('#blendPriceTotal');
     const addBtn = root.querySelector('#blendAddToCartBtn');
@@ -208,9 +209,15 @@
         priceDisplay.textContent = `${finalPrice.toFixed(2)} ₼`;
       }
 
-      // Live Bag Mockup sync
+      // Live Passport Specification sync
       if (bagFormula) {
         bagFormula.textContent = `${baseRatio}% ${baseCoffee.name} · ${accentRatio}% ${accentCoffee.name}`;
+      }
+
+      if (gramsText) {
+        const baseGrams = Math.round((selectedWeight * baseRatio) / 100);
+        const accentGrams = selectedWeight - baseGrams;
+        gramsText.textContent = `${baseGrams} q ${baseCoffee.name} + ${accentGrams} q ${accentCoffee.name}`;
       }
 
       if (bagGrind) bagGrind.textContent = selectedGrind;

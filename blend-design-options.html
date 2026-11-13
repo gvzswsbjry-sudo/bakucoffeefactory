@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fərdi Blend Dizayn Variantları — Baku Coffee Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="custom-blend.css" />
+  <style>
+    /* Design Showcase Container Styles */
+    .showcase-header {
+      background: #1e1916;
+      color: #f7f5f0;
+      padding: 48px max(20px, 6vw) 36px;
+      text-align: center;
+      border-bottom: 2px solid var(--accent-terracotta, #c86d51);
+    }
+    .showcase-header .eyebrow {
+      color: var(--accent-terracotta, #c86d51);
+      margin-bottom: 8px;
+    }
+    .showcase-header h1 {
+      font: 500 clamp(28px, 5vw, 42px)/1.08 var(--serif, "Playfair Display", Georgia, serif);
+      margin: 0 0 10px;
+    }
+    .showcase-header p {
+      font: 400 14px/1.55 var(--sans, "Manrope", sans-serif);
+      color: #bfaea2;
+      max-width: 65ch;
+      margin: 0 auto 20px;
+    }
+    .showcase-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .showcase-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f7f5f0;
+      font: 600 12px/1 var(--mono, "DM Mono", monospace);
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.15s ease;
+    }
+    .showcase-nav-btn:hover {
+      background: var(--accent-terracotta, #c86d51);
+      border-color: var(--accent-terracotta, #c86d51);
+    }
+
+    .design-variant-block {
+      padding: 60px max(16px, 5vw) 80px;
+      border-bottom: 12px solid #e7ded0;
+    }
+    .design-variant-block:nth-of-type(even) {
+      background: #efe9df;
+    }
+
+    .variant-banner {
+      max-width: 1180px;
+      margin: 0 auto 36px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(74, 53, 37, 0.18);
+      padding-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .variant-title-wrap h2 {
+      font: 600 clamp(24px, 3.8vw, 34px)/1.1 var(--serif, "Playfair Display", Georgia, serif);
+      margin: 0 0 4px;
+      color: #1e1916;
+    }
+    .variant-title-wrap .variant-tag {
+      font: 700 10.5px/1 var(--mono, "DM Mono", monospace);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-terracotta, #c86d51);
+    }
+    .variant-desc {
+      font: 400 13px/1.5 var(--sans, "Manrope", sans-serif);
+      color: #6a594d;
+      max-width: 48ch;
+      margin: 0;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       VARIANT 1: «ATELIER MINIMAL» (Klassik Menyu Üslubu)
+       ════════════════════════════════════════════════════════════ */
+    .v1-atelier-wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid rgba(74, 53, 37, 0.14);
+      border-radius: 14px;
+      padding: 34px 28px 28px;
+      box-shadow: 0 4px 18px rgba(34, 25, 18, 0.04);
+    }
+    @media (min-width: 768px) {
+      .v1-atelier-wrap {
+        padding: 44px 40px 36px;
+      }
+    }
+    .v1-head {
+      text-align: center;
+      margin-bottom: 34px;
+    }
+    .v1-head h3 {
+      font: 500 clamp(28px, 4vw, 38px)/1 var(--serif, "Playfair Display", Georgia, serif);
+      letter-spacing: -0.04em;
+      margin: 0 0 8px;
+      color: #1e1916;
+    }
+    .v1-head h3 em {
+      font-style: italic;
+      color: var(--accent-terracotta, #c86d51);
+    }
+    .v1-head p {
+      font: 400 13px/1.55 var(--sans, "Manrope", sans-serif);
+      color: #7a6a5e;
+      margin: 0 auto;
+      max-width: 52ch;
+    }
+
+    .v1-blend-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    @media (min-width: 680px) {
+      .v1-blend-row {
+        grid-template-columns: 1fr 1.3fr 1fr;
+        align-items: center;
+        gap: 20px;
+      }
+    }
+    .v1-select-box label {
+      display: block;
+      font: 700 10.5px/1 var(--mono, "DM Mono", monospace);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #554438;
+      margin-bottom: 6px;
+    }
+    .v1-select-box select {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+      border: 1px solid rgba(74, 53, 37, 0.18);
+      border-radius: 8px;
+      background: #faf7f1;
+      font: 600 13.5px/1 var(--sans, "Manrope", sans-serif);
+      color: #1e1916;
+    }
+
+    .v1-ratio-center {
+      text-align: center;
+      padding: 6px 10px;
+    }
+    .v1-ratio-display {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .v1-ratio-display strong {
+      font: 700 14px/1 var(--mono, "DM Mono", monospace);
+      color: #1e1916;
+    }
+    .v1-ratio-display span {
+      font: 500 11px/1 var(--mono, "DM Mono", monospace);
+      color: #8c7e73;
+    }
+    .v1-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(to right, #c86d51 70%, #4a5043 70%);
+      outline: none;
+    }
+    .v1-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2.5px solid #1e1916;
+      cursor: pointer;
+    }
+
+    .v1-divider {
+      height: 1px;
+      background: rgba(74, 53, 37, 0.1);
+      margin: 24px 0;
+    }
+
+    .v1-inline-options {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    @media (min-width: 680px) {
+      .v1-inline-options {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    .v1-option-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .v1-option-label {
+      font: 700 11px/1 var(--mono, "DM Mono", monospace);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #7a6a5e;
+      min-width: 70px;
+    }
+    .v1-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .v1-tab-btn {
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(74, 53, 37, 0.14);
+      background: #faf7f1;
+      font: 600 12px/1 var(--sans, "Manrope", sans-serif);
+      color: #3b2f27;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+    .v1-tab-btn.active {
+      background: #1e1916;
+      border-color: #1e1916;
+      color: #ffffff;
+    }
+
+    .v1-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #1e1916;
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 16px 22px;
+      flex-wrap: wrap;
+    }
+    .v1-summary-copy h4 {
+      font: 600 15px/1.2 var(--serif, "Playfair Display", Georgia, serif);
+      margin: 0 0 3px;
+    }
+    .v1-summary-copy p {
+      font: 500 11.5px/1 var(--mono, "DM Mono", monospace);
+      color: #c9b9ad;
+      margin: 0;
+    }
+    .v1-action-side {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .v1-total-price {
+      font: 800 24px/1 var(--mono, "DM Mono", monospace);
+      color: #f7f5f0;
+    }
+    .v1-add-btn {
+      padding: 12px 24px;
+      border-radius: 6px;
+      border: none;
+      background: var(--accent-terracotta, #c86d51);
+      color: #ffffff;
+      font: 700 13px/1 var(--sans, "Manrope", sans-serif);
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background-color 0.15s ease;
+    }
+    .v1-add-btn:hover {
+      background: #b55d42;
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       VARIANT 3: «DUAL ORIGIN BALANCE» (Yan-yana İkili Kart)
+       ════════════════════════════════════════════════════════════ */
+    .v3-dual-wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .v3-head {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .v3-head h3 {
+      font: 500 clamp(28px, 4vw, 38px)/1 var(--serif, "Playfair Display", Georgia, serif);
+      letter-spacing: -0.04em;
+      margin: 0 0 8px;
+      color: #1e1916;
+    }
+    .v3-head h3 em {
+      font-style: italic;
+      color: var(--accent-terracotta, #c86d51);
+    }
+    .v3-head p {
+      font: 400 13.5px/1.5 var(--sans, "Manrope", sans-serif);
+      color: #7a6a5e;
+      margin: 0 auto;
+      max-width: 54ch;
+    }
+
+    .v3-cards-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+    @media (min-width: 768px) {
+      .v3-cards-row {
+        grid-template-columns: 1fr 140px 1fr;
+        align-items: center;
+      }
+    }
+
+    .v3-origin-card {
+      background: #ffffff;
+      border: 1px solid rgba(74, 53, 37, 0.14);
+      border-radius: 14px;
+      padding: 24px 22px;
+      box-shadow: 0 6px 18px rgba(34, 25, 18, 0.04);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .v3-card-tag {
+      font: 700 10px/1 var(--mono, "DM Mono", monospace);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8c7e73;
+      margin-bottom: 6px;
+    }
+    .v3-card-role-title {
+      font: 600 20px/1.1 var(--serif, "Playfair Display", Georgia, serif);
+      color: #1e1916;
+      margin: 0 0 14px;
+    }
+    .v3-card-select {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      border: 1.5px solid rgba(74, 53, 37, 0.16);
+      border-radius: 8px;
+      background: #faf7f1;
+      font: 600 13px/1 var(--sans, "Manrope", sans-serif);
+      color: #1e1916;
+      margin-bottom: 14px;
+    }
+    .v3-card-proportion-badge {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #faf7f1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .v3-card-proportion-badge strong {
+      font: 700 16px/1 var(--mono, "DM Mono", monospace);
+      color: #a4482b;
+    }
+    .v3-card-proportion-badge span {
+      font: 600 11.5px/1 var(--mono, "DM Mono", monospace);
+      color: #6a5a4e;
+    }
+    .v3-card-accent .v3-card-proportion-badge strong {
+      color: #3b5037;
+    }
+    .v3-card-taste {
+      font: 400 12px/1.45 var(--sans, "Manrope", sans-serif);
+      color: #7a6a5e;
+      margin: 0;
+      border-top: 1px dashed rgba(74, 53, 37, 0.12);
+      padding-top: 10px;
+    }
+
+    .v3-bridge-col {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .v3-bridge-badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #1e1916;
+      color: #ffffff;
+      font: 700 14px/1 var(--mono, "DM Mono", monospace);
+      letter-spacing: 0.04em;
+    }
+    .v3-bridge-hint {
+      font: 500 10.5px/1.2 var(--sans, "Manrope", sans-serif);
+      color: #8c7e73;
+    }
+
+    .v3-bottom-strip {
+      background: #faf7f1;
+      border: 1px solid rgba(74, 53, 37, 0.13);
+      border-radius: 12px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .v3-strip-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .v3-strip-item label {
+      font: 700 10px/1 var(--mono, "DM Mono", monospace);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #7a6a5e;
+    }
+    .v3-strip-item select, .v3-strip-item input {
+      height: 38px;
+      padding: 0 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(74, 53, 37, 0.18);
+      background: #ffffff;
+      font: 600 12.5px/1 var(--sans, "Manrope", sans-serif);
+      color: #1e1916;
+    }
+    .v3-strip-action {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+    }
+    .v3-price-wrap {
+      text-align: right;
+    }
+    .v3-price-wrap span {
+      display: block;
+      font: 600 10.5px/1 var(--mono, "DM Mono", monospace);
+      color: #8c7e73;
+      text-transform: uppercase;
+    }
+    .v3-price-wrap strong {
+      font: 800 24px/1 var(--mono, "DM Mono", monospace);
+      color: #1e1916;
+    }
+    .v3-add-btn {
+      height: 44px;
+      padding: 0 22px;
+      border-radius: 6px;
+      border: none;
+      background: #1e1916;
+      color: #ffffff;
+      font: 700 13.5px/1 var(--sans, "Manrope", sans-serif);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+    .v3-add-btn:hover {
+      background: var(--accent-terracotta, #c86d51);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Showcase Navigation Bar -->
+  <header class="showcase-header">
+    <p class="eyebrow">DİZAYN TƏKLİFLƏRİ · BAKU COFFEE FACTORY</p>
+    <h1>«Öz Qəhvə Blendini Yarat» Dizayn Seçimləri</h1>
+    <p>Aşağıda brendin ümumi dizayn dili ilə tam həmahəng, minimalist və fərqli 3 dizayn yanaşması hazırlanmışdır. İstədiyiniz variantı seçə bilərsiniz.</p>
+    <div class="showcase-nav">
+      <a class="showcase-nav-btn" href="#design-1">Variant 1: Atelier Minimal ↓</a>
+      <a class="showcase-nav-btn" href="#design-2">Variant 2: Roastery Passport ↓</a>
+      <a class="showcase-nav-btn" href="#design-3">Variant 3: Dual Origin Balance ↓</a>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       VARIANT 1: ATELIER MINIMAL (Menyu və Təbii Axış Formatı)
+       ════════════════════════════════════════════════════════════════ -->
+  <section class="design-variant-block" id="design-1">
+    <div class="variant-banner">
+      <div class="variant-title-wrap">
+        <span class="variant-tag">VARİANT 1</span>
+        <h2>Atelier Minimal (Klassik Menyu Üslubu)</h2>
+      </div>
+      <p class="variant-desc">Qutulardan və dashboard elementlərindən uzaq, təmiz qəhvəxana resept vərəqi. Sadə, xətti və zərif.</p>
+    </div>
+
+    <div class="v1-atelier-wrap">
+      <div class="v1-head">
+        <p class="eyebrow">FƏRDİ BLEND STUDİYASI</p>
+        <h3>Öz Qəhvə Blendini <em>özün yarat.</em></h3>
+        <p>İki fərqli mənşə qəhvəsini istədiyiniz nisbətdə qarışdırın, üyütmə və çəkini seçərək şəxsi qəhvənizi hazırlayın.</p>
+      </div>
+
+      <!-- Coffee Origins & Ratio -->
+      <div class="v1-blend-row">
+        <div class="v1-select-box">
+          <label for="v1Base">Baza Qəhvəsi (Əsas Gövdə)</label>
+          <select id="v1Base">
+            <option selected>Efiopiya (13.00 ₼ / 100q)</option>
+            <option>Colombia (15.00 ₼ / 100q)</option>
+            <option>Brasil (10.00 ₼ / 100q)</option>
+            <option>Guatemala (12.00 ₼ / 100q)</option>
+            <option>Keniya (8.00 ₼ / 100q)</option>
+          </select>
+        </div>
+
+        <div class="v1-ratio-center">
+          <div class="v1-ratio-display">
+            <strong style="color: #a4482b">70% Efiopiya</strong>
+            <span>nisbət</span>
+            <strong style="color: #3b5037">30% Robusta</strong>
+          </div>
+          <input class="v1-slider" type="range" min="10" max="90" value="70" />
+        </div>
+
+        <div class="v1-select-box">
+          <label for="v1Accent">Vurğu Qəhvəsi (Xarakter &amp; Ətir)</label>
+          <select id="v1Accent">
+            <option selected>Robusta (8.00 ₼ / 100q)</option>
+            <option>Efiopiya (13.00 ₼ / 100q)</option>
+            <option>Colombia (15.00 ₼ / 100q)</option>
+            <option>Brasil (10.00 ₼ / 100q)</option>
+            <option>Decaf (12.00 ₼ / 100q)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="v1-divider"></div>
+
+      <!-- Grind and Weight -->
+      <div class="v1-inline-options">
+        <div class="v1-option-group">
+          <span class="v1-option-label">Üyütmə:</span>
+          <div class="v1-tabs">
+            <button class="v1-tab-btn active" type="button">Dənə (Bütöv)</button>
+            <button class="v1-tab-btn" type="button">Espresso / Moka</button>
+            <button class="v1-tab-btn" type="button">V60 / Filtr</button>
+            <button class="v1-tab-btn" type="button">French Press</button>
+            <button class="v1-tab-btn" type="button">Türk qəhvəsi</button>
+          </div>
+        </div>
+
+        <div class="v1-option-group">
+          <span class="v1-option-label">Çəki:</span>
+          <div class="v1-tabs">
+            <button class="v1-tab-btn" type="button">100 q</button>
+            <button class="v1-tab-btn active" type="button">250 q</button>
+            <button class="v1-tab-btn" type="button">500 q</button>
+            <button class="v1-tab-btn" type="button">1 kq</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Action Bar -->
+      <div class="v1-action-bar">
+        <div class="v1-summary-copy">
+          <h4>Fərdi Qəhvə Blendi</h4>
+          <p>70% Efiopiya (175q) + 30% Robusta (75q) · Dənə (Bütöv)</p>
+        </div>
+        <div class="v1-action-side">
+          <span class="v1-total-price">28.75 ₼</span>
+          <button class="v1-add-btn" type="button">Səbətə əlavə et →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       VARIANT 2: ROASTERY PASSPORT (İki Sütunlu Cupping & Resept Vərəqi)
+       ════════════════════════════════════════════════════════════════ -->
+  <section class="design-variant-block" id="design-2">
+    <div class="variant-banner">
+      <div class="variant-title-wrap">
+        <span class="variant-tag">VARİANT 2</span>
+        <h2>Roastery Passport (Dəqiq Resept &amp; Pasport Kartı)</h2>
+      </div>
+      <p class="variant-desc">İki sütunlu mühəndislik: Sol sütunda Master Blender parametrləri, sağ sütunda rəsmi Roastery Spesifikasiya Pasportu.</p>
+    </div>
+
+    <div class="blend-studio-section" style="padding: 0; background: transparent; border: none;">
+      <div class="blend-studio-container">
+        <div class="blend-studio-grid">
+          <!-- Left Column: Master Blender Studio Controls -->
+          <div class="blend-workbench">
+            <div class="blend-step">
+              <div class="blend-step-header">
+                <span class="blend-step-num">01</span>
+                <div class="blend-step-title-wrap">
+                  <h3>Qəhvə Növləri və Qarışıq Nisbəti</h3>
+                  <p>Əsas baza və vurğu qəhvəsini seçərək dad balansını tənzimləyin</p>
+                </div>
+              </div>
+
+              <div class="blend-beans-row">
+                <div class="blend-select-group">
+                  <label class="blend-select-label">Baza Qəhvəsi (Əsas Gövdə)</label>
+                  <div class="blend-select-wrap">
+                    <select class="blend-select">
+                      <option selected>Efiopiya (13 ₼ / 100q)</option>
+                      <option>Colombia (15 ₼ / 100q)</option>
+                      <option>Brasil (10 ₼ / 100q)</option>
+                    </select>
+                    <span class="blend-select-arrow" aria-hidden="true">▾</span>
+                  </div>
+                </div>
+
+                <div class="blend-select-group">
+                  <label class="blend-select-label">Vurğu Qəhvəsi (Xarakter &amp; Ətir)</label>
+                  <div class="blend-select-wrap">
+                    <select class="blend-select">
+                      <option selected>Robusta (8 ₼ / 100q)</option>
+                      <option>Efiopiya (13 ₼ / 100q)</option>
+                      <option>Colombia (15 ₼ / 100q)</option>
+                    </select>
+                    <span class="blend-select-arrow" aria-hidden="true">▾</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="blend-ratio-box">
+                <div class="blend-ratio-header">
+                  <div class="ratio-side ratio-side-base">
+                    <span class="ratio-role">Baza</span>
+                    <strong class="ratio-name">70% Efiopiya</strong>
+                  </div>
+                  <div class="ratio-divider-icon" aria-hidden="true">:</div>
+                  <div class="ratio-side ratio-side-accent">
+                    <span class="ratio-role">Vurğu</span>
+                    <strong class="ratio-name">30% Robusta</strong>
+                  </div>
+                </div>
+                <div class="blend-slider-wrap">
+                  <input class="blend-range-slider" type="range" min="10" max="90" value="70" />
+                </div>
+                <div class="blend-ratio-markers" aria-hidden="true">
+                  <span>90/10</span>
+                  <span>70/30</span>
+                  <span>50/50</span>
+                  <span>30/70</span>
+                  <span>10/90</span>
+                </div>
+              </div>
+
+              <div class="blend-taste-profile">
+                <div class="taste-metric">
+                  <div class="taste-metric-label"><span>Şirinlik</span><strong>4.0 / 5</strong></div>
+                  <div class="taste-metric-track"><div class="taste-metric-fill" style="width: 80%"></div></div>
+                </div>
+                <div class="taste-metric">
+                  <div class="taste-metric-label"><span>Turşuluq</span><strong>3.5 / 5</strong></div>
+                  <div class="taste-metric-track"><div class="taste-metric-fill" style="width: 70%"></div></div>
+                </div>
+                <div class="taste-metric">
+                  <div class="taste-metric-label"><span>Gövdə</span><strong>3.2 / 5</strong></div>
+                  <div class="taste-metric-track"><div class="taste-metric-fill" style="width: 64%"></div></div>
+                </div>
+                <div class="taste-metric">
+                  <div class="taste-metric-label"><span>Aroma</span><strong>4.3 / 5</strong></div>
+                  <div class="taste-metric-track"><div class="taste-metric-fill" style="width: 86%"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="blend-step">
+              <div class="blend-step-header">
+                <span class="blend-step-num">02</span>
+                <div class="blend-step-title-wrap">
+                  <h3>Üyütmə Növü</h3>
+                  <p>Dəmləmə üsulunuza uyğun optimal dərəcə</p>
+                </div>
+              </div>
+              <div class="blend-grind-grid">
+                <button class="blend-option-btn active" type="button">
+                  <span class="grind-title">Dənə (Bütöv)</span>
+                  <span class="grind-hint">Üyüdülməmiş</span>
+                </button>
+                <button class="blend-option-btn" type="button">
+                  <span class="grind-title">Espresso / Moka</span>
+                  <span class="grind-hint">İncə</span>
+                </button>
+                <button class="blend-option-btn" type="button">
+                  <span class="grind-title">V60 / Filtr</span>
+                  <span class="grind-hint">Orta</span>
+                </button>
+                <button class="blend-option-btn" type="button">
+                  <span class="grind-title">French Press</span>
+                  <span class="grind-hint">İri</span>
+                </button>
+                <button class="blend-option-btn" type="button">
+                  <span class="grind-title">Türk qəhvəsi</span>
+                  <span class="grind-hint">Ultra incə</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="blend-step">
+              <div class="blend-step-header">
+                <span class="blend-step-num">03</span>
+                <div class="blend-step-title-wrap">
+                  <h3>Çəki Seçimi</h3>
+                  <p>İstədiyiniz qram miqdarını yazın və ya standart paket seçin</p>
+                </div>
+              </div>
+              <div class="blend-weight-box">
+                <div class="blend-weight-inputs">
+                  <div class="blend-weight-control">
+                    <button type="button" class="blend-weight-step-btn">−</button>
+                    <div class="blend-weight-field-wrap">
+                      <input type="number" value="250" />
+                      <span class="blend-weight-unit">q</span>
+                    </div>
+                    <button type="button" class="blend-weight-step-btn">+</button>
+                  </div>
+                  <div class="blend-weight-presets">
+                    <button class="blend-weight-preset-btn" type="button">100 q</button>
+                    <button class="blend-weight-preset-btn active" type="button">250 q</button>
+                    <button class="blend-weight-preset-btn" type="button">500 q</button>
+                    <button class="blend-weight-preset-btn" type="button">1000 q (1 kq)</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Blend Passport / Specification Card -->
+          <aside class="blend-passport-card">
+            <div class="passport-header">
+              <span class="passport-kicker">ROASTERY SPECIFICATION</span>
+              <span class="passport-brand">Baku Coffee Factory</span>
+            </div>
+            <div class="passport-title-wrap">
+              <h3 class="passport-title">Xüsusi Qəhvə Blendi</h3>
+              <p class="passport-tagline">Freshly Roasted Specialty Coffee</p>
+            </div>
+            <div class="passport-table">
+              <div class="passport-row">
+                <span class="passport-label">Blend Formulu</span>
+                <strong class="passport-val">70% Efiopiya · 30% Robusta</strong>
+              </div>
+              <div class="passport-row">
+                <span class="passport-label">Komponent Payı</span>
+                <span class="passport-val mono">175 q Efiopiya + 75 q Robusta</span>
+              </div>
+              <div class="passport-row">
+                <span class="passport-label">Üyütmə Növü</span>
+                <strong class="passport-val">Dənə (Bütöv)</strong>
+              </div>
+              <div class="passport-row">
+                <span class="passport-label">Xalis Çəki</span>
+                <strong class="passport-val">250 q</strong>
+              </div>
+              <div class="passport-row">
+                <span class="passport-label">Qovrum &amp; Status</span>
+                <span class="passport-val">Təzə qovrum · Baku Coffee Factory</span>
+              </div>
+            </div>
+            <div class="passport-price-box">
+              <div class="passport-price-top">
+                <span class="passport-price-label">Yekun Qiymət:</span>
+                <strong class="passport-price-number">28.75 ₼</strong>
+              </div>
+              <button class="blend-add-btn" type="button">
+                <span>Səbətə əlavə et</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+            <p class="passport-footer-note">Sifarişinizə uyğun olaraq təzə dənələrdən qarışdırılır və seçdiyiniz üyütmə ilə təqdim edilir.</p>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       VARIANT 3: DUAL ORIGIN BALANCE (Yan-yana İkili Qəhvə Kartı)
+       ════════════════════════════════════════════════════════════════ -->
+  <section class="design-variant-block" id="design-3">
+    <div class="variant-banner">
+      <div class="variant-title-wrap">
+        <span class="variant-tag">VARİANT 3</span>
+        <h2>Dual Origin Balance (İki Qəhvənin Harmoniyası)</h2>
+      </div>
+      <p class="variant-desc">İstifadəçiyə iki qəhvə mənşəyini vizual olaraq yan-yana təqdim edən, mərkəzdə nisbət körpüsü olan balanslı və intuitiv dizayn.</p>
+    </div>
+
+    <div class="v3-dual-wrap">
+      <div class="v3-head">
+        <p class="eyebrow">İKİ MƏNŞƏNİN HARMONİYASI</p>
+        <h3>İki Qəhvəni Birləşdir, <em>öz dadını kəşf et.</em></h3>
+        <p>Baza və vurğu qəhvəsini seçərək ortadakı balans tənzimləyicisi ilə tərkibi müəyyənləşdirin.</p>
+      </div>
+
+      <!-- Two Side-by-side Origin Cards + Bridge -->
+      <div class="v3-cards-row">
+        <!-- Left: Base Coffee Card -->
+        <div class="v3-origin-card v3-card-base">
+          <span class="v3-card-tag">KOMPONENT 01 · BAZA</span>
+          <h4 class="v3-card-role-title">Efiopiya Sidamo</h4>
+          <select class="v3-card-select">
+            <option selected>Efiopiya (13.00 ₼ / 100q)</option>
+            <option>Colombia (15.00 ₼ / 100q)</option>
+            <option>Brasil (10.00 ₼ / 100q)</option>
+          </select>
+          <div class="v3-card-proportion-badge">
+            <strong>70%</strong>
+            <span>175 q pay</span>
+          </div>
+          <p class="v3-card-taste">Yasəmən, berqamot, limon qabığı və çəyirdəkli meyvələr ilə parlaq çiçək xarakteri.</p>
+        </div>
+
+        <!-- Center: Balance Bridge -->
+        <div class="v3-bridge-col">
+          <span class="v3-bridge-badge">70 : 30</span>
+          <input class="v1-slider" type="range" min="10" max="90" value="70" style="width: 100px;" />
+          <span class="v3-bridge-hint">Balans dərəcəsi</span>
+        </div>
+
+        <!-- Right: Accent Coffee Card -->
+        <div class="v3-origin-card v3-card-accent">
+          <span class="v3-card-tag">KOMPONENT 02 · VURĞU</span>
+          <h4 class="v3-card-role-title">Robusta Premium</h4>
+          <select class="v3-card-select">
+            <option selected>Robusta (8.00 ₼ / 100q)</option>
+            <option>Efiopiya (13.00 ₼ / 100q)</option>
+            <option>Colombia (15.00 ₼ / 100q)</option>
+          </select>
+          <div class="v3-card-proportion-badge">
+            <strong>30%</strong>
+            <span>75 q pay</span>
+          </div>
+          <p class="v3-card-taste">Tünd kakao, odunsu tonlar, yüksək intensivlik və qalın qızılı crema.</p>
+        </div>
+      </div>
+
+      <!-- Bottom Integrated Strip -->
+      <div class="v3-bottom-strip">
+        <div class="v3-strip-item">
+          <label for="v3Grind">Üyütmə Növü</label>
+          <select id="v3Grind">
+            <option selected>Dənə (Bütöv) — Üyüdülməmiş</option>
+            <option>Espresso / Moka — İncə</option>
+            <option>V60 / Filtr — Orta</option>
+            <option>French Press — İri</option>
+            <option>Türk qəhvəsi — Ultra incə</option>
+          </select>
+        </div>
+
+        <div class="v3-strip-item">
+          <label for="v3Weight">Ümumi Çəki</label>
+          <select id="v3Weight">
+            <option>100 q</option>
+            <option selected>250 q (Standart)</option>
+            <option>500 q</option>
+            <option>1000 q (1 kq)</option>
+          </select>
+        </div>
+
+        <div class="v3-strip-action">
+          <div class="v3-price-wrap">
+            <span>Cəmi Qiymət</span>
+            <strong>28.75 ₼</strong>
+          </div>
+          <button class="v3-add-btn" type="button">Səbətə əlavə et →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
