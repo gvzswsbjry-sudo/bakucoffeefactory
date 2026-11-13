@@ -88,8 +88,9 @@ test('menyu.html and script.js adopt Version 1 modern theme without dark atmosph
   assert.ok(
     modernCss.includes('.price-chip b {\n  font: 800 10.5px/1 var(--mono);\n  color: var(--m-ink);') &&
     modernCss.includes('.price-chip-single {\n  border: 1.5px solid var(--m-chip-border);') &&
-    modernCss.includes('.price-chip-sale {\n  border: 1.5px solid var(--m-chip-border);'),
-    'single, multi-size, and discounted price chips all share identical border type and bold text styling'
+    modernCss.includes('.price-chip-sale {\n  border: 1.5px solid var(--m-chip-border);') &&
+    modernCss.includes('.price-chip-sale strong {\n  color: #c02b1c;'),
+    'single, multi-size, and discounted price chips all share identical border type, with only discounted prices highlighted in red'
   );
   assert.ok(
     modernCss.includes('.site-header .menu-tabs-bar-mobile {\n  position: static;\n  z-index: 1;'),

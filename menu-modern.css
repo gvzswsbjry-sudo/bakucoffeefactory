@@ -289,7 +289,7 @@ body:has(.menu-modern) .site-header .main-nav {
 }
 
 .daily-size-new {
-  color: var(--m-clay-deep);
+  color: #c02b1c;
   font: 700 12px/1 var(--mono);
 }
 
@@ -570,7 +570,7 @@ body:has(.menu-modern) .site-header .main-nav {
 }
 
 .price-chip-sale strong {
-  color: var(--m-ink);
+  color: #c02b1c;
   font: 800 11.5px/1 var(--mono);
   line-height: 1.05;
 }
@@ -900,7 +900,7 @@ body:has(.menu-modern) .site-header .main-nav {
   .price-chip-sale strong {
     font-size: 12px;
     font-weight: 800;
-    color: var(--m-ink);
+    color: #c02b1c;
   }
 
   .menu-modern .menu-group.menu-card p.menu-row.menu-row-discount {
