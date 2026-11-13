@@ -79,6 +79,19 @@ test('menyu.html and script.js adopt Version 1 modern theme without dark atmosph
     'every coffee row places prices cleanly opposite the name rather than wrapping underneath'
   );
   assert.ok(
+    modernCss.includes('.price-chip {') &&
+    modernCss.includes('border: 1.5px solid var(--m-chip-border);') &&
+    modernCss.includes('font: 700 11.5px/1 var(--mono);') &&
+    modernCss.includes('--m-chip-border: rgba(30, 25, 22, 0.28);'),
+    'all price chips share a consistent crisp dark frame and bold typography for maximum readability'
+  );
+  assert.ok(
+    modernCss.includes('.price-chip b {\n  font: 800 10.5px/1 var(--mono);\n  color: var(--m-ink);') &&
+    modernCss.includes('.price-chip-single {\n  border: 1.5px solid var(--m-chip-border);') &&
+    modernCss.includes('.price-chip-sale {\n  border: 1.5px solid var(--m-chip-border);'),
+    'single, multi-size, and discounted price chips all share identical border type and bold text styling'
+  );
+  assert.ok(
     modernCss.includes('.site-header .menu-tabs-bar-mobile {\n  position: static;\n  z-index: 1;'),
     'mobile menu tab bar stays at z-index: 1 inside site-header so header dropdowns stay on top'
   );

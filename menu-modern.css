@@ -10,7 +10,7 @@
   --m-clay: #c86d51;
   --m-clay-deep: #a94f34;
   --m-line: rgba(30, 25, 22, 0.1);
-  --m-chip-border: rgba(200, 109, 81, 0.38);
+  --m-chip-border: rgba(30, 25, 22, 0.28);
 }
 
 .menu-modern {
@@ -517,57 +517,61 @@ body:has(.menu-modern) .site-header .main-nav {
 .price-chip {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 3.5px 6.5px;
+  gap: 3.5px;
+  padding: 4px 8px;
   border-radius: 999px;
-  border: 1px solid var(--m-chip-border);
-  background: #fffcf9;
+  border: 1.5px solid var(--m-chip-border);
+  background: #faf7f1;
   color: var(--m-ink);
-  font: 500 10px/1.1 var(--mono);
+  font: 700 11.5px/1 var(--mono);
   white-space: nowrap;
+  letter-spacing: -0.01em;
 }
 
 .price-chip b {
-  font: 700 9.5px/1 var(--mono);
-  color: var(--m-clay-deep);
+  font: 800 10.5px/1 var(--mono);
+  color: var(--m-ink);
+  letter-spacing: 0.02em;
 }
 
 .price-chip-single {
-  border-color: rgba(30, 25, 22, 0.14);
+  border: 1.5px solid var(--m-chip-border);
   background: #faf7f1;
-  font-weight: 600;
+  color: var(--m-ink);
+  font: 700 11.5px/1 var(--mono);
   padding: 4px 9px;
-  font-size: 11px;
 }
 
 .price-chip-sale {
-  border-color: rgba(200, 109, 81, 0.55);
-  background: #fdf0ea;
-  color: var(--m-clay-deep);
+  border: 1.5px solid var(--m-chip-border);
+  background: #faf7f1;
+  color: var(--m-ink);
   display: inline-flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
-  padding: 4px 6px;
-  border-radius: 10px;
+  padding: 4px 7px;
+  border-radius: 999px;
   min-width: 48px;
 }
 
-.price-chip-sale b,
-.price-chip-sale del {
-  font-size: 8.5px;
+.price-chip-sale b {
+  font: 800 10px/1 var(--mono);
+  color: var(--m-ink);
   line-height: 1;
 }
 
 .price-chip-sale del {
-  color: #8f8479;
-  font-weight: 400;
+  font: 600 10px/1 var(--mono);
+  color: #857b70;
+  text-decoration: line-through;
+  line-height: 1;
 }
 
 .price-chip-sale strong {
-  color: var(--m-clay-deep);
-  font-weight: 700;
-  font-size: 10px;
+  color: var(--m-ink);
+  font: 800 11.5px/1 var(--mono);
   line-height: 1.05;
 }
 
@@ -855,30 +859,48 @@ body:has(.menu-modern) .site-header .main-nav {
   }
 
   .price-chip {
-    padding: 4px 9px;
-    font-size: 11px;
-    gap: 4px;
+    padding: 4.5px 10px;
+    font-size: 12px;
+    gap: 4.5px;
+    font-weight: 700;
   }
 
   .price-chip b {
-    font-size: 10px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--m-ink);
+  }
+
+  .price-chip-single {
+    padding: 4.5px 10px;
+    font-size: 12px;
+    font-weight: 700;
   }
 
   .price-chip-sale {
     flex-direction: row;
     border-radius: 999px;
-    padding: 4px 9px;
+    padding: 4.5px 10px;
     gap: 5px;
     min-width: 0;
   }
 
-  .price-chip-sale b,
+  .price-chip-sale b {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--m-ink);
+  }
+
   .price-chip-sale del {
-    font-size: 10px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #857b70;
   }
 
   .price-chip-sale strong {
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--m-ink);
   }
 
   .menu-modern .menu-group.menu-card p.menu-row.menu-row-discount {
