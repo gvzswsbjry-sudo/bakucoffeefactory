@@ -1,4 +1,4 @@
-// Baku Coffee Factory — Custom Blend Studio (Fərdi Qəhvə Blendini Yarat)
+// Baku Coffee Factory — Custom Blend Studio (Öz Qəhvə Blendini Yarat)
 (function () {
   'use strict';
 
@@ -115,13 +115,14 @@
     const aromaVal = root.querySelector('#tasteAromaVal');
 
     const grindButtons = root.querySelectorAll('.blend-option-btn[data-grind]');
-    const sizeCards = root.querySelectorAll('.blend-size-card[data-weight]');
 
-    const titleInput = root.querySelector('#blendTitleInput');
-    const dedicationInput = root.querySelector('#blendDedicationInput');
+    // Weight controls
+    const weightInput = root.querySelector('#blendWeightInput');
+    const weightMinus = root.querySelector('#blendWeightMinus');
+    const weightPlus = root.querySelector('#blendWeightPlus');
+    const presetButtons = root.querySelectorAll('.blend-weight-preset-btn');
 
-    const bagBlendName = root.querySelector('#craftBagBlendName');
-    const bagDedication = root.querySelector('#craftBagDedication');
+    // Craft bag mockup elements
     const bagFormula = root.querySelector('#craftBagFormulaText');
     const bagGrind = root.querySelector('#craftBagGrindText');
     const bagWeight = root.querySelector('#craftBagWeightText');
@@ -139,6 +140,12 @@
       const month = String(d.getMonth() + 1).padStart(2, '0');
       const year = d.getFullYear();
       return `${day}.${month}.${year}`;
+    }
+
+    function syncPresetActive(grams) {
+      presetButtons.forEach((btn) => {
+        btn.classList.toggle('active', Number(btn.dataset.preset) === grams);
+      });
     }
 
     function calculateState() {
@@ -182,14 +189,9 @@
         aromaVal.textContent = `${aroma.toFixed(1)} / 5`;
       }
 
-      // Calculate pricing
+      // Calculate pricing: STRICTLY NO DISCOUNTS (endirim olmasin)
       const avgPricePer100g = ((baseCoffee.price * baseRatio) + (accentCoffee.price * accentRatio)) / 100;
-      let total = (avgPricePer100g * selectedWeight) / 100;
-
-      // Tier discount for larger packs
-      if (selectedWeight === 500) total *= 0.95; // 5% off
-      if (selectedWeight === 1000) total *= 0.90; // 10% off
-
+      const total = (avgPricePer100g * selectedWeight) / 100;
       const finalPrice = Math.round(total * 100) / 100;
 
       if (priceDisplay) {
@@ -197,15 +199,6 @@
       }
 
       // Live Bag Mockup sync
-      const rawTitle = titleInput?.value.trim() || '';
-      const displayTitle = rawTitle || 'İmza Blend';
-      if (bagBlendName) bagBlendName.textContent = `"${displayTitle}"`;
-
-      const rawDedication = dedicationInput?.value.trim() || '';
-      if (bagDedication) {
-        bagDedication.textContent = rawDedication ? `«${rawDedication}»` : 'Baku Coffee Factory · Xüsusi Fərdi Qovrum';
-      }
-
       if (bagFormula) {
         bagFormula.textContent = `${baseRatio}% ${baseCoffee.name} · ${accentRatio}% ${accentCoffee.name}`;
       }
@@ -214,6 +207,8 @@
       if (bagWeight) bagWeight.textContent = `${selectedWeight} q`;
       if (bagDate) bagDate.textContent = `Təzə qovrum · ${getTodayString()}`;
 
+      syncPresetActive(selectedWeight);
+
       return {
         baseCoffee,
         accentCoffee,
@@ -221,8 +216,6 @@
         accentRatio,
         selectedGrind,
         selectedWeight,
-        displayTitle,
-        rawDedication,
         avgPricePer100g,
         finalPrice,
       };
@@ -232,8 +225,6 @@
     baseSelect?.addEventListener('change', calculateState);
     accentSelect?.addEventListener('change', calculateState);
     slider?.addEventListener('input', calculateState);
-    titleInput?.addEventListener('input', calculateState);
-    dedicationInput?.addEventListener('input', calculateState);
 
     // Grind buttons
     grindButtons.forEach((btn) => {
@@ -245,13 +236,42 @@
       });
     });
 
-    // Size cards
-    sizeCards.forEach((card) => {
-      card.addEventListener('click', () => {
-        sizeCards.forEach((c) => c.classList.remove('active'));
-        card.classList.add('active');
-        selectedWeight = Number(card.dataset.weight || 250);
+    // Custom weight typing and buttons
+    function setWeight(raw) {
+      const num = parseInt(String(raw || '').replace(/\D/g, ''), 10);
+      if (Number.isNaN(num) || num < 1) {
+        selectedWeight = 250;
+      } else {
+        selectedWeight = Math.min(2000, Math.max(5, num));
+      }
+      if (weightInput) weightInput.value = String(selectedWeight);
+      calculateState();
+    }
+
+    weightInput?.addEventListener('input', () => {
+      const num = parseInt(weightInput.value.replace(/\D/g, ''), 10);
+      if (!Number.isNaN(num) && num > 0) {
+        selectedWeight = Math.min(2000, num);
         calculateState();
+      }
+    });
+
+    weightInput?.addEventListener('change', () => {
+      setWeight(weightInput.value);
+    });
+
+    weightMinus?.addEventListener('click', () => {
+      setWeight(Math.max(50, selectedWeight - 50));
+    });
+
+    weightPlus?.addEventListener('click', () => {
+      setWeight(Math.min(2000, selectedWeight + 50));
+    });
+
+    presetButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = Number(btn.dataset.preset || 250);
+        setWeight(val);
       });
     });
 
@@ -270,24 +290,20 @@
       }
 
       const itemId = 'coffee-custom-blend';
-      const blendTitle = state.displayTitle;
       const formula = `${state.baseRatio}% ${state.baseCoffee.name} + ${state.accentRatio}% ${state.accentCoffee.name}`;
-      const effectiveUnitPrice = Math.round((state.finalPrice / (state.selectedWeight / 100)) * 100) / 100;
 
       const cartItem = {
         id: itemId,
-        name: `Fərdi Blend: "${blendTitle}" (${formula})`,
-        price: effectiveUnitPrice,
+        name: `Fərdi Blend (${formula}) · ${state.selectedGrind}`,
+        price: Math.round(state.avgPricePer100g * 100) / 100,
         unit: 'g',
         quantity: state.selectedWeight,
         category: 'coffee',
         image: 'assets/coffee/cart-coffee-beans.png',
         maxQuantity: 2000,
         meta: {
-          blendTitle,
           formula,
           grind: state.selectedGrind,
-          dedication: state.rawDedication,
           weight: `${state.selectedWeight} q`,
         },
       };
@@ -312,7 +328,7 @@
       // Toast feedback
       const toast = document.getElementById('coffeeCartToast');
       if (toast) {
-        toast.textContent = `"${blendTitle}" səbətə əlavə edildi!`;
+        toast.textContent = `Fərdi blend (${state.selectedWeight} q) səbətə əlavə edildi!`;
         toast.hidden = false;
         setTimeout(() => { toast.hidden = true; }, 3000);
       }

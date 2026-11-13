@@ -3,11 +3,10 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { prepareOrder, resolveOrderSelection } = require('../server/order-store');
-const { createServer } = require('../server/routes');
 
 const ROOT = path.resolve(__dirname, '..');
 
-test('qehveler.html has custom blend studio elements and scripts', () => {
+test('qehveler.html has custom blend studio elements, custom weight input, and no label inputs or discounts', () => {
   const html = fs.readFileSync(path.join(ROOT, 'qehveler.html'), 'utf8');
 
   assert.ok(html.includes('custom-blend.css'), 'custom-blend.css stylesheet link is present');
@@ -19,12 +18,23 @@ test('qehveler.html has custom blend studio elements and scripts', () => {
   assert.ok(html.includes('id="blendBaseSelect"'), 'Base coffee selector exists');
   assert.ok(html.includes('id="blendAccentSelect"'), 'Accent coffee selector exists');
   assert.ok(html.includes('id="blendRatioSlider"'), 'Ratio slider exists');
-  assert.ok(html.includes('id="blendTitleInput"'), 'Custom blend title input exists');
-  assert.ok(html.includes('id="blendDedicationInput"'), 'Custom dedication input exists');
+
+  // Custom weight input & presets
+  assert.ok(html.includes('id="blendWeightInput"'), 'Custom weight input field exists');
+  assert.ok(html.includes('id="blendWeightMinus"'), 'Weight minus stepper exists');
+  assert.ok(html.includes('id="blendWeightPlus"'), 'Weight plus stepper exists');
+  assert.ok(html.includes('blend-weight-preset-btn'), 'Weight preset chips exist');
+
+  // Fərdi etiket inputs must NOT exist (user requested removal)
+  assert.ok(!html.includes('id="blendTitleInput"'), 'blendTitleInput removed');
+  assert.ok(!html.includes('id="blendDedicationInput"'), 'blendDedicationInput removed');
+
+  // No discounts (user requested "endirim olmasin")
+  assert.ok(!html.includes('5% qənaət'), '5% discount badge removed');
+  assert.ok(!html.includes('10% qənaət'), '10% discount badge removed');
 
   // Live craft bag mockup elements
   assert.ok(html.includes('id="craftBagBlendName"'), 'Bag blend title element exists');
-  assert.ok(html.includes('id="craftBagDedication"'), 'Bag dedication quote element exists');
   assert.ok(html.includes('id="craftBagFormulaText"'), 'Bag formula element exists');
   assert.ok(html.includes('id="craftBagGrindText"'), 'Bag grind element exists');
   assert.ok(html.includes('id="craftBagWeightText"'), 'Bag weight element exists');
@@ -58,8 +68,8 @@ test('order-store resolves and prepares coffee-custom-blend orders correctly', (
     items: [
       {
         id: 'coffee-custom-blend',
-        name: 'Fərdi Blend: "Muradın Səhər Enerjisi" (70% Colombia + 30% Efiopiya)',
-        quantity: 250,
+        name: 'Fərdi Blend (70% Colombia + 30% Efiopiya) · V60 / Filtr',
+        quantity: 350,
       },
     ],
   };
@@ -70,7 +80,7 @@ test('order-store resolves and prepares coffee-custom-blend orders correctly', (
   assert.equal(item.id, 'coffee-custom-blend');
   assert.equal(item.category, 'coffee');
   assert.equal(item.unit, 'g');
-  assert.equal(item.quantity, 250);
+  assert.equal(item.quantity, 350);
   assert.ok(item.total > 0, 'Item total is computed');
-  assert.ok(item.name.includes('Muradın Səhər Enerjisi'), 'Custom blend title is preserved');
+  assert.ok(item.name.includes('Fərdi Blend'), 'Blend name is preserved');
 });

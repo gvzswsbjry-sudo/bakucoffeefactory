@@ -302,80 +302,107 @@
   box-shadow: 0 4px 12px rgba(30, 25, 22, 0.18);
 }
 
-/* Weight Size Option Cards */
-.blend-sizes-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.blend-size-card {
+/* Weight Size Custom Input & Presets */
+.blend-weight-input-box {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 6px;
-  border-radius: 14px;
-  border: 1.5px solid rgba(30, 25, 22, 0.14);
-  background: #faf7f1;
-  color: #1e1916;
-  cursor: pointer;
-  transition: all 0.16s ease;
+  gap: 12px;
 }
 
-.blend-size-card strong {
-  font: 700 13px/1.2 var(--mono, "DM Mono", monospace);
-}
-
-.blend-size-card small {
-  font: 500 10.5px/1.2 var(--sans, "Manrope", sans-serif);
-  color: #7a6e64;
-  margin-top: 3px;
-}
-
-.blend-size-card.active {
-  background: #fbf0ea;
-  border-color: #c86d51;
-  color: #9d3e24;
-}
-
-.blend-size-card.active small {
-  color: #9d3e24;
-}
-
-/* Text Inputs for Custom Label */
-.blend-inputs-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.blend-input-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.blend-input-field label {
-  font: 600 11.5px/1.2 var(--sans, "Manrope", sans-serif);
+.blend-weight-input-label {
+  font: 600 12px/1.2 var(--sans, "Manrope", sans-serif);
   color: #554a42;
 }
 
-.blend-input-field input {
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1.5px solid rgba(30, 25, 22, 0.16);
-  background: #faf7f1;
-  font: 600 13px/1.3 var(--sans, "Manrope", sans-serif);
-  color: #1e1916;
-  outline: none;
-  transition: border-color 0.16s ease;
+.blend-weight-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 320px;
 }
 
-.blend-input-field input:focus {
+.blend-weight-step-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(30, 25, 22, 0.18);
+  background: #faf7f1;
+  color: #1e1916;
+  font: 700 20px/1 var(--sans, "Manrope", sans-serif);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.blend-weight-step-btn:hover {
+  background: #1e1916;
+  color: #ffffff;
+  border-color: #1e1916;
+}
+
+.blend-weight-field-wrap {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.blend-weight-field-wrap input {
+  width: 100%;
+  height: 42px;
+  padding: 0 32px 0 16px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(30, 25, 22, 0.18);
+  background: #ffffff;
+  font: 700 16px/1 var(--mono, "DM Mono", monospace);
+  color: #1e1916;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.blend-weight-field-wrap input:focus {
   border-color: var(--accent-terracotta, #c86d51);
   box-shadow: 0 0 0 3px rgba(200, 109, 81, 0.15);
+}
+
+.blend-weight-unit {
+  position: absolute;
+  right: 14px;
+  font: 700 13px/1 var(--mono, "DM Mono", monospace);
+  color: #8c7e73;
+  pointer-events: none;
+}
+
+.blend-weight-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.blend-weight-preset-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(30, 25, 22, 0.14);
+  background: #faf7f1;
+  color: #2b2420;
+  font: 600 12px/1 var(--mono, "DM Mono", monospace);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.blend-weight-preset-btn:hover {
+  background: #f0ebe2;
+  border-color: rgba(30, 25, 22, 0.3);
+}
+
+.blend-weight-preset-btn.active {
+  background: #1e1916;
+  border-color: #1e1916;
+  color: #ffffff;
 }
 
 /* Right Column: Live Craft Bag Mockup & Action Bar */
@@ -463,15 +490,14 @@
 .craft-bag-blend-name {
   font: 600 clamp(18px, 2.5vw, 24px)/1.15 var(--serif, "Playfair Display", Georgia, serif);
   color: #1e1916;
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   word-break: break-word;
 }
 
-.craft-bag-dedication {
-  font: italic 400 12.5px/1.4 var(--serif, "Playfair Display", Georgia, serif);
+.craft-bag-subline {
+  font: italic 400 12px/1.4 var(--serif, "Playfair Display", Georgia, serif);
   color: #794a38;
   margin: 0;
-  min-height: 18px;
 }
 
 .craft-bag-formula {
