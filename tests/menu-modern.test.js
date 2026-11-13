@@ -148,6 +148,7 @@ test('signature section showcases Cold Brew (slow-drip tower apparatus) and Filt
     'assets/dessert-background/brownie.jpg',
     'assets/dessert-background/tiramisu.jpg',
     'assets/dessert-background/cake.jpg',
+    'assets/dessert-background/napoleon.jpg',
     'assets/dessert-background/crepe.jpg',
   ]) {
     assert.ok(fs.existsSync(path.join(ROOT, imgPath)), `asset exists on disk: ${imgPath}`);

@@ -656,7 +656,7 @@ body:has(.menu-modern) .site-header .main-nav {
   padding: 4px 10px;
 }
 
-.dessert-visual-card:last-child {
+.dessert-visual-card:last-child:nth-child(odd) {
   grid-column: 1 / -1;
   flex-direction: row;
   align-items: center;
@@ -664,7 +664,7 @@ body:has(.menu-modern) .site-header .main-nav {
   gap: 12px;
 }
 
-.dessert-visual-card:last-child figure {
+.dessert-visual-card:last-child:nth-child(odd) figure {
   width: 84px;
   flex: none;
   margin: 0;
@@ -923,13 +923,13 @@ body:has(.menu-modern) .site-header .main-nav {
     gap: 14px;
   }
 
-  .dessert-visual-card:last-child {
+  .dessert-visual-card:last-child:nth-child(odd) {
     grid-column: auto;
     flex-direction: column;
     align-items: stretch;
   }
 
-  .dessert-visual-card:last-child figure {
+  .dessert-visual-card:last-child:nth-child(odd) figure {
     width: auto;
     margin-bottom: 10px;
   }
@@ -961,6 +961,6 @@ body:has(.menu-modern) .site-header .main-nav {
 
 @media (min-width: 1120px) {
   .dessert-featured-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
