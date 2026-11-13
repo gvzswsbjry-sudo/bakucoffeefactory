@@ -19,6 +19,14 @@ test('qehveler.html has custom blend studio elements, custom weight input, and n
   assert.ok(html.includes('id="blendAccentSelect"'), 'Accent coffee selector exists');
   assert.ok(html.includes('id="blendRatioSlider"'), 'Ratio slider exists');
 
+  // Default selection: 70% Efiopiya (base) + 30% Robusta (accent)
+  assert.ok(html.includes('<option value="efiopiya" selected>'), 'Efiopiya is selected by default for base');
+  assert.ok(html.includes('<option value="robusta" selected>'), 'Robusta is selected by default for accent');
+  assert.ok(html.includes('70% Efiopiya'), 'Base ratio pill displays 70% Efiopiya');
+  assert.ok(html.includes('30% Robusta'), 'Accent ratio pill displays 30% Robusta');
+  assert.ok(html.includes('70% Efiopiya · 30% Robusta'), 'Craft bag formula displays 70% Efiopiya · 30% Robusta');
+  assert.ok(html.includes('28.75 ₼'), 'Initial price reflects 70% Efiopiya + 30% Robusta @ 250g (28.75 ₼)');
+
   // Custom weight input & presets
   assert.ok(html.includes('id="blendWeightInput"'), 'Custom weight input field exists');
   assert.ok(html.includes('id="blendWeightMinus"'), 'Weight minus stepper exists');

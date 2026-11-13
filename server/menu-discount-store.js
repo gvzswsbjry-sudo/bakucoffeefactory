@@ -64,6 +64,9 @@ function createMenuDiscountStore({ filePath, fsImpl = nodeFs, database = null } 
   const tempPath = `${targetPath}.tmp`;
   let writeQueue = Promise.resolve();
   let dbSynced = false;
+  let cachedRaw = null;
+  let lastDbAttempt = 0;
+  const DB_FAILURE_COOLDOWN_MS = 60_000;
 
   async function readJsonSafe(candidate) {
     try {
@@ -90,35 +93,50 @@ function createMenuDiscountStore({ filePath, fsImpl = nodeFs, database = null } 
   }
 
   async function loadRaw() {
-    if (database && database.pool) {
-      try {
-        if (!dbSynced && typeof database.migrate === 'function') {
-          await database.migrate();
-        }
-        dbSynced = true;
-        const res = await database.pool.query('SELECT value, updated_at FROM storefront_settings WHERE key = $1', [SETTINGS_KEY]);
-        if (res.rows.length > 0 && res.rows[0].value) {
-          return {
-            ...DEFAULT_DAILY_DISCOUNT_SETTINGS,
-            ...res.rows[0].value,
-            updatedAt: res.rows[0].value.updatedAt || res.rows[0].updated_at || null,
-          };
-        }
-      } catch (err) {
-        console.warn('[MenuDiscountStore] Database load notice:', err.message);
-      }
+    if (cachedRaw !== null) {
+      return cachedRaw;
     }
 
     const fromPrimary = await readJsonSafe(targetPath);
-    if (fromPrimary) return { ...DEFAULT_DAILY_DISCOUNT_SETTINGS, ...fromPrimary };
+    if (fromPrimary) {
+      cachedRaw = { ...DEFAULT_DAILY_DISCOUNT_SETTINGS, ...fromPrimary };
+    } else {
+      const fromBackup = await readJsonSafe(backupPath);
+      if (fromBackup) cachedRaw = { ...DEFAULT_DAILY_DISCOUNT_SETTINGS, ...fromBackup };
+      else cachedRaw = { ...DEFAULT_DAILY_DISCOUNT_SETTINGS };
+    }
 
-    const fromBackup = await readJsonSafe(backupPath);
-    if (fromBackup) return { ...DEFAULT_DAILY_DISCOUNT_SETTINGS, ...fromBackup };
+    if (database && database.pool && !dbSynced) {
+      const now = Date.now();
+      if (now - lastDbAttempt >= DB_FAILURE_COOLDOWN_MS) {
+        lastDbAttempt = now;
+        (async () => {
+          try {
+            if (!dbSynced && typeof database.migrate === 'function') {
+              await database.migrate();
+            }
+            dbSynced = true;
+            const res = await database.pool.query('SELECT value, updated_at FROM storefront_settings WHERE key = $1', [SETTINGS_KEY]);
+            if (res.rows.length > 0 && res.rows[0].value) {
+              cachedRaw = {
+                ...DEFAULT_DAILY_DISCOUNT_SETTINGS,
+                ...res.rows[0].value,
+                updatedAt: res.rows[0].value.updatedAt || res.rows[0].updated_at || null,
+              };
+              await writeLocal(cachedRaw);
+            }
+          } catch (err) {
+            console.warn('[MenuDiscountStore] Database load notice:', err.message);
+          }
+        })().catch(() => {});
+      }
+    }
 
-    return { ...DEFAULT_DAILY_DISCOUNT_SETTINGS };
+    return cachedRaw;
   }
 
   async function saveRaw(settings) {
+    cachedRaw = { ...settings };
     await writeLocal(settings);
     if (database && database.pool) {
       try {

@@ -3,6 +3,7 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const crypto = require('node:crypto');
+const zlib = require('node:zlib');
 const { handleCustomerAuthRequest, customerCookie, sameOrigin } = require('./customer-auth-routes');
 const { prepareOrder } = require('./order-store');
 const { createAnalyticsStore } = require('./analytics-store');
@@ -50,9 +51,17 @@ const PUBLIC_FILES = new Set([
   '/admin/product-values.js',
 ]);
 
-function json(res, status, body, headers = {}) {
-  res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers });
-  res.end(body === undefined ? '' : JSON.stringify(body));
+function json(res, status, body, headers = {}, req = null) {
+  const payload = body === undefined ? '' : JSON.stringify(body);
+  const outHeaders = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers };
+  if (req && req.headers && /\bgzip\b/.test(req.headers['accept-encoding'] || '') && payload.length > 512) {
+    const compressed = zlib.gzipSync(Buffer.from(payload, 'utf8'));
+    outHeaders['content-encoding'] = 'gzip';
+    res.writeHead(status, outHeaders);
+    return res.end(compressed);
+  }
+  res.writeHead(status, outHeaders);
+  res.end(payload);
 }
 
 function cookieToken(req) {
@@ -168,6 +177,7 @@ function createRequestHandler({
     database: customerDatabase,
   });
   const assetsRoot = path.join(rootDir, 'assets');
+  const staticCache = new Map();
   const apiLimiter = createRateLimiter({ limit: 240, windowMs: 60 * 1000 });
   const adminLoginLimiter = createRateLimiter({ limit: 5, windowMs: 15 * 60 * 1000 });
   const accountLimiter = createRateLimiter({ limit: 12, windowMs: 15 * 60 * 1000 });
@@ -214,8 +224,8 @@ function createRequestHandler({
         socialProviders, oidcVerifier, resetNotifier,
       })) return;
 
-      if (req.method === 'GET' && pathname === '/api/products') return json(res, 200, await store.list());
-      if (req.method === 'GET' && pathname === '/api/menu-discount') return json(res, 200, await menuDiscountStore.get());
+      if (req.method === 'GET' && pathname === '/api/products') return json(res, 200, await store.list(), {}, req);
+      if (req.method === 'GET' && pathname === '/api/menu-discount') return json(res, 200, await menuDiscountStore.get(), {}, req);
       if (req.method === 'GET' && pathname === '/api/catalog.js') {
         const serialized = JSON.stringify(await store.list()).replace(/</g, '\\u003c');
         res.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-store' });
@@ -452,6 +462,7 @@ function createRequestHandler({
           if (!requireJson(req, res)) return;
           try {
             const assetPath = await saveUploadedImage(assetsRoot, rootDir, await parseJson(req, MAX_UPLOAD_BODY_BYTES));
+            staticCache.delete(path.resolve(rootDir, assetPath));
             return json(res, 201, { path: assetPath });
           } catch (error) {
             return json(res, error.status || 400, { error: error.message });
@@ -494,15 +505,38 @@ function createRequestHandler({
       const relative = path.relative(rootDir, absolute);
       if (relative.startsWith('..') || path.isAbsolute(relative)) return json(res, 400, { error: 'Invalid URL path' });
       try {
-        const body = await fs.readFile(absolute);
         const extension = path.extname(absolute).toLowerCase();
+        let cached = staticCache.get(absolute);
+        if (!cached) {
+          const body = await fs.readFile(absolute);
+          const etag = `"${crypto.createHash('md5').update(body).digest('hex').slice(0, 16)}"`;
+          const isCompressible = ['.html', '.css', '.js', '.json', '.svg'].includes(extension);
+          const gzipBody = isCompressible && body.length > 256 ? zlib.gzipSync(body) : null;
+          cached = { body, gzipBody, etag, extension };
+          staticCache.set(absolute, cached);
+        }
+
+        const ifNoneMatch = req.headers['if-none-match'];
+        if (ifNoneMatch && ifNoneMatch === cached.etag) {
+          res.writeHead(304, {
+            'etag': cached.etag,
+            'cache-control': ['.html'].includes(extension) ? 'no-cache' : 'public, max-age=86400, stale-while-revalidate=604800',
+          });
+          return res.end();
+        }
+
+        const acceptGzip = /\bgzip\b/.test(req.headers['accept-encoding'] || '');
+        const sendGzip = acceptGzip && cached.gzipBody !== null;
+        const responseBody = sendGzip ? cached.gzipBody : cached.body;
         const headers = {
           'content-type': MIME_TYPES[extension] || 'application/octet-stream',
-          'cache-control': ['.html', '.css', '.js'].includes(extension) ? 'no-cache' : 'public, max-age=3600',
+          'etag': cached.etag,
+          'cache-control': ['.html'].includes(extension) ? 'no-cache' : 'public, max-age=86400, stale-while-revalidate=604800',
         };
+        if (sendGzip) headers['content-encoding'] = 'gzip';
         if (isPublicAsset) headers['access-control-allow-origin'] = '*';
         res.writeHead(200, headers);
-        res.end(req.method === 'HEAD' ? undefined : body);
+        res.end(req.method === 'HEAD' ? undefined : responseBody);
       } catch (error) {
         if (error.code === 'ENOENT' || error.code === 'EISDIR') return json(res, 404, { error: 'File not found' });
         throw error;

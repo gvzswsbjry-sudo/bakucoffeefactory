@@ -75,6 +75,9 @@ function createProductStore({ filePath, assetsRoot, fsImpl = nodeFs, database = 
   const tempPath = `${filePath}.tmp`;
   const localPersistentPath = path.join(path.dirname(filePath), 'products.local.json');
   let dbSynced = false;
+  let cachedProducts = null;
+  let lastDbAttempt = 0;
+  const DB_FAILURE_COOLDOWN_MS = 60_000;
 
   async function readValid(candidate, { allowMissing = false } = {}) {
     let raw;
@@ -140,6 +143,9 @@ function createProductStore({ filePath, assetsRoot, fsImpl = nodeFs, database = 
 
   async function syncWithDatabase() {
     if (!database || !database.pool) return;
+    const now = Date.now();
+    if (now - lastDbAttempt < DB_FAILURE_COOLDOWN_MS && !dbSynced) return;
+    lastDbAttempt = now;
     try {
       if (typeof database.migrate === 'function') {
         await database.migrate();
@@ -155,6 +161,7 @@ function createProductStore({ filePath, assetsRoot, fsImpl = nodeFs, database = 
             await upsertProductInDb(database.pool, item);
           }
           await saveToLocalFiles(fileProducts);
+          cachedProducts = clone(fileProducts);
         }
       } else {
         // DB has products!
@@ -174,6 +181,7 @@ function createProductStore({ filePath, assetsRoot, fsImpl = nodeFs, database = 
         }
         // Save authoritative catalog to local file so static reads always match
         await saveToLocalFiles(dbProducts);
+        cachedProducts = clone(dbProducts);
       }
       dbSynced = true;
     } catch (err) {
@@ -182,20 +190,20 @@ function createProductStore({ filePath, assetsRoot, fsImpl = nodeFs, database = 
   }
 
   async function load() {
-    if (database && database.pool) {
-      if (!dbSynced) {
-        await syncWithDatabase();
-      }
-      try {
-        const res = await database.pool.query('SELECT * FROM catalog_products ORDER BY sort_order ASC, name ASC');
-        if (res.rows.length > 0) {
-          return res.rows.map(rowToProduct);
-        }
-      } catch (err) {
-        console.warn('[ProductStore] Fallback to file load:', err.message);
+    if (cachedProducts !== null) {
+      return clone(cachedProducts);
+    }
+    const fromFile = await loadFromFile().catch(() => []);
+    cachedProducts = fromFile;
+
+    if (database && database.pool && !dbSynced) {
+      const now = Date.now();
+      if (now - lastDbAttempt >= DB_FAILURE_COOLDOWN_MS) {
+        lastDbAttempt = now;
+        syncWithDatabase().catch(() => {});
       }
     }
-    return loadFromFile();
+    return clone(cachedProducts);
   }
 
   async function writeSynced(target, contents) {
@@ -233,6 +241,7 @@ function createProductStore({ filePath, assetsRoot, fsImpl = nodeFs, database = 
       await writeSynced(localTemp, serialized);
       await fsImpl.rename(localTemp, localPersistentPath);
     } catch {}
+    cachedProducts = clone(products);
   }
 
   async function save(products) {

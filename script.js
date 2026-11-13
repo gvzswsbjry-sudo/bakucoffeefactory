@@ -7,15 +7,19 @@ if (homeNavLink && menuNavLink) homeNavLink.after(menuNavLink);
 
 mainNav?.querySelectorAll('a[href*="#haqqimizda"]').forEach((link) => link.remove());
 
-const navigationStyles = document.createElement('link');
-navigationStyles.rel = 'stylesheet';
-navigationStyles.href = 'navigation.css';
-document.head.append(navigationStyles);
+if (!document.querySelector('link[href*="navigation.css"]')) {
+  const navigationStyles = document.createElement('link');
+  navigationStyles.rel = 'stylesheet';
+  navigationStyles.href = 'navigation.css';
+  document.head.append(navigationStyles);
+}
 
-const brandStyles = document.createElement('link');
-brandStyles.rel = 'stylesheet';
-brandStyles.href = 'brand.css';
-document.head.append(brandStyles);
+if (!document.querySelector('link[href*="brand.css"]')) {
+  const brandStyles = document.createElement('link');
+  brandStyles.rel = 'stylesheet';
+  brandStyles.href = 'brand.css';
+  document.head.append(brandStyles);
+}
 document.querySelectorAll('.site-header .brand').forEach((brand) => {
   brand.setAttribute('aria-label', 'Baku Coffee Factory ana səhifə');
   const logo = document.createElement('img');
@@ -42,28 +46,38 @@ if (!window.BCF_I18N && !window.__BCF_I18N_INITIALIZED__ && !document.querySelec
   document.body.append(i18nScript);
 }
 
-const accountStyles = document.createElement('link');
-accountStyles.rel = 'stylesheet';
-accountStyles.href = 'account.css?v=20261111-7';
-document.head.append(accountStyles);
-const accountScript = document.createElement('script');
-accountScript.src = 'account.js?v=20261111-7';
-accountScript.async = false;
-document.body.append(accountScript);
+if (!document.querySelector('link[href*="account.css"]')) {
+  const accountStyles = document.createElement('link');
+  accountStyles.rel = 'stylesheet';
+  accountStyles.href = 'account.css?v=20261111-7';
+  document.head.append(accountStyles);
+}
+if (!document.querySelector('script[src*="account.js"]')) {
+  const accountScript = document.createElement('script');
+  accountScript.src = 'account.js?v=20261111-7';
+  accountScript.async = false;
+  document.body.append(accountScript);
+}
 
-const favoritesStyles = document.createElement('link');
-favoritesStyles.rel = 'stylesheet';
-favoritesStyles.href = 'favorites.css?v=20261112-1';
-document.head.append(favoritesStyles);
-const favoritesScript = document.createElement('script');
-favoritesScript.src = 'favorites.js?v=20261112-1';
-favoritesScript.async = false;
-document.body.append(favoritesScript);
+if (!document.querySelector('link[href*="favorites.css"]')) {
+  const favoritesStyles = document.createElement('link');
+  favoritesStyles.rel = 'stylesheet';
+  favoritesStyles.href = 'favorites.css?v=20261112-1';
+  document.head.append(favoritesStyles);
+}
+if (!document.querySelector('script[src*="favorites.js"]')) {
+  const favoritesScript = document.createElement('script');
+  favoritesScript.src = 'favorites.js?v=20261112-1';
+  favoritesScript.async = false;
+  document.body.append(favoritesScript);
+}
 
-const analyticsScript = document.createElement('script');
-analyticsScript.src = 'analytics.js?v=20261103-v1';
-analyticsScript.async = true;
-document.body.append(analyticsScript);
+if (!document.querySelector('script[src*="analytics.js"]')) {
+  const analyticsScript = document.createElement('script');
+  analyticsScript.src = 'analytics.js?v=20261103-v1';
+  analyticsScript.async = true;
+  document.body.append(analyticsScript);
+}
 
 menuToggle?.addEventListener('click', () => {
   const menuIsOpen = mainNav.classList.toggle('open');
@@ -204,4 +218,53 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined' && !window.
     { passive: false, capture: true }
   );
 }
+
+// Instant navigation: prefetch next page on link hover / touch for zero wait time
+(function initInstantNav() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  const prefetched = new Set();
+  function prefetch(url) {
+    if (!url || prefetched.has(url)) return;
+    try {
+      const target = new URL(url, location.href);
+      if (target.origin !== location.origin) return;
+      if (target.pathname === location.pathname) return;
+      if (!target.pathname.endsWith('.html') && target.pathname !== '/') return;
+      prefetched.add(url);
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = target.href;
+      document.head.appendChild(link);
+    } catch {}
+  }
+
+  document.addEventListener('mouseover', (e) => {
+    const a = e.target?.closest?.('a[href]');
+    if (a && a.href && !a.target && !a.href.startsWith('tel:') && !a.href.startsWith('mailto:')) {
+      prefetch(a.href);
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchstart', (e) => {
+    const a = e.target?.closest?.('a[href]');
+    if (a && a.href && !a.target && !a.href.startsWith('tel:') && !a.href.startsWith('mailto:')) {
+      prefetch(a.href);
+    }
+  }, { passive: true });
+
+  if (typeof HTMLScriptElement !== 'undefined' && HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
+    try {
+      const specScript = document.createElement('script');
+      specScript.type = 'speculationrules';
+      specScript.textContent = JSON.stringify({
+        prerender: [{
+          source: 'list',
+          urls: ['/index.html', '/qehveler.html', '/caylar.html', '/avadanliqlar.html', '/menyu.html'],
+          eagerness: 'moderate'
+        }]
+      });
+      document.head.appendChild(specScript);
+    } catch {}
+  }
+})();
 

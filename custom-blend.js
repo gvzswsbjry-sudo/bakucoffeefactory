@@ -149,10 +149,10 @@
     }
 
     function calculateState() {
-      const baseKey = baseSelect?.value || 'colombia';
-      const accentKey = accentSelect?.value || 'efiopiya';
-      const baseCoffee = COFFEE_COMPONENTS[baseKey] || COFFEE_COMPONENTS.colombia;
-      const accentCoffee = COFFEE_COMPONENTS[accentKey] || COFFEE_COMPONENTS.efiopiya;
+      const baseKey = baseSelect?.value || 'efiopiya';
+      const accentKey = accentSelect?.value || 'robusta';
+      const baseCoffee = COFFEE_COMPONENTS[baseKey] || COFFEE_COMPONENTS.efiopiya;
+      const accentCoffee = COFFEE_COMPONENTS[accentKey] || COFFEE_COMPONENTS.robusta;
 
       const baseRatio = Number(slider?.value || 70);
       const accentRatio = 100 - baseRatio;
