@@ -27,6 +27,15 @@ test('qehveler.html has custom blend studio elements, custom weight input, and n
   assert.ok(html.includes('70% Efiopiya · 30% Robusta'), 'Craft bag formula displays 70% Efiopiya · 30% Robusta');
   assert.ok(html.includes('28.75 ₼'), 'Initial price reflects 70% Efiopiya + 30% Robusta @ 250g (28.75 ₼)');
 
+  // All 10 coffees must be available in both base and accent selectors
+  const allCoffeeIds = ['efiopiya', 'colombia', 'brasil', 'guatemala', 'honduras', 'keniya', 'costa-rica', 'robusta', 'decaf', 'uqanda'];
+  const baseSelectHtml = html.slice(html.indexOf('id="blendBaseSelect"'), html.indexOf('</select>', html.indexOf('id="blendBaseSelect"')));
+  const accentSelectHtml = html.slice(html.indexOf('id="blendAccentSelect"'), html.indexOf('</select>', html.indexOf('id="blendAccentSelect"')));
+  for (const cid of allCoffeeIds) {
+    assert.ok(baseSelectHtml.includes(`value="${cid}"`), `Base selector contains ${cid}`);
+    assert.ok(accentSelectHtml.includes(`value="${cid}"`), `Accent selector contains ${cid}`);
+  }
+
   // Custom weight input & presets
   assert.ok(html.includes('id="blendWeightInput"'), 'Custom weight input field exists');
   assert.ok(html.includes('id="blendWeightMinus"'), 'Weight minus stepper exists');

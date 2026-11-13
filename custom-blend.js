@@ -93,6 +93,16 @@
       body: 3.5,
       aroma: 3.5,
     },
+    uqanda: {
+      id: 'uqanda',
+      name: 'Uqanda',
+      price: 11,
+      taste: 'Tünd şokolad, quru gavalı, isti ədviyyat, qovrulmuş qoz',
+      sweetness: 3.5,
+      acidity: 2.5,
+      body: 4.0,
+      aroma: 3.5,
+    },
   };
 
   function initBlendStudio() {
