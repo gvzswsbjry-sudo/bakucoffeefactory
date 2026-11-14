@@ -1,34 +1,36 @@
+/* Baku Coffee Factory — Coffee Finder (Şəxsi Dad Testi / Sənə Uyğun Qəhvəni Seç) */
+
 /* Homepage editorial entry banner -> qehve-secici.html */
 .home-finder-cta {
-  background: #efeae0;
-  color: var(--ink, #1e1e1e);
-  padding: 36px max(16px, env(safe-area-inset-left, 0px)) 40px max(16px, env(safe-area-inset-right, 0px));
-  border-top: 1px solid rgba(74, 53, 37, .12);
+  background: var(--paper, #f7f5f0);
+  color: var(--ink, #1e1916);
+  padding: 44px max(16px, env(safe-area-inset-left, 0px)) 48px max(16px, env(safe-area-inset-right, 0px));
+  border-top: 1px solid rgba(74, 53, 37, 0.12);
 }
 
 .home-finder-cta-card {
-  max-width: 1180px;
+  max-width: 1040px;
   margin: 0 auto;
-  background: #faf7f1;
-  border: 1px solid rgba(74, 53, 37, .14);
-  border-radius: 16px;
-  padding: 24px 18px;
+  background: #ffffff;
+  border: 1px solid rgba(74, 53, 37, 0.12);
+  border-radius: 20px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  box-shadow: 0 8px 26px rgba(34, 25, 18, .05);
+  gap: 20px;
+  box-shadow: 0 8px 28px rgba(34, 25, 18, 0.05);
 }
 
 .home-finder-cta-copy .eyebrow {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: var(--text-muted, #7a6a5e);
 }
 
 .home-finder-cta-copy h2 {
   margin: 0 0 10px;
-  font: 500 clamp(30px, 8vw, 48px)/.95 var(--serif, "Playfair Display", Georgia, serif);
-  letter-spacing: -.055em;
-  color: var(--ink, #1e1e1e);
+  font: 500 clamp(28px, 6vw, 44px)/0.96 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.04em;
+  color: var(--ink, #1e1916);
 }
 
 .home-finder-cta-copy h2 em {
@@ -59,12 +61,12 @@
 .home-finder-cta-tag {
   display: inline-flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: 5px 11px;
   border-radius: 999px;
-  background: #f1ebe1;
-  border: 1px solid rgba(74, 53, 37, .14);
+  background: #faf7f1;
+  border: 1px solid rgba(74, 53, 37, 0.14);
   font: 600 10px/1.1 var(--mono, "DM Mono", monospace);
-  letter-spacing: .04em;
+  letter-spacing: 0.04em;
   color: var(--primary-wood, #4a3525);
 }
 
@@ -74,30 +76,32 @@
   gap: 10px;
   min-height: 44px;
   padding: 0 22px;
-  border-radius: 999px;
-  background: #4a5043;
-  color: #fcf9f4;
-  font: 600 13px/1 var(--sans, "Manrope", sans-serif);
+  border-radius: 10px;
+  background: #1e1916;
+  color: #ffffff;
+  font: 700 13px/1 var(--sans, "Manrope", sans-serif);
   text-decoration: none;
-  box-shadow: 0 8px 20px rgba(74, 80, 67, .2);
-  transition: background-color .18s ease, transform .15s ease;
+  box-shadow: 0 6px 18px rgba(30, 25, 22, 0.14);
+  transition: all 0.16s ease;
 }
 
 .home-finder-cta-btn:hover {
   background: var(--accent-terracotta, #c86d51);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(200, 109, 81, 0.25);
 }
 
 .home-finder-cta-btn:active {
-  transform: scale(.98);
+  transform: scale(0.98);
 }
 
 @media (min-width: 760px) {
   .home-finder-cta {
-    padding: 50px 24px 56px;
+    padding: 56px 24px 60px;
   }
 
   .home-finder-cta-card {
-    padding: 34px 36px;
+    padding: 34px 38px;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -110,32 +114,23 @@
   }
 }
 
-@media (min-width: 1080px) {
-  .home-finder-cta {
-    padding: 64px 48px 70px;
-  }
-
-  .home-finder-cta-card {
-    padding: 40px 44px;
-  }
-}
-
 /* Standalone Coffee Finder page (qehve-secici.html) */
 .finder-page {
-  background: #f7f5f0;
-  color: var(--ink, #1e1e1e);
+  background: var(--paper, #f7f5f0);
+  color: var(--ink, #1e1916);
   min-height: calc(100vh - 140px);
 }
 
 .finder-page-hero {
-  background: #efeae0;
-  border-bottom: 1px solid rgba(74, 53, 37, .12);
-  padding: 108px max(16px, env(safe-area-inset-left, 0px)) 28px max(16px, env(safe-area-inset-right, 0px));
+  background: var(--paper, #f7f5f0);
+  border-bottom: 1px solid rgba(74, 53, 37, 0.12);
+  padding: 108px max(16px, env(safe-area-inset-left, 0px)) 32px max(16px, env(safe-area-inset-right, 0px));
 }
 
 .finder-page-hero-inner {
-  max-width: 1180px;
+  max-width: 780px;
   margin: 0 auto;
+  text-align: center;
 }
 
 .finder-page-hero .eyebrow {
@@ -145,9 +140,9 @@
 
 .finder-page-hero h1 {
   margin: 0 0 12px;
-  font: 500 clamp(34px, 9vw, 60px)/.94 var(--serif, "Playfair Display", Georgia, serif);
-  letter-spacing: -.055em;
-  color: var(--ink, #1e1e1e);
+  font: 500 clamp(32px, 8vw, 54px)/0.96 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.045em;
+  color: var(--ink, #1e1916);
 }
 
 .finder-page-hero h1 em {
@@ -156,29 +151,32 @@
 }
 
 .finder-page-hero-sub {
-  margin: 0;
-  max-width: 60ch;
+  margin: 0 auto;
+  max-width: 56ch;
   font: 400 13.5px/1.6 var(--sans, "Manrope", sans-serif);
   color: var(--text-muted, #7a6a5e);
 }
 
+/* Main Coffee Finder Section */
 .coffee-finder {
-  background: #f7f5f0;
-  color: var(--ink, #1e1e1e);
-  padding: 26px max(12px, env(safe-area-inset-left, 0px)) 64px max(12px, env(safe-area-inset-right, 0px));
+  background: var(--paper, #f7f5f0);
+  color: var(--ink, #1e1916);
+  padding: 32px max(16px, env(safe-area-inset-left, 0px)) 64px max(16px, env(safe-area-inset-right, 0px));
   overflow-x: clip;
   scroll-margin-top: 84px;
 }
 
 .coffee-finder--embedded {
-  background: #efeae0;
-  border-top: 1px solid rgba(74, 53, 37, .14);
-  padding-top: 38px;
-  padding-bottom: 56px;
+  background: var(--paper, #f7f5f0);
+  border-top: 1px solid rgba(74, 53, 37, 0.12);
+  padding-top: 52px;
+  padding-bottom: 64px;
 }
 
 .coffee-finder-embedded-head {
-  margin-bottom: 20px;
+  text-align: center;
+  max-width: 620px;
+  margin: 0 auto 30px;
 }
 
 .coffee-finder-embedded-head .eyebrow {
@@ -188,9 +186,9 @@
 
 .coffee-finder-embedded-head h2 {
   margin: 0 0 10px;
-  font: 500 clamp(30px, 8vw, 48px)/.95 var(--serif, "Playfair Display", Georgia, serif);
-  letter-spacing: -.055em;
-  color: var(--ink, #1e1e1e);
+  font: 500 clamp(30px, 6vw, 44px)/0.96 var(--serif, "Playfair Display", Georgia, serif);
+  letter-spacing: -0.045em;
+  color: var(--ink, #1e1916);
 }
 
 .coffee-finder-embedded-head h2 em {
@@ -199,74 +197,96 @@
 }
 
 .coffee-finder-embedded-sub {
-  margin: 0;
-  max-width: 58ch;
+  margin: 0 auto;
+  max-width: 54ch;
   font: 400 13.5px/1.6 var(--sans, "Manrope", sans-serif);
   color: var(--text-muted, #7a6a5e);
 }
 
 .coffee-finder-inner {
   width: 100%;
-  max-width: 1180px;
+  max-width: 1080px;
   margin: 0 auto;
 }
 
-/* Slider & interactive panel */
+/* Simplified Interactive Filter Card */
 .coffee-finder-panel {
-  background: #faf7f1;
-  border: 1px solid rgba(74, 53, 37, .13);
-  border-radius: 16px;
-  padding: 16px 14px;
-  margin-bottom: 20px;
-  box-shadow: 0 6px 22px rgba(34, 25, 18, .04);
+  max-width: 780px;
+  margin: 0 auto 28px;
+  background: #ffffff;
+  border: 1px solid rgba(74, 53, 37, 0.13);
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 8px 28px rgba(34, 25, 18, 0.05);
 }
 
+@media (min-width: 600px) {
+  .coffee-finder-panel {
+    padding: 28px 28px 26px;
+  }
+}
+
+/* Sliders Section */
 .finder-sliders {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 12px;
   margin-bottom: 18px;
 }
 
+@media (min-width: 640px) {
+  .finder-sliders {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
 .finder-slider-item {
-  background: #fffdf9;
-  border: 1px solid rgba(74, 53, 37, .1);
+  background: #faf7f1;
+  border: 1px solid rgba(74, 53, 37, 0.08);
   border-radius: 12px;
-  padding: 12px 13px;
+  padding: 13px 14px 11px;
+  transition: all 0.15s ease;
+}
+
+.finder-slider-item:hover {
+  border-color: rgba(74, 53, 37, 0.2);
+  background: #fffdf9;
 }
 
 .finder-slider-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
 .finder-slider-label {
-  font: 700 9px/1.2 var(--mono, "DM Mono", monospace);
-  letter-spacing: .09em;
+  font: 700 10.5px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--primary-wood, #4a3525);
+  color: #4a3525;
 }
 
 .finder-slider-value {
   display: inline-flex;
   align-items: center;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: rgba(200, 109, 81, .12);
-  color: var(--accent-terracotta, #c86d51);
-  font: 700 11.5px/1.1 var(--mono, "DM Mono", monospace);
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #1e1916;
+  color: #ffffff;
+  font: 700 11px/1 var(--mono, "DM Mono", monospace);
 }
 
+/* Range Input styling */
 .finder-range-input {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
   height: 8px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #4a5043 var(--pct, 50%), rgba(74, 53, 37, .16) var(--pct, 50%));
+  background: linear-gradient(90deg, #1e1916 var(--pct, 50%), rgba(74, 53, 37, 0.16) var(--pct, 50%));
   outline: none;
   cursor: pointer;
   touch-action: pan-y;
@@ -275,61 +295,70 @@
 .finder-range-input::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: #c86d51;
-  border: 3px solid #fffdf9;
-  box-shadow: 0 2px 8px rgba(34, 25, 18, .28);
+  background: #ffffff;
+  border: 3px solid #1e1916;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
   cursor: grab;
-  transition: transform .14s ease, background-color .14s ease;
+  transition: transform 0.12s ease, border-color 0.12s ease;
 }
 
 .finder-range-input::-webkit-slider-thumb:active {
   transform: scale(1.12);
   cursor: grabbing;
-  background: #b5593c;
+  border-color: var(--accent-terracotta, #c86d51);
 }
 
 .finder-range-input::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: #c86d51;
-  border: 3px solid #fffdf9;
-  box-shadow: 0 2px 8px rgba(34, 25, 18, .28);
+  background: #ffffff;
+  border: 3px solid #1e1916;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
   cursor: grab;
+  transition: transform 0.12s ease;
 }
 
 .finder-slider-scale {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
-  font: 500 9.5px/1.1 var(--sans, "Manrope", sans-serif);
-  color: var(--text-muted, #7a6a5e);
+  margin-top: 6px;
+  font: 500 10px/1.2 var(--sans, "Manrope", sans-serif);
+  color: #8c7e73;
 }
 
+/* Groups Section (Dəmləmə & Dad) */
 .coffee-finder-groups {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(74, 53, 37, .1);
+  gap: 16px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(74, 53, 37, 0.1);
+}
+
+@media (min-width: 640px) {
+  .coffee-finder-groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
 }
 
 .finder-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .finder-group-label {
   margin: 0;
-  font: 700 8.5px/1.2 var(--mono, "DM Mono", monospace);
-  letter-spacing: .09em;
+  font: 700 11px/1.2 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted, #7a6a5e);
+  color: #6a5a4e;
 }
 
 .finder-options {
@@ -342,43 +371,55 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 32px;
-  padding: 6px 11px;
+  min-height: 33px;
+  padding: 6px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(74, 53, 37, .2);
-  background: #fffdf9;
-  color: var(--ink, #1e1e1e);
+  border: 1.5px solid rgba(74, 53, 37, 0.16);
+  background: #ffffff;
+  color: #1e1916;
   font: 600 11.5px/1.1 var(--sans, "Manrope", sans-serif);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
-  transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .14s ease;
+  transition: all 0.14s ease;
+  user-select: none;
 }
 
 .finder-chip:hover {
-  border-color: var(--primary-wood, #4a3525);
+  border-color: var(--accent-terracotta, #c86d51);
+  background: #fffdf9;
+  transform: translateY(-1px);
 }
 
 .finder-chip:active {
-  transform: scale(.97);
+  transform: scale(0.97);
 }
 
 .finder-chip.active,
 .finder-chip[aria-pressed="true"] {
-  background: #4a5043;
-  border-color: #4a5043;
-  color: #fcf9f4;
+  background: #1e1916;
+  border-color: #1e1916;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(30, 25, 22, 0.14);
 }
 
+/* Summary Bar & Actions */
 .coffee-finder-bar {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(74, 53, 37, .12);
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(74, 53, 37, 0.1);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
+}
+
+.finder-summary-note {
+  margin: 0;
+  font: 600 12px/1.3 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.02em;
+  color: #4a3525;
 }
 
 .finder-bar-actions {
@@ -393,49 +434,53 @@
   align-items: center;
   gap: 6px;
   min-height: 32px;
-  padding: 0 12px;
+  padding: 0 13px;
   border-radius: 999px;
-  border: 1px dashed rgba(74, 53, 37, .3);
-  background: transparent;
-  color: var(--primary-wood, #4a3525);
-  font: 600 11px/1 var(--sans, "Manrope", sans-serif);
+  border: 1.5px solid rgba(74, 53, 37, 0.2);
+  background: #ffffff;
+  color: #4a3525;
+  font: 600 11.5px/1 var(--sans, "Manrope", sans-serif);
   cursor: pointer;
   touch-action: manipulation;
-  transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+  transition: all 0.14s ease;
+}
+
+.finder-decaf-toggle:hover {
+  border-color: var(--accent-terracotta, #c86d51);
+  background: #fffdf9;
 }
 
 .finder-decaf-toggle[aria-pressed="true"] {
   border-style: solid;
   border-color: var(--accent-terracotta, #c86d51);
   background: var(--accent-terracotta, #c86d51);
-  color: #fffaf4;
+  color: #ffffff;
 }
 
 .finder-reset-btn {
   min-height: 32px;
-  padding: 0 10px;
-  border: 0;
+  padding: 0 12px;
+  border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--text-muted, #7a6a5e);
-  font: 600 11px/1 var(--sans, "Manrope", sans-serif);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: #8c7e73;
+  font: 600 11.5px/1 var(--sans, "Manrope", sans-serif);
   cursor: pointer;
+  text-decoration: none;
+  transition: all 0.14s ease;
 }
 
 .finder-reset-btn:hover {
   color: var(--accent-terracotta, #c86d51);
-}
-
-.finder-summary-note {
-  margin: 0;
-  font: 600 11.5px/1.3 var(--mono, "DM Mono", monospace);
-  letter-spacing: .04em;
-  color: var(--primary-wood, #4a3525);
+  background: rgba(200, 109, 81, 0.08);
 }
 
 /* Recommended coffee cards (1 or 2 results) */
+.coffee-finder .home-featured-grid {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
 .coffee-finder .home-featured-grid[data-result-count="1"] {
   grid-template-columns: minmax(0, 1fr);
 }
@@ -444,6 +489,7 @@
   display: grid;
   grid-template-columns: 124px minmax(0, 1fr);
   max-width: 600px;
+  margin: 0 auto;
 }
 
 .coffee-finder .home-featured-grid[data-result-count="1"] .home-featured-media {
@@ -457,83 +503,55 @@
 }
 
 .finder-match-badge--alt {
-  background: rgba(30, 30, 30, .78);
+  background: #1e1916;
   color: #fffdf9;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
 }
 
 .finder-card-specs {
   margin: 0 0 6px;
-  font: 600 9px/1.3 var(--mono, "DM Mono", monospace);
-  letter-spacing: .03em;
+  font: 600 9.5px/1.3 var(--mono, "DM Mono", monospace);
+  letter-spacing: 0.03em;
   color: #6b7b5c;
 }
 
 .coffee-finder-footbar {
   margin-top: 24px;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: center;
+}
+
+.coffee-finder-footbar .home-featured-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(74, 53, 37, 0.18);
+  background: #ffffff;
+  color: #1e1916;
+  font: 600 12.5px/1 var(--sans, "Manrope", sans-serif);
+  text-decoration: none;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(34, 25, 18, 0.04);
+}
+
+.coffee-finder-footbar .home-featured-all:hover {
+  background: #1e1916;
+  border-color: #1e1916;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 @media (min-width: 640px) {
-  .finder-page-hero {
-    padding: 126px 24px 36px;
-  }
-
-  .coffee-finder {
-    padding: 32px 24px 72px;
-  }
-
-  .coffee-finder-panel {
-    padding: 20px 22px;
-    margin-bottom: 24px;
-  }
-
-  .finder-sliders {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .coffee-finder-groups {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px 20px;
-  }
-
   .coffee-finder .home-featured-grid[data-result-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, 360px));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 
   .coffee-finder .home-featured-grid[data-result-count="1"] .home-featured-card {
     grid-template-columns: 185px minmax(0, 1fr);
     max-width: 640px;
-  }
-
-  .finder-chip {
-    min-height: 35px;
-    padding: 7px 14px;
-    font-size: 12px;
-  }
-
-  .finder-card-specs {
-    font-size: 9.5px;
-  }
-}
-
-@media (min-width: 1080px) {
-  .finder-page-hero {
-    padding: 136px 48px 42px;
-  }
-
-  .coffee-finder {
-    padding: 36px 48px 84px;
-  }
-
-  .coffee-finder .home-featured-grid[data-result-count="2"] {
-    grid-template-columns: repeat(2, minmax(0, 380px));
   }
 }
 
