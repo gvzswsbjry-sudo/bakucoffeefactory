@@ -92,12 +92,9 @@ const renderDetail = () => {
     const label = escapeDetailHtml(dyn(rawLabel));
     const image = escapeDetailHtml(safeDetailImage(variant.image));
     const color = escapeDetailHtml(variant.color || '#8b8177');
-    const swatchImg = variant.swatchImage ? escapeDetailHtml(safeDetailImage(variant.swatchImage)) : '';
-    const imageStyle = swatchImg ? `background-image:url('${swatchImg}');` : '';
-    const swatchImgVar = swatchImg ? `--swatch-img:url('${swatchImg}');` : '';
     return `
-    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${color}; ${swatchImgVar}" aria-label="${label}" aria-pressed="false">
-      <span class="swatch-pattern" style="${imageStyle} background-color:${color}"></span><small>${label}</small>
+    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${color};" aria-label="${label}" aria-pressed="false">
+      <span class="swatch-pattern" style="background-color:${color}"></span><small>${label}</small>
     </button>`;
   }).join('');
 

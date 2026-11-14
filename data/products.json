@@ -71,8 +71,7 @@
         "name": "600 ml",
         "color": "#64748b",
         "image": "assets/equipment/french-press.jpg",
-        "price": 25,
-        "pattern": false
+        "price": 25
       },
       {
         "id": "french-press-350",
@@ -80,8 +79,7 @@
         "name": "350 ml",
         "color": "#94a3b8",
         "image": "assets/equipment/french-press.jpg",
-        "price": 20,
-        "pattern": false
+        "price": 20
       },
       {
         "id": "french-press-850",
@@ -89,8 +87,7 @@
         "name": "850 ml",
         "color": "#334155",
         "image": "assets/equipment/french-press.jpg",
-        "price": 30,
-        "pattern": false
+        "price": 30
       }
     ]
   },
@@ -166,8 +163,7 @@
         "name": "Klassik taxta",
         "color": "#854d0e",
         "image": "assets/equipment/manual-grinder-wood.jpg",
-        "price": 55,
-        "pattern": false
+        "price": 55
       }
     ]
   },
@@ -243,8 +239,7 @@
         "name": "Naxışlı bürünc",
         "color": "#b45309",
         "image": "assets/equipment/ornate-manual-grinder.jpg",
-        "price": 55,
-        "pattern": false
+        "price": 55
       }
     ]
   },
@@ -318,11 +313,9 @@
         "id": "moka-pot-steel",
         "alt": "Paslanmayan poladdan Moka Pot",
         "name": "Polad",
-        "color": "#e2e8f0",
+        "color": "#94a3b8",
         "image": "assets/equipment/moka-pot.jpg",
-        "price": 90,
-        "pattern": true,
-        "swatchImage": "assets/swatches/moka-pot-steel.jpg"
+        "price": 90
       },
       {
         "id": "moka-pot-gray",
@@ -330,9 +323,7 @@
         "name": "Boz",
         "color": "#475569",
         "image": "assets/equipment/classic-moka-pot-gray.jpg",
-        "price": 90,
-        "pattern": true,
-        "swatchImage": "assets/swatches/moka-pot-gray.jpg"
+        "price": 90
       }
     ]
   },
@@ -383,11 +374,9 @@
         "id": "cezve",
         "alt": "Naxışlı mis rəngli cezvə",
         "name": "Klassik naxışlı",
-        "color": "#c27803",
+        "color": "#b45309",
         "image": "assets/equipment/brass-cezve.jpg",
-        "price": 70,
-        "pattern": true,
-        "swatchImage": "assets/swatches/cezve.jpg"
+        "price": 70
       },
       {
         "id": "cezve-classic",
@@ -395,9 +384,7 @@
         "name": "Sadə bürünc",
         "color": "#d97706",
         "image": "assets/equipment/brass-cezve-classic.jpg",
-        "price": 70,
-        "pattern": true,
-        "swatchImage": "assets/swatches/cezve-classic.jpg"
+        "price": 70
       },
       {
         "id": "cezve-fluted",
@@ -405,9 +392,7 @@
         "name": "Yivli bürünc",
         "color": "#92400e",
         "image": "assets/equipment/brass-cezve-fluted.jpg",
-        "price": 70,
-        "pattern": true,
-        "swatchImage": "assets/swatches/cezve-fluted.jpg"
+        "price": 70
       },
       {
         "id": "cezve-lidded",
@@ -415,9 +400,7 @@
         "name": "Qapaqlı bürünc",
         "color": "#78350f",
         "image": "assets/equipment/brass-cezve-lidded.jpg",
-        "price": 75,
-        "pattern": true,
-        "swatchImage": "assets/swatches/cezve-lidded.jpg"
+        "price": 75
       }
     ]
   },
@@ -493,8 +476,7 @@
         "name": "Polad",
         "color": "#cbd5e1",
         "image": "assets/equipment/gooseneck-kettle.jpg",
-        "price": 55,
-        "pattern": false
+        "price": 55
       }
     ]
   },
@@ -593,9 +575,7 @@
         "name": "Yaşıl daşlı",
         "color": "#047857",
         "image": "assets/equipment/decorative-dallah.jpg",
-        "price": 2,
-        "pattern": true,
-        "swatchImage": "assets/swatches/dallah-decorative.jpg"
+        "price": 2
       },
       {
         "id": "dallah-silver",
@@ -603,9 +583,7 @@
         "name": "Gümüşü",
         "color": "#cbd5e1",
         "image": "assets/equipment/silver-dallah.jpg",
-        "price": 2,
-        "pattern": true,
-        "swatchImage": "assets/swatches/dallah-silver.jpg"
+        "price": 2
       }
     ]
   },
@@ -658,8 +636,7 @@
         "name": "Qara",
         "color": "#1e293b",
         "image": "assets/equipment/manual-press.jpg",
-        "price": 80,
-        "pattern": false
+        "price": 80
       }
     ]
   },
@@ -758,8 +735,7 @@
         "name": "Bürünc",
         "color": "#7c2d12",
         "image": "assets/equipment/wheel-grinder.jpg",
-        "price": 95,
-        "pattern": false
+        "price": 95
       }
     ]
   },
@@ -835,8 +811,7 @@
         "name": "Şüşə",
         "color": "#e2e8f0",
         "image": "assets/equipment/glass-server-400ml.jpg",
-        "price": 38,
-        "pattern": false
+        "price": 38
       }
     ]
   },
@@ -866,9 +841,7 @@
         "name": "Bürünc",
         "color": "#9a3412",
         "image": "assets/equipment/azerbaijan-coffee-set-bronze.jpg",
-        "price": 83,
-        "pattern": true,
-        "swatchImage": "assets/swatches/azerbaijan-bronze.jpg"
+        "price": 83
       },
       {
         "id": "azerbaijan-set-silver",
@@ -876,9 +849,7 @@
         "name": "Gümüşü",
         "color": "#cbd5e1",
         "image": "assets/equipment/azerbaijan-coffee-set-silver.jpg",
-        "price": 83,
-        "pattern": true,
-        "swatchImage": "assets/swatches/azerbaijan-silver.jpg"
+        "price": 83
       }
     ]
   },
@@ -952,19 +923,15 @@
         "name": "Taxta",
         "color": "#854d0e",
         "image": "assets/equipment/espresso-tamper-wood.jpg",
-        "price": 58,
-        "pattern": true,
-        "swatchImage": "assets/swatches/tamper-wood.jpg"
+        "price": 58
       },
       {
         "id": "tamper-silver",
         "alt": "Gümüşü rəngli espresso tamperi",
         "name": "Gümüşü",
-        "color": "#f1f5f9",
+        "color": "#cbd5e1",
         "image": "assets/equipment/espresso-tamper-silver.jpg",
-        "price": 55,
-        "pattern": true,
-        "swatchImage": "assets/swatches/tamper-silver.jpg"
+        "price": 55
       },
       {
         "id": "tamper-black",
@@ -972,9 +939,7 @@
         "name": "Qara",
         "color": "#18181b",
         "image": "assets/equipment/espresso-tamper-black.jpg",
-        "price": 55,
-        "pattern": true,
-        "swatchImage": "assets/swatches/tamper-black.jpg"
+        "price": 55
       }
     ]
   },
@@ -1071,9 +1036,7 @@
         "name": "6 fincanlı",
         "color": "#78350f",
         "image": "assets/equipment/oriental-serving-set-six-cup.jpg",
-        "price": 120,
-        "pattern": true,
-        "swatchImage": "assets/swatches/oriental-six.jpg"
+        "price": 120
       },
       {
         "id": "oriental-serving-set",
@@ -1081,9 +1044,7 @@
         "name": "2 fincanlı",
         "color": "#b45309",
         "image": "assets/equipment/oriental-serving-set.jpg",
-        "price": 72,
-        "pattern": true,
-        "swatchImage": "assets/swatches/oriental-two.jpg"
+        "price": 72
       }
     ]
   },
@@ -1135,8 +1096,7 @@
         "name": "Standart",
         "color": "#8b8177",
         "image": "assets/equipment/french-press.jpg",
-        "price": 1,
-        "pattern": false
+        "price": 1
       }
     ]
   },
@@ -1258,10 +1218,8 @@
         "size": "M",
         "price": 20,
         "image": "assets/uploads/img-1209-mw2dyoqv-8ac58a84.jpg",
-        "color": "#ffffff",
-        "pattern": true,
-        "alt": "Ağ rəngli əl işi fincan",
-        "swatchImage": "assets/swatches/fincan-ag.jpg"
+        "color": "#f8f9fa",
+        "alt": "Ağ rəngli əl işi fincan"
       },
       {
         "id": "fincan-handmade-m-c-90c048",
@@ -1269,10 +1227,8 @@
         "size": "M",
         "price": 20,
         "image": "assets/uploads/img-1207-mw2dw8pl-1608b5a0.jpg",
-        "color": "#90c048",
-        "pattern": true,
-        "alt": "Yaşıl rəngli əl işi fincan",
-        "swatchImage": "assets/swatches/fincan-yasil.jpg"
+        "color": "#2d6a4f",
+        "alt": "Yaşıl rəngli əl işi fincan"
       },
       {
         "id": "fincan-handmade-m-c-1878c0",
@@ -1280,10 +1236,8 @@
         "size": "M",
         "price": 20,
         "image": "assets/uploads/img-1208-mw2dxu72-54840327.jpg",
-        "color": "#f0d818",
-        "pattern": true,
-        "alt": "Sarı rəngli əl işi fincan",
-        "swatchImage": "assets/swatches/fincan-sari.jpg"
+        "color": "#eab308",
+        "alt": "Sarı rəngli əl işi fincan"
       },
       {
         "id": "fincan-handmade-c-1878c0",
@@ -1291,10 +1245,8 @@
         "size": "M",
         "price": 19.82,
         "image": "assets/uploads/img-1205-mw2cfedg-565ffe02.jpg",
-        "color": "#1878c0",
-        "pattern": true,
-        "alt": "Mavi rəngli əl işi fincan",
-        "swatchImage": "assets/swatches/fincan-mavi.jpg"
+        "color": "#2563eb",
+        "alt": "Mavi rəngli əl işi fincan"
       }
     ]
   },
@@ -1324,10 +1276,8 @@
         "size": "Standart",
         "price": 20,
         "image": "assets/uploads/94d28998-458d-4f4c-9165-f5a4adea05db-mw9kpink-c2505c4b.png",
-        "color": "#b22222",
-        "pattern": true,
-        "alt": "Qırmızı milli fincan",
-        "swatchImage": "assets/swatches/milli-fincan-qirmizi.png"
+        "color": "#c53030",
+        "alt": "Qırmızı milli fincan"
       },
       {
         "id": "milli-fincan-standart-c-1e3f66",
@@ -1336,9 +1286,7 @@
         "price": 20,
         "image": "assets/uploads/72c6cdb6-a710-4376-86cf-4522b66dcccd-mw9kmhbw-8e3e8651.png",
         "color": "#1e3f66",
-        "pattern": true,
-        "alt": "Tünd göy milli fincan",
-        "swatchImage": "assets/swatches/milli-fincan-goy.png"
+        "alt": "Tünd göy milli fincan"
       },
       {
         "id": "milli-fincan-standart",
@@ -1346,10 +1294,8 @@
         "size": "Standart",
         "price": 20,
         "image": "assets/uploads/51547910-f36e-40ad-93b5-efdff142ea48-mw9kppsm-2acf13c3.png",
-        "color": "#8b8177",
-        "pattern": true,
-        "alt": "Klassik milli fincan",
-        "swatchImage": "assets/swatches/milli-fincan-klassik.png"
+        "color": "#d4af37",
+        "alt": "Klassik milli fincan"
       }
     ]
   },
@@ -1379,7 +1325,6 @@
         "price": 58,
         "image": "assets/equipment/espresso-tamper-black.jpg",
         "color": "#18181b",
-        "pattern": false,
         "alt": "Qara tamper"
       }
     ]
