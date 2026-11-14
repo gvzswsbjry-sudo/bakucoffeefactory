@@ -29,8 +29,8 @@
       id: 'moka-pot', category: 'brewing', categoryLabel: 'Dəmləmə', name: 'Moka Pot',
       description: 'Ocaq üzərində klassik İtalyan üslubunda sıx və dolğun espresso hazırlamaq üçün səkkizbucaqlı dəmləyici.',
       variants: [
-        { id: 'moka-pot-steel', label: 'Polad', color: '#e2e8f0', pattern: false, image: 'assets/equipment/moka-pot.jpg', alt: 'Paslanmayan poladdan Moka Pot', price: 90 },
-        { id: 'moka-pot-gray', label: 'Boz', color: '#475569', pattern: true, image: 'assets/equipment/classic-moka-pot-gray.jpg', alt: 'Boz xallı klassik Moka Pot', price: 90 },
+        { id: 'moka-pot-steel', label: 'Polad', color: '#e2e8f0', pattern: false, image: 'assets/equipment/moka-pot.jpg', alt: 'Paslanmayan poladdan Moka Pot', price: 90 , swatchImage: 'assets/swatches/moka-pot-steel.jpg' },
+        { id: 'moka-pot-gray', label: 'Boz', color: '#475569', pattern: true, image: 'assets/equipment/classic-moka-pot-gray.jpg', alt: 'Boz xallı klassik Moka Pot', price: 90 , swatchImage: 'assets/swatches/moka-pot-gray.jpg' },
       ],
     },
     {
@@ -38,10 +38,10 @@
       description: 'Əl işi naxışlı qalın bürünc gövdə, təbii ağac sap və bərabər istilik paylanması ilə ənənəvi türk qəhvəsi cezvəsi.',
       imageFit: 'contain',
       variants: [
-        { id: 'cezve', label: 'Klassik naxışlı', color: '#c27803', pattern: true, image: 'assets/equipment/brass-cezve.jpg', alt: 'Naxışlı mis rəngli cezvə', price: 70 },
-        { id: 'cezve-classic', label: 'Sadə bürünc', color: '#d97706', pattern: false, image: 'assets/equipment/brass-cezve-classic.jpg', alt: 'Taxta saplı klassik bürünc cezvə', price: 70 },
-        { id: 'cezve-fluted', label: 'Yivli bürünc', color: '#92400e', pattern: true, image: 'assets/equipment/brass-cezve-fluted.jpg', alt: 'Taxta saplı yivli bürünc cezvə', price: 70 },
-        { id: 'cezve-lidded', label: 'Qapaqlı bürünc', color: '#78350f', pattern: true, image: 'assets/equipment/brass-cezve-lidded.jpg', alt: 'Taxta saplı qapaqlı bürünc cezvə', price: 75 },
+        { id: 'cezve', label: 'Klassik naxışlı', color: '#c27803', pattern: true, image: 'assets/equipment/brass-cezve.jpg', alt: 'Naxışlı mis rəngli cezvə', price: 70 , swatchImage: 'assets/swatches/cezve.jpg' },
+        { id: 'cezve-classic', label: 'Sadə bürünc', color: '#d97706', pattern: false, image: 'assets/equipment/brass-cezve-classic.jpg', alt: 'Taxta saplı klassik bürünc cezvə', price: 70 , swatchImage: 'assets/swatches/cezve-classic.jpg' },
+        { id: 'cezve-fluted', label: 'Yivli bürünc', color: '#92400e', pattern: true, image: 'assets/equipment/brass-cezve-fluted.jpg', alt: 'Taxta saplı yivli bürünc cezvə', price: 70 , swatchImage: 'assets/swatches/cezve-fluted.jpg' },
+        { id: 'cezve-lidded', label: 'Qapaqlı bürünc', color: '#78350f', pattern: true, image: 'assets/equipment/brass-cezve-lidded.jpg', alt: 'Taxta saplı qapaqlı bürünc cezvə', price: 75 , swatchImage: 'assets/swatches/cezve-lidded.jpg' },
       ],
     },
     {
@@ -53,8 +53,8 @@
       id: 'dallah', category: 'service', categoryLabel: 'Servis', name: 'Naxışlı Dallah',
       description: 'Ərəb qəhvə mədəniyyətini əks etdirən, zərif naxışlı və bəzək daşlı ənənəvi qəhvə təqdimat qəhvədanı.',
       variants: [
-        { id: 'dallah-decorative', label: 'Yaşıl daşlı', color: '#047857', pattern: true, image: 'assets/equipment/decorative-dallah.jpg', alt: 'Yaşıl daşlı dekorativ Dallah qəhvədan', price: 2 },
-        { id: 'dallah-silver', label: 'Gümüşü', color: '#cbd5e1', pattern: true, image: 'assets/equipment/silver-dallah.jpg', alt: 'Naxışlı gümüşü rəngli Dallah qəhvədan', price: 2 },
+        { id: 'dallah-decorative', label: 'Yaşıl daşlı', color: '#047857', pattern: true, image: 'assets/equipment/decorative-dallah.jpg', alt: 'Yaşıl daşlı dekorativ Dallah qəhvədan', price: 2 , swatchImage: 'assets/swatches/dallah-decorative.jpg' },
+        { id: 'dallah-silver', label: 'Gümüşü', color: '#cbd5e1', pattern: true, image: 'assets/equipment/silver-dallah.jpg', alt: 'Naxışlı gümüşü rəngli Dallah qəhvədan', price: 2 , swatchImage: 'assets/swatches/dallah-silver.jpg' },
       ],
     },
     {
@@ -77,8 +77,8 @@
       description: 'Zərif bürünc və ya gümüşü naxışlı cezvə, iki ədəd fincan və nəlbəki ilə xüsusi hədiyyəlik qutuda milli qəhvə dəsti.',
       imageFit: 'contain',
       variants: [
-        { id: 'azerbaijan-set-bronze', label: 'Bürünc', color: '#9a3412', pattern: true, image: 'assets/equipment/azerbaijan-coffee-set-bronze.jpg', alt: 'Taxta qutuda bürünc rəngli Azərbaycan qəhvə dəsti', price: 83 },
-        { id: 'azerbaijan-set-silver', label: 'Gümüşü', color: '#cbd5e1', pattern: true, image: 'assets/equipment/azerbaijan-coffee-set-silver.jpg', alt: 'Taxta qutuda gümüşü rəngli Azərbaycan qəhvə dəsti', price: 83 },
+        { id: 'azerbaijan-set-bronze', label: 'Bürünc', color: '#9a3412', pattern: true, image: 'assets/equipment/azerbaijan-coffee-set-bronze.jpg', alt: 'Taxta qutuda bürünc rəngli Azərbaycan qəhvə dəsti', price: 83 , swatchImage: 'assets/swatches/azerbaijan-bronze.jpg' },
+        { id: 'azerbaijan-set-silver', label: 'Gümüşü', color: '#cbd5e1', pattern: true, image: 'assets/equipment/azerbaijan-coffee-set-silver.jpg', alt: 'Taxta qutuda gümüşü rəngli Azərbaycan qəhvə dəsti', price: 83 , swatchImage: 'assets/swatches/azerbaijan-silver.jpg' },
       ],
     },
     {
@@ -86,9 +86,9 @@
       description: 'Qəhvə tabletini portafilterdə bərabər və ideal təzyiqlə sıxmaq üçün 58 mm-lik paslanmayan polad əsaslı peşəkar tamper.',
       imageFit: 'contain',
       variants: [
-        { id: 'tamper-wood', label: 'Taxta', color: '#854d0e', pattern: true, image: 'assets/equipment/espresso-tamper-wood.jpg', alt: 'Taxta üstlü qara espresso tamperi', price: 58 },
-        { id: 'tamper-silver', label: 'Gümüşü', color: '#f1f5f9', pattern: false, image: 'assets/equipment/espresso-tamper-silver.jpg', alt: 'Gümüşü rəngli espresso tamperi', price: 55 },
-        { id: 'tamper-black', label: 'Qara', color: '#18181b', pattern: false, image: 'assets/equipment/espresso-tamper-black.jpg', alt: 'Qara rəngli espresso tamperi', price: 55 },
+        { id: 'tamper-wood', label: 'Taxta', color: '#854d0e', pattern: true, image: 'assets/equipment/espresso-tamper-wood.jpg', alt: 'Taxta üstlü qara espresso tamperi', price: 58 , swatchImage: 'assets/swatches/tamper-wood.jpg' },
+        { id: 'tamper-silver', label: 'Gümüşü', color: '#f1f5f9', pattern: false, image: 'assets/equipment/espresso-tamper-silver.jpg', alt: 'Gümüşü rəngli espresso tamperi', price: 55 , swatchImage: 'assets/swatches/tamper-silver.jpg' },
+        { id: 'tamper-black', label: 'Qara', color: '#18181b', pattern: false, image: 'assets/equipment/espresso-tamper-black.jpg', alt: 'Qara rəngli espresso tamperi', price: 55 , swatchImage: 'assets/swatches/tamper-black.jpg' },
       ],
     },
     {
@@ -96,11 +96,36 @@
       description: 'Əl işi naxışlı fincanlar, qapaqlı lokum qabı və zərif servis nimçəsindən ibarət autentik Şərq qəhvə dəsti.',
       imageFit: 'contain',
       variants: [
-        { id: 'oriental-serving-set-six-cup', label: '6 fincanlı', color: '#78350f', pattern: true, image: 'assets/equipment/oriental-serving-set-six-cup.jpg', alt: 'Naxışlı metal altlıqda altı fincanlı Şərq üslublu servis dəsti', price: 120 },
+        { id: 'oriental-serving-set-six-cup', label: '6 fincanlı', color: '#78350f', pattern: true, image: 'assets/equipment/oriental-serving-set-six-cup.jpg', alt: 'Naxışlı metal altlıqda altı fincanlı Şərq üslublu servis dəsti', price: 120 , swatchImage: 'assets/swatches/oriental-six.jpg' },
         { id: 'oriental-serving-set', label: '2 fincanlı', color: '#b45309', pattern: true, image: 'assets/equipment/oriental-serving-set.jpg', alt: 'Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti', price: 72 },
       ],
     },
   ];
+
+  const SWATCH_MAP = {
+    'milli-fincan-standart-c-b22222': 'assets/swatches/milli-fincan-qirmizi.png',
+    'milli-fincan-standart-c-1e3f66': 'assets/swatches/milli-fincan-goy.png',
+    'milli-fincan-standart': 'assets/swatches/milli-fincan-klassik.png',
+    'cezve': 'assets/swatches/cezve.jpg',
+    'cezve-classic': 'assets/swatches/cezve-classic.jpg',
+    'cezve-fluted': 'assets/swatches/cezve-fluted.jpg',
+    'cezve-lidded': 'assets/swatches/cezve-lidded.jpg',
+    'moka-pot-steel': 'assets/swatches/moka-pot-steel.jpg',
+    'moka-pot-gray': 'assets/swatches/moka-pot-gray.jpg',
+    'dallah-decorative': 'assets/swatches/dallah-decorative.jpg',
+    'dallah-silver': 'assets/swatches/dallah-silver.jpg',
+    'azerbaijan-set-bronze': 'assets/swatches/azerbaijan-bronze.jpg',
+    'azerbaijan-set-silver': 'assets/swatches/azerbaijan-silver.jpg',
+    'tamper-wood': 'assets/swatches/tamper-wood.jpg',
+    'tamper-silver': 'assets/swatches/tamper-silver.jpg',
+    'tamper-black': 'assets/swatches/tamper-black.jpg',
+    'oriental-serving-set-six-cup': 'assets/swatches/oriental-six.jpg',
+    'oriental-serving-set': 'assets/swatches/oriental-two.jpg',
+    'fincan-handmade-s-c-f0d818': 'assets/swatches/fincan-ag.jpg',
+    'fincan-handmade-m-c-90c048': 'assets/swatches/fincan-yasil.jpg',
+    'fincan-handmade-m-c-1878c0': 'assets/swatches/fincan-sari.jpg',
+    'fincan-handmade-c-1878c0': 'assets/swatches/fincan-mavi.jpg'
+  };
 
   const managedEquipment = Array.isArray(globalThis.BCF_PRODUCT_DATA)
     ? globalThis.BCF_PRODUCT_DATA.filter((product) => product.category === 'equipment' && product.active)
@@ -120,7 +145,8 @@
             id: variant.id,
             label: variant.name,
             color: variant.color || '#8b8177',
-            pattern: Boolean(variant.pattern),
+            pattern: Boolean(variant.pattern || variant.swatchImage || SWATCH_MAP[variant.id]),
+            swatchImage: variant.swatchImage || SWATCH_MAP[variant.id] || '',
             image: variant.image,
             alt: variant.alt || product.name,
             price: variant.price,

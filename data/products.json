@@ -321,7 +321,8 @@
         "color": "#e2e8f0",
         "image": "assets/equipment/moka-pot.jpg",
         "price": 90,
-        "pattern": false
+        "pattern": true,
+        "swatchImage": "assets/swatches/moka-pot-steel.jpg"
       },
       {
         "id": "moka-pot-gray",
@@ -330,7 +331,8 @@
         "color": "#475569",
         "image": "assets/equipment/classic-moka-pot-gray.jpg",
         "price": 90,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/moka-pot-gray.jpg"
       }
     ]
   },
@@ -384,7 +386,8 @@
         "color": "#c27803",
         "image": "assets/equipment/brass-cezve.jpg",
         "price": 70,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/cezve.jpg"
       },
       {
         "id": "cezve-classic",
@@ -393,7 +396,8 @@
         "color": "#d97706",
         "image": "assets/equipment/brass-cezve-classic.jpg",
         "price": 70,
-        "pattern": false
+        "pattern": true,
+        "swatchImage": "assets/swatches/cezve-classic.jpg"
       },
       {
         "id": "cezve-fluted",
@@ -402,7 +406,8 @@
         "color": "#92400e",
         "image": "assets/equipment/brass-cezve-fluted.jpg",
         "price": 70,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/cezve-fluted.jpg"
       },
       {
         "id": "cezve-lidded",
@@ -411,7 +416,8 @@
         "color": "#78350f",
         "image": "assets/equipment/brass-cezve-lidded.jpg",
         "price": 75,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/cezve-lidded.jpg"
       }
     ]
   },
@@ -588,7 +594,8 @@
         "color": "#047857",
         "image": "assets/equipment/decorative-dallah.jpg",
         "price": 2,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/dallah-decorative.jpg"
       },
       {
         "id": "dallah-silver",
@@ -597,7 +604,8 @@
         "color": "#cbd5e1",
         "image": "assets/equipment/silver-dallah.jpg",
         "price": 2,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/dallah-silver.jpg"
       }
     ]
   },
@@ -859,7 +867,8 @@
         "color": "#9a3412",
         "image": "assets/equipment/azerbaijan-coffee-set-bronze.jpg",
         "price": 83,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/azerbaijan-bronze.jpg"
       },
       {
         "id": "azerbaijan-set-silver",
@@ -868,7 +877,8 @@
         "color": "#cbd5e1",
         "image": "assets/equipment/azerbaijan-coffee-set-silver.jpg",
         "price": 83,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/azerbaijan-silver.jpg"
       }
     ]
   },
@@ -943,7 +953,8 @@
         "color": "#854d0e",
         "image": "assets/equipment/espresso-tamper-wood.jpg",
         "price": 58,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/tamper-wood.jpg"
       },
       {
         "id": "tamper-silver",
@@ -952,7 +963,8 @@
         "color": "#f1f5f9",
         "image": "assets/equipment/espresso-tamper-silver.jpg",
         "price": 55,
-        "pattern": false
+        "pattern": true,
+        "swatchImage": "assets/swatches/tamper-silver.jpg"
       },
       {
         "id": "tamper-black",
@@ -961,7 +973,8 @@
         "color": "#18181b",
         "image": "assets/equipment/espresso-tamper-black.jpg",
         "price": 55,
-        "pattern": false
+        "pattern": true,
+        "swatchImage": "assets/swatches/tamper-black.jpg"
       }
     ]
   },
@@ -1059,7 +1072,8 @@
         "color": "#78350f",
         "image": "assets/equipment/oriental-serving-set-six-cup.jpg",
         "price": 120,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/oriental-six.jpg"
       },
       {
         "id": "oriental-serving-set",
@@ -1068,7 +1082,8 @@
         "color": "#b45309",
         "image": "assets/equipment/oriental-serving-set.jpg",
         "price": 72,
-        "pattern": true
+        "pattern": true,
+        "swatchImage": "assets/swatches/oriental-two.jpg"
       }
     ]
   },
@@ -1244,8 +1259,9 @@
         "price": 20,
         "image": "assets/uploads/img-1209-mw2dyoqv-8ac58a84.jpg",
         "color": "#ffffff",
-        "pattern": false,
-        "alt": "Ağ rəngli əl işi fincan"
+        "pattern": true,
+        "alt": "Ağ rəngli əl işi fincan",
+        "swatchImage": "assets/swatches/fincan-ag.jpg"
       },
       {
         "id": "fincan-handmade-m-c-90c048",
@@ -1254,8 +1270,9 @@
         "price": 20,
         "image": "assets/uploads/img-1207-mw2dw8pl-1608b5a0.jpg",
         "color": "#90c048",
-        "pattern": false,
-        "alt": "Yaşıl rəngli əl işi fincan"
+        "pattern": true,
+        "alt": "Yaşıl rəngli əl işi fincan",
+        "swatchImage": "assets/swatches/fincan-yasil.jpg"
       },
       {
         "id": "fincan-handmade-m-c-1878c0",
@@ -1264,8 +1281,9 @@
         "price": 20,
         "image": "assets/uploads/img-1208-mw2dxu72-54840327.jpg",
         "color": "#f0d818",
-        "pattern": false,
-        "alt": "Sarı rəngli əl işi fincan"
+        "pattern": true,
+        "alt": "Sarı rəngli əl işi fincan",
+        "swatchImage": "assets/swatches/fincan-sari.jpg"
       },
       {
         "id": "fincan-handmade-c-1878c0",
@@ -1274,8 +1292,9 @@
         "price": 19.82,
         "image": "assets/uploads/img-1205-mw2cfedg-565ffe02.jpg",
         "color": "#1878c0",
-        "pattern": false,
-        "alt": "Mavi rəngli əl işi fincan"
+        "pattern": true,
+        "alt": "Mavi rəngli əl işi fincan",
+        "swatchImage": "assets/swatches/fincan-mavi.jpg"
       }
     ]
   },
@@ -1306,8 +1325,9 @@
         "price": 20,
         "image": "assets/uploads/94d28998-458d-4f4c-9165-f5a4adea05db-mw9kpink-c2505c4b.png",
         "color": "#b22222",
-        "pattern": false,
-        "alt": "Qırmızı milli fincan"
+        "pattern": true,
+        "alt": "Qırmızı milli fincan",
+        "swatchImage": "assets/swatches/milli-fincan-qirmizi.png"
       },
       {
         "id": "milli-fincan-standart-c-1e3f66",
@@ -1316,8 +1336,9 @@
         "price": 20,
         "image": "assets/uploads/72c6cdb6-a710-4376-86cf-4522b66dcccd-mw9kmhbw-8e3e8651.png",
         "color": "#1e3f66",
-        "pattern": false,
-        "alt": "Tünd göy milli fincan"
+        "pattern": true,
+        "alt": "Tünd göy milli fincan",
+        "swatchImage": "assets/swatches/milli-fincan-goy.png"
       },
       {
         "id": "milli-fincan-standart",
@@ -1326,8 +1347,9 @@
         "price": 20,
         "image": "assets/uploads/51547910-f36e-40ad-93b5-efdff142ea48-mw9kppsm-2acf13c3.png",
         "color": "#8b8177",
-        "pattern": false,
-        "alt": "Klassik milli fincan"
+        "pattern": true,
+        "alt": "Klassik milli fincan",
+        "swatchImage": "assets/swatches/milli-fincan-klassik.png"
       }
     ]
   },

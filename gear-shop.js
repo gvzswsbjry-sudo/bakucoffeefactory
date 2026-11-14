@@ -87,9 +87,9 @@ const renderProducts = () => {
           const itemColor = escapeShopHtml(item.color || '#8b8177');
           const itemLabel = escapeShopHtml(dyn(item.label || item.name));
           const activeClass = idx === 0 ? ' class="active"' : '';
-          const hasPattern = Boolean(item.pattern);
-          const imageStyle = hasPattern && itemImg ? `background-image:url('${itemImg}');` : '';
-          const swatchImgVar = hasPattern && itemImg ? `--swatch-img:url('${itemImg}');` : '';
+          const swatchImg = item.swatchImage ? escapeShopHtml(safeShopImage(item.swatchImage)) : '';
+          const imageStyle = swatchImg ? `background-image:url('${swatchImg}');` : '';
+          const swatchImgVar = swatchImg ? `--swatch-img:url('${swatchImg}');` : '';
           return `<span${activeClass} style="--swatch:${itemColor}; ${swatchImgVar} ${imageStyle} background-color:${itemColor}" title="${itemLabel}" data-variant-id="${escapeShopHtml(item.id)}" data-variant-image="${itemImg}" data-variant-alt="${escapeShopHtml(dyn(item.alt || product.name))}" data-variant-price="${escapeShopHtml(formatPrice(item.price))}"></span>`;
         }).join('')}</div>`
       : '';

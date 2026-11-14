@@ -69,6 +69,7 @@ function validateProduct(product) {
       if (!isBoundedString(variant.name, 1, 120)) errors.push(`variants[${index}].name must be between 1 and 120 characters`);
       if (!Number.isFinite(variant.price) || variant.price < 0 || variant.price > 1_000_000) errors.push(`variants[${index}].price must be bounded and non-negative`);
       if (!isAssetPath(variant.image)) errors.push(`variants[${index}].image must be below assets/`);
+      if (variant.swatchImage !== undefined && !isAssetPath(variant.swatchImage)) errors.push(`variants[${index}].swatchImage must be below assets/`);
       if (variant.alt !== undefined && !isBoundedString(variant.alt, 0, 250)) errors.push(`variants[${index}].alt must be at most 250 characters`);
       if (variant.color !== undefined && (typeof variant.color !== 'string' || !COLOR_PATTERN.test(variant.color))) errors.push(`variants[${index}].color is invalid`);
     });
