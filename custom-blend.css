@@ -327,110 +327,69 @@
 }
 
 /* ==========================================================================
-   Custom Blend Dedicated Order Modal (Popup for Grind & Weight)
+   Custom Blend Dedicated Order Modal (Simplified Minimal Popup)
    ========================================================================== */
 .blend-order-modal {
   grid-template-columns: 1fr !important;
-  max-width: 500px !important;
-  border-radius: 20px !important;
+  max-width: 420px !important;
+  border-radius: 18px !important;
   overflow: hidden;
+  background: #faf7f1 !important;
+  box-shadow: 0 20px 60px rgba(20, 16, 13, 0.28) !important;
 }
 
 .blend-modal-content {
-  padding: 26px 22px 26px !important;
+  padding: 22px 20px 20px !important;
 }
 
-@media (min-width: 520px) {
-  .blend-modal-content {
-    padding: 30px 28px 28px !important;
-  }
+.blend-modal-head {
+  margin-bottom: 16px;
+  padding-right: 28px;
 }
 
-.blend-modal-content .tea-kicker {
-  font: 700 10.5px/1.2 var(--mono, "DM Mono", monospace);
-  color: var(--accent-terracotta, #c86d51);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin: 0 0 6px;
-}
-
-.blend-modal-content h2 {
-  font: 600 clamp(20px, 3.5vw, 24px)/1.15 var(--serif, "Playfair Display", Georgia, serif);
+.blend-modal-head h2 {
+  font: 600 20px/1.2 var(--serif, "Playfair Display", Georgia, serif);
   color: #1e1916;
-  margin: 0 0 10px;
+  margin: 0 0 4px;
 }
 
-.blend-modal-recipe-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  background: #ffffff;
-  border: 1px solid rgba(74, 53, 37, 0.1);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 20px;
+.blend-modal-head .blend-modal-formula {
+  font: 500 13px/1.35 var(--sans, "Manrope", sans-serif);
+  color: #7a6a5e;
+  margin: 0;
 }
 
-.blend-modal-formula {
-  font: 700 13px/1.2 var(--sans, "Manrope", sans-serif);
-  color: #1e1916;
+.blend-modal-group {
+  margin-bottom: 16px;
 }
 
-.blend-modal-rate {
-  font: 600 11.5px/1.2 var(--mono, "DM Mono", monospace);
-  color: var(--accent-terracotta, #c86d51);
-}
-
-/* Step Sections in Modal */
-.blend-modal-step {
-  margin-bottom: 20px;
-}
-
-.blend-modal-step-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.blend-modal-step-title {
-  font: 700 11.5px/1.2 var(--mono, "DM Mono", monospace);
-  color: #6a5a4e;
+.blend-modal-label {
+  display: block;
+  font: 700 11px/1 var(--mono, "DM Mono", monospace);
+  color: #8c7e73;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  margin-bottom: 8px;
 }
 
-.blend-modal-step-current {
-  font: 700 12.5px/1.2 var(--sans, "Manrope", sans-serif);
-  color: #1e1916;
-}
-
-/* Grind Options Grid inside Modal */
-.blend-grind-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+/* Horizontal single-line chips for Grind */
+.blend-grind-chips {
+  display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
-@media (min-width: 480px) {
-  .blend-grind-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
-
 .blend-option-btn {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 9px 6px;
+  padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(74, 53, 37, 0.16);
+  border: 1.5px solid rgba(74, 53, 37, 0.16);
   background: #ffffff;
+  color: #3d2f25;
   cursor: pointer;
-  transition: all 0.15s ease;
-  text-align: center;
+  transition: all 0.14s ease;
   user-select: none;
 }
 
@@ -442,76 +401,50 @@
 .blend-option-btn.active {
   background: #1e1916;
   border-color: #1e1916;
-  box-shadow: 0 4px 12px rgba(30, 25, 22, 0.15);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(30, 25, 22, 0.16);
 }
 
 .blend-option-btn .grind-title {
-  font: 700 11.5px/1.2 var(--sans, "Manrope", sans-serif);
+  font: 700 12px/1 var(--sans, "Manrope", sans-serif);
   color: #1e1916;
-  margin-bottom: 2px;
-  transition: color 0.15s ease;
+  transition: color 0.14s ease;
 }
 
 .blend-option-btn.active .grind-title {
   color: #ffffff;
 }
 
-.blend-option-btn .grind-hint {
-  font: 500 9px/1.1 var(--mono, "DM Mono", monospace);
-  color: #8c7e73;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  transition: color 0.15s ease;
-}
-
-.blend-option-btn.active .grind-hint {
-  color: #d4c8bd;
-}
-
-/* Weight Section inside Modal */
-.blend-weight-box {
-  background: #ffffff;
-  border: 1px solid rgba(74, 53, 37, 0.1);
-  border-radius: 10px;
-  padding: 12px 14px;
-}
-
-.blend-weight-inputs {
+/* Weight Row */
+.blend-modal-weight-row {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-@media (min-width: 480px) {
-  .blend-weight-inputs {
-    flex-direction: row;
-    align-items: center;
-  }
+  align-items: center;
+  gap: 8px;
 }
 
 .blend-weight-control {
   display: inline-flex;
   align-items: center;
-  background: #faf7f1;
+  background: #ffffff;
   border: 1.5px solid rgba(74, 53, 37, 0.18);
   border-radius: 8px;
-  padding: 3px;
+  padding: 2px;
   flex-shrink: 0;
 }
 
 .blend-weight-step-btn {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border: none;
   background: transparent;
   color: #1e1916;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 5px;
   transition: background 0.12s ease;
 }
 
@@ -527,37 +460,36 @@
 }
 
 .blend-weight-field-wrap input {
-  width: 60px;
+  width: 48px;
   border: none;
   background: transparent;
-  font: 700 16px/1 var(--mono, "DM Mono", monospace);
+  font: 700 15px/1 var(--mono, "DM Mono", monospace);
   color: #1e1916;
   text-align: right;
-  padding: 4px 2px;
+  padding: 2px 0;
   outline: none;
 }
 
 .blend-weight-unit {
-  font: 600 13px/1 var(--mono, "DM Mono", monospace);
+  font: 600 12px/1 var(--mono, "DM Mono", monospace);
   color: #7a6a5e;
   margin-left: 2px;
 }
 
 .blend-weight-presets {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
   flex: 1;
 }
 
 .blend-weight-preset-btn {
-  flex: 1 1 auto;
-  padding: 7px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(74, 53, 37, 0.16);
+  flex: 1 1 0;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(74, 53, 37, 0.16);
   background: #ffffff;
-  color: #4a3525;
-  font: 600 11.5px/1 var(--mono, "DM Mono", monospace);
+  color: #3d2f25;
+  font: 700 11px/1 var(--mono, "DM Mono", monospace);
   cursor: pointer;
   transition: all 0.14s ease;
   text-align: center;
@@ -575,55 +507,54 @@
   color: #ffffff;
 }
 
-.blend-weight-note {
-  margin: 8px 0 0;
-  font: 400 11px/1.35 var(--sans, "Manrope", sans-serif);
-  color: #8c7e73;
-}
-
-/* Modal Total & Confirm Section */
-.blend-modal-total-section {
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(74, 53, 37, 0.1);
+/* Modal Foot: Total + Confirm */
+.blend-modal-foot {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(74, 53, 37, 0.12);
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 }
 
 .blend-modal-total-line {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  font: 600 13px/1 var(--sans, "Manrope", sans-serif);
-  color: #6a5a4e;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  flex-direction: column;
+  flex-shrink: 0;
 }
 
-.blend-modal-price {
-  font: 800 24px/1 var(--mono, "DM Mono", monospace);
+.blend-modal-total-line span {
+  font: 600 10px/1 var(--mono, "DM Mono", monospace);
+  color: #8c7e73;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.blend-modal-total-line strong {
+  font: 800 20px/1 var(--mono, "DM Mono", monospace);
   color: #1e1916;
 }
 
 .blend-confirm-add-btn {
-  width: 100%;
-  min-height: 48px;
-  border-radius: 10px;
+  flex: 1;
+  min-height: 44px;
+  border-radius: 9px;
   border: none;
   background: #1e1916;
   color: #ffffff;
-  font: 700 14px/1 var(--sans, "Manrope", sans-serif);
+  font: 700 13.5px/1 var(--sans, "Manrope", sans-serif);
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: all 0.16s ease;
-  box-shadow: 0 4px 14px rgba(30, 25, 22, 0.15);
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(30, 25, 22, 0.15);
 }
 
 .blend-confirm-add-btn:hover {
   background: var(--accent-terracotta, #c86d51);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(200, 109, 81, 0.25);
+  box-shadow: 0 6px 16px rgba(200, 109, 81, 0.25);
 }
 
 .blend-confirm-add-btn:active {
