@@ -7,101 +7,51 @@
       id: 'colombia',
       name: 'Colombia',
       price: 15,
-      taste: 'Karamel, süd şokoladı, qırmızı alma',
-      sweetness: 4.0,
-      acidity: 3.0,
-      body: 3.5,
-      aroma: 4.0,
     },
     brasil: {
       id: 'brasil',
       name: 'Brasil',
       price: 10,
-      taste: 'Qovrulmuş fındıq, kakao, tünd şokolad',
-      sweetness: 3.8,
-      acidity: 2.0,
-      body: 4.5,
-      aroma: 3.5,
     },
     guatemala: {
       id: 'guatemala',
       name: 'Guatemala',
       price: 12,
-      taste: 'Tünd şokolad, badam, qəhvəyi şəkər',
-      sweetness: 4.0,
-      acidity: 3.5,
-      body: 4.0,
-      aroma: 4.0,
     },
     honduras: {
       id: 'honduras',
       name: 'Honduras',
       price: 11,
-      taste: 'Qırmızı giləmeyvə, kakao, yumşaq sitrus',
-      sweetness: 4.0,
-      acidity: 3.0,
-      body: 3.5,
-      aroma: 4.0,
     },
     efiopiya: {
       id: 'efiopiya',
       name: 'Efiopiya',
       price: 13,
-      taste: 'Yasəmən, berqamot, limon qabığı',
-      sweetness: 4.0,
-      acidity: 4.5,
-      body: 2.5,
-      aroma: 5.0,
     },
     keniya: {
       id: 'keniya',
       name: 'Keniya',
       price: 8,
-      taste: 'Qara qarağat, qırmızı giləmeyvə, qamış şəkəri',
-      sweetness: 4.0,
-      acidity: 4.5,
-      body: 3.0,
-      aroma: 4.5,
     },
     'costa-rica': {
       id: 'costa-rica',
       name: 'Costa Rica',
       price: 13,
-      taste: 'Qırmızı alma, bal şirinliyi, sitrus',
-      sweetness: 4.5,
-      acidity: 3.5,
-      body: 3.5,
-      aroma: 4.0,
     },
     robusta: {
       id: 'robusta',
       name: 'Robusta',
       price: 8,
-      taste: 'Tünd kakao, odunsu tonlar, dolğun crema',
-      sweetness: 2.5,
-      acidity: 1.5,
-      body: 5.0,
-      aroma: 3.0,
     },
     decaf: {
       id: 'decaf',
       name: 'Decaf (Kofeinsiz)',
       price: 12,
-      taste: 'Karamel, kakao, badam',
-      sweetness: 4.0,
-      acidity: 2.0,
-      body: 3.5,
-      aroma: 3.5,
     },
     uqanda: {
       id: 'uqanda',
       name: 'Uqanda',
       price: 11,
-      taste: 'Tünd şokolad, quru gavalı, isti ədviyyat, qovrulmuş qoz',
-      sweetness: 3.5,
-      acidity: 2.5,
-      body: 4.0,
-      aroma: 3.5,
     },
   };
 
@@ -109,49 +59,46 @@
     const root = document.getElementById('oz-blendini-yarat');
     if (!root) return;
 
+    // Interactive Pickers & Slider on Main Card
     const baseSelect = root.querySelector('#blendBaseSelect');
     const accentSelect = root.querySelector('#blendAccentSelect');
     const slider = root.querySelector('#blendRatioSlider');
-    const baseRatioPill = root.querySelector('#blendRatioBaseText');
-    const accentRatioPill = root.querySelector('#blendRatioAccentText');
 
-    const sweetnessFill = root.querySelector('#tasteSweetnessFill');
-    const sweetnessVal = root.querySelector('#tasteSweetnessVal');
-    const acidityFill = root.querySelector('#tasteAcidityFill');
-    const acidityVal = root.querySelector('#tasteAcidityVal');
-    const bodyFill = root.querySelector('#tasteBodyFill');
-    const bodyVal = root.querySelector('#tasteBodyVal');
-    const aromaFill = root.querySelector('#tasteAromaFill');
-    const aromaVal = root.querySelector('#tasteAromaVal');
+    const baseRatioPct = root.querySelector('#blendRatioBasePct');
+    const accentRatioPct = root.querySelector('#blendRatioAccentPct');
+    const baseNameDisplay = root.querySelector('#blendBaseNameDisplay');
+    const accentNameDisplay = root.querySelector('#blendAccentNameDisplay');
+    const basePriceDisplay = root.querySelector('#blendBasePriceDisplay');
+    const accentPriceDisplay = root.querySelector('#blendAccentPriceDisplay');
+    const baseRatioText = root.querySelector('#blendRatioBaseText');
+    const accentRatioText = root.querySelector('#blendRatioAccentText');
 
-    const grindButtons = root.querySelectorAll('.blend-option-btn[data-grind]');
+    const cardFormula = root.querySelector('#blendCardFormula');
+    const cardRate = root.querySelector('#blendCardRate');
+    const openModalBtn = root.querySelector('#blendOpenModalBtn');
 
-    // Weight controls
-    const weightInput = root.querySelector('#blendWeightInput');
-    const weightMinus = root.querySelector('#blendWeightMinus');
-    const weightPlus = root.querySelector('#blendWeightPlus');
-    const presetButtons = root.querySelectorAll('.blend-weight-preset-btn');
+    // Modal elements
+    const modal = document.getElementById('blendOrderModal');
+    const modalOverlay = document.getElementById('blendModalOverlay');
+    const modalCloseBtn = document.getElementById('blendModalClose');
 
-    // Passport summary elements
-    const bagFormula = root.querySelector('#craftBagFormulaText');
-    const bagGrind = root.querySelector('#craftBagGrindText');
-    const bagWeight = root.querySelector('#craftBagWeightText');
-    const bagDate = root.querySelector('#craftBagDateText');
-    const gramsText = root.querySelector('#passportGramsText');
+    const modalBlendName = document.getElementById('craftBagBlendName');
+    const modalFormulaText = document.getElementById('craftBagFormulaText');
+    const modalRateText = document.getElementById('blendModalRateText');
+    const modalGrindCurrent = document.getElementById('craftBagGrindText');
+    const modalWeightCurrent = document.getElementById('craftBagWeightText');
 
-    const priceDisplay = root.querySelector('#blendPriceTotal');
-    const addBtn = root.querySelector('#blendAddToCartBtn');
+    const grindButtons = document.querySelectorAll('#blendOrderModal .blend-option-btn[data-grind]');
+    const weightInput = document.getElementById('blendWeightInput');
+    const weightMinus = document.getElementById('blendWeightMinus');
+    const weightPlus = document.getElementById('blendWeightPlus');
+    const presetButtons = document.querySelectorAll('#blendOrderModal .blend-weight-preset-btn');
+
+    const priceDisplay = document.getElementById('blendPriceTotal');
+    const addToCartBtn = document.getElementById('blendAddToCartBtn');
 
     let selectedGrind = 'Dənə (Bütöv)';
     let selectedWeight = 250; // grams
-
-    function getTodayString() {
-      const d = new Date();
-      const day = String(d.getDate()).padStart(2, '0');
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
-      return `${day}.${month}.${year}`;
-    }
 
     function syncPresetActive(grams) {
       presetButtons.forEach((btn) => {
@@ -160,69 +107,42 @@
     }
 
     function calculateState() {
-      const baseKey = baseSelect?.value || 'efiopiya';
-      const accentKey = accentSelect?.value || 'robusta';
+      const baseKey = (baseSelect?.value || 'efiopiya').toLowerCase();
+      const accentKey = (accentSelect?.value || 'robusta').toLowerCase();
+
       const baseCoffee = COFFEE_COMPONENTS[baseKey] || COFFEE_COMPONENTS.efiopiya;
       const accentCoffee = COFFEE_COMPONENTS[accentKey] || COFFEE_COMPONENTS.robusta;
 
-      const baseRatio = Number(slider?.value || 70);
+      const rawSlider = parseInt(slider?.value, 10);
+      const baseRatio = Number.isNaN(rawSlider) ? 70 : Math.min(90, Math.max(10, rawSlider));
       const accentRatio = 100 - baseRatio;
 
-      // Update slider CSS variable for track fill
-      if (slider) {
-        slider.style.setProperty('--slider-ratio', `${baseRatio}%`);
-      }
+      // Weighted price per 100g
+      const avgPricePer100g = (baseCoffee.price * baseRatio + accentCoffee.price * accentRatio) / 100;
+      const finalPrice = Math.round((avgPricePer100g * (selectedWeight / 100)) * 100) / 100;
 
-      // Update ratio pills
-      if (baseRatioPill) baseRatioPill.textContent = `${baseRatio}% ${baseCoffee.name}`;
-      if (accentRatioPill) accentRatioPill.textContent = `${accentRatio}% ${accentCoffee.name}`;
+      // Update Card Header Pickers
+      if (baseRatioPct) baseRatioPct.textContent = `${baseRatio}%`;
+      if (accentRatioPct) accentRatioPct.textContent = `${accentRatio}%`;
+      if (baseNameDisplay) baseNameDisplay.textContent = baseCoffee.name;
+      if (accentNameDisplay) accentNameDisplay.textContent = accentCoffee.name;
+      if (basePriceDisplay) basePriceDisplay.textContent = `${baseCoffee.price} ₼ / 100q`;
+      if (accentPriceDisplay) accentPriceDisplay.textContent = `${accentCoffee.price} ₼ / 100q`;
 
-      // Calculate dynamic taste profile
-      const sweetness = ((baseCoffee.sweetness * baseRatio) + (accentCoffee.sweetness * accentRatio)) / 100;
-      const acidity = ((baseCoffee.acidity * baseRatio) + (accentCoffee.acidity * accentRatio)) / 100;
-      const body = ((baseCoffee.body * baseRatio) + (accentCoffee.body * accentRatio)) / 100;
-      const aroma = ((baseCoffee.aroma * baseRatio) + (accentCoffee.aroma * accentRatio)) / 100;
+      if (baseRatioText) baseRatioText.textContent = `${baseRatio}% ${baseCoffee.name}`;
+      if (accentRatioText) accentRatioText.textContent = `${accentRatio}% ${accentCoffee.name}`;
 
-      if (sweetnessFill && sweetnessVal) {
-        sweetnessFill.style.width = `${(sweetness / 5) * 100}%`;
-        sweetnessVal.textContent = `${sweetness.toFixed(1)} / 5`;
-      }
-      if (acidityFill && acidityVal) {
-        acidityFill.style.width = `${(acidity / 5) * 100}%`;
-        acidityVal.textContent = `${acidity.toFixed(1)} / 5`;
-      }
-      if (bodyFill && bodyVal) {
-        bodyFill.style.width = `${(body / 5) * 100}%`;
-        bodyVal.textContent = `${body.toFixed(1)} / 5`;
-      }
-      if (aromaFill && aromaVal) {
-        aromaFill.style.width = `${(aroma / 5) * 100}%`;
-        aromaVal.textContent = `${aroma.toFixed(1)} / 5`;
-      }
+      const formulaString = `${baseRatio}% ${baseCoffee.name} · ${accentRatio}% ${accentCoffee.name}`;
+      if (cardFormula) cardFormula.textContent = formulaString;
+      if (cardRate) cardRate.textContent = `${avgPricePer100g.toFixed(2)} ₼ / 100 q`;
 
-      // Calculate pricing: STRICTLY NO DISCOUNTS (endirim olmasin)
-      const avgPricePer100g = ((baseCoffee.price * baseRatio) + (accentCoffee.price * accentRatio)) / 100;
-      const total = (avgPricePer100g * selectedWeight) / 100;
-      const finalPrice = Math.round(total * 100) / 100;
-
-      if (priceDisplay) {
-        priceDisplay.textContent = `${finalPrice.toFixed(2)} ₼`;
-      }
-
-      // Live Passport Specification sync
-      if (bagFormula) {
-        bagFormula.textContent = `${baseRatio}% ${baseCoffee.name} · ${accentRatio}% ${accentCoffee.name}`;
-      }
-
-      if (gramsText) {
-        const baseGrams = Math.round((selectedWeight * baseRatio) / 100);
-        const accentGrams = selectedWeight - baseGrams;
-        gramsText.textContent = `${baseGrams} q ${baseCoffee.name} + ${accentGrams} q ${accentCoffee.name}`;
-      }
-
-      if (bagGrind) bagGrind.textContent = selectedGrind;
-      if (bagWeight) bagWeight.textContent = `${selectedWeight} q`;
-      if (bagDate) bagDate.textContent = `Təzə qovrum · ${getTodayString()}`;
+      // Update Modal
+      if (modalBlendName) modalBlendName.textContent = 'Xüsusi Qəhvə Blendi';
+      if (modalFormulaText) modalFormulaText.textContent = formulaString;
+      if (modalRateText) modalRateText.textContent = `${avgPricePer100g.toFixed(2)} ₼ / 100 q`;
+      if (modalGrindCurrent) modalGrindCurrent.textContent = selectedGrind;
+      if (modalWeightCurrent) modalWeightCurrent.textContent = `${selectedWeight} q`;
+      if (priceDisplay) priceDisplay.textContent = `${finalPrice.toFixed(2)} ₼`;
 
       syncPresetActive(selectedWeight);
 
@@ -235,15 +155,44 @@
         selectedWeight,
         avgPricePer100g,
         finalPrice,
+        formulaString,
       };
     }
+
+    // Modal open / close
+    function openModal() {
+      if (!modal || !modalOverlay) return;
+      calculateState();
+      modal.hidden = false;
+      modalOverlay.hidden = false;
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('tea-modal-open');
+    }
+
+    function closeModal() {
+      if (!modal || !modalOverlay) return;
+      modal.hidden = true;
+      modalOverlay.hidden = true;
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('tea-modal-open');
+    }
+
+    openModalBtn?.addEventListener('click', openModal);
+    modalCloseBtn?.addEventListener('click', closeModal);
+    modalOverlay?.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal && !modal.hidden) {
+        closeModal();
+      }
+    });
 
     // Event listeners for inputs
     baseSelect?.addEventListener('change', calculateState);
     accentSelect?.addEventListener('change', calculateState);
     slider?.addEventListener('input', calculateState);
 
-    // Grind buttons
+    // Grind buttons in modal
     grindButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         grindButtons.forEach((b) => b.classList.remove('active'));
@@ -259,7 +208,7 @@
       if (Number.isNaN(num) || num < 1) {
         selectedWeight = 250;
       } else {
-        selectedWeight = Math.min(2000, Math.max(5, num));
+        selectedWeight = Math.min(2000, Math.max(50, num));
       }
       if (weightInput) weightInput.value = String(selectedWeight);
       calculateState();
@@ -295,8 +244,8 @@
     // Initial state calculation
     calculateState();
 
-    // Add to Cart handler
-    addBtn?.addEventListener('click', () => {
+    // Add to Cart handler inside Modal
+    addToCartBtn?.addEventListener('click', () => {
       const state = calculateState();
       const cartKey = 'bcf-equipment-cart-v1';
       let cart = {};
@@ -336,7 +285,10 @@
       cart[itemId] = cartItem;
       localStorage.setItem(cartKey, JSON.stringify(cart));
 
-      // Sync and open cart
+      // Close modal
+      closeModal();
+
+      // Sync and open cart drawer
       if (typeof window.syncUnifiedCartDom === 'function') {
         window.syncUnifiedCartDom(cart);
       }
