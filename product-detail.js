@@ -28,6 +28,11 @@ const escapeDetailHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (cha
   '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
 })[character]);
 
+const safeDetailImage = (value) => {
+  const image = String(value || '');
+  return /^assets\/(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(image) && !image.split('/').includes('..') ? image : '';
+};
+
 let selectedVariant = detailProduct ? resolveEquipmentVariant(detailProduct, params.get('variant')) : null;
 const purchasable = Boolean(detailProduct) && detailProduct.stock?.status !== 'out' && !(detailProduct.stock?.status === 'counted' && detailProduct.stock.quantity <= 0);
 
@@ -85,9 +90,12 @@ const renderDetail = () => {
   variantSwatches.innerHTML = detailProduct.variants.map((variant) => {
     const rawLabel = variant.label || variant.size || variant.name;
     const label = escapeDetailHtml(dyn(rawLabel));
+    const image = escapeDetailHtml(safeDetailImage(variant.image));
+    const color = escapeDetailHtml(variant.color || '#8b8177');
+    const imageStyle = image ? `background-image:url('${image}');` : '';
     return `
-    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${escapeDetailHtml(variant.color || '#8b8177')}" aria-label="${label}" aria-pressed="false">
-      <span></span><small>${label}</small>
+    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${color}; --swatch-img:url('${image}')" aria-label="${label}" aria-pressed="false">
+      <span class="swatch-pattern" style="${imageStyle} background-color:${color}"></span><small>${label}</small>
     </button>`;
   }).join('');
 

@@ -82,7 +82,14 @@ const renderProducts = () => {
     const soldOut = product.stock?.status === 'out' || (product.stock?.status === 'counted' && product.stock.quantity <= 0);
     const fitClass = product.imageFit === 'contain' ? 'product-image-contain' : '';
     const variants = product.variants.length > 1
-      ? `<div class="product-variant-preview" aria-label="${escapeShopHtml(dyn(`${product.variants.length} seçim`))}">${product.variants.map((item) => `<span style="--swatch:${escapeShopHtml(item.color)}" title="${escapeShopHtml(dyn(item.label))}"></span>`).join('')}</div>`
+      ? `<div class="product-variant-preview" aria-label="${escapeShopHtml(dyn(`${product.variants.length} seçim`))}">${product.variants.map((item, idx) => {
+          const itemImg = escapeShopHtml(safeShopImage(item.image));
+          const itemColor = escapeShopHtml(item.color || '#8b8177');
+          const itemLabel = escapeShopHtml(dyn(item.label || item.name));
+          const activeClass = idx === 0 ? ' class="active"' : '';
+          const imageStyle = itemImg ? `background-image:url('${itemImg}');` : '';
+          return `<span${activeClass} style="--swatch:${itemColor}; --swatch-img:url('${itemImg}'); ${imageStyle} background-color:${itemColor}" title="${itemLabel}" data-variant-id="${escapeShopHtml(item.id)}" data-variant-image="${itemImg}" data-variant-alt="${escapeShopHtml(dyn(item.alt || product.name))}" data-variant-price="${escapeShopHtml(formatPrice(item.price))}"></span>`;
+        }).join('')}</div>`
       : '';
 
     const productId = escapeShopHtml(product.id);
@@ -171,7 +178,13 @@ const closeCart = () => {
 const openProduct = (card) => {
   if (!card) return;
   const filter = shopFilters?.querySelector('.filter-chip.active')?.dataset.filter || 'all';
-  window.location.href = buildEquipmentDetailUrl(card.dataset.productId, filter);
+  const activeSwatch = card.querySelector('.product-variant-preview span.active');
+  const variantId = activeSwatch?.dataset.variantId;
+  let url = buildEquipmentDetailUrl(card.dataset.productId, filter);
+  if (variantId) {
+    url += (url.includes('?') ? '&' : '?') + `variant=${encodeURIComponent(variantId)}`;
+  }
+  window.location.href = url;
 };
 
 const applyShopFilter = (filterButton, updateUrl = true) => {
@@ -207,14 +220,45 @@ const applyShopSort = (sort, updateUrl = true) => {
   }
 };
 
+const selectCardVariant = (card, swatch) => {
+  if (!card || !swatch) return;
+  const newImg = swatch.dataset.variantImage;
+  const newAlt = swatch.dataset.variantAlt;
+  const newPrice = swatch.dataset.variantPrice;
+  const variantId = swatch.dataset.variantId;
+  if (newImg) {
+    const imgEl = card.querySelector('figure img');
+    if (imgEl) {
+      imgEl.src = newImg;
+      if (newAlt) imgEl.alt = newAlt;
+    }
+  }
+  if (newPrice) {
+    const priceEl = card.querySelector('.product-price');
+    if (priceEl) priceEl.textContent = newPrice;
+  }
+  const btn = card.querySelector('.add-to-cart');
+  if (btn && variantId) btn.dataset.variantId = variantId;
+  card.querySelectorAll('.product-variant-preview span').forEach((s) => s.classList.remove('active'));
+  swatch.classList.add('active');
+};
+
 shopProducts?.addEventListener('click', (event) => {
+  const swatch = event.target.closest('.product-variant-preview span');
+  if (swatch) {
+    event.stopPropagation();
+    selectCardVariant(swatch.closest('.shop-product'), swatch);
+    return;
+  }
   const button = event.target.closest('.add-to-cart');
   if (button) {
     event.stopPropagation();
     if (button.disabled) return;
     const product = getEquipmentProduct(button.dataset.productId);
     if (!product) return;
-    addVariantToCart(product, product.variants[0]);
+    const variantId = button.dataset.variantId;
+    const selectedVariant = (variantId && product.variants.find((v) => v.id === variantId)) || product.variants[0];
+    addVariantToCart(product, selectedVariant);
     button.classList.add('added');
     button.dataset.i18n = 'added';
     button.textContent = tr('added', 'Əlavə edildi');
@@ -226,6 +270,12 @@ shopProducts?.addEventListener('click', (event) => {
     return;
   }
   openProduct(event.target.closest('.shop-product'));
+});
+
+shopProducts?.addEventListener('pointerover', (event) => {
+  const swatch = event.target.closest('.product-variant-preview span');
+  if (!swatch) return;
+  selectCardVariant(swatch.closest('.shop-product'), swatch);
 });
 
 shopProducts?.addEventListener('keydown', (event) => {

@@ -52,7 +52,7 @@
     "price": 25,
     "unit": "piece",
     "image": "assets/equipment/french-press.jpg",
-    "description": "350 ml, 600 ml və 850 ml ölçülərdə sadə və dolğun dəmləmə üçün klassik pres.",
+    "description": "350 ml, 600 ml və 850 ml ölçülərdə sadə, zəngin və dolğun dəmləmə üçün borosilikat şüşə və polad pres.",
     "active": true,
     "stock": {
       "status": "available",
@@ -69,7 +69,7 @@
         "id": "french-press",
         "alt": "600 millilitrlik şüşə və paslanmayan polad French Press",
         "name": "600 ml",
-        "color": "#8f8982",
+        "color": "#64748b",
         "image": "assets/equipment/french-press.jpg",
         "price": 25
       },
@@ -77,7 +77,7 @@
         "id": "french-press-350",
         "alt": "350 millilitrlik şüşə və paslanmayan polad French Press",
         "name": "350 ml",
-        "color": "#b7aaa0",
+        "color": "#94a3b8",
         "image": "assets/equipment/french-press.jpg",
         "price": 20
       },
@@ -85,7 +85,7 @@
         "id": "french-press-850",
         "alt": "850 millilitrlik şüşə və paslanmayan polad French Press",
         "name": "850 ml",
-        "color": "#625d57",
+        "color": "#334155",
         "image": "assets/equipment/french-press.jpg",
         "price": 30
       }
@@ -144,7 +144,7 @@
     "price": 55,
     "unit": "piece",
     "image": "assets/equipment/manual-grinder-wood.jpg",
-    "description": "Klassik görünüşlü, mexaniki üyütmə üçün əl dəyirmanı.",
+    "description": "Klassik taxta gövdəli, keramika dişli mexanizmə və tənzimlənən üyütmə dərəcəsinə malik əl dəyirmanı.",
     "active": true,
     "stock": {
       "status": "available",
@@ -161,7 +161,7 @@
         "id": "wood-grinder",
         "alt": "Taxta gövdəli əl qəhvə dəyirmanı",
         "name": "Klassik taxta",
-        "color": "#76513a",
+        "color": "#854d0e",
         "image": "assets/equipment/manual-grinder-wood.jpg",
         "price": 55
       }
@@ -220,7 +220,7 @@
     "price": 55,
     "unit": "piece",
     "image": "assets/equipment/ornate-manual-grinder.jpg",
-    "description": "Bürünc naxışlı gövdə və mexaniki üyütmə sistemi ilə klassik əl dəyirmanı.",
+    "description": "Ənənəvi şərq naxışları ilə bəzədilmiş antik bürünc gövdə, qatlanan qol və dəqiq üyütmə tənzimləyicisi.",
     "active": true,
     "stock": {
       "status": "available",
@@ -237,7 +237,7 @@
         "id": "ornate-manual-grinder",
         "alt": "Bürünc rəngli naxışlı əl qəhvə dəyirmanı",
         "name": "Naxışlı bürünc",
-        "color": "#756044",
+        "color": "#b45309",
         "image": "assets/equipment/ornate-manual-grinder.jpg",
         "price": 55
       }
@@ -296,7 +296,7 @@
     "price": 90,
     "unit": "piece",
     "image": "assets/equipment/moka-pot.jpg",
-    "description": "Ocaq üzərində güclü və aromatik qəhvə hazırlamaq üçün klassik dəmləyici.",
+    "description": "Ocaq üzərində klassik İtalyan üslubunda sıx və dolğun espresso hazırlamaq üçün səkkizbucaqlı dəmləyici.",
     "active": true,
     "stock": {
       "status": "available",
@@ -313,7 +313,7 @@
         "id": "moka-pot-steel",
         "alt": "Paslanmayan poladdan Moka Pot",
         "name": "Polad",
-        "color": "#b7b7b2",
+        "color": "#e2e8f0",
         "image": "assets/equipment/moka-pot.jpg",
         "price": 90
       },
@@ -321,7 +321,7 @@
         "id": "moka-pot-gray",
         "alt": "Boz xallı klassik Moka Pot",
         "name": "Boz",
-        "color": "#696866",
+        "color": "#475569",
         "image": "assets/equipment/classic-moka-pot-gray.jpg",
         "price": 90
       }
@@ -357,7 +357,7 @@
     "price": 70,
     "unit": "piece",
     "image": "assets/equipment/brass-cezve.jpg",
-    "description": "Türk qəhvəsini ənənəvi üsulla hazırlamaq üçün cezvə.",
+    "description": "Əl işi naxışlı qalın bürünc gövdə, təbii ağac sap və bərabər istilik paylanması ilə ənənəvi türk qəhvəsi cezvəsi.",
     "active": true,
     "stock": {
       "status": "available",
@@ -374,7 +374,7 @@
         "id": "cezve",
         "alt": "Naxışlı mis rəngli cezvə",
         "name": "Klassik naxışlı",
-        "color": "#a9703e",
+        "color": "#c27803",
         "image": "assets/equipment/brass-cezve.jpg",
         "price": 70
       },
@@ -382,7 +382,7 @@
         "id": "cezve-classic",
         "alt": "Taxta saplı klassik bürünc cezvə",
         "name": "Sadə bürünc",
-        "color": "#b18a45",
+        "color": "#d97706",
         "image": "assets/equipment/brass-cezve-classic.jpg",
         "price": 70
       },
@@ -390,7 +390,7 @@
         "id": "cezve-fluted",
         "alt": "Taxta saplı yivli bürünc cezvə",
         "name": "Yivli bürünc",
-        "color": "#aa843d",
+        "color": "#92400e",
         "image": "assets/equipment/brass-cezve-fluted.jpg",
         "price": 70
       },
@@ -398,7 +398,7 @@
         "id": "cezve-lidded",
         "alt": "Taxta saplı qapaqlı bürünc cezvə",
         "name": "Qapaqlı bürünc",
-        "color": "#a08042",
+        "color": "#78350f",
         "image": "assets/equipment/brass-cezve-lidded.jpg",
         "price": 75
       }
@@ -457,7 +457,7 @@
     "price": 55,
     "unit": "piece",
     "image": "assets/equipment/gooseneck-kettle.jpg",
-    "description": "V60 və filtr qəhvə üçün su axınını dəqiq idarə edir.",
+    "description": "V60 və manual filtr dəmləmələrdə su axınının sürətini və istiqamətini dəqiq idarə edən incə qu quşu ağızlı paslanmayan polad çaydan.",
     "active": true,
     "stock": {
       "status": "available",
@@ -474,7 +474,7 @@
         "id": "gooseneck-kettle",
         "alt": "Paslanmayan poladdan qu quşu ağızlı çaydan",
         "name": "Polad",
-        "color": "#a9a8a4",
+        "color": "#cbd5e1",
         "image": "assets/equipment/gooseneck-kettle.jpg",
         "price": 55
       }
@@ -556,7 +556,7 @@
     "price": 2,
     "unit": "piece",
     "image": "assets/equipment/decorative-dallah.jpg",
-    "description": "Qəhvə təqdimatına ənənəvi və zərif görünüş verən qəhvədan.",
+    "description": "Ərəb qəhvə mədəniyyətini əks etdirən, zərif naxışlı və bəzək daşlı ənənəvi qəhvə təqdimat qəhvədanı.",
     "active": true,
     "stock": {
       "status": "available",
@@ -573,7 +573,7 @@
         "id": "dallah-decorative",
         "alt": "Yaşıl daşlı dekorativ Dallah qəhvədan",
         "name": "Yaşıl daşlı",
-        "color": "#64705c",
+        "color": "#047857",
         "image": "assets/equipment/decorative-dallah.jpg",
         "price": 2
       },
@@ -581,7 +581,7 @@
         "id": "dallah-silver",
         "alt": "Naxışlı gümüşü rəngli Dallah qəhvədan",
         "name": "Gümüşü",
-        "color": "#c2c1bd",
+        "color": "#cbd5e1",
         "image": "assets/equipment/silver-dallah.jpg",
         "price": 2
       }
@@ -617,7 +617,7 @@
     "price": 80,
     "unit": "piece",
     "image": "assets/equipment/manual-press.jpg",
-    "description": "Sürətli dəmləmə və rahat daşınma üçün yığcam əl presi.",
+    "description": "Sürətli hava təzyiqi ilə zəngin və təmiz dad əldə etmək üçün yüngül, portativ və davamlı əl presi.",
     "active": true,
     "stock": {
       "status": "available",
@@ -634,7 +634,7 @@
         "id": "manual-press",
         "alt": "Silindrik əl presi dəmləyici",
         "name": "Qara",
-        "color": "#262625",
+        "color": "#1e293b",
         "image": "assets/equipment/manual-press.jpg",
         "price": 80
       }
@@ -716,7 +716,7 @@
     "price": 95,
     "unit": "piece",
     "image": "assets/equipment/wheel-grinder.jpg",
-    "description": "Möhkəm metal gövdəli, klassik çarx mexanizmi ilə.",
+    "description": "Retro üslublu tökmə çuqun çarx mexanizmi, taxta qutu qəbuledicisi və dəqiq üyütmə sistemli dekorativ əl dəyirmanı.",
     "active": true,
     "stock": {
       "status": "available",
@@ -733,7 +733,7 @@
         "id": "wheel-grinder",
         "alt": "Böyük çarxlı klassik əl qəhvə dəyirmanı",
         "name": "Bürünc",
-        "color": "#755037",
+        "color": "#7c2d12",
         "image": "assets/equipment/wheel-grinder.jpg",
         "price": 95
       }
@@ -792,7 +792,7 @@
     "price": 38,
     "unit": "piece",
     "image": "assets/equipment/glass-server-400ml.jpg",
-    "description": "Filtr qəhvəni dəmləmək və səliqəli təqdim etmək üçün.",
+    "description": "Termo-davamlı borosilikat şüşədən hazırlanmış, rahat erqonomik tutacaqlı və ölçü xətli 400 ml servis qrafini.",
     "active": true,
     "stock": {
       "status": "available",
@@ -809,7 +809,7 @@
         "id": "glass-server",
         "alt": "Qara tutacaqlı 400 millilitrlik şüşə server",
         "name": "Şüşə",
-        "color": "#d7d1c7",
+        "color": "#e2e8f0",
         "image": "assets/equipment/glass-server-400ml.jpg",
         "price": 38
       }
@@ -822,7 +822,7 @@
     "price": 83,
     "unit": "piece",
     "image": "assets/equipment/azerbaijan-coffee-set-bronze.jpg",
-    "description": "Cezvə, iki fincan və servis detalları ilə zərif hədiyyə dəsti.",
+    "description": "Zərif bürünc və ya gümüşü naxışlı cezvə, iki ədəd fincan və nəlbəki ilə xüsusi hədiyyəlik qutuda milli qəhvə dəsti.",
     "active": true,
     "stock": {
       "status": "available",
@@ -839,7 +839,7 @@
         "id": "azerbaijan-set-bronze",
         "alt": "Taxta qutuda bürünc rəngli Azərbaycan qəhvə dəsti",
         "name": "Bürünc",
-        "color": "#75503b",
+        "color": "#9a3412",
         "image": "assets/equipment/azerbaijan-coffee-set-bronze.jpg",
         "price": 83
       },
@@ -847,7 +847,7 @@
         "id": "azerbaijan-set-silver",
         "alt": "Taxta qutuda gümüşü rəngli Azərbaycan qəhvə dəsti",
         "name": "Gümüşü",
-        "color": "#b7b3ad",
+        "color": "#cbd5e1",
         "image": "assets/equipment/azerbaijan-coffee-set-silver.jpg",
         "price": 83
       }
@@ -860,7 +860,7 @@
     "price": 12,
     "unit": "piece",
     "image": "assets/catalog/fincan.jpg",
-    "description": "Zərif qəhvə fincanı.",
+    "description": "Keyfiyyətli ağ keramikadan hazırlanmış, espresso və türk qəhvəsi üçün ideal qalın divarlı zərif fincan və nəlbəki dəsti.",
     "active": true,
     "stock": {
       "status": "counted",
@@ -904,7 +904,7 @@
     "price": 58,
     "unit": "piece",
     "image": "assets/equipment/espresso-tamper-wood.jpg",
-    "description": "Qəhvəni portafilterdə bərabər sıxmaq üçün möhkəm və rahat tamper.",
+    "description": "Qəhvə tabletini portafilterdə bərabər və ideal təzyiqlə sıxmaq üçün 58 mm-lik paslanmayan polad əsaslı peşəkar tamper.",
     "active": true,
     "stock": {
       "status": "available",
@@ -921,7 +921,7 @@
         "id": "tamper-wood",
         "alt": "Taxta üstlü qara espresso tamperi",
         "name": "Taxta",
-        "color": "#7a563d",
+        "color": "#854d0e",
         "image": "assets/equipment/espresso-tamper-wood.jpg",
         "price": 58
       },
@@ -929,7 +929,7 @@
         "id": "tamper-silver",
         "alt": "Gümüşü rəngli espresso tamperi",
         "name": "Gümüşü",
-        "color": "#c6c5c0",
+        "color": "#f1f5f9",
         "image": "assets/equipment/espresso-tamper-silver.jpg",
         "price": 55
       },
@@ -937,7 +937,7 @@
         "id": "tamper-black",
         "alt": "Qara rəngli espresso tamperi",
         "name": "Qara",
-        "color": "#242321",
+        "color": "#18181b",
         "image": "assets/equipment/espresso-tamper-black.jpg",
         "price": 55
       }
@@ -950,7 +950,7 @@
     "price": 18,
     "unit": "piece",
     "image": "assets/catalog/milli-fincan.jpg",
-    "description": "Xüsusi naxışlı milli qəhvə fincanı və qaşıq dəsti.",
+    "description": "Milli ornamentlərlə bəzədilmiş xüsusi metal örtük, çini kasa, qaşıq və nəlbəki ilə tamamlanan zərif qəhvə fincanı dəsti.",
     "active": true,
     "stock": {
       "status": "counted",
@@ -1017,7 +1017,7 @@
     "price": 120,
     "unit": "piece",
     "image": "assets/equipment/oriental-serving-set-six-cup.jpg",
-    "description": "Naxışlı fincanlar, şəkər qabı və altlıqdan ibarət servis dəsti.",
+    "description": "Əl işi naxışlı fincanlar, qapaqlı lokum qabı və zərif servis nimçəsindən ibarət autentik Şərq qəhvə dəsti.",
     "active": true,
     "stock": {
       "status": "available",
@@ -1034,7 +1034,7 @@
         "id": "oriental-serving-set-six-cup",
         "alt": "Naxışlı metal altlıqda altı fincanlı Şərq üslublu servis dəsti",
         "name": "6 fincanlı",
-        "color": "#5e4939",
+        "color": "#78350f",
         "image": "assets/equipment/oriental-serving-set-six-cup.jpg",
         "price": 120
       },
@@ -1042,7 +1042,7 @@
         "id": "oriental-serving-set",
         "alt": "Naxışlı metal altlıqda iki fincanlı Şərq üslublu servis dəsti",
         "name": "2 fincanlı",
-        "color": "#766153",
+        "color": "#b45309",
         "image": "assets/equipment/oriental-serving-set.jpg",
         "price": 72
       }
