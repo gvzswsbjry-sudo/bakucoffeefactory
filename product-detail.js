@@ -92,9 +92,11 @@ const renderDetail = () => {
     const label = escapeDetailHtml(dyn(rawLabel));
     const image = escapeDetailHtml(safeDetailImage(variant.image));
     const color = escapeDetailHtml(variant.color || '#8b8177');
-    const imageStyle = image ? `background-image:url('${image}');` : '';
+    const hasPattern = Boolean(variant.pattern);
+    const imageStyle = hasPattern && image ? `background-image:url('${image}');` : '';
+    const swatchImgVar = hasPattern && image ? `--swatch-img:url('${image}');` : '';
     return `
-    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${color}; --swatch-img:url('${image}')" aria-label="${label}" aria-pressed="false">
+    <button class="variant-swatch" type="button" data-variant-id="${escapeDetailHtml(variant.id)}" style="--swatch:${color}; ${swatchImgVar}" aria-label="${label}" aria-pressed="false">
       <span class="swatch-pattern" style="${imageStyle} background-color:${color}"></span><small>${label}</small>
     </button>`;
   }).join('');

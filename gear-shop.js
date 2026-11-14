@@ -87,8 +87,10 @@ const renderProducts = () => {
           const itemColor = escapeShopHtml(item.color || '#8b8177');
           const itemLabel = escapeShopHtml(dyn(item.label || item.name));
           const activeClass = idx === 0 ? ' class="active"' : '';
-          const imageStyle = itemImg ? `background-image:url('${itemImg}');` : '';
-          return `<span${activeClass} style="--swatch:${itemColor}; --swatch-img:url('${itemImg}'); ${imageStyle} background-color:${itemColor}" title="${itemLabel}" data-variant-id="${escapeShopHtml(item.id)}" data-variant-image="${itemImg}" data-variant-alt="${escapeShopHtml(dyn(item.alt || product.name))}" data-variant-price="${escapeShopHtml(formatPrice(item.price))}"></span>`;
+          const hasPattern = Boolean(item.pattern);
+          const imageStyle = hasPattern && itemImg ? `background-image:url('${itemImg}');` : '';
+          const swatchImgVar = hasPattern && itemImg ? `--swatch-img:url('${itemImg}');` : '';
+          return `<span${activeClass} style="--swatch:${itemColor}; ${swatchImgVar} ${imageStyle} background-color:${itemColor}" title="${itemLabel}" data-variant-id="${escapeShopHtml(item.id)}" data-variant-image="${itemImg}" data-variant-alt="${escapeShopHtml(dyn(item.alt || product.name))}" data-variant-price="${escapeShopHtml(formatPrice(item.price))}"></span>`;
         }).join('')}</div>`
       : '';
 

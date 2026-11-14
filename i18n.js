@@ -3340,6 +3340,16 @@
     "ar": "فنجان (صناعة يدوية)",
     "ru": "Чашка ручной работы"
   },
+  "milli fincan": {
+    "en": "National Cup",
+    "ar": "فنجان تراثي",
+    "ru": "Национальная чашка"
+  },
+  "Milli fincan": {
+    "en": "National Cup",
+    "ar": "فنجان تراثي",
+    "ru": "Национальная чашка"
+  },
   "Milli Fincan (qaşıqlı)": {
     "en": "National Cup (with spoon)",
     "ar": "فنجان تراثي (مع ملعقة)",

@@ -71,7 +71,8 @@
         "name": "600 ml",
         "color": "#64748b",
         "image": "assets/equipment/french-press.jpg",
-        "price": 25
+        "price": 25,
+        "pattern": false
       },
       {
         "id": "french-press-350",
@@ -79,7 +80,8 @@
         "name": "350 ml",
         "color": "#94a3b8",
         "image": "assets/equipment/french-press.jpg",
-        "price": 20
+        "price": 20,
+        "pattern": false
       },
       {
         "id": "french-press-850",
@@ -87,7 +89,8 @@
         "name": "850 ml",
         "color": "#334155",
         "image": "assets/equipment/french-press.jpg",
-        "price": 30
+        "price": 30,
+        "pattern": false
       }
     ]
   },
@@ -163,7 +166,8 @@
         "name": "Klassik taxta",
         "color": "#854d0e",
         "image": "assets/equipment/manual-grinder-wood.jpg",
-        "price": 55
+        "price": 55,
+        "pattern": false
       }
     ]
   },
@@ -239,7 +243,8 @@
         "name": "Naxışlı bürünc",
         "color": "#b45309",
         "image": "assets/equipment/ornate-manual-grinder.jpg",
-        "price": 55
+        "price": 55,
+        "pattern": false
       }
     ]
   },
@@ -315,7 +320,8 @@
         "name": "Polad",
         "color": "#e2e8f0",
         "image": "assets/equipment/moka-pot.jpg",
-        "price": 90
+        "price": 90,
+        "pattern": false
       },
       {
         "id": "moka-pot-gray",
@@ -323,7 +329,8 @@
         "name": "Boz",
         "color": "#475569",
         "image": "assets/equipment/classic-moka-pot-gray.jpg",
-        "price": 90
+        "price": 90,
+        "pattern": true
       }
     ]
   },
@@ -376,7 +383,8 @@
         "name": "Klassik naxışlı",
         "color": "#c27803",
         "image": "assets/equipment/brass-cezve.jpg",
-        "price": 70
+        "price": 70,
+        "pattern": true
       },
       {
         "id": "cezve-classic",
@@ -384,7 +392,8 @@
         "name": "Sadə bürünc",
         "color": "#d97706",
         "image": "assets/equipment/brass-cezve-classic.jpg",
-        "price": 70
+        "price": 70,
+        "pattern": false
       },
       {
         "id": "cezve-fluted",
@@ -392,7 +401,8 @@
         "name": "Yivli bürünc",
         "color": "#92400e",
         "image": "assets/equipment/brass-cezve-fluted.jpg",
-        "price": 70
+        "price": 70,
+        "pattern": true
       },
       {
         "id": "cezve-lidded",
@@ -400,7 +410,8 @@
         "name": "Qapaqlı bürünc",
         "color": "#78350f",
         "image": "assets/equipment/brass-cezve-lidded.jpg",
-        "price": 75
+        "price": 75,
+        "pattern": true
       }
     ]
   },
@@ -476,7 +487,8 @@
         "name": "Polad",
         "color": "#cbd5e1",
         "image": "assets/equipment/gooseneck-kettle.jpg",
-        "price": 55
+        "price": 55,
+        "pattern": false
       }
     ]
   },
@@ -575,7 +587,8 @@
         "name": "Yaşıl daşlı",
         "color": "#047857",
         "image": "assets/equipment/decorative-dallah.jpg",
-        "price": 2
+        "price": 2,
+        "pattern": true
       },
       {
         "id": "dallah-silver",
@@ -583,7 +596,8 @@
         "name": "Gümüşü",
         "color": "#cbd5e1",
         "image": "assets/equipment/silver-dallah.jpg",
-        "price": 2
+        "price": 2,
+        "pattern": true
       }
     ]
   },
@@ -636,7 +650,8 @@
         "name": "Qara",
         "color": "#1e293b",
         "image": "assets/equipment/manual-press.jpg",
-        "price": 80
+        "price": 80,
+        "pattern": false
       }
     ]
   },
@@ -735,7 +750,8 @@
         "name": "Bürünc",
         "color": "#7c2d12",
         "image": "assets/equipment/wheel-grinder.jpg",
-        "price": 95
+        "price": 95,
+        "pattern": false
       }
     ]
   },
@@ -811,7 +827,8 @@
         "name": "Şüşə",
         "color": "#e2e8f0",
         "image": "assets/equipment/glass-server-400ml.jpg",
-        "price": 38
+        "price": 38,
+        "pattern": false
       }
     ]
   },
@@ -841,7 +858,8 @@
         "name": "Bürünc",
         "color": "#9a3412",
         "image": "assets/equipment/azerbaijan-coffee-set-bronze.jpg",
-        "price": 83
+        "price": 83,
+        "pattern": true
       },
       {
         "id": "azerbaijan-set-silver",
@@ -849,7 +867,8 @@
         "name": "Gümüşü",
         "color": "#cbd5e1",
         "image": "assets/equipment/azerbaijan-coffee-set-silver.jpg",
-        "price": 83
+        "price": 83,
+        "pattern": true
       }
     ]
   },
@@ -923,7 +942,8 @@
         "name": "Taxta",
         "color": "#854d0e",
         "image": "assets/equipment/espresso-tamper-wood.jpg",
-        "price": 58
+        "price": 58,
+        "pattern": true
       },
       {
         "id": "tamper-silver",
@@ -931,7 +951,8 @@
         "name": "Gümüşü",
         "color": "#f1f5f9",
         "image": "assets/equipment/espresso-tamper-silver.jpg",
-        "price": 55
+        "price": 55,
+        "pattern": false
       },
       {
         "id": "tamper-black",
@@ -939,7 +960,8 @@
         "name": "Qara",
         "color": "#18181b",
         "image": "assets/equipment/espresso-tamper-black.jpg",
-        "price": 55
+        "price": 55,
+        "pattern": false
       }
     ]
   },
@@ -1036,7 +1058,8 @@
         "name": "6 fincanlı",
         "color": "#78350f",
         "image": "assets/equipment/oriental-serving-set-six-cup.jpg",
-        "price": 120
+        "price": 120,
+        "pattern": true
       },
       {
         "id": "oriental-serving-set",
@@ -1044,7 +1067,8 @@
         "name": "2 fincanlı",
         "color": "#b45309",
         "image": "assets/equipment/oriental-serving-set.jpg",
-        "price": 72
+        "price": 72,
+        "pattern": true
       }
     ]
   },
@@ -1096,7 +1120,8 @@
         "name": "Standart",
         "color": "#8b8177",
         "image": "assets/equipment/french-press.jpg",
-        "price": 1
+        "price": 1,
+        "pattern": false
       }
     ]
   },
@@ -1191,5 +1216,150 @@
       "pricePending": false
     },
     "variants": []
+  },
+  {
+    "id": "fincan-handmade",
+    "category": "equipment",
+    "name": "Fincan(handmade)",
+    "price": 20,
+    "unit": "piece",
+    "image": "assets/uploads/img-1209-mw2dyoqv-8ac58a84.jpg",
+    "description": "Əl işi, fərqli rəng çalarlarına malik xüsusi dizaynlı keramika qəhvə fincanı.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 15,
+    "meta": {
+      "equipmentCategory": "accessory",
+      "categoryLabel": "Aksesuar",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "fincan-handmade-s-c-f0d818",
+        "name": "Ağ",
+        "size": "M",
+        "price": 20,
+        "image": "assets/uploads/img-1209-mw2dyoqv-8ac58a84.jpg",
+        "color": "#ffffff",
+        "pattern": false,
+        "alt": "Ağ rəngli əl işi fincan"
+      },
+      {
+        "id": "fincan-handmade-m-c-90c048",
+        "name": "Yaşıl",
+        "size": "M",
+        "price": 20,
+        "image": "assets/uploads/img-1207-mw2dw8pl-1608b5a0.jpg",
+        "color": "#90c048",
+        "pattern": false,
+        "alt": "Yaşıl rəngli əl işi fincan"
+      },
+      {
+        "id": "fincan-handmade-m-c-1878c0",
+        "name": "Sarı",
+        "size": "M",
+        "price": 20,
+        "image": "assets/uploads/img-1208-mw2dxu72-54840327.jpg",
+        "color": "#f0d818",
+        "pattern": false,
+        "alt": "Sarı rəngli əl işi fincan"
+      },
+      {
+        "id": "fincan-handmade-c-1878c0",
+        "name": "Mavi",
+        "size": "M",
+        "price": 19.82,
+        "image": "assets/uploads/img-1205-mw2cfedg-565ffe02.jpg",
+        "color": "#1878c0",
+        "pattern": false,
+        "alt": "Mavi rəngli əl işi fincan"
+      }
+    ]
+  },
+  {
+    "id": "milli-fincan",
+    "category": "equipment",
+    "name": "milli fincan",
+    "price": 20,
+    "unit": "piece",
+    "image": "assets/uploads/94d28998-458d-4f4c-9165-f5a4adea05db-mw9kpink-c2505c4b.png",
+    "description": "Milli ornamentlərlə bəzədilmiş xüsusi qəhvə fincanı.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 16,
+    "meta": {
+      "equipmentCategory": "accessory",
+      "categoryLabel": "Aksesuar",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "milli-fincan-standart-c-b22222",
+        "name": "Qırmızı",
+        "size": "Standart",
+        "price": 20,
+        "image": "assets/uploads/94d28998-458d-4f4c-9165-f5a4adea05db-mw9kpink-c2505c4b.png",
+        "color": "#b22222",
+        "pattern": false,
+        "alt": "Qırmızı milli fincan"
+      },
+      {
+        "id": "milli-fincan-standart-c-1e3f66",
+        "name": "Tünd göy",
+        "size": "Standart",
+        "price": 20,
+        "image": "assets/uploads/72c6cdb6-a710-4376-86cf-4522b66dcccd-mw9kmhbw-8e3e8651.png",
+        "color": "#1e3f66",
+        "pattern": false,
+        "alt": "Tünd göy milli fincan"
+      },
+      {
+        "id": "milli-fincan-standart",
+        "name": "Klassik",
+        "size": "Standart",
+        "price": 20,
+        "image": "assets/uploads/51547910-f36e-40ad-93b5-efdff142ea48-mw9kppsm-2acf13c3.png",
+        "color": "#8b8177",
+        "pattern": false,
+        "alt": "Klassik milli fincan"
+      }
+    ]
+  },
+  {
+    "id": "tamper",
+    "category": "equipment",
+    "name": "Tamper",
+    "price": 55,
+    "unit": "piece",
+    "image": "assets/equipment/tamper.jpg",
+    "description": "Portafilterdə qəhvənin bərabər sıxılması üçün erqonomik metal tamper.",
+    "active": true,
+    "stock": {
+      "status": "available",
+      "quantity": null
+    },
+    "sortOrder": 3,
+    "meta": {
+      "equipmentCategory": "accessory",
+      "categoryLabel": "Aksesuar",
+      "imageFit": "contain"
+    },
+    "variants": [
+      {
+        "id": "tamper-standard",
+        "name": "Qara",
+        "price": 58,
+        "image": "assets/equipment/espresso-tamper-black.jpg",
+        "color": "#18181b",
+        "pattern": false,
+        "alt": "Qara tamper"
+      }
+    ]
   }
 ]
